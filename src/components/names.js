@@ -3,7 +3,7 @@ import BasePage from './basepage';
 import namesData from '../api/names_data';
 import Section from 'constructicon/section';
 
-export default class NameItem extends Section {
+export class NameItem extends Section {
   render() {
     var link = "http://etherscan.io/address/" + this.props.addr;
     return (

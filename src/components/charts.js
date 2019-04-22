@@ -3,7 +3,7 @@ import BasePage from './basepage';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
-export default class OptionalTabbedView extends Component {
+export class OptionalTabbedView extends Component {
   constructor(props) {
     super(props);
     this.characters = {
