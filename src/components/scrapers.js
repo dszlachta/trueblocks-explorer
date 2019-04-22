@@ -10,22 +10,22 @@ export default class ScrapersPage extends BasePage {
       return (
         <div>
           <Section><b>blockScrape:</b>
-            <Section background='tertiary'>
+            <Section background='secondary'>
               <Accordion title='Seed settings'>
-                <Section background='secondary'>This is the blockScrape seed section</Section>
+                <Section background='primary'>This is the blockScrape seed section</Section>
               </Accordion>
               <Accordion title='Scrape settings'>
-                <Section background='secondary'>This is the blockScrape scrape section</Section>
+                <Section background='primary'>This is the blockScrape scrape section</Section>
               </Accordion>
             </Section>
           </Section>
           <Section><b>acctScrape:</b>
-            <Section background='tertiary'>
+            <Section background='secondary'>
               <Accordion title='Daemon settings'>
-                <Section background='secondary'>This is the acctScrape daemon section</Section>
+                <Section background='primary'>This is the acctScrape daemon section</Section>
               </Accordion>
               <Accordion title='Scrape settings'>
-                <Section background='secondary'>This is the acctScrape scrape section</Section>
+                <Section background='primary'>This is the acctScrape scrape section</Section>
               </Accordion>
             </Section>
           </Section>
