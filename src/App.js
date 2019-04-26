@@ -27,11 +27,16 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     fetch('https://hn.algolia.com/api/v1/search?query=binance', { mode: 'cors' })
       //    fetch('http://localhost:80/list?address=0x06012c8cf97bead5deae237070f9587f8e7a266d', { mode: 'cors' })
       .then(response => response.json())
       .then(data => this.setState({ hits: data.hits }));
+
+
+      fetch(`${process.env.REACT_APP_API_URL}/list?address=0x06012c8cf97bead5deae237070f9587f8e7a266d`, { mode: 'cors' })
+      // .then(response => response.json())
+      .then(res => console.log(res));
   }
 
   /*

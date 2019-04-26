@@ -1,6 +1,5 @@
 import React from 'react'
 import BasePage from './basepage';
-import namesData from '../api/names_data';
 import Section from 'constructicon/section';
 
 export class NameItem extends Section {
@@ -19,10 +18,22 @@ export class NameItem extends Section {
 }
 
 export default class NamesPage extends BasePage {
+  constructor(props) {
+    super(props);
+    this.state = {
+      namesData: []
+    };
+  }
+
+  componentDidMount() {
+      fetch('http://localhost:8080/names', { mode: 'cors' })
+      .then(response => response.json())
+      .then(data => this.setState({ data: data }));
+  }
   render() {
-    function makeContent() {
+    this.makeContent = () => {
       return (
-        namesData.map(item => {
+        this.state.namesData.length && this.state.namesData.map(item => {
           return (
             <NameItem
               name={item.name}
@@ -37,7 +48,7 @@ export default class NamesPage extends BasePage {
     }
 
     var left = "Names";
-    var middle = makeContent();
+    var middle = this.makeContent();
     var right = "The names component of TrueBlocks allows you to assign names to Ethereum addresses. From then on, anywhere that address appears in a TrueBlocks monitor, the name appears beside it. This makes understanding what's going on easier. You may also select names from ENS if you wish. If you choose to share the names you create, others will benefit from that information.";
     var button = "Push";
     return (
