@@ -13,7 +13,7 @@ import AccountingPage from './components/accounting';
 import AuditingPage from './components/auditing';
 import ScrapersPage from './components/scrapers';
 import NamesPage from './components/names';
-import DatesPage from './components/dates';
+import BlocksPage from './components/blocks';
 import ChartsPage from './components/charts';
 import logo from './svg/logo.svg';
 
@@ -70,7 +70,7 @@ class App extends Component {
           <TabPanel><MonitorPage /></TabPanel>
           <TabPanel></TabPanel>
           <TabPanel><NamesPage /></TabPanel>
-          <TabPanel><DatesPage /></TabPanel>
+          <TabPanel><BlocksPage /></TabPanel>
           <TabPanel><ChartsPage /></TabPanel>
           <TabPanel></TabPanel>
           <TabPanel><MonitorPage /></TabPanel>

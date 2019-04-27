@@ -2,7 +2,7 @@ import React from 'react'
 import BasePage from './basepage';
 import Section from 'constructicon/section';
 
-export class DateItem extends Section {
+export class BlockItem extends Section {
   render() {
     var link = "http://etherscan.io/block/" + this.props.hash;
     return (
@@ -16,7 +16,7 @@ export class DateItem extends Section {
   }
 }
 
-export default class DatesPage extends BasePage {
+export default class BlocksPage extends BasePage {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +34,7 @@ export default class DatesPage extends BasePage {
       return (
         this.state.data.length && this.state.data.map(item => {
           return (
-            <DateItem key={item.name}
+            <BlockItem key={item.name}
               name={item.name}
               blockNumber={item.blockNumber}
               hash={item.hash}
@@ -46,9 +46,9 @@ export default class DatesPage extends BasePage {
         ));
     }
 
-    var left = "Dates";
+    var left = "Blocks";
     var middle = this.makeContent();
-    var right = "The dates component of TrueBlocks allows you to assign names any Ethereum blocks. We've provided a number of default named blocks, but you may add your own. This makes understanding the timeline of your interactions with the blockchain easier. If you choose to share the names you create, others will benefit from that information.";
+    var right = "The blocks component of TrueBlocks allows you to assign names any Ethereum blocks. We've provided a number of default named blocks, but you may add your own. This makes understanding the timeline of your interactions with the blockchain easier. If you choose to share the names you create, others will benefit from that information.";
     var button = "Push";
     return (
       <BasePage
