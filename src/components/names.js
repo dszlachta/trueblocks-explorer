@@ -21,19 +21,19 @@ export default class NamesPage extends BasePage {
   constructor(props) {
     super(props);
     this.state = {
-      namesData: []
+      data: []
     };
   }
 
   componentDidMount() {
-      fetch('http://localhost:8080/names', { mode: 'cors' })
+      fetch('http://localhost:8080/names?search1=0x12', { mode: 'cors' })
       .then(response => response.json())
       .then(data => this.setState({ data: data }));
   }
   render() {
     this.makeContent = () => {
       return (
-        this.state.namesData.length && this.state.namesData.map(item => {
+        this.state.data.length && this.state.data.map(item => {
           return (
             <NameItem
               name={item.name}
