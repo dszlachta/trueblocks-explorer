@@ -5,7 +5,7 @@ import 'react-tabs/style/react-tabs.css';
 import ButtonGroup from 'constructicon/button-group';
 import ButtonSocial from 'constructicon/button-social';
 import Section from 'constructicon/section';
-import Container from 'constructicon/container';
+//import Container from 'constructicon/container';
 
 import './App.css';
 import MonitorPage from './components/monitoring';
@@ -23,7 +23,7 @@ class App extends Component {
     super(props);
     this.state = {
       hits: [],
-      lastTab: 4
+      lastTab: 10
     };
   }
 
@@ -53,23 +53,34 @@ class App extends Component {
       <div>
         <Tabs onSelect={index => this.state.lastTab = index} defaultIndex={this.state.lastTab}>
           <TabList>
-            <Tab>Monitors</Tab >
+            <Tab>Home</Tab >
+            <Tab>|</Tab >
+            <Tab>Accounts</Tab>
+            <Tab>Blocks</Tab>
             <Tab>Charts</Tab>
+            <Tab>|</Tab >
+            <Tab>Monitors</Tab >
+            <Tab>Scrapers</Tab>
+            <Tab>|</Tab >
             <Tab>Accounting</Tab >
             <Tab>Auditing</Tab >
-            <Tab>Named Accounts</Tab>
-            <Tab>Named Blocks</Tab>
-            <Tab>Scrapers</Tab>
+            <Tab>Notifications</Tab >
+            <Tab>Custom</Tab >
           </TabList>
           <TabPanel><MonitorPage /></TabPanel>
-          <TabPanel><ChartsPage /></TabPanel>
-          <TabPanel><AccountingPage /></TabPanel>
-          <TabPanel><AuditingPage /></TabPanel>
+          <TabPanel></TabPanel>
           <TabPanel><NamesPage /></TabPanel>
           <TabPanel><DatesPage /></TabPanel>
+          <TabPanel><ChartsPage /></TabPanel>
+          <TabPanel></TabPanel>
+          <TabPanel><MonitorPage /></TabPanel>
           <TabPanel><ScrapersPage /></TabPanel>
+          <TabPanel></TabPanel>
+          <TabPanel><AccountingPage /></TabPanel>
+          <TabPanel><AuditingPage /></TabPanel>
+          <TabPanel><AuditingPage /></TabPanel>
+          <TabPanel><AuditingPage /></TabPanel>
         </Tabs>
-        <Section>This is the thing that matters.</Section>
       </div>
     );
   }
@@ -79,7 +90,7 @@ class App extends Component {
       <div className='App'>
         <div className='App-header'>
           <div className='header-logo'><img src={logo} className='header-logo' alt='logo' /></div>
-          <div className='header-appname'>TrueBlocks Monitors</div>
+          <div className='header-appname'>TrueBlocks<superscript><small>&reg;</small></superscript></div>
           <div className='header-social'>
             <ButtonGroup>
               <ButtonSocial size={-4} share type='facebook' />
@@ -89,7 +100,7 @@ class App extends Component {
         </div>
         {this.renderTabs()}
         <div className='bottom-footer'>
-          TrueBlocks &reg; 2018 ~ <a href="mailto:info@trueblocks.io"><font color="#b1b1b1">info@trueblocks.io</font></a> ~ <a href="https://trueblocks.io"><font color="#b1b1b1">https://trueblocks.io</font></a>
+          TrueBlocks &reg; 2019 ~ <a href="mailto:info@trueblocks.io"><font color="#b1b1b1">info@trueblocks.io</font></a> ~ <a href="https://trueblocks.io"><font color="#b1b1b1">https://trueblocks.io</font></a>
         </div>
       </div>
 

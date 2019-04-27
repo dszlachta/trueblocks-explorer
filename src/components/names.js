@@ -10,7 +10,7 @@ export class NameItem extends Section {
         <div><b>Name:</b> {this.props.name} ({this.props.symbol})</div>
         <div>Address: <a href={link}>{this.props.addr}</a></div>
         <div>Desciption: {this.props.description}</div>
-        <div>Logo: <img src="./images/{this.props.logo}" /></div>
+        <div>Logo: <img alt='' src='./images/{this.props.logo}' /></div>
         <hr />
       </div>
     );
