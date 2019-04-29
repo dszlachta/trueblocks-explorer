@@ -2,17 +2,27 @@ import React from 'react'
 import BasePage from './basepage';
 import Section from 'constructicon/section';
 import Accordion from 'constructicon/accordion';
-//import namesData from '../api/names_data';
+import Label from 'constructicon/label';
+import InputSelect from 'constructicon/input-select';
+import InputDate from 'constructicon/input-date';
 
 export default class ScrapersPage extends BasePage {
+  constructor(props) {
+    super(props);
+    this.state = {
+      choice: "choice 1"
+    };
+  }
+
   render() {
     function makeContent() {
       return (
         <div>
           <Section><b>blockScrape:</b>
             <Section background='secondary'>
-              <Accordion title='Seed settings'>
-                <Section background='primary'>This is the blockScrape seed section</Section>
+              <Accordion title='Seed settings' toggled>
+                <Section background='primary'>
+                </Section>
               </Accordion>
               <Accordion title='Scrape settings'>
                 <Section background='primary'>This is the blockScrape scrape section</Section>
