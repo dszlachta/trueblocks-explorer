@@ -7,7 +7,7 @@ export class BlockItem extends Section {
     var link = "http://etherscan.io/block/" + this.props.hash;
     return (
       <div key={this.props.name}>
-        <div><pre>{this.props.date} ({this.props.timestamp}) <b><big>{this.props.name}</big></b> (<a target="_blank" href={link}>{this.props.blockNumber}</a>)<br/>
+        <div><pre>{this.props.date} ({this.props.timestamp}) <b><big>{this.props.name}</big></b> (<a rel="noopener noreferrer" target="_blank" href={link}>{this.props.blockNumber}</a>)<br/>
           <small><i>{this.props.hash}</i></small>
         </pre></div>
         <hr />

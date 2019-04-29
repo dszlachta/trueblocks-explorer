@@ -2,12 +2,34 @@ import React, { Component } from 'react'
 import BasePage from './basepage';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import chartData from '../api/chart_data.js'
+import Grid from 'constructicon/grid'
+import GridColumn from 'constructicon/grid-column'
 
-export class OptionalTabbedView extends Component {
+var chartData = {
+  // Used fields: description, contents
+  // Unused fields: img, color, text, disabled
+  "Unpublished/Private": {
+    description: "A chart showing the number of blocks produced per week.",
+    contents: "http://calendarhost.com/tb_images/Chart1.png",
+  },
+  "Standards": {
+    description: "This chart shows some other shit.",
+    contents: "http://calendarhost.com/tb_images/Chart3.png",
+  },
+  "Leached": {
+    description: "This chart shows some other shit.",
+    contents: "http://calendarhost.com/tb_images/Chart3.png",
+  },
+  "Seeded": {
+    description: "This chart shows some other shit.",
+    contents: "http://calendarhost.com/tb_images/Chart4.png",
+  },
+};
+
+export class TabbedSubview extends Component {
   constructor(props) {
     super(props);
-    this.charts = chartData;
+    this.tabData = chartData;
   }
 
   render() {
@@ -15,26 +37,34 @@ export class OptionalTabbedView extends Component {
     const tabs = [];
     const tabPanels = [];
 
-    Object.keys(this.charts).forEach(name => {
-      if (!this.charts[name].enabled)
+    Object.keys(this.tabData).forEach(name => {
+      if (this.tabData[name].disabled)
         return;
 
       const {
         img,
         color: backgroundColor,
-        text: color, descr, chart
-      } = this.charts[name];
+        text: color, description, contents
+      } = this.tabData[name];
 
       tabs.push(
         <Tab style={{ backgroundColor }} className="status-charts">
-          <img src={img} alt={name} height="32" width="32" />
+          {name}
         </Tab>
       );
 
       tabPanels.push(
         <TabPanel style={{ backgroundColor, color }} className="status-charts-panel">
-          <span>{descr}<br/></span>
-          <img src={chart} alt={name} height="800" width="1200" />
+          <Grid>
+            <GridColumn borderWidth={1} borderColor='secondary' lg={8}>
+              <img src={contents} alt={name} width="100%" height="480" />
+            </GridColumn>
+            <GridColumn lg={1}>
+            </GridColumn>
+            <GridColumn lg={3}>
+              {description}
+            </GridColumn>
+          </Grid>
         </TabPanel>
       );
     });
@@ -42,9 +72,7 @@ export class OptionalTabbedView extends Component {
     return (
       <div>
         <p>{links}</p>
-        <Tabs
-          selectedTabClassName="status-charts--selected"
-          selectedTabPanelClassName="status-charts-panel--selected" >
+        <Tabs selectedTabClassName="status-charts--selected" selectedTabPanelClassName="status-charts-panel--selected" >
           <TabList className="status-charts-list">{tabs}</TabList>
           {tabPanels}
         </Tabs>
@@ -58,7 +86,7 @@ export default class ChartsPage extends BasePage {
     function makeContent() {
       return (
         <div>
-          <OptionalTabbedView>This is it.</OptionalTabbedView>
+          <TabbedSubview></TabbedSubview>
         </div>
       );
     }

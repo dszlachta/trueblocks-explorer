@@ -2,9 +2,9 @@ import React from 'react'
 import BasePage from './basepage';
 import Section from 'constructicon/section';
 import Accordion from 'constructicon/accordion';
-import Label from 'constructicon/label';
-import InputSelect from 'constructicon/input-select';
-import InputDate from 'constructicon/input-date';
+//import Label from 'constructicon/label';
+//import InputSelect from 'constructicon/input-select';
+//import InputDate from 'constructicon/input-date';
 
 export default class ScrapersPage extends BasePage {
   constructor(props) {

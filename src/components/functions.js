@@ -7,36 +7,23 @@ var subTabData = {
   // Used fields: description, contents
   // Unused fields: img, color, text, disabled
   "Unpublished/Private": {
-    description: "On the unpublished/private tab we show function definitions that the user has created themselves \
-    and has either not yet published or does not wish to publish",
+    description: "On the unpublished/private tab we show function definitions that the user has created themselves and has either not yet published or does not wish to publish",
     contents: "http://calendarhost.com/tb_images/Chart2.png",
   },
   "Standards": {
-    description: "This tab shows un-editable community standards such as ERC-20 or ER-721. The  availablity \
-    of standards allows the community to understand a large class of smart contracts without the need for \
-    defining what they mean.",
+    description: "This tab shows un-editable community standards such as ERC-20 or ER-721. The  availablity of standards allows the community to understand a large class of smart contracts without the need for defining what they mean.",
     contents: "http://calendarhost.com/tb_images/Chart3.png",
   },
   "Generated": {
-    description: "ABI functions are special. Given a particular interface, you can easily generate the \
-    four-byte signature from that interface. If you separate the function name from the type interface, \
-    and do a cross-product, you can generate millions of signatures from a small collection of data. We've \
-    done that here.",
+    description: "ABI functions are special. Given a particular interface, you can easily generate the four-byte signature from that interface. If you separate the function name from the type interface, and do a cross-product, you can generate millions of signatures from a small collection of data. We've done that here.",
     contents: "http://calendarhost.com/tb_images/Chart9.png",
   },
   "Leached": {
-    description: "This section shows function definitions that the end user has downloaded from IPFS (so it's \
-    undeniable and uncensorable), but the user has not produced this data themselves. In effect, this is \
-    unverified data (although in the case of function declarations, the data is easily verified locally). \
-    This data must be snapshot based.",
+    description: "This section shows function definitions that the end user has downloaded from IPFS (so it's undeniable and uncensorable), but the user has not produced this data themselves. In effect, this is unverified data (although in the case of function declarations, the data is easily verified locally). This data must be snapshot based.",
     contents: "http://calendarhost.com/tb_images/Chart5.png",
   },
   "Seeded": {
-    description: "This subsection displays functional definitions that end users have previously shared with \
-    the community (i.e. by publishing to IPFS, for example). Smart contract function declarations are immutable \
-    and unchanging. Once they exists (actually even before they exist) they are the same for everyone. We do \
-    not, as a community want any single entity to hold this data. It's a quintessential example of a public good. \
-    This data must be snapshot based.",
+    description: "This subsection displays functional definitions that end users have previously shared with the community (i.e. by publishing to IPFS, for example). Smart contract function declarations are immutable and unchanging. Once they exists (actually even before they exist) they are the same for everyone. We do not, as a community want any single entity to hold this data. It's a quintessential example of a public good. This data must be snapshot based.",
     contents: "http://calendarhost.com/tb_images/Chart4.png",
   },
 };
