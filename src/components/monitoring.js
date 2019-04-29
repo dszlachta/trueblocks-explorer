@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import BasePage from './basepage';
 
 export default class MonitorPage extends BasePage {

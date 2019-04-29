@@ -2,95 +2,34 @@ import React, { Component } from 'react'
 import BasePage from './basepage';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import Grid from 'constructicon/grid'
+import GridColumn from 'constructicon/grid-column'
 
-export class OptionalTabbedView extends Component {
+var chartData = {
+  // Used fields: description, contents
+  // Unused fields: img, color, text, disabled
+  "Unpublished/Private": {
+    description: "A chart showing the number of blocks produced per week.",
+    contents: "http://calendarhost.com/tb_images/Chart1.png",
+  },
+  "Standards": {
+    description: "This chart shows some other shit.",
+    contents: "http://calendarhost.com/tb_images/Chart3.png",
+  },
+  "Leached": {
+    description: "This chart shows some other shit.",
+    contents: "http://calendarhost.com/tb_images/Chart3.png",
+  },
+  "Seeded": {
+    description: "This chart shows some other shit.",
+    contents: "http://calendarhost.com/tb_images/Chart4.png",
+  },
+};
+
+export class TabbedSubview extends Component {
   constructor(props) {
     super(props);
-    this.characters = {
-      "Block per Week": {
-        img: "http://calendarhost.com/tb_images/1.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "A chart showing the number of blocks produced per week.",
-        chart: "http://calendarhost.com/tb_images/Chart1.png"
-      },
-      "Chart 2": {
-        img: "http://calendarhost.com/tb_images/2.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "This chart shows some other shit.",
-        chart: "http://calendarhost.com/tb_images/Chart2.png"
-      },
-      "Chart 3": {
-        img: "http://calendarhost.com/tb_images/3.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "This chart shows some other shit.",
-        chart: "http://calendarhost.com/tb_images/Chart3.png"
-      },
-      "Chart 4": {
-        img: "http://calendarhost.com/tb_images/4.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "This chart shows some other shit.",
-        chart: "http://calendarhost.com/tb_images/Chart4.png"
-      },
-      "Chart 5": {
-        img: "http://calendarhost.com/tb_images/5.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "This chart shows some other shit.",
-        chart: "http://calendarhost.com/tb_images/Chart5.png"
-      },
-      "Chart 6": {
-        img: "http://calendarhost.com/tb_images/6.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "This chart shows some other shit.",
-        chart: "http://calendarhost.com/tb_images/Chart6.png"
-      },
-      "Chart 7": {
-        img: "http://calendarhost.com/tb_images/7.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "This chart shows some other shit.",
-        chart: "http://calendarhost.com/tb_images/Chart7.png"
-      },
-      "Chart 8": {
-        img: "http://calendarhost.com/tb_images/8.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "This chart shows some other shit.",
-        chart: "http://calendarhost.com/tb_images/Chart8.png"
-      },
-      "Chart 9": {
-        img: "http://calendarhost.com/tb_images/9.png",
-        color: "IndianRed",
-        text: "white",
-        descr: "This chart shows some other shit.",
-        chart: "http://calendarhost.com/tb_images/Chart9.png"
-      }
-    };
-
-    this.state = {
-      "Block per Week": true,
-      "Chart 2": true,
-      "Chart 3": true,
-      "Chart 4": true,
-      "Chart 5": true,
-      "Chart 6": true,
-      "Chart 7": true,
-      "Chart 8": true,
-      "Chart 9": true
-    };
-
-    this.handleCheckClicked = this.handleCheckClicked.bind(this);
-  }
-
-  handleCheckClicked(e) {
-    this.setState({
-      [e.target.name]: e.target.checked
-    });
+    this.tabData = chartData;
   }
 
   render() {
@@ -98,26 +37,34 @@ export class OptionalTabbedView extends Component {
     const tabs = [];
     const tabPanels = [];
 
-    Object.keys(this.characters).forEach(name => {
-      if (!this.state[name])
+    Object.keys(this.tabData).forEach(name => {
+      if (this.tabData[name].disabled)
         return;
 
       const {
         img,
         color: backgroundColor,
-        text: color, descr, chart
-      } = this.characters[name];
+        text: color, description, contents
+      } = this.tabData[name];
 
       tabs.push(
         <Tab style={{ backgroundColor }} className="status-charts">
-          <img src={img} alt={name} height="32" width="32" />
+          {name}
         </Tab>
       );
 
       tabPanels.push(
         <TabPanel style={{ backgroundColor, color }} className="status-charts-panel">
-          <span>{descr}</span>
-          <img src={chart} alt={name} height="800" width="1200" />
+          <Grid>
+            <GridColumn borderWidth={1} borderColor='secondary' lg={8}>
+              <img src={contents} alt={name} width="100%" height="480" />
+            </GridColumn>
+            <GridColumn lg={1}>
+            </GridColumn>
+            <GridColumn lg={3}>
+              {description}
+            </GridColumn>
+          </Grid>
         </TabPanel>
       );
     });
@@ -125,9 +72,7 @@ export class OptionalTabbedView extends Component {
     return (
       <div>
         <p>{links}</p>
-        <Tabs
-          selectedTabClassName="status-charts--selected"
-          selectedTabPanelClassName="status-charts-panel--selected" >
+        <Tabs selectedTabClassName="status-charts--selected" selectedTabPanelClassName="status-charts-panel--selected" >
           <TabList className="status-charts-list">{tabs}</TabList>
           {tabPanels}
         </Tabs>
@@ -141,7 +86,7 @@ export default class ChartsPage extends BasePage {
     function makeContent() {
       return (
         <div>
-          <OptionalTabbedView>This is it.</OptionalTabbedView>
+          <TabbedSubview></TabbedSubview>
         </div>
       );
     }

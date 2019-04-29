@@ -351,6 +351,7 @@ h3 {
   display: none;
   z-index: 2;
   position: relative;
+  border: 1px solid rgb(80, 80, 80);
 }
 .status-charts-panel--selected {
   box-shadow: 2px -1px 2px 0px rgba(0, 0, 0, 0.5);
