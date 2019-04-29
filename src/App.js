@@ -4,12 +4,12 @@ import 'react-tabs/style/react-tabs.css';
 
 import ButtonGroup from 'constructicon/button-group';
 import ButtonSocial from 'constructicon/button-social';
-import Section from 'constructicon/section';
+//import Section from 'constructicon/section';
 //import Container from 'constructicon/container';
 
 import './App.css';
 import HomePage from './components/home';
-import NamesPage from './components/names';
+import AccountsPage from './components/accounts';
 import BlocksPage from './components/blocks';
 import FunctionsPage from './components/functions';
 import ChartsPage from './components/charts';
@@ -38,7 +38,7 @@ class App extends Component {
   renderTabs() {
     return (
       <div>
-        <Tabs onSelect={index => this.state.lastTab = index} defaultIndex={this.state.lastTab}>
+        <Tabs onSelect={index => this.setState({ lastTab: index })} defaultIndex={this.state.lastTab}>
           <TabList>
             <Tab>Home</Tab >
 
@@ -68,7 +68,7 @@ class App extends Component {
           <TabPanel><ScrapersPage /></TabPanel>
 
           <TabPanel></TabPanel>
-          <TabPanel><NamesPage /></TabPanel>
+          <TabPanel><AccountsPage /></TabPanel>
           <TabPanel><BlocksPage /></TabPanel>
           <TabPanel><FunctionsPage /></TabPanel>
 
