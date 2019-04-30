@@ -9,14 +9,19 @@ import ButtonSocial from 'constructicon/button-social';
 
 import './App.css';
 import HomePage from './components/home';
+import MonitorsPage from './components/monitors';
+import ScrapersPage from './components/scrapers';
 import AccountsPage from './components/accounts';
 import BlocksPage from './components/blocks';
 import FunctionsPage from './components/functions';
+import AnalysisPage from './components/analysis';
 import ChartsPage from './components/charts';
-import MonitorPage from './components/monitoring';
-import ScrapersPage from './components/scrapers';
 import AccountingPage from './components/accounting';
 import AuditingPage from './components/auditing';
+import NotificationsPage from './components/notifications';
+import CustomPage from './components/custom';
+import PricingPage from './components/pricing';
+import HelpPage from './components/help';
 //import logo from './svg/logo.svg';
 
 class App extends Component {
@@ -25,7 +30,7 @@ class App extends Component {
     super(props);
     this.state = {
       hits: [],
-      lastTab: 7
+      lastTab: 2
     };
   }
 
@@ -60,11 +65,14 @@ class App extends Component {
             <Tab>Auditing</Tab >
             <Tab>Notifications</Tab >
             <Tab>Custom</Tab >
+            <Tab>|</Tab >
+            <Tab>Pricing</Tab >
+            <Tab>Help</Tab >
           </TabList>
           <TabPanel><HomePage /></TabPanel>
 
           <TabPanel></TabPanel>
-          <TabPanel><MonitorPage /></TabPanel>
+          <TabPanel><MonitorsPage /></TabPanel>
           <TabPanel><ScrapersPage /></TabPanel>
 
           <TabPanel></TabPanel>
@@ -73,14 +81,18 @@ class App extends Component {
           <TabPanel><FunctionsPage /></TabPanel>
 
           <TabPanel></TabPanel>
-          <TabPanel><ChartsPage /></TabPanel>
+          <TabPanel><AnalysisPage /></TabPanel>
           <TabPanel><ChartsPage /></TabPanel>
 
           <TabPanel></TabPanel>
           <TabPanel><AccountingPage /></TabPanel>
           <TabPanel><AuditingPage /></TabPanel>
-          <TabPanel><AccountingPage /></TabPanel>
-          <TabPanel><AuditingPage /></TabPanel>
+          <TabPanel><NotificationsPage /></TabPanel>
+          <TabPanel><CustomPage /></TabPanel>
+
+          <TabPanel></TabPanel>
+          <TabPanel><PricingPage /></TabPanel>
+          <TabPanel><HelpPage /></TabPanel>
         </Tabs>
       </div>
     );

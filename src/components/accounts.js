@@ -26,11 +26,11 @@ export default class AccountsPage extends BasePage {
   }
 
   componentDidMount() {
-      fetch('http://localhost:8080/accounts?search1=0x12', { mode: 'cors' })
+      fetch(`${process.env.REACT_APP_API_URL}/accounts?search1=0x12`, { mode: 'cors' })
       .then(response => response.json())
       .then(data => this.setState({ data: data }));
   }
-  
+
   render() {
     this.makeContent = () => {
       return (

@@ -3,9 +3,9 @@ import { BasePage, Grid, GridColumn } from './common'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
+// Used fields: description, contents
+// Unused fields: img, color, text, disabled
 var subTabData = {
-  // Used fields: description, contents
-  // Unused fields: img, color, text, disabled
   "Unpublished/Private": {
     description: "On the unpublished/private tab we show function definitions that the user has created themselves and has either not yet published or does not wish to publish",
     contents: "http://calendarhost.com/tb_images/Chart2.png",
@@ -38,7 +38,7 @@ export class TabbedSubview extends Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:8080/functions', { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/functions`, { mode: 'cors' })
       .then(response => response.json())
       .then(data => {
 //        this.setState({ data: data })

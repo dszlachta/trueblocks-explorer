@@ -13,25 +13,31 @@ export default class BasePage extends Component {
     render() {
         return (
             <div>
-                <Grid>
-                    <GridColumn xs={1} lg={1}>
-                        <Section background='primary' foreground='light'>
-                            <h3>{this.props.lSection}</h3>
-                            <div><p></p></div>
-                            <Button background='tertiary' size={-1} onClick={this.clickHandler.bind(this)}>
-                                {this.props.lButton}
-                            </Button>
+                <Grid styles={{ backgroundColor: 'lightyellow', color: 'brown', border: '1px dotted black' }}>
+                    <GridColumn xs={1} lg={1} styles={{ padding: '1px' }} >
+                        <Section>
+                            <h2>{this.props.lSection}</h2>
                         </Section>
                     </GridColumn>
                     <GridColumn xs={1} lg={9}>
-                        <Section background='shade'>
+                    <br/>
+                        <Section styles={{ border: '1px dotted black' }} background='shade'>
                             {this.props.mSection}
                         </Section>
                     </GridColumn>
                     <GridColumn xs={1} lg={2}>
-                        <Section background='secondary'>
+                        <Section>
                             {this.props.rSection}
                         </Section>
+                    </GridColumn>
+                    <GridColumn xs={1} lg={8} styles={{ padding: 0, margin: 0 }}>
+                    </GridColumn>
+                    <GridColumn xs={1} lg={2} styles={{ padding: 0, margin: 0 }}>
+                        <Section>
+                            <h3>{this.props.lSection} Module</h3>
+                        </Section>
+                    </GridColumn>
+                    <GridColumn xs={1} lg={2} styles={{ padding: 0, margin: 0 }}>
                     </GridColumn>
                 </Grid>
             </div>

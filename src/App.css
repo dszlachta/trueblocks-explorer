@@ -1,7 +1,7 @@
 .App-header {
-  background-color: #222;
+  background-color: rgba(85, 166, 247, 0.639);
   padding: 20px;
-  color: white;
+  color: rgb(4, 4, 80);
   text-align: left;
   vertical-align: middle;
   font-size: x-large;
@@ -39,13 +39,14 @@
   display: inline-block;
   height: 30px;
   vertical-align: middle;
+  border: 1px dashed black;
 }
 
 .header-appname {
   position: relative;
   left: 50px;
   top: -28px;
-  color: rgb(79, 71, 244);
+  color: rgb(7, 2, 89);
   vertical-align: middle;
 }
 
@@ -379,4 +380,3 @@ h3 {
     font-size: 1.4em;
   }
 }
-

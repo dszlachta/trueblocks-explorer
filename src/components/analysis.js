@@ -5,31 +5,31 @@ import 'react-tabs/style/react-tabs.css';
 import Grid from 'constructicon/grid'
 import GridColumn from 'constructicon/grid-column'
 
-var chartData = {
+var anaysisData = {
   // Used fields: description, contents
   // Unused fields: img, color, text, disabled
   "Unpublished/Private": {
     description: "A chart showing the number of blocks produced per week.",
-    contents: "http://calendarhost.com/tb_images/Chart5.png",
+    contents: "http://calendarhost.com/tb_images/Chart1.png",
   },
   "Standards": {
     description: "This chart shows some other shit.",
-    contents: "http://calendarhost.com/tb_images/Chart6.png",
+    contents: "http://calendarhost.com/tb_images/Chart2.png",
   },
   "Leached": {
     description: "This chart shows some other shit.",
-    contents: "http://calendarhost.com/tb_images/Chart7.png",
+    contents: "http://calendarhost.com/tb_images/Chart3.png",
   },
   "Seeded": {
     description: "This chart shows some other shit.",
-    contents: "http://calendarhost.com/tb_images/Chart8.png",
+    contents: "http://calendarhost.com/tb_images/Chart4.png",
   },
 };
 
 export class TabbedSubview extends Component {
   constructor(props) {
     super(props);
-    this.tabData = chartData;
+    this.tabData = anaysisData;
   }
 
   render() {
@@ -81,7 +81,7 @@ export class TabbedSubview extends Component {
   }
 }
 
-export default class ChartsPage extends BasePage {
+export default class AnalysisPage extends BasePage {
   render() {
     function makeContent() {
       return (

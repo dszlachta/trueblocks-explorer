@@ -18,27 +18,37 @@ export default class ScrapersPage extends BasePage {
     function makeContent() {
       return (
         <div>
-          <Section><b>blockScrape:</b>
-            <Section background='secondary'>
-              <Accordion title='Seed settings' toggled>
-                <Section background='primary'>
+          <table width="100%" border="1">
+            <tr>
+              <td width="50%" valign="top" align="middle">
+                <img src="http://calendarhost.com/tb_images/BlockScrape.png" alt="Debugger" height="480px" />
+                <Section><b>blockScrape:</b><br />
+                  <Section background='secondary'>
+                    <Accordion title='Seed settings'>
+                      <Section background='primary'>
+                      </Section>
+                    </Accordion>
+                    <Accordion title='Scrape settings'>
+                      <Section background='primary'>This is the blockScrape scrape section</Section>
+                    </Accordion>
+                  </Section>
                 </Section>
-              </Accordion>
-              <Accordion title='Scrape settings'>
-                <Section background='primary'>This is the blockScrape scrape section</Section>
-              </Accordion>
-            </Section>
-          </Section>
-          <Section><b>acctScrape:</b>
-            <Section background='secondary'>
-              <Accordion title='Daemon settings'>
-                <Section background='primary'>This is the acctScrape daemon section</Section>
-              </Accordion>
-              <Accordion title='Scrape settings'>
-                <Section background='primary'>This is the acctScrape scrape section</Section>
-              </Accordion>
-            </Section>
-          </Section>
+              </td>
+              <td width="50%" valign="top" align="middle">
+                <img src="http://calendarhost.com/tb_images/AcctScrape.png" alt="Debugger" height="480px" width="100%" />
+                <Section><b>acctScrape:</b>
+                  <Section background='secondary'>
+                    <Accordion title='Daemon settings'>
+                      <Section background='primary'>This is the acctScrape daemon section</Section>
+                    </Accordion>
+                    <Accordion title='Scrape settings'>
+                      <Section background='primary'>This is the acctScrape scrape section</Section>
+                    </Accordion>
+                  </Section>
+                </Section>
+              </td>
+            </tr>
+          </table>
         </div>
       );
     }

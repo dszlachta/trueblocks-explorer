@@ -7,14 +7,9 @@ export default class HomePage extends BasePage {
   render() {
     function makeContent() {
       return (
-        <Container background='red'>
-          <Section background='primary' foreground='light' align='center'>
-            <div>
-              <h2>TrueBlocks by Geat Hill Corporation is the world's first<br />fully-decentralized data extraction tool for the Ethereum blockchain.</h2><br/>
-            <div><img alt='' src="https://quickblocks.io/wp-content/uploads/2017/10/logo-white-website-95px.png" /></div>
-            </div>
-          </Section>
-        </Container>
+        <div>
+          <img src="http://calendarhost.com/tb_images/Home.png" alt="Debugger" width="100%" />
+        </div>
       );
     }
 
