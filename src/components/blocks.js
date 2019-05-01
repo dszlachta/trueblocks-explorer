@@ -4,10 +4,10 @@ import Section from 'constructicon/section';
 
 export class BlockItem extends Section {
   render() {
-    var link = "http://etherscan.io/block/" + this.props.hash;
+    var link = this.props.blockNumber;
     return (
       <div key={this.props.name}>
-        <div><pre>{this.props.date} ({this.props.timestamp}) <b><big>{this.props.name}</big></b> (<a rel="noopener noreferrer" target="_blank" href={link}>{this.props.blockNumber}</a>)<br/>
+        <div><pre>{this.props.date} ({this.props.timestamp}) <b><big>{this.props.name}</big></b> (<a href={link}>{this.props.blockNumber}</a>)<br/>
           <small><i>{this.props.hash}</i></small>
         </pre></div>
         <hr />
@@ -20,12 +20,13 @@ export default class BlocksPage extends BasePage {
   constructor(props) {
     super(props);
     this.state = {
-      data: []
+      data: [],
+      prevBlock: 123
     };
   }
 
   componentDidMount() {
-    fetch(`${process.env.REACT_APP_API_URL}/blocks`, { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/blocks/{this.state.prevBlock}}`, { mode: 'cors' })
       .then(response => response.json())
       .then(data => this.setState({ data: data }));
   }
