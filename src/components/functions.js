@@ -114,9 +114,9 @@ export default class FunctionsPage extends BasePage {
       );
     }
 
-    var left = "Functions";
+    var left = "Functions Module";
     var middle = makeContent();
-    var right = "This component known functions and ABIs.";
+    var right = "This component shows known and shared functions and ABIs.";
     var button = "Push";
     return (
       <BasePage

@@ -7,14 +7,13 @@ export default class CustomPage extends BasePage {
     function makeContent() {
       return (
         <Section>
-          <h2>Custom Built Modules ($$$)</h2>
           <Section styles={{ backgroundColor: 'rebeccapurple', color: 'white' }}>
             The accounting module, like the audit module, is an optional component. Users must purchase a shrink-wrapped
             software license (a one-time purchase). Technical support, hosting services, customization consulting, and
             other services are available on per-incident, monthly, or annual basis.
           </Section>
           <ul>
-            <h4>Permissionless Accounting</h4>
+            <h4>Auto Generated Code from ABI</h4>
             <ul>
               <li>Because TrueBlocks is connected directly to the blockchain node, it is impossible to stop the user from gaining access to any data they want.</li>
               <li>Permissionless accounting promotes engagement. Users are more likely to join a project if they think it's fair.
@@ -23,7 +22,7 @@ export default class CustomPage extends BasePage {
               <li>Market forces enabled by third-party for-pay blockchain data providers will, over time, price the less fortunate out of the market.</li>
               <li>There is no danger of being captured by a third-party data provider.</li>
             </ul>
-            <h4>Per-block Profit and Loss</h4>
+            <h4>Operate with Other Chains</h4>
             <ul>
               <li><b>Assumption:</b> In the future, people will run entire organizations using smart contracts.</li>
               <li>At every block, the business owner (or anyone else) can do a full reconcilation against the shared global ledger.</li>
@@ -32,7 +31,7 @@ export default class CustomPage extends BasePage {
               <li>The business models of the future should anticipate instantaneous, permissionless, 18-decimal-place accounting.</li>
               <li>Think about departmental P&L statements every 15 seconds for your entire organization.</li>
             </ul>
-            <h4>Instananeous Balance Sheets</h4>
+            <h4>Private / Poladot Chain Explorers</h4>
             <ul>
               <li><b>Assumption:</b> In the future, customers of a company or non-profit will demand better insight into the financial health of the organization.</li>
               <li>Given permissionless accounting, organizations will not be able to hide dirty dealing / shady practices from its customers (if customers become aware of the shift in the power dynamic).</li>
@@ -45,7 +44,7 @@ export default class CustomPage extends BasePage {
       );
     }
 
-    var left = "Custom";
+    var left = "Custom Modules ($$$)";
     var middle = makeContent();
     var right = "The accounting component is a for-pay portion of TrueBlocks. Please contact us for more information.";
     var button = "Push";

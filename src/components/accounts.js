@@ -48,7 +48,7 @@ export default class AccountsPage extends BasePage {
       ));
     }
 
-    var left = "Accounts";
+    var left = "Accounts Module";
     var middle = this.makeContent();
     var right = "The accounts component of TrueBlocks allows you to assign names to Ethereum addresses. From then on, anywhere that address appears in a TrueBlocks monitor, the name appears beside it. This makes understanding what's going on easier. You may also select names from ENS if you wish. If you choose to share the names you create, others will benefit from that information.";
     var button = "Push";

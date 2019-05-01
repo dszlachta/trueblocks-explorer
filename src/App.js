@@ -30,7 +30,7 @@ class App extends Component {
     super(props);
     this.state = {
       hits: [],
-      lastTab: 0
+      lastTab: 7
     };
   }
 

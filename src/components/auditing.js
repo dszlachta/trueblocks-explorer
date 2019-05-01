@@ -7,7 +7,6 @@ export default class AuditPage extends BasePage {
     function makeContent() {
       return (
         <Section>
-          <h2>Auditing Module ($$$)</h2>
           <Section styles={{ backgroundColor: 'forestgreen', color: 'white' }}>
             The auditing module, like the accounting module, is an optional component. Users must purchase a shrink-wrapped
             software license (a one-time purchase). Technical support, hosting services, customization consulting, and
@@ -32,7 +31,7 @@ export default class AuditPage extends BasePage {
               <li>The business models of the future should anticipate instantaneous, permissionless, 18-decimal-place accounting.</li>
               <li>Think about departmental P&L statements every 15 seconds for your entire organization.</li>
             </ul>
-            <h4>Cross-Organization Data Sharing</h4>
+            <h4>Cross-Organizational Auditing</h4>
             <ul>
               <li><b>Assumption:</b> In the future, customers of a company or non-profit will demand better insight into the financial health of the organization.</li>
               <li>Given permissionless accounting, organizations will not be able to hide dirty dealing / shady practices from its customers (if customers become aware of the shift in the power dynamic).</li>
@@ -45,7 +44,7 @@ export default class AuditPage extends BasePage {
       );
     }
 
-    var left = "Accounting";
+    var left = "Auditing Module ($$$)";
     var middle = makeContent();
     var right = "The accounting component is a for-pay portion of TrueBlocks. Please contact us for more information.";
     var button = "Push";

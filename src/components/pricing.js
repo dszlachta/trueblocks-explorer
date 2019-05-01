@@ -7,7 +7,6 @@ export default class HelpPage extends BasePage {
     function makeContent() {
       return (
         <Section>
-          <h2>Pricing ($$$)</h2>
           <Section styles={{ backgroundColor: 'purple', color: 'white' }}>
             For-pay modules would be shrink-wrapped software with annual paid support/upgrade options. We prefer this method
             (due to it's natural affinity with decentralization). We recognize that clients will want an easier-to-use hosted solution, and 
@@ -56,7 +55,7 @@ export default class HelpPage extends BasePage {
       );
     }
 
-    var left = "Help";
+    var left = "Product Options / Pricing";
     var middle = makeContent();
     var right = "The accounting component is a for-pay portion of TrueBlocks. Please contact us for more information.";
     var button = "Push";

@@ -7,7 +7,6 @@ export default class HelpPage extends BasePage {
     function makeContent() {
       return (
         <Section>
-          <h2>Help</h2>
           <Section styles={{ backgroundColor: 'rebeccapurple', color: 'white' }}>
             The accounting module, like the audit module, is an optional component. Users must purchase a shrink-wrapped
             software license (a one-time purchase). Technical support, hosting services, customization consulting, and
@@ -45,7 +44,7 @@ export default class HelpPage extends BasePage {
       );
     }
 
-    var left = "Help";
+    var left = "Help / Support";
     var middle = makeContent();
     var right = "The accounting component is a for-pay portion of TrueBlocks. Please contact us for more information.";
     var button = "Push";

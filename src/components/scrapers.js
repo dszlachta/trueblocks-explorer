@@ -25,8 +25,7 @@ export default class ScrapersPage extends BasePage {
                 <Section><b>blockScrape:</b><br />
                   <Section background='secondary'>
                     <Accordion title='Seed settings'>
-                      <Section background='primary'>
-                      </Section>
+                    <Section background='primary'>This is the blockScrape section</Section>
                     </Accordion>
                     <Accordion title='Scrape settings'>
                       <Section background='primary'>This is the blockScrape scrape section</Section>
@@ -52,7 +51,7 @@ export default class ScrapersPage extends BasePage {
         </div>
       );
     }
-    var left = "Scrapers";
+    var left = "Scrapers Module";
     var middle = makeContent();
     var right =
       "Scrapers interact with the blockchain to prepare data for TrueBlocks to use. You may control the behaviour of the scrapers in this section. There are two scrapers: blockScrape and acctScrape. Click the help icon next to the scraper for more information. One these screens, you are given an option to share the results of your scraper's work with others. If you do so, others will benefit from your scraper's work.";
