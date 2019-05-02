@@ -26,7 +26,7 @@ export default class BlocksPage extends BasePage {
   }
 
   componentDidMount() {
-    fetch(`${process.env.REACT_APP_API_URL}/blocks/{this.state.prevBlock}}`, { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/blocks/${this.state.prevBlock}`, { mode: 'cors' })
       .then(response => response.json())
       .then(data => this.setState({ data: data }));
   }
