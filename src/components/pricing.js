@@ -25,6 +25,18 @@ export default class HelpPage extends BasePage {
               <li>Operating cost, unlike web-based models, are low due to the fact that the data is pushed out to the end-user infrastructure.</li>
               <li>Despite the lower cost, the connectivity of the users remains the same.</li>
             </ul>
+            <h4>Freemium</h4>
+            <ul>
+              <li>Basic mode allows for three groups of three accounts plus an extra one.</li>
+              <li>Charge the client for additional address support in packages of 10.</li>
+              <li>Provide a few in-depth investigation of some high visibility community contracts for free.</li>
+              <li>Sell pre-packaged investigations</li>
+            </ul>
+            <h4>White Lable for hardware manufacturers</h4>
+            <ul>
+              <li>Audit nodes.</li>
+              <li>White label for hardware manufacturs.</li>
+            </ul>
             <h4>Consulting / Customization</h4>
             <ul>
               <li><b>Assumption:</b> In the future, people will run entire organizations using smart contracts.</li>
