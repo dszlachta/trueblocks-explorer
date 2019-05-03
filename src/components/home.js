@@ -1,7 +1,7 @@
 import React from 'react'
 import BasePage from './basepage';
-import Section from 'constructicon/section'
-import Container from 'constructicon/container'
+//import Section from 'constructicon/section'
+//import Container from 'constructicon/container'
 
 export default class HomePage extends BasePage {
   render() {

@@ -10,6 +10,8 @@
     "react-addons": "^0.9.1-deprecated",
     "react-addons-update": "^15.3.0",
     "react-dom": "^16.8.6",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
     "react-scripts": "^3.0.0",
     "react-tabs": "^3.0.0",
     "react-test-renderer": "16.0.0"

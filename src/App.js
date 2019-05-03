@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import ButtonGroup from 'constructicon/button-group';
-import ButtonSocial from 'constructicon/button-social';
+import ButtonShare from 'constructicon/button-share';
 //import Section from 'constructicon/section';
 //import Container from 'constructicon/container';
 
@@ -30,7 +31,7 @@ class App extends Component {
     super(props);
     this.state = {
       hits: [],
-      lastTab: 7
+      lastTab: 6
     };
   }
 
@@ -43,6 +44,7 @@ class App extends Component {
   renderTabs() {
     return (
       <div>
+        <Router>
         <Tabs onSelect={index => this.setState({ lastTab: index })} defaultIndex={this.state.lastTab}>
           <TabList>
             <Tab>Home</Tab >
@@ -94,6 +96,8 @@ class App extends Component {
           <TabPanel><PricingPage /></TabPanel>
           <TabPanel><HelpPage /></TabPanel>
         </Tabs>
+        <div><Route location={"/blocks/21"} component="BlocksPage"></Route></div>
+        </Router>
       </div>
     );
   }
@@ -106,8 +110,8 @@ class App extends Component {
           <div className='header-appname'>TrueBlocks<small>&reg;</small></div>
           <div className='header-social'>
             <ButtonGroup>
-              <ButtonSocial size={-4} share type='facebook' />
-              <ButtonSocial size={-4} share type='twitter' />
+              <ButtonShare size={-4} share type='facebook' />
+              <ButtonShare size={-4} share type='twitter' />
             </ButtonGroup>
           </div>
         </div>

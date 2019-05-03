@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Grid from 'constructicon/grid';
 import GridColumn from 'constructicon/grid-column';
 import Section from 'constructicon/section';
-import Button from 'constructicon/button'
+//import Button from 'constructicon/button'
 
 export default class BasePage extends Component {
 
