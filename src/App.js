@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
-import ButtonGroup from 'constructicon/button-group';
-import ButtonShare from 'constructicon/button-share';
+// import ButtonGroup from 'constructicon/button-group';
+// import ButtonShare from 'constructicon/button-share';
 //import Section from 'constructicon/section';
 //import Container from 'constructicon/container';
 
@@ -45,58 +45,45 @@ class App extends Component {
     return (
       <div>
         <Router>
-        <Tabs onSelect={index => this.setState({ lastTab: index })} defaultIndex={this.state.lastTab}>
-          <TabList>
-            <Tab>Home</Tab >
+            <Link to="/">Home</Link>
+            |
+            <Link to="/monitors">Monitors</Link>
+            <Link to="/scrapers">Scrapers</Link>
 
-            <Tab>|</Tab >
-            <Tab>Monitors</Tab >
-            <Tab>Scrapers</Tab>
+            |
+            <Link to="/accounts">Accounts</Link>
+            <Link to="/blocks">Blocks</Link>
+            <Link to="/functions">Functions</Link>
 
-            <Tab>|</Tab >
-            <Tab>Accounts</Tab>
-            <Tab>Blocks</Tab>
-            <Tab>Functions</Tab>
+            |
+            <Link to="/analysis">Analysis</Link>
+            <Link to="/charts">Charts</Link>
 
-            <Tab>|</Tab >
-            <Tab>Analysis</Tab>
-            <Tab>Charts</Tab>
-
-            <Tab>|</Tab >
-            <Tab>Accounting</Tab >
-            <Tab>Auditing</Tab >
-            <Tab>Notifications</Tab >
-            <Tab>Custom</Tab >
-            <Tab>|</Tab >
-            <Tab>Pricing</Tab >
-            <Tab>Help</Tab >
-          </TabList>
-          <TabPanel><HomePage /></TabPanel>
-
-          <TabPanel></TabPanel>
-          <TabPanel><MonitorsPage /></TabPanel>
-          <TabPanel><ScrapersPage /></TabPanel>
-
-          <TabPanel></TabPanel>
-          <TabPanel><AccountsPage /></TabPanel>
-          <TabPanel><BlocksPage /></TabPanel>
-          <TabPanel><FunctionsPage /></TabPanel>
-
-          <TabPanel></TabPanel>
-          <TabPanel><AnalysisPage /></TabPanel>
-          <TabPanel><ChartsPage /></TabPanel>
-
-          <TabPanel></TabPanel>
-          <TabPanel><AccountingPage /></TabPanel>
-          <TabPanel><AuditingPage /></TabPanel>
-          <TabPanel><NotificationsPage /></TabPanel>
-          <TabPanel><CustomPage /></TabPanel>
-
-          <TabPanel></TabPanel>
-          <TabPanel><PricingPage /></TabPanel>
-          <TabPanel><HelpPage /></TabPanel>
-        </Tabs>
-        <div><Route location={"/blocks/21"} component="BlocksPage"></Route></div>
+            |
+            <Link to="/accounting">Accounting</Link>
+            <Link to="/auditing">Auditing</Link>
+            <Link to="/notifications">Notifications</Link>
+            <Link to="/custom">Custom</Link>
+            |
+            <Link to="/pricing">Pricing</Link>
+            <Link to="/help">Help</Link>
+          
+        <div>
+          <Route path="/" exact component={HomePage}/>
+          <Route path="/monitors" component={MonitorsPage}/>
+          <Route path="/scrapers" component={ScrapersPage}/>
+          <Route path="/accounts" component={AccountsPage}/>
+          <Route path="/blocks/:block?" component={BlocksPage}/>
+          <Route path="/functions" component={FunctionsPage}/>
+          <Route path="/analysis" component={AnalysisPage}/>
+          <Route path="/charts" component={ChartsPage}/>
+          <Route path="/accounting" component={AccountingPage}/>
+          <Route path="/auditing" component={AuditingPage}/>
+          <Route path="/notifications" component={NotificationsPage}/>
+          <Route path="/custom" component={CustomPage}/>
+          <Route path="/pricing" component={PricingPage}/>
+          <Route path="/help" component={HelpPage}/>
+          </div>
         </Router>
       </div>
     );
@@ -109,10 +96,10 @@ class App extends Component {
           <div className='header-logo'><img alt='' src="https://quickblocks.io/wp-content/uploads/2017/10/logo-white-website-95px.png" width="25px"/></div>
           <div className='header-appname'>TrueBlocks<small>&reg;</small></div>
           <div className='header-social'>
-            <ButtonGroup>
+            {/* <ButtonGroup>
               <ButtonShare size={-4} share type='facebook' />
               <ButtonShare size={-4} share type='twitter' />
-            </ButtonGroup>
+            </ButtonGroup> */}
           </div>
         </div>
         {this.renderTabs()}

@@ -75,9 +75,11 @@ export default class BlocksPage extends BasePage {
     };
   }
 
-  componentDidMount() {
-    console.log("didMount");
-    fetch(`${process.env.REACT_APP_API_URL}/blocks/kitties`, { mode: 'cors' })
+  fetchBlock = () => {
+    let blockNum = this.props.match.params.block;
+    if (blockNum == undefined) return;
+    console.log(this.props.match);
+    fetch(`${process.env.REACT_APP_API_URL}/blocks/${blockNum}`, { mode: 'cors' })
       .then(response => response.json())
       .then(result => {
         console.log("data: ");
@@ -88,8 +90,21 @@ export default class BlocksPage extends BasePage {
         console.log("data: ");
         console.log(this.state.data);
       }
-      );
+      ).catch((e) => {
+        console.log(e)
+      });
   }
+
+  componentDidMount() {
+    console.log("didMount");
+    this.fetchBlock();
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.match.params.block !== prevProps.match.params.block) this.fetchBlock(); 
+  }
+
+  
 
   render() {
     console.log("render");
