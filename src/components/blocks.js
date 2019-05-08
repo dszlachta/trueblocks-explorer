@@ -77,7 +77,9 @@ export default class BlocksPage extends BasePage {
 
   componentDidMount() {
     console.log("didMount");
-    fetch(`${process.env.REACT_APP_API_URL}/blocks/kitties`, { mode: 'cors' })
+    let blockNum = this.props.match.params.block;
+    if (blockNum == undefined) return;
+    fetch(`${process.env.REACT_APP_API_URL}/blocks/${blockNum}`, { mode: 'cors' })
       .then(response => response.json())
       .then(result => {
         console.log("data: ");
@@ -88,7 +90,9 @@ export default class BlocksPage extends BasePage {
         console.log("data: ");
         console.log(this.state.data);
       }
-      );
+      ).catch((e) => {
+        console.log(e)
+      });
   }
 
   render() {
