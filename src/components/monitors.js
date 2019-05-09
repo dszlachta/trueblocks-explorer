@@ -12,11 +12,9 @@ export default class MonitorsPage extends BasePage {
     var left = "Monitoring Module";
     var middle = makeContent();
     var right = "The monitoring component runs 'chifra daemon' which continually scrapes your accounts of interest.";
-    var button = "Push";
     return (
       <BasePage
         lSection={left}
-        lButton={button}
         mSection={middle}
         rSection={right}
       />

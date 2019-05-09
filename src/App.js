@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
+//import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-
-// import ButtonGroup from 'constructicon/button-group';
-// import ButtonShare from 'constructicon/button-share';
-//import Section from 'constructicon/section';
-//import Container from 'constructicon/container';
 
 import './App.css';
 import HomePage from './components/home';
@@ -14,6 +9,7 @@ import MonitorsPage from './components/monitors';
 import ScrapersPage from './components/scrapers';
 import AccountsPage from './components/accounts';
 import BlocksPage from './components/blocks';
+import TransPage from './components/transactions';
 import FunctionsPage from './components/functions';
 import AnalysisPage from './components/analysis';
 import ChartsPage from './components/charts';
@@ -45,44 +41,51 @@ class App extends Component {
     return (
       <div>
         <Router>
-            <Link to="/">Home</Link>
-            |
-            <Link to="/monitors">Monitors</Link>
-            <Link to="/scrapers">Scrapers</Link>
+          <Link className="react-tabs__tab" to="/">Home</Link>
+          |
+          <Link className="react-tabs__tab" to="/monitors">Monitors</Link>
+          <Link className="react-tabs__tab" to="/scrapers">Scrapers</Link>
 
-            |
-            <Link to="/accounts">Accounts</Link>
-            <Link to="/blocks">Blocks</Link>
-            <Link to="/functions">Functions</Link>
+          |
+          <Link className="react-tabs__tab" to="/accounts">Accounts</Link>
+          <Link className="react-tabs__tab" to="/blocks">Blocks</Link>
+          <Link className="react-tabs__tab" to="/transactions">Transactions</Link>
+          <Link className="react-tabs__tab" to="/functions">Functions</Link>
 
-            |
-            <Link to="/analysis">Analysis</Link>
-            <Link to="/charts">Charts</Link>
+          |
+          <Link className="react-tabs__tab" to="/analysis">Analysis</Link>
+          <Link className="react-tabs__tab" to="/charts">Charts</Link>
 
-            |
-            <Link to="/accounting">Accounting</Link>
-            <Link to="/auditing">Auditing</Link>
-            <Link to="/notifications">Notifications</Link>
-            <Link to="/custom">Custom</Link>
-            |
-            <Link to="/pricing">Pricing</Link>
-            <Link to="/help">Help</Link>
-          
-        <div>
-          <Route path="/" exact component={HomePage}/>
-          <Route path="/monitors" component={MonitorsPage}/>
-          <Route path="/scrapers" component={ScrapersPage}/>
-          <Route path="/accounts" component={AccountsPage}/>
-          <Route path="/blocks/:block?" component={BlocksPage}/>
-          <Route path="/functions" component={FunctionsPage}/>
-          <Route path="/analysis" component={AnalysisPage}/>
-          <Route path="/charts" component={ChartsPage}/>
-          <Route path="/accounting" component={AccountingPage}/>
-          <Route path="/auditing" component={AuditingPage}/>
-          <Route path="/notifications" component={NotificationsPage}/>
-          <Route path="/custom" component={CustomPage}/>
-          <Route path="/pricing" component={PricingPage}/>
-          <Route path="/help" component={HelpPage}/>
+          |
+          <Link className="react-tabs__tab" to="/accounting">Accounting</Link>
+          <Link className="react-tabs__tab" to="/auditing">Auditing</Link>
+          <Link className="react-tabs__tab" to="/notifications">Notifications</Link>
+          <Link className="react-tabs__tab" to="/custom">Custom</Link>
+
+          |
+          <Link className="react-tabs__tab" to="/pricing">Pricing</Link>
+          <Link className="react-tabs__tab" to="/help">Help</Link>
+
+          <div>
+            <Route path="/" exact component={HomePage}/>
+            <Route path="/monitors" component={MonitorsPage}/>
+            <Route path="/scrapers" component={ScrapersPage}/>
+
+            <Route path="/accounts/:account?" component={AccountsPage}/>
+            <Route path="/blocks/:block?" component={BlocksPage} />
+            <Route path="/transactions/:trans?" component={TransPage} />
+            <Route path="/functions/:func?" component={FunctionsPage}/>
+
+            <Route path="/analysis" component={AnalysisPage}/>
+            <Route path="/charts" component={ChartsPage}/>
+
+            <Route path="/accounting" component={AccountingPage}/>
+            <Route path="/auditing" component={AuditingPage}/>
+            <Route path="/notifications" component={NotificationsPage}/>
+            <Route path="/custom" component={CustomPage}/>
+
+            <Route path="/pricing" component={PricingPage}/>
+            <Route path="/help" component={HelpPage}/>
           </div>
         </Router>
       </div>

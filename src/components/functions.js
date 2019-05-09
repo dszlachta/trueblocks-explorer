@@ -117,11 +117,9 @@ export default class FunctionsPage extends BasePage {
     var left = "Functions Module";
     var middle = makeContent();
     var right = "This component shows known and shared functions and ABIs.";
-    var button = "Push";
     return (
       <BasePage
         lSection={left}
-        lButton={button}
         mSection={middle}
         rSection={right}
       />
