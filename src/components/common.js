@@ -7,17 +7,16 @@ export { default as GridColumn } from 'constructicon/grid-column'
 
 export class Row extends Component {
     render() {
-        var isAddr = (this.props.type == "address");
+        var isAddr = (this.props.type === "address");
         function l2(props) {
             if (!isAddr)
                 return "";
-            var addr = props.value;
             return (
                 <td class="logo_col" align="center">
-                    <a href="/accounting/"><img width="25" src="/accounting.png" /></a>&nbsp;&nbsp;
-                    <a href="/auditing/"><img width="25" src="/auditing.png" /></a>&nbsp;&nbsp;
-                    <a href="/notifications/"><img width="25" src="/monitoring.png" /></a>&nbsp;&nbsp;
-                    <a href="/accounts/"><img width="25" src="/name.png" /></a>
+                    <a href="/accounts/"><img alt="" width="25" src="/name.png" /></a>
+                    <a href="/accounting/"><img alt="" width="25" src="/accounting.png" /></a>&nbsp;&nbsp;
+                    <a href="/auditing/"><img alt="" width="25" src="/auditing.png" /></a>&nbsp;&nbsp;
+                    <a href="/notifications/"><img alt="" width="25" src="/monitoring.png" /></a>&nbsp;&nbsp;
                 </td>
             )
         }
@@ -25,6 +24,18 @@ export class Row extends Component {
             return (<div class={props.bold ? "data_boldHead" : "data_head"}>{props.name}</div>)
         }
         function dd(props) {
+            if (props.value === undefined)
+                return props.value;
+            if (props.type === "date:lights") {
+                var ret = <div class="data_value">{props.value} seconds</div>
+                if (props.value > 300)
+                    ret = <div class="data_value"><img alt="" width="35" src="/greenlight.png" /> {ret}</div>;
+                else if (props.value > 30)
+                    ret = <div class="data_value"><img alt="" width="35" src="/yellowlight.png" /> {ret}</div>;
+                else
+                    ret = <div class="data_value"><img alt="" width="35" src="/redlight.png" /> {ret}</div>;
+                return ret;
+            }
             var string = props.value.toString();
             var length = 80;
             var ret = string.length > length ? string.substring(0, length - 3) + "..." : string;

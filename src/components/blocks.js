@@ -4,7 +4,6 @@ import { BasePage, Row } from './common';
 export class BlockDisplay extends Component {
   render() {
     let blk = this.props.block;
-    let cur  = blk.blockNumber;
     let prev = blk.blockNumber + (".prev");  // bounds
     let next = blk.blockNumber + (".next");  // bounds
     return (
@@ -14,6 +13,7 @@ export class BlockDisplay extends Component {
           <Row class="row_type_1" name="date" type="date:date" value={blk.date}></Row>
           <Row class="row_type_1" name="timestamp" type="date:ts" value={blk.timestamp}></Row>
           <Row class="row_type_1" name="nTransactions" type="amount:num" value={blk.transactions.length}></Row>
+          <Row class="row_type_1" name="age" type="date:lights" value={blk.age}></Row>
           <div>&nbsp;</div>
           <Row class="row_type_2" name="gasLimit" type="amount:wei" value={blk.gasLimit}></Row>
           <Row class="row_type_2" name="gasUsed" type="amount:wei" value={blk.gasUsed}></Row>
@@ -53,7 +53,7 @@ export default class BlocksPage extends BasePage {
 
   fetchBlock = () => {
     let blockNum = this.props.match.params.block;
-    if (blockNum == undefined)
+    if (blockNum === undefined)
       blockNum = "latest";
     console.log(this.props.match);
     fetch(`${process.env.REACT_APP_API_URL}/blocks/${blockNum}`, { mode: 'cors' })
