@@ -10,25 +10,25 @@ export class BlockDisplay extends Component {
       <div key={this.props.name}>
         <table width="100%"><tbody>
           <Row name="blockNumber" type="amount:blk" value={blk.blockNumber} bold={true}></Row>
-          <Row class="row_type_1" name="date" type="date:date" value={blk.date}></Row>
-          <Row class="row_type_1" name="timestamp" type="date:ts" value={blk.timestamp}></Row>
-          <Row class="row_type_1" name="nTransactions" type="amount:num" value={blk.transactions.length}></Row>
-          <Row class="row_type_1" name="age" type="date:lights" value={blk.age}></Row>
-          <div>&nbsp;</div>
-          <Row class="row_type_2" name="gasLimit" type="amount:wei" value={blk.gasLimit}></Row>
-          <Row class="row_type_2" name="gasUsed" type="amount:wei" value={blk.gasUsed}></Row>
-          <Row class="row_type_2" name="difficulty" type="amount:num" value={blk.difficulty}></Row>
+          <Row className="row_type_1" name="date" type="date:date" value={blk.date}></Row>
+          <Row className="row_type_1" name="timestamp" type="date:ts" value={blk.timestamp}></Row>
+          <Row className="row_type_1" name="nTransactions" type="amount:num" value={blk.transactions.length}></Row>
+          <Row className="row_type_1" name="age" type="date:lights" value={blk.age}></Row>
+          <tr><td width="100%" colSpan="3" height="10px"></td></tr>
+          <Row className="row_type_2" name="gasLimit" type="amount:wei" value={blk.gasLimit}></Row>
+          <Row className="row_type_2" name="gasUsed" type="amount:wei" value={blk.gasUsed}></Row>
+          <Row className="row_type_2" name="difficulty" type="amount:num" value={blk.difficulty}></Row>
           {/*<Row name="price" type="amount:dollars" value={blk.price}></Row>*/}
-          <div>&nbsp;</div>
-          <Row class="row_type_3" name="miner" type="address" value={blk.miner} route="/accounts/"></Row>
-          <Row class="row_type_3" name="finalized" type="bool" value={blk.finalized}></Row>
-          <div>&nbsp;</div>
-          <Row class="row_type_4" name="parentHash" type="hash:blk" value={blk.parentHash} route="/blocks/"></Row>
-          <Row class="row_type_4" name="hash" type="hash:blk" value={blk.hash}></Row>
-          <div>&nbsp;</div>
+          <tr><td width="100%" colSpan="3" height="10px"></td></tr>
+          <Row className="row_type_3" name="miner" type="address" value={blk.miner} route="/accounts/"></Row>
+          <Row className="row_type_3" name="finalized" type="bool" value={blk.finalized}></Row>
+          <tr><td width="100%" colSpan="3" height="10px"></td></tr>
+          <Row className="row_type_4" name="parentHash" type="hash:blk" value={blk.parentHash} route="/blocks/"></Row>
+          <Row className="row_type_4" name="hash" type="hash:blk" value={blk.hash}></Row>
+          <tr><td width="100%" colSpan="3" height="10px"></td></tr>
           <Row name="previous" type="nav:prev" value={prev} route="/blocks/"></Row>
           <Row name="next" type="nav:next" value={next} route="/blocks/"></Row>
-          <div>&nbsp;</div>
+          <tr><td width="100%" colSpan="3" height="10px"></td></tr>
           if ({blk.transactions.length > 0}) {
             blk.transactions.map(trans => {
               return (
@@ -59,13 +59,7 @@ export default class BlocksPage extends BasePage {
     fetch(`${process.env.REACT_APP_API_URL}/blocks/${blockNum}`, { mode: 'cors' })
       .then(response => response.json())
       .then(result => {
-        console.log("data: ");
-        console.log(this.state.data);
-        console.log("result: ");
-        console.log(result);
         this.setState({ data: result })
-        console.log("data: ");
-        console.log(this.state.data);
       }
       ).catch((e) => {
         console.log(e)
@@ -91,7 +85,7 @@ export default class BlocksPage extends BasePage {
         return "";
 
       return (this.state.data.map(block => {
-        return (<BlockDisplay key={block.name} block={block} />);
+        return (<BlockDisplay key={block.hash} block={block} />);
       }
       ));
     }
