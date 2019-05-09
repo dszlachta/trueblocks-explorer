@@ -70,11 +70,9 @@ export default class HelpPage extends BasePage {
     var left = "Product Options / Pricing";
     var middle = makeContent();
     var right = "The accounting component is a for-pay portion of TrueBlocks. Please contact us for more information.";
-    var button = "Push";
     return (
       <BasePage
         lSection={left}
-        lButton={button}
         mSection={middle}
         rSection={right}
       />

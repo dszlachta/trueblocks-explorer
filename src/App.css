@@ -380,3 +380,72 @@ h3 {
     font-size: 1.4em;
   }
 }
+.data_type {
+  display: inline-block;
+  font-size: smaller;
+  font-style: italic;
+  font-family: monospace;
+  font-size: 10pt;
+  vertical-align: text-top;
+}
+.data_link {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 12pt;
+  vertical-align: text-top;
+  text-decoration: underline;
+  margin-bottom: 3px;
+  margin-left: 10px;
+}
+.data_value {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 12pt;
+  vertical-align: text-top;
+  margin-bottom: 3px;
+  margin-left: 10px;
+}
+.data_head {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 12pt;
+  vertical-align: text-top;
+  margin-left: 20px;
+}
+.data_boldHead {
+  display: inline-block;
+  font-weight: 700;
+  font-size: 12pt;
+  font-family: monospace;
+  vertical-align: text-top;
+}
+.row_type_1 {
+  vertical-align: text-top;
+  background-color: rgb(237, 202, 137);
+  color: rebeccapurple;
+  margin: 4px;
+}
+.row_type_2 {
+  vertical-align: text-top;
+  background-color: #064788;
+  color: #C5C8C6;
+  margin: 4px;
+}
+.row_type_3 {
+  vertical-align: text-top;
+  background-color: #f5874c;
+  color: rgb(2, 41, 15);
+  margin: 4px;
+}
+.row_type_4 {
+  vertical-align: text-top;
+  background-color: #9a90cdcd;
+  color: rgb(2, 62, 22);
+  margin: 4px;
+}
+.no_class {
+  background-color: none !important;
+}
+.logo_col {
+  vertical-align: middle;
+}

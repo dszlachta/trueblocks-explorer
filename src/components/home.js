@@ -16,11 +16,9 @@ export default class HomePage extends BasePage {
     var left = "Home";
     var middle = makeContent();
     var right = "This is the application's home page.";
-    var button = "Push";
     return (
       <BasePage
         lSection={left}
-        lButton={button}
         mSection={middle}
         rSection={right}
       />

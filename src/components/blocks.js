@@ -1,67 +1,44 @@
 import React, { Component } from 'react'
-import BasePage from './basepage';
-//import Section from 'constructicon/section';
-//import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { Link } from "react-router-dom";
-
-export class Row extends Component {
-  render() {
-    var link = "/blocks/" + this.props.value;
-    if (this.props.bold) {
-      if (this.props.link) {
-        return (
-          <tr><td width="20%">
-            <b>{this.props.name}:</b>
-          </td><td>
-            <Link to={link}>{this.props.value}</Link>
-            </td></tr>);
-      } else {
-        return (<tr><td width="20%"><b>{this.props.name}:</b></td><td><b>{this.props.value}</b></td></tr>);
-      }
-    } else {
-      if (this.props.link) {
-        return (
-          <tr><td width="20%">
-            <b>{this.props.name}:</b>
-          </td><td>
-              <Link to={link}>{this.props.value}</Link>
-            </td></tr>);
-      } else {
-        return (<tr><td width="20%">{this.props.name}:</td><td>{this.props.value}</td></tr>);
-      }
-    }
-  }
-}
+import { BasePage, Row } from './common';
 
 export class BlockDisplay extends Component {
   render() {
-    var link = "/blocks/" + this.props.blockNumber;
+    let blk = this.props.block;
+    let prev = blk.blockNumber + (".prev");  // bounds
+    let next = blk.blockNumber + (".next");  // bounds
     return (
       <div key={this.props.name}>
-        <table><tbody>
-          <Row name="blockNumber" value={this.props.block.blockNumber} bold={true} link={true}></Row>
-          <Row name="hash" value={this.props.block.hash} link={true}></Row>
-          <Row name="parentHash" value={this.props.block.parentHash} link={true}></Row>
-          <Row name="miner" value={this.props.block.miner} link={true}></Row>
-          <Row name="date" value={this.props.block.date}></Row>
-          <Row name="timestamp" value={this.props.block.timestamp}></Row>
-          <Row name="gasLimit" value={this.props.block.gasLimit}></Row>
-          <Row name="gasUsed" value={this.props.block.gasUsed}></Row>
-          <Row name="difficulty" value={this.props.block.difficulty}></Row>
-          <Row name="nTransactions" value={this.props.block.transactions.length}></Row>
-          if ({this.props.block.transactions.length > 0}) {
-            this.props.block.transactions.map(trans => {
+        <table width="100%"><tbody>
+          <Row name="blockNumber" type="amount:blk" value={blk.blockNumber} bold={true}></Row>
+          <Row class="row_type_1" name="date" type="date:date" value={blk.date}></Row>
+          <Row class="row_type_1" name="timestamp" type="date:ts" value={blk.timestamp}></Row>
+          <Row class="row_type_1" name="nTransactions" type="amount:num" value={blk.transactions.length}></Row>
+          <Row class="row_type_1" name="age" type="date:lights" value={blk.age}></Row>
+          <div>&nbsp;</div>
+          <Row class="row_type_2" name="gasLimit" type="amount:wei" value={blk.gasLimit}></Row>
+          <Row class="row_type_2" name="gasUsed" type="amount:wei" value={blk.gasUsed}></Row>
+          <Row class="row_type_2" name="difficulty" type="amount:num" value={blk.difficulty}></Row>
+          {/*<Row name="price" type="amount:dollars" value={blk.price}></Row>*/}
+          <div>&nbsp;</div>
+          <Row class="row_type_3" name="miner" type="address" value={blk.miner} route="/accounts/"></Row>
+          <Row class="row_type_3" name="finalized" type="bool" value={blk.finalized}></Row>
+          <div>&nbsp;</div>
+          <Row class="row_type_4" name="parentHash" type="hash:blk" value={blk.parentHash} route="/blocks/"></Row>
+          <Row class="row_type_4" name="hash" type="hash:blk" value={blk.hash}></Row>
+          <div>&nbsp;</div>
+          <Row name="previous" type="nav:prev" value={prev} route="/blocks/"></Row>
+          <Row name="next" type="nav:next" value={next} route="/blocks/"></Row>
+          <div>&nbsp;</div>
+          if ({blk.transactions.length > 0}) {
+            blk.transactions.map(trans => {
               return (
-                <Row name="tx" value={trans.hash} link={true}></Row>
+                <Row name="tx" type="hash:tx" value={trans.hash} route="/transactions/"></Row>
               );
-          })
-        }
+            })
+          }
         </tbody></table>
-        <hr />
       </div>
     );
-//    <Row name="price" value={this.props.block.price}></Row>
-//    <Row name="finalized" value={this.props.block.finalized}></Row>
   }
 }
 
@@ -71,13 +48,13 @@ export default class BlocksPage extends BasePage {
     super(props);
     this.state = {
       data: [],
-      prevBlock: "123-129"
     };
   }
 
   fetchBlock = () => {
     let blockNum = this.props.match.params.block;
-    if (blockNum == undefined) return;
+    if (blockNum === undefined)
+      blockNum = "latest";
     console.log(this.props.match);
     fetch(`${process.env.REACT_APP_API_URL}/blocks/${blockNum}`, { mode: 'cors' })
       .then(response => response.json())
@@ -101,10 +78,9 @@ export default class BlocksPage extends BasePage {
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.match.params.block !== prevProps.match.params.block) this.fetchBlock(); 
+    if (this.props.match.params.block !== prevProps.match.params.block)
+      this.fetchBlock();
   }
-
-  
 
   render() {
     console.log("render");
@@ -123,11 +99,9 @@ export default class BlocksPage extends BasePage {
     var left = "Blocks Module";
     var middle = this.makeContent();
     var right = "The blocks component of TrueBlocks allows you to assign names any Ethereum blocks. We've provided a number of default named blocks, but you may add your own. This makes understanding the timeline of your interactions with the blockchain easier. If you choose to share the names you create, others will benefit from that information.";
-    var button = "Push";
     return (
       <BasePage
         lSection={left}
-        lButton={button}
         mSection={middle}
         rSection={right}
       />

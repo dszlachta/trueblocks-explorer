@@ -26,7 +26,7 @@ export default class AccountsPage extends BasePage {
   }
 
   componentDidMount() {
-      fetch(`${process.env.REACT_APP_API_URL}/accounts?search1=0x12`, { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/accounts?search1=0x12`, { mode: 'cors' })
       .then(response => response.json())
       .then(data => this.setState({ data: data }));
   }
@@ -51,11 +51,9 @@ export default class AccountsPage extends BasePage {
     var left = "Accounts Module";
     var middle = this.makeContent();
     var right = "The accounts component of TrueBlocks allows you to assign names to Ethereum addresses. From then on, anywhere that address appears in a TrueBlocks monitor, the name appears beside it. This makes understanding what's going on easier. You may also select names from ENS if you wish. If you choose to share the names you create, others will benefit from that information.";
-    var button = "Push";
     return (
       <BasePage
         lSection={left}
-        lButton={button}
         mSection={middle}
         rSection={right}
       />
