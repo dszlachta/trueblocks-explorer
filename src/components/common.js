@@ -17,6 +17,13 @@ export class Row extends Component {
                 </div>
             )
         }
+        function l3(props) {
+            return (
+                <div>
+                    <a href="/blocks/"><img alt="" width="25" src="/name.png" /></a> 
+                </div>
+            )
+        }
         function bb(props) {
             return (<div className={props.bold ? "data_boldHead" : "data_head"}>{props.name}</div>)
         }
@@ -34,7 +41,7 @@ export class Row extends Component {
                 return ret1;
             }
             var string = props.value.toString();
-            var length = 80;
+            var length = 60;
             var ret = string.length > length ? string.substring(0, length - 3) + "..." : string;
             return (ret);
         }
@@ -51,6 +58,14 @@ export class Row extends Component {
                 <td width="20%" nowrap="true">{bb(this.props)}</td>
                 <td>{ll(this.props)}</td>
                 <td className="logo_col" align="center">{l2(this.props)}</td>
+            </tr>);
+        }
+        var isNav = (this.props.type.substring(0,4) === "nav:" && !this.props.type.includes("prev") && !this.props.type.includes("next"));
+        if (isNav) {
+            return (<tr className={this.props.className}>
+                <td width="20%" nowrap="true">{bb(this.props)}</td>
+                <td>{ll(this.props)}</td>
+                <td className="logo_col" align="center">{l3(this.props)}</td>
             </tr>);
         }
         return (<tr className={this.props.className}>

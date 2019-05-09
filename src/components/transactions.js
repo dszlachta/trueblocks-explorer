@@ -4,10 +4,11 @@ import { BasePage, Row } from "./common"
 export class TransDisplay extends Component {
   render() {
     let tx = this.props.trans;
-    let cur = tx.blockNumber + "." + tx.transactionIndex;
-    let prev = tx.blockNumber + "." + (tx.transactionIndex + ".prev");  // bounds
-    let next = tx.blockNumber + "." + (tx.transactionIndex + ".next");  // bounds
+    let cur     = tx.blockNumber + "." + tx.transactionIndex;
+    let first   = "45000.0.next";  // bounds
+    let prev    = tx.blockNumber + "." + (tx.transactionIndex + ".prev");  // bounds
     let prevblk = (tx.blockNumber - 1) + "." + (1 + ".prev");  // bounds
+    let next    = tx.blockNumber + "." + (tx.transactionIndex + ".next");  // bounds
     let nextblk = (tx.blockNumber + 1) + "." + (1 + ".prev");  // bounds
     /*<Row className="row_type_1" name="price" type="num:dollars" value={tx.price}></Row>*/
     return (
@@ -39,6 +40,8 @@ export class TransDisplay extends Component {
           <Row name="1st tx in next blk" type="nav:next" value={nextblk} route="/transactions/"></Row>
           <Row name="previous tx" type="nav:prev" value={prev} route="/transactions/"></Row>
           <Row name="next tx" type="nav:next" value={next} route="/transactions/"></Row>
+          <Row name="first tx" type="nav:first" value={first} route="/transactions/"></Row>
+          <Row name="latest tx" type="nav:last" value={"latest"} route="/transactions/"></Row>
         }
         </tbody></table>
       </div>
