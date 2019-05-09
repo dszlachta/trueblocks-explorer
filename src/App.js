@@ -1,3 +1,8 @@
+/*-------------------------------------------------------------------------
+ * This source code is confidential proprietary information which is
+ * Copyright (c) 2019 by Great Hill Corporation.
+ * All Rights Reserved
+ *------------------------------------------------------------------------*/
 import React, { Component } from 'react';
 //import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
