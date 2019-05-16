@@ -8,12 +8,12 @@ class TransListSeek extends Component {
     this.state = {
       listResults: [],
       currentIndex: 0,
-      currentAddress: this.props.account
+      currentAddress: ""
     };
   }
 
   fetchList = (address) => {
-    fetch(`${process.env.REACT_APP_API_URL}/list?address=${address}`, { mode: 'cors' })
+    return fetch(`${process.env.REACT_APP_API_URL}/list?address=${address}`, { mode: 'cors' })
       .then((res) => {
         //console.log(res.text());
         return res.text()
@@ -33,12 +33,22 @@ class TransListSeek extends Component {
   }
 
   componentDidMount = () => {
+    console.log(this.props);
     this.props.account !== "" && this.fetchList(this.props.account);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.account !== prevProps.account & this.props.account.length === 42 | this.props.account.length === 0)
-    this.props.account !== "" && this.fetchList(this.props.account)
+    if (this.props.account === prevProps.account)
+     return false;
+    if(this.props.account.length !== 42 & this.props.account.length !== 0)
+      return false;
+    console.log("updating");
+    this.props.account !== "" && this.fetchList(this.props.account).then(
+        () => {
+          console.log(this.state.listResults[this.state.listResults.length - 1])
+          //this.props.history.push(`/transactions/${this.state.listResults[this.state.listResults.length - 1]}`)
+    });
+    
   }
 
   render = () => {
@@ -46,7 +56,7 @@ class TransListSeek extends Component {
     this.makeList = (chifraList) => {
       return <div>
         {chifraList.map((bnTxid) => {
-          return (<span key={bnTxid}><Link to={`/transactions/${bnTxid}`}>{bnTxid}</Link>&nbsp;&nbsp;&nbsp;</span>)
+          return (<span key={bnTxid}><Link to={`/transactions/${bnTxid}`}>{bnTxid}</Link>&nbsp;&nbsp;&nbsp;</span> )
         })
       }
       </div>
@@ -140,7 +150,7 @@ export default class TransPage extends BasePage {
     this.makeContent = () => {
       if (this.state.data.length === 0)
         return "";
-
+      //let TransListSeekwRouter = TransListSeek;
       return (
         <div>
         <TransListSeek account={this.props.account} changeAccount={this.props.changeAccount}/>

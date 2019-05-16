@@ -452,6 +452,16 @@ h3 {
   padding: 1em;
 }
 
+.account-filter div {
+  overflow-y: scroll;
+  height: 100px;
+}
+
+.account-filter span {
+  display: inline-block;
+  width: 115px;
+}
+
 .address-input {
   background-color: inherit;
   border: 0;
