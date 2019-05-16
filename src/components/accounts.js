@@ -48,15 +48,11 @@ export default class AccountsPage extends BasePage {
     fetch(`${process.env.REACT_APP_API_URL}/accounts/${theID}`, { mode: 'cors' })
       .then ((response) => {
         this.setState({ data: [] })
-          console.log("response");
-          console.log(response);
           if (response.status !== 200) {
             console.log('Looks like there was a problem. Status Code: ' + response.status);
             return;
           }
           response.json().then((result) => {
-            console.log("result");
-            console.log(result);
             this.setState({ data: result })
           });
         }
@@ -67,12 +63,12 @@ export default class AccountsPage extends BasePage {
   }
 
   componentDidMount() {
-    console.log("I AM HERE - componentDidMount");
+    console.log("componentDidMount");
     this.fetchData();
   }
 
   componentDidUpdate(prevProps) {
-    console.log("I WAS THERE - componentDidMount");
+    console.log("componentDidMount");
     if (this.props.match.params.theID !== prevProps.match.params.theID)
       this.fetchData();
   }
