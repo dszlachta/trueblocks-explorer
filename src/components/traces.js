@@ -69,7 +69,6 @@ export default class TransPage extends BasePage {
   }
 
   componentDidMount() {
-    console.log("didMount");
     this.fetchBlock();
   }
 
@@ -79,10 +78,7 @@ export default class TransPage extends BasePage {
   }
 
   render() {
-    console.log("render");
     this.makeContent = () => {
-      console.log("data: ");
-      console.log(this.state.data);
       if (this.state.data.length === 0)
         return "";
 

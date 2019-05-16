@@ -1,17 +1,24 @@
-import React from 'react'
-import BasePage from './basepage';
-import Section from 'constructicon/section';
+import React, { Component } from 'react'
+import { BasePage, Row } from './common';
 
-export class NameItem extends Section {
+export class AccountDisplay extends Component {
   render() {
-    var link = "http://etherscan.io/address/" + this.props.addr;
+    let item = this.props.theData[0];
+    console.log("item");
+    console.log(item);
     return (
-      <div key={this.props.name}>
-        <div><b>Name:</b> {this.props.name} ({this.props.symbol})</div>
-        <div>Address: <a href={link}>{this.props.addr}</a></div>
-        <div>Desciption: {this.props.description}</div>
-        <div>Logo: <img alt='' src='./images/{this.props.logo}' /></div>
-        <hr />
+      <div key={this.props.hash}>
+        <table width="100%"><tbody>
+          <Row className="row_type_1" name="address" type="string" value={item.address} display={item.address} />
+          <Row className="row_type_1" name="blockNumber" type="string" value={item.blockNumber} display={item.blockNumber} route="/blocks/" />
+          <Row className="row_type_2" name="balance" type="string" value={item.balance} display={item.balance} />
+          <Row className="row_type_2" name="ether" type="string" value={item.ether} display={item.ether} />
+          <Row className="row_type_2" name="nonce" type="string" value={item.nonce} display={item.nonce} />
+          <Row className="row_type_2" name="code" type="string" value={item.code} display={item.code} />
+          <Row className="row_type_2" name="storage" type="string" value={item.storage} display={item.storage} />
+          <Row className="row_type_3" name="deployed" type="string" value={item.deployed} display={item.deployed} route="/blocks/" />
+          <Row className="row_type_3" name="accttype" type="string" value={item.accttype} display={item.accttype} />
+        </tbody></table>
       </div>
     );
   }
@@ -20,32 +27,61 @@ export class NameItem extends Section {
 export default class AccountsPage extends BasePage {
   constructor(props) {
     super(props);
+    this.setState = this.setState.bind(this);
     this.state = {
-      data: []
+      data: [],
     };
   }
 
-  componentDidMount() {
-    fetch(`${process.env.REACT_APP_API_URL}/accounts?search1=0x12`, { mode: 'cors' })
-      .then(response => response.json())
-      .then(data => this.setState({ data: data }));
+  fetchData = async () => {
+    let theID = this.props.match.params.theID;
+    if (theID === undefined) theID = "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359";
+    var response = await fetch(`${process.env.REACT_APP_API_URL}/accounts/${theID}`, { mode: 'cors' });
+    var result = await response.json();
+    this.setState({ data: result });
+  }
+  
+  fetchData1 = () => {
+    let theID = this.props.match.params.theID;
+    if (theID === undefined)
+      theID = "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359"; // tip jar if nothing else
+    fetch(`${process.env.REACT_APP_API_URL}/accounts/${theID}`, { mode: 'cors' })
+      .then ((response) => {
+        this.setState({ data: [] })
+          console.log("response");
+          console.log(response);
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' + response.status);
+            return;
+          }
+          response.json().then((result) => {
+            console.log("result");
+            console.log(result);
+            this.setState({ data: result })
+          });
+        }
+      )
+      .catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
   }
 
-  render() {
+  componentDidMount() {
+    console.log("I AM HERE - componentDidMount");
+    this.fetchData();
+  }
+
+  componentDidUpdate(prevProps) {
+    console.log("I WAS THERE - componentDidMount");
+    if (this.props.match.params.theID !== prevProps.match.params.theID)
+      this.fetchData();
+  }
+
+render() {
     this.makeContent = () => {
-      return (
-        this.state.data.length && this.state.data.map(item => {
-          return (
-            <NameItem
-              name={item.name}
-              description={item.description}
-              addr={item.addr}
-              symbol={item.symbol}
-              logo={item.logo}
-            />
-          );
-        }
-      ));
+      if (this.state.data.length === 0)
+        return "";
+      return (<AccountDisplay key={this.state.data.data.address} theData={this.state.data.data} />);
     }
 
     var left = "Accounts Module";
