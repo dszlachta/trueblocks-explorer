@@ -2,21 +2,30 @@ import React, { Component } from 'react'
 import { BasePage, Row } from "./common"
 import { Link } from "react-router-dom";
 
-class TransSeek extends Component {
+class TransListSeek extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listResults: []
+      listResults: [],
+      currentIndex: 0,
+      currentAddress: ""
     };
   }
 
   fetchList = (address) => {
-    fetch(`${process.env.REACT_APP_API_URL}/list?address=${address}`, { mode: 'cors' })
+    return fetch(`${process.env.REACT_APP_API_URL}/list?address=${address}`, { mode: 'cors' })
       .then((res) => {
         //console.log(res.text());
         return res.text()
       }).then((res) => {
-        this.setState({listResults: res.replace(/[^\S\r\n]/g, ".").trim().split("\n")});
+        return this.setState({
+          listResults: res.replace(/[^\S\r\n]/g, ".").trim().split("\n")
+      });
+      }).then(() => {
+        this.setState({
+          currentIndex: this.state.listResults.length - 1,
+          currentAddress: address
+        });
       })
     .catch((e) => {
         console.log(e)
@@ -24,7 +33,22 @@ class TransSeek extends Component {
   }
 
   componentDidMount = () => {
+    console.log(this.props);
     this.props.account !== "" && this.fetchList(this.props.account);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.account === prevProps.account)
+     return false;
+    if(this.props.account.length !== 42 & this.props.account.length !== 0)
+      return false;
+    console.log("updating");
+    this.props.account !== "" && this.fetchList(this.props.account).then(
+        () => {
+          console.log(this.state.listResults[this.state.listResults.length - 1])
+          //this.props.history.push(`/transactions/${this.state.listResults[this.state.listResults.length - 1]}`)
+    });
+    
   }
 
   render = () => {
@@ -32,16 +56,16 @@ class TransSeek extends Component {
     this.makeList = (chifraList) => {
       return <div>
         {chifraList.map((bnTxid) => {
-          return (<span><Link key={bnTxid} to={`/transactions/${bnTxid}`}>{bnTxid}</Link>&nbsp;&nbsp;&nbsp;</span>)
+          return (<span key={bnTxid}><Link to={`/transactions/${bnTxid}`}>{bnTxid}</Link>&nbsp;&nbsp;&nbsp;</span> )
         })
       }
       </div>
     }
 
     return (
-      <div>
-        Account filter: {this.props.account}
-        {this.makeList(this.state.listResults)}
+      <div className="account-filter" >
+        Account filter: <input className="address-input" value={this.props.account} maxLength="42" onChange={this.props.changeAccount.bind(this)}/>
+        {this.props.account === this.state.currentAddress && this.makeList(this.state.listResults)}
       </div>
     )
       
@@ -105,7 +129,7 @@ export default class TransPage extends BasePage {
     };
   }
 
-  fetchData = async () => {
+  fetchTx = async () => {
     let txID = this.props.match.params.trans;
     if (txID === undefined) txID = "latest";
     var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions/${txID}`, { mode: 'cors' });
@@ -114,22 +138,22 @@ export default class TransPage extends BasePage {
   }
 
   componentDidMount() {
-    this.fetchData();
+    this.fetchTx();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.trans !== prevProps.match.params.trans)
-      this.fetchData();
+      this.fetchTx();
   }
 
   render() {
     this.makeContent = () => {
       if (this.state.data.length === 0)
         return "";
-
+      //let TransListSeekwRouter = TransListSeek;
       return (
         <div>
-        <TransSeek account={this.props.account}/>
+        <TransListSeek account={this.props.account} changeAccount={this.props.changeAccount}/>
         {this.state.data.map(trans => 
           <TransDisplay key={trans.hash} trans={trans} />
         )}

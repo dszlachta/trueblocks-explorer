@@ -40,9 +40,16 @@ class App extends Component {
   }
 
   componentDidMount = () => {
+    console.log(this.props)
   }
 
-  renderTabs() {
+  handleAccountChange = (e) => {
+    let account = e.target.value.trim();
+    this.setState({account: account});
+    return false;
+  }
+
+  renderTabs = () => {
     return (
       <div>
         <Router>
@@ -80,9 +87,9 @@ class App extends Component {
 
             <Route path="/accounts/:theID?" component={AccountsPage}/>
             <Route path="/blocks/:theID?" component={BlocksPage} />
-            <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account}/>} />
             <Route path="/logs/:theID?" component={LogsPage} />
             <Route path="/receipts/:theID?" component={ReceiptPage} />
+            <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account} changeAccount={this.handleAccountChange}/>} />
             <Route path="/functions/:func?" component={FunctionsPage}/>
 
             <Route path="/charts" component={ChartsPage}/>

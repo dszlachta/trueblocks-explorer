@@ -445,3 +445,29 @@ h3 {
 .logo_col {
   vertical-align: middle;
 }
+
+
+.account-filter {
+  background-color: #cecdb5;
+  padding: 1em;
+}
+
+.account-filter div {
+  overflow-y: scroll;
+  height: 100px;
+}
+
+.account-filter span {
+  display: inline-block;
+  width: 115px;
+}
+
+.address-input {
+  background-color: inherit;
+  border: 0;
+  border-bottom: 1px solid #000;
+  font-size: 1.2em;
+  width: 100%;
+  padding: .1em;
+  margin: .1em 0;
+}
