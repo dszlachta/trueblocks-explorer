@@ -105,11 +105,7 @@ export default class TransPage extends BasePage {
     };
   }
 
-<<<<<<< HEAD
-  fetchData = async () => {
-=======
   fetchTx = () => {
->>>>>>> cosmetic: fetchBlock -> fetchTx
     let txID = this.props.match.params.trans;
     if (txID === undefined) txID = "latest";
     var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions/${txID}`, { mode: 'cors' });
@@ -118,37 +114,18 @@ export default class TransPage extends BasePage {
   }
 
   componentDidMount() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    this.fetchData();
-=======
-    console.log("didMount");
-=======
-    console.log(this.props)
->>>>>>> chifra-list-seek: basic version of tx seek on transactions page
     this.fetchTx();
->>>>>>> cosmetic: fetchBlock -> fetchTx
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.trans !== prevProps.match.params.trans)
-<<<<<<< HEAD
-      this.fetchData();
-=======
       this.fetchTx();
->>>>>>> cosmetic: fetchBlock -> fetchTx
   }
 
   render() {
     this.makeContent = () => {
       if (this.state.data.length === 0)
         return "";
-<<<<<<< HEAD
-      return (this.state.data.map (trans => {
-        return (<TransDisplay key={trans.hash} trans={trans} />);
-      }
-      ));
-=======
 
       return (
         <div>
@@ -158,7 +135,6 @@ export default class TransPage extends BasePage {
         )}
        </div>
       );
->>>>>>> chifra-list-seek: basic version of tx seek on transactions page
     }
 
     var left = "Trans Module";
