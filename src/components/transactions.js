@@ -105,7 +105,7 @@ export default class TransPage extends BasePage {
     };
   }
 
-  fetchTx = () => {
+  fetchTx = async () => {
     let txID = this.props.match.params.trans;
     if (txID === undefined) txID = "latest";
     var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions/${txID}`, { mode: 'cors' });
