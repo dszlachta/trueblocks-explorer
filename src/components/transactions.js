@@ -53,8 +53,8 @@ class TransListSeek extends Component {
     }
 
     return (
-      <div>
-        Account filter: <input value={this.props.account} maxLength="42" onChange={this.props.changeAccount.bind(this)}/>
+      <div className="account-filter" >
+        Account filter: <input className="address-input" value={this.props.account} maxLength="42" onChange={this.props.changeAccount.bind(this)}/>
         {this.props.account === this.state.currentAddress && this.makeList(this.state.listResults)}
       </div>
     )
