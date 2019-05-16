@@ -43,8 +43,8 @@ class App extends Component {
   }
 
   handleAccountChange = (e) => {
-    console.log(e);
-    // this.setState({account: account});
+    let account = e.target.value.trim();
+    this.setState({account: account});
     return false;
   }
 

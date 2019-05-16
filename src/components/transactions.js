@@ -6,7 +6,8 @@ class TransListSeek extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listResults: []
+      listResults: [],
+      currentIndex: 0
     };
   }
 
@@ -16,7 +17,11 @@ class TransListSeek extends Component {
         //console.log(res.text());
         return res.text()
       }).then((res) => {
-        this.setState({listResults: res.replace(/[^\S\r\n]/g, ".").trim().split("\n")});
+        return this.setState({
+          listResults: res.replace(/[^\S\r\n]/g, ".").trim().split("\n")
+      });
+      }).then(() => {
+        this.setState({currentIndex: this.state.listResults.length - 1});
       })
     .catch((e) => {
         console.log(e)
@@ -28,7 +33,7 @@ class TransListSeek extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.account !== prevProps.account)
+    if (this.props.account !== prevProps.account & this.props.account.length === 42 | this.props.account.length === 0)
     this.props.account !== "" && this.fetchList(this.props.account)
   }
 
@@ -45,8 +50,8 @@ class TransListSeek extends Component {
 
     return (
       <div>
-        Account filter: {this.props.account} <button onClick={this.props.changeAccount("")}>[clear]</button>
-        {this.makeList(this.state.listResults)}
+        Account filter: <input value={this.props.account} maxlength="42" onChange={this.props.changeAccount.bind(this)}/> <button onClick={this.props.changeAccount.bind(this, "")}>[clear]</button>
+        {this.props.account && this.makeList(this.state.listResults)}
       </div>
     )
       
