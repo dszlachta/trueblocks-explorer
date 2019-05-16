@@ -34,7 +34,8 @@ class App extends Component {
     super(props);
     this.state = {
       hits: [],
-      lastTab: 6
+      lastTab: 6,
+      account: "0xa1e4380a3b1f749673e270229993ee55f35663b4"
     };
   }
 
@@ -79,7 +80,7 @@ class App extends Component {
 
             <Route path="/accounts/:theID?" component={AccountsPage}/>
             <Route path="/blocks/:theID?" component={BlocksPage} />
-            <Route path="/transactions/:trans?" component={TransPage} />
+            <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account}/>} />
             <Route path="/logs/:theID?" component={LogsPage} />
             <Route path="/receipts/:theID?" component={ReceiptPage} />
             <Route path="/functions/:func?" component={FunctionsPage}/>

@@ -16,7 +16,7 @@ export class ReceiptDisplay extends Component {
       <div key={this.props.hash}>
         <table width="100%"><tbody>
           <Row name="blockNumber" type="amount:blk" value={item.blockNumber} bold={true}></Row>
-          <Row className="row_type_1" name="contractAddress" type="address " value={item.contractAddress}></Row>
+          <Row className="row_type_1" name="contractAddress" type="address " value={item.contractAddress} route="/accounts/"></Row>
           <Row className="row_type_1" name="status" type="status" value={status1}></Row>
           <Row className="row_type_1" name="cumulativeGasUsed" type="amount:wei" value={item.cumulativeGasUsed}></Row>
           <Row className="row_type_1" name="gasUsed" type="amount:gas" value={item.gasUsed}></Row>
@@ -72,9 +72,6 @@ export default class ReceiptPage extends BasePage {
   }
 
   componentDidUpdate(prevProps) {
-    console.log("DidUpdate");
-    console.log(this.props.match.params.theID);
-    console.log(prevProps.match.params.theID);
     if (this.props.match.params.theID !== prevProps.match.params.theID)
       this.fetchData();
   }
@@ -84,7 +81,6 @@ export default class ReceiptPage extends BasePage {
       if (this.state.data.length === 0)
         return "";
       return (this.state.data.map(dataObj => {
-        console.log(dataObj);
         return (<ReceiptDisplay key={dataObj.hash} theData={dataObj} />);
       }
       ));

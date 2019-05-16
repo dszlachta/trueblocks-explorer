@@ -1,5 +1,52 @@
 import React, { Component } from 'react'
 import { BasePage, Row } from "./common"
+import { Link } from "react-router-dom";
+
+class TransSeek extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      listResults: []
+    };
+  }
+
+  fetchList = (address) => {
+    fetch(`${process.env.REACT_APP_API_URL}/list?address=${address}`, { mode: 'cors' })
+      .then((res) => {
+        //console.log(res.text());
+        return res.text()
+      }).then((res) => {
+        this.setState({listResults: res.replace(/[^\S\r\n]/g, ".").trim().split("\n")});
+      })
+    .catch((e) => {
+        console.log(e)
+      });
+  }
+
+  componentDidMount = () => {
+    this.props.account !== "" && this.fetchList(this.props.account);
+  }
+
+  render = () => {
+
+    this.makeList = (chifraList) => {
+      return <div>
+        {chifraList.map((bnTxid) => {
+          return (<span><Link key={bnTxid} to={`/transactions/${bnTxid}`}>{bnTxid}</Link>&nbsp;&nbsp;&nbsp;</span>)
+        })
+      }
+      </div>
+    }
+
+    return (
+      <div>
+        Account filter: {this.props.account}
+        {this.makeList(this.state.listResults)}
+      </div>
+    )
+      
+  }
+}
 
 export class TransDisplay extends Component {
   render() {
@@ -54,6 +101,7 @@ export default class TransPage extends BasePage {
     super(props);
     this.state = {
       data: [],
+      account: ""
     };
   }
 
@@ -78,10 +126,15 @@ export default class TransPage extends BasePage {
     this.makeContent = () => {
       if (this.state.data.length === 0)
         return "";
-      return (this.state.data.map (trans => {
-        return (<TransDisplay key={trans.hash} trans={trans} />);
-      }
-      ));
+
+      return (
+        <div>
+        <TransSeek account={this.props.account}/>
+        {this.state.data.map(trans => 
+          <TransDisplay key={trans.hash} trans={trans} />
+        )}
+       </div>
+      );
     }
 
     var left = "Trans Module";
