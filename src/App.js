@@ -15,6 +15,8 @@ import ScrapersPage from './components/scrapers';
 import AccountsPage from './components/accounts';
 import BlocksPage from './components/blocks';
 import TransPage from './components/transactions';
+import LogsPage from './components/logs';
+import ReceiptPage from './components/receipts';
 import FunctionsPage from './components/functions';
 import AnalysisPage from './components/analysis';
 import ChartsPage from './components/charts';
@@ -37,9 +39,6 @@ class App extends Component {
   }
 
   componentDidMount = () => {
-//    fetch(`${process.env.REACT_APP_API_URL}/list?address=0x06012c8cf97bead5deae237070f9587f8e7a266d`, { mode: 'cors' })
-//      // .then(response => response.json())
-//      .then(res => console.log(res));
   }
 
   renderTabs() {
@@ -55,11 +54,13 @@ class App extends Component {
           <Link className="react-tabs__tab" to="/accounts">Accounts</Link>
           <Link className="react-tabs__tab" to="/blocks">Blocks</Link>
           <Link className="react-tabs__tab" to="/transactions">Transactions</Link>
+          <Link className="react-tabs__tab" to="/logs">Logs</Link>
+          <Link className="react-tabs__tab" to="/receipts">Receipts</Link>
           <Link className="react-tabs__tab" to="/functions">Functions</Link>
 
           |
-          <Link className="react-tabs__tab" to="/analysis">Analysis</Link>
           <Link className="react-tabs__tab" to="/charts">Charts</Link>
+          <Link className="react-tabs__tab" to="/analysis">Analysis</Link>
 
           |
           <Link className="react-tabs__tab" to="/accounting">Accounting</Link>
@@ -76,13 +77,15 @@ class App extends Component {
             <Route path="/monitors" component={MonitorsPage}/>
             <Route path="/scrapers" component={ScrapersPage}/>
 
-            <Route path="/accounts/:account?" component={AccountsPage}/>
-            <Route path="/blocks/:block?" component={BlocksPage} />
+            <Route path="/accounts/:theID?" component={AccountsPage}/>
+            <Route path="/blocks/:theID?" component={BlocksPage} />
             <Route path="/transactions/:trans?" component={TransPage} />
+            <Route path="/logs/:theID?" component={LogsPage} />
+            <Route path="/receipts/:theID?" component={ReceiptPage} />
             <Route path="/functions/:func?" component={FunctionsPage}/>
 
-            <Route path="/analysis" component={AnalysisPage}/>
             <Route path="/charts" component={ChartsPage}/>
+            <Route path="/analysis" component={AnalysisPage} />
 
             <Route path="/accounting" component={AccountingPage}/>
             <Route path="/auditing" component={AuditingPage}/>
