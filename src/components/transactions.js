@@ -54,10 +54,15 @@ export default class TransPage extends BasePage {
     super(props);
     this.state = {
       data: [],
+      account: ""
     };
   }
 
+<<<<<<< HEAD
   fetchData = async () => {
+=======
+  fetchTx = () => {
+>>>>>>> cosmetic: fetchBlock -> fetchTx
     let txID = this.props.match.params.trans;
     if (txID === undefined) txID = "latest";
     var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions/${txID}`, { mode: 'cors' });
@@ -66,12 +71,21 @@ export default class TransPage extends BasePage {
   }
 
   componentDidMount() {
+<<<<<<< HEAD
     this.fetchData();
+=======
+    console.log("didMount");
+    this.fetchTx();
+>>>>>>> cosmetic: fetchBlock -> fetchTx
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.trans !== prevProps.match.params.trans)
+<<<<<<< HEAD
       this.fetchData();
+=======
+      this.fetchTx();
+>>>>>>> cosmetic: fetchBlock -> fetchTx
   }
 
   render() {
