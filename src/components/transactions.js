@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { BasePage, Row } from "./common"
 import { Link } from "react-router-dom";
 
-class TransSeek extends Component {
+class TransListSeek extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,6 +27,11 @@ class TransSeek extends Component {
     this.props.account !== "" && this.fetchList(this.props.account);
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.account !== prevProps.account)
+    this.props.account !== "" && this.fetchList(this.props.account)
+  }
+
   render = () => {
 
     this.makeList = (chifraList) => {
@@ -40,7 +45,7 @@ class TransSeek extends Component {
 
     return (
       <div>
-        Account filter: {this.props.account}
+        Account filter: {this.props.account} <button onClick={this.props.changeAccount("")}>[clear]</button>
         {this.makeList(this.state.listResults)}
       </div>
     )
@@ -129,7 +134,7 @@ export default class TransPage extends BasePage {
 
       return (
         <div>
-        <TransSeek account={this.props.account}/>
+        <TransListSeek account={this.props.account} changeAccount={this.props.changeAccount}/>
         {this.state.data.map(trans => 
           <TransDisplay key={trans.hash} trans={trans} />
         )}

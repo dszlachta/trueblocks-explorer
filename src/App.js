@@ -42,7 +42,13 @@ class App extends Component {
   componentDidMount = () => {
   }
 
-  renderTabs() {
+  handleAccountChange = (e) => {
+    console.log(e);
+    // this.setState({account: account});
+    return false;
+  }
+
+  renderTabs = () => {
     return (
       <div>
         <Router>
@@ -82,7 +88,7 @@ class App extends Component {
             <Route path="/blocks/:theID?" component={BlocksPage} />
             <Route path="/logs/:theID?" component={LogsPage} />
             <Route path="/receipts/:theID?" component={ReceiptPage} />
-            <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account}/>} />
+            <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account} changeAccount={this.handleAccountChange}/>} />
             <Route path="/functions/:func?" component={FunctionsPage}/>
 
             <Route path="/charts" component={ChartsPage}/>
