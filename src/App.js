@@ -80,11 +80,8 @@ class App extends Component {
 
             <Route path="/accounts/:theID?" component={AccountsPage}/>
             <Route path="/blocks/:theID?" component={BlocksPage} />
-            <Route path="/transactions/:trans?" component={TransPage} />
             <Route path="/logs/:theID?" component={LogsPage} />
             <Route path="/receipts/:theID?" component={ReceiptPage} />
-            <Route path="/accounts/:account?" component={AccountsPage}/>
-            <Route path="/blocks/:block?" component={BlocksPage} />
             <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account}/>} />
             <Route path="/functions/:func?" component={FunctionsPage}/>
 
