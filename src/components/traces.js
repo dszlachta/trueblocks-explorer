@@ -1,52 +1,75 @@
 import React, { Component } from 'react'
-import { BasePage, Row } from "./common"
+import { BasePage, Row } from './common';
 
-export class TransDisplay extends Component {
+export class TraceActionDisplay extends Component {
   render() {
-    let tx = this.props.trans;
-    let cur = tx.blockNumber + "." + tx.transactionIndex;
-    let prev = tx.blockNumber + "." + (tx.transactionIndex + ".prev");  // bounds
-    let next = tx.blockNumber + "." + (tx.transactionIndex + ".next");  // bounds
-    let prevblk = (tx.blockNumber - 1) + "." + (1 + ".prev");  // bounds
-    let nextblk = (tx.blockNumber + 1) + "." + (1 + ".prev");  // bounds
+    let item = this.props.theData;
     return (
-      <div key={this.props.name}>
-          <table width="100%"><tbody>
-          <Row name="transId" type="nav:cur" value={cur} bold={true}></Row>
-          <Row class="row_type_1" name="from" type="address" value={tx.from} route="/accounts/"></Row>
-          <Row class="row_type_1" name="to" type="address" value={tx.to} route="/accounts/"></Row>
-          <Row class="row_type_1" name="date" type="date:date" value={tx.date}></Row>
-          <Row class="row_type_1" name="value.wei" type="num:wei" value={tx.value}></Row>
-          <Row class="row_type_1" name="value.ether" type="num:ether" value={tx.ether}></Row>
-          <Row class="row_type_1" name="age" type="date:lights" value={tx.age}></Row>
-          {/*<Row class="row_type_1" name="price" type="num:dollars" value={tx.price}></Row>*/}
-          <div>&nbsp;</div>
-          <Row class="row_type_2" name="transactionIndex" type="num:txid" value={tx.transactionIndex}></Row>
-          <Row class="row_type_2" name="hash" type="hash:tx" value={tx.hash} route="/transactions/"></Row>
-          <Row class="row_type_2" name="date short" type="date:datesh" value={tx.datesh}></Row>
-          <Row class="row_type_2" name="time" type="date:time" value={tx.time}></Row>
-          <Row class="row_type_2" name="timestamp" type="date:ts" value={tx.timestamp}></Row>
-          <Row class="row_type_2" name="input" type="bytes" value={tx.input} route="/transactions/"></Row>
-          <Row class="row_type_2" name="gasUsed" type="num:gas" value={tx.gasUsed}></Row>
-          <div>&nbsp;</div>
-          <Row class="row_type_3" name="receipt" type="receipt" value="<expand>" route="/receipts/"></Row>
-          <Row class="row_type_3" name="traces" type="trace" value="<expand>" route="/traces/"></Row>
-          <div>&nbsp;</div>
-          <Row class="row_type_4" name="blockNumber" type="num:blk" value={tx.blockNumber} route="/blocks/"></Row>
-          <Row class="row_type_4" name="blockHash" type="hash:blk" value={tx.blockHash} route="/blocks/"></Row>
-          <div>&nbsp;</div>
-          <Row name="1st tx in prev blk" type="nav:prev" value={prevblk} route="/transactions/"></Row>
-          <Row name="1st tx in next blk" type="nav:next" value={nextblk} route="/transactions/"></Row>
-          <Row name="previous tx" type="nav:prev" value={prev} route="/transactions/"></Row>
-          <Row name="next tx" type="nav:next" value={next} route="/transactions/"></Row>
-        }
+      <div key={this.props.hash}>
+        <table width="100%"><tbody>
+          <Row name="address" type="string" value={item.address} display={item.address} route="" />
+          <Row name="balance" type="string" value={item.balance} display={item.balance} route="" />
+          <Row name="callType" type="string" value={item.callType} display={item.callType} route="" />
+          <Row name="from" type="string" value={item.from} display={item.from} route="" />
+          <Row name="gas" type="string" value={item.gas} display={item.gas} route="" />
+          <Row name="init" type="string" value={item.init} display={item.init} route="" />
+          <Row name="input" type="string" value={item.input} display={item.input} route="" />
+          <Row name="refundAddress" type="string" value={item.refundAddress} display={item.refundAddress} route="" />
+          <Row name="to" type="string" value={item.to} display={item.to} route="" />
+          <Row name="value" type="string" value={item.value} display={item.value} route="" />
+          <Row name="ether" type="string" value={item.ether} display={item.ether} route="" />
         </tbody></table>
       </div>
     );
   }
 }
 
-export default class TransPage extends BasePage {
+export class TraceResultDisplay extends Component {
+  render() {
+    let item = this.props.theData;
+    return (
+      <div key={this.props.hash}>
+        <table width="100%"><tbody>
+          <Row name="address" type="string" value={item.address} display={item.address} route="" />
+          <Row name="code" type="string" value={item.code} display={item.code} route="" />
+          <Row name="gasUsed" type="string" value={item.gasUsed} display={item.gasUsed} route="" />
+          <Row name="output" type="string" value={item.output} display={item.output} route="" />        </tbody></table>
+      </div>
+    );
+  }
+}
+
+export class TraceDisplay extends Component {
+  render() {
+    let array = this.props.theData;
+    console.log(array);
+    console.log(array[0]);
+    var item = array[0];
+    return (
+      <div key={this.props.hash}>
+        <div>Trace</div>
+        <table width="100%"><tbody>
+          <Row name="subtraces" type="string" value={item.subtraces} display={item.subtraces} route="" />
+          <Row name="traceAddress" type="string" value={item.traceAddress} display={item.traceAddress} route="" />
+          <Row name="transactionHash" type="string" value={item.transactionHash} display={item.transactionHash} route="" />
+          <Row name="transactionPosition" type="string" value={item.transactionPosition} display={item.transactionPosition} route="" />
+          <tr><td width="100%" colSpan="3" height="10px"></td></tr>
+          <Row name="type" type="string" value={item.type} display={item.type} route="" />
+          <Row name="error" type="string" value={item.error} display={item.error} route="" />
+          <Row name="articulatedTrace" type="string" value={item.articulatedTrace} display={item.articulatedTrace} route="" />
+          <tr><td width="100%" colSpan="3" height="10px"></td></tr>
+          <tr><td width="100%" colSpan="3" height="10px"></td></tr>
+        </tbody></table>
+        <div>Trace Action</div>
+        <TraceActionDisplay theData={item.action} />
+        <div>Trace Result</div>
+        <TraceResultDisplay theData={item.result} />
+       </div>
+    );
+  }
+}
+
+export default class TracePage extends BasePage {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,43 +77,43 @@ export default class TransPage extends BasePage {
     };
   }
 
-  fetchBlock = () => {
-    let txID = this.props.match.params.trans;
-    if (txID === undefined)
-      txID = "latest";
-    fetch(`${process.env.REACT_APP_API_URL}/transactions/${txID}`, { mode: 'cors' })
-      .then(response => response.json())
-      .then(result => {
-        this.setState({ data: result })
-      }
-      ).catch((e) => {
-        console.log(e)
-      });
+  fetchData = async () => {
+    let theID = this.props.match.params.theID;
+    if (theID === undefined)
+      theID = "latest";
+    try {
+      var response = await fetch(`${process.env.REACT_APP_API_URL}/traces/${theID}`, { mode: 'cors' });
+      var result = await response.json();
+      console.log("result: ");
+      console.log(result);
+      this.setState({ data: result })
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   componentDidMount() {
-    this.fetchBlock();
+    console.log("DidMount");
+    this.fetchData();
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.trans !== prevProps.match.params.trans)
-      this.fetchBlock();
+    if (this.props.match.params.theID !== prevProps.match.params.theID)
+      this.fetchData();
   }
 
   render() {
     this.makeContent = () => {
       if (this.state.data.length === 0)
         return "";
-
-      return (this.state.data.map(trans => {
-        return (<TransDisplay key={trans.name} trans={trans} />);
-      }
-      ));
+      console.log("this.state.data[0]: ");
+      console.log(this.state.data[0]);
+      return (<TraceDisplay key={0} theData={this.state.data} />);
     }
 
-    var left = "Trans Module";
+    var left = "Trace Module";
     var middle = this.makeContent();
-    var right = "The transactions component of TrueBlocks allows you to assign names any Ethereum transactions. We've provided a number of default named transactions, but you may add your own. This makes understanding the timeline of your interactions with the blockchain easier. If you choose to share the names you create, others will benefit from that information.";
+    var right = "The traces component of TrueBlocks allows you to assign names any Ethereum traces. We've provided a number of default named traces, but you may add your own. This makes understanding the timeline of your interactions with the blockchain easier. If you choose to share the names you create, others will benefit from that information.";
     return (
       <BasePage
         lSection={left}

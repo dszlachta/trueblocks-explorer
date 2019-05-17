@@ -17,6 +17,7 @@ import BlocksPage from './components/blocks';
 import TransPage from './components/transactions';
 import LogsPage from './components/logs';
 import ReceiptPage from './components/receipts';
+import TracePage from './components/traces';
 import FunctionsPage from './components/functions';
 import AnalysisPage from './components/analysis';
 import ChartsPage from './components/charts';
@@ -35,7 +36,7 @@ class App extends Component {
     this.state = {
       hits: [],
       lastTab: 6,
-      account: "0xa1e4380a3b1f749673e270229993ee55f35663b4"
+      account: "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359"
     };
   }
 
@@ -64,6 +65,7 @@ class App extends Component {
           <Link className="react-tabs__tab" to="/transactions">Transactions</Link>
           <Link className="react-tabs__tab" to="/logs">Logs</Link>
           <Link className="react-tabs__tab" to="/receipts">Receipts</Link>
+          <Link className="react-tabs__tab" to="/traces">Traces</Link>
           <Link className="react-tabs__tab" to="/functions">Functions</Link>
 
           |
@@ -90,6 +92,7 @@ class App extends Component {
             <Route path="/logs/:theID?" component={LogsPage} />
             <Route path="/receipts/:theID?" component={ReceiptPage} />
             <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account} changeAccount={this.handleAccountChange}/>} />
+            <Route path="/traces/:theID?" component={TracePage} />
             <Route path="/functions/:func?" component={FunctionsPage}/>
 
             <Route path="/charts" component={ChartsPage}/>
