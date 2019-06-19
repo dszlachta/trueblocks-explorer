@@ -27,7 +27,19 @@ import NotificationsPage from './components/notifications';
 import CustomPage from './components/custom';
 import PricingPage from './components/pricing';
 import HelpPage from './components/help';
-//import logo from './svg/logo.svg';
+import BasePage from './components/basepage';
+
+export class DDosPage extends BasePage {
+  render() {
+    return (<div><br/><big><center>Not showing dDos transaction.</center></big><br/><p/></div>);
+  }
+}
+
+export class RPage extends BasePage {
+  render() {
+    return (<div>R PAGE</div>);
+  }
+}
 
 class App extends Component {
 
@@ -54,34 +66,6 @@ class App extends Component {
     return (
       <div>
         <Router>
-          <Link className="react-tabs__tab" to="/">Home</Link>
-          |
-          <Link className="react-tabs__tab" to="/monitors">Monitors</Link>
-          <Link className="react-tabs__tab" to="/scrapers">Scrapers</Link>
-
-          |
-          <Link className="react-tabs__tab" to="/accounts">Accounts</Link>
-          <Link className="react-tabs__tab" to="/blocks">Blocks</Link>
-          <Link className="react-tabs__tab" to="/transactions">Transactions</Link>
-          <Link className="react-tabs__tab" to="/logs">Logs</Link>
-          <Link className="react-tabs__tab" to="/receipts">Receipts</Link>
-          <Link className="react-tabs__tab" to="/traces">Traces</Link>
-          <Link className="react-tabs__tab" to="/functions">Functions</Link>
-
-          |
-          <Link className="react-tabs__tab" to="/charts">Charts</Link>
-          <Link className="react-tabs__tab" to="/analysis">Analysis</Link>
-
-          |
-          <Link className="react-tabs__tab" to="/accounting">Accounting</Link>
-          <Link className="react-tabs__tab" to="/auditing">Auditing</Link>
-          <Link className="react-tabs__tab" to="/notifications">Notifications</Link>
-          <Link className="react-tabs__tab" to="/custom">Custom</Link>
-
-          |
-          <Link className="react-tabs__tab" to="/pricing">Pricing</Link>
-          <Link className="react-tabs__tab" to="/help">Help</Link>
-
           <div>
             <Route path="/" exact component={HomePage}/>
             <Route path="/monitors" component={MonitorsPage}/>
@@ -92,6 +76,8 @@ class App extends Component {
             <Route path="/logs/:theID?" component={LogsPage} />
             <Route path="/receipts/:theID?" component={ReceiptPage} />
             <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account} changeAccount={this.handleAccountChange}/>} />
+            <Route path="/ddos/" component={DDosPage} />
+            <Route path="/R/" component={RPage} />
             <Route path="/traces/:theID?" component={TracePage} />
             <Route path="/functions/:func?" component={FunctionsPage}/>
 
@@ -118,10 +104,6 @@ class App extends Component {
           <div className='header-logo'><img alt='' src="https://quickblocks.io/wp-content/uploads/2017/10/logo-white-website-95px.png" width="25px"/></div>
           <div className='header-appname'>TrueBlocks<small>&reg;</small></div>
           <div className='header-social'>
-            {/* <ButtonGroup>
-              <ButtonShare size={-4} share type='facebook' />
-              <ButtonShare size={-4} share type='twitter' />
-            </ButtonGroup> */}
           </div>
         </div>
         {this.renderTabs()}
