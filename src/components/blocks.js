@@ -54,7 +54,7 @@ export default class BlocksPage extends BasePage {
     let theID = this.props.match.params.theID;
     if (theID === undefined)
       theID = "latest";
-    fetch(`${process.env.REACT_APP_API_URL}/blocks/${theID}`, { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/blocks?block_list=${theID}`, { mode: 'cors' })
       .then(response => response.json())
       .then(result => {
         this.setState({ data: result })

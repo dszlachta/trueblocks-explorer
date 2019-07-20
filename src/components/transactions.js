@@ -15,7 +15,7 @@ class TransListSeek extends Component {
   fetchList = (address) => {
     return fetch(`${process.env.REACT_APP_API_URL}/list?address=${address}`, { mode: 'cors' })
       .then((res) => {
-        //console.log(res.text());
+        console.log(res.text());
         return res.text()
       }).then((res) => {
         return this.setState({
@@ -132,9 +132,10 @@ export default class TransPage extends BasePage {
   fetchTx = async () => {
     let txID = this.props.match.params.trans;
     if (txID === undefined) txID = "latest";
-    var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions/${txID}`, { mode: 'cors' });
+    var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions?trans_list=${txID}`, { mode: 'cors' });
     var result = await response.json();
-    this.setState({ data: result });
+    console.log(result)
+    this.setState({ data: result.data });
   }
 
   componentDidMount() {
@@ -151,9 +152,9 @@ export default class TransPage extends BasePage {
       if (this.state.data.length === 0)
         return "";
       //let TransListSeekwRouter = TransListSeek;
+      //{//<TransListSeek account={this.props.account} changeAccount={this.props.changeAccount}/>}
       return (
         <div>
-        <TransListSeek account={this.props.account} changeAccount={this.props.changeAccount}/>
         {this.state.data.map(trans => 
           <TransDisplay key={trans.hash} trans={trans} />
         )}

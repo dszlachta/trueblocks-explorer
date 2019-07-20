@@ -56,7 +56,7 @@ export default class ReceiptPage extends BasePage {
     let theID = this.props.match.params.theID;
     if (theID === undefined)
       theID = "latest";
-    fetch(`${process.env.REACT_APP_API_URL}/receipts/${theID}`, { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/receipts?trans_list=${theID}`, { mode: 'cors' })
       .then(response => response.json())
       .then(result => {
         this.setState({ data: result })
