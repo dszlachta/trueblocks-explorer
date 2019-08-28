@@ -30,8 +30,8 @@ export default class TransPage extends Component {
 
   fetchTx = async () => {
     let txID = this.props.match.params.trans;
-    if (txID === undefined) return;
-    var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions/${txID}`, { mode: 'cors' });
+    if (txID === undefined) txID = "latest";
+    var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions?trans_list=${txID}`, { mode: 'cors' });
     var result = await response.json();
     this.setState({ data: result });
   }

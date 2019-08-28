@@ -15,7 +15,7 @@ export default class HelpPage extends BasePage {
           <ul>
             <h4>Shrink Wrapped / Support Options</h4>
             <ul>
-              <li>The paradigm has shited. Decentralized software, in order to fully realize its promise, will return to being desktop software.</li>
+              <li>The paradigm has shifted. Decentralized software, in order to fully realize its promise, will return to being desktop software.</li>
               <li>Open source issues challenge shrink-wrapped software models:
                 <ul>
                   <li>Only the core parts of the system would be open sourced.</li>
@@ -32,7 +32,7 @@ export default class HelpPage extends BasePage {
               <li>Provide a few in-depth investigation of some high visibility community contracts for free.</li>
               <li>Sell pre-packaged investigations</li>
             </ul>
-            <h4>White Lable for hardware manufacturers</h4>
+            <h4>White Label for hardware manufacturers</h4>
             <ul>
               <li>Audit nodes.</li>
               <li>White label for hardware manufacturs.</li>
