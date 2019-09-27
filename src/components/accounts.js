@@ -1,23 +1,21 @@
 import React, { Component } from 'react'
-import { BasePage, Row } from './common';
+import { BasePage, Row } from './baserow';
 
 export class AccountDisplay extends Component {
   render() {
     let item = this.props.theData[0];
-    console.log("item");
-    console.log(item);
     return (
       <div key={this.props.hash}>
         <table width="100%"><tbody>
-          <Row className="row_type_1" name="address" type="string" value={item.address} display={item.address} />
-          <Row className="row_type_1" name="blockNumber" type="string" value={item.blockNumber} display={item.blockNumber} route="/blocks/" />
-          <Row className="row_type_2" name="balance" type="string" value={item.balance} display={item.balance} />
-          <Row className="row_type_2" name="ether" type="string" value={item.ether} display={item.ether} />
-          <Row className="row_type_2" name="nonce" type="string" value={item.nonce} display={item.nonce} />
-          <Row className="row_type_2" name="code" type="string" value={item.code} display={item.code} />
-          <Row className="row_type_2" name="storage" type="string" value={item.storage} display={item.storage} />
-          <Row className="row_type_3" name="deployed" type="string" value={item.deployed} display={item.deployed} route="/blocks/" />
-          <Row className="row_type_3" name="accttype" type="string" value={item.accttype} display={item.accttype} />
+          <Row name="address" type="string" value={item.address} display={item.address} />
+          <Row name="blockNumber" type="string" value={item.blockNumber} display={item.blockNumber} route="/blocks/" />
+          <Row name="balance" type="string" value={item.balance} display={item.balance} />
+          <Row name="ether" type="string" value={item.ether} display={item.ether} />
+          <Row name="nonce" type="string" value={item.nonce} display={item.nonce} />
+          <Row name="code" type="string" value={item.code} display={item.code} />
+          <Row name="storage" type="string" value={item.storage} display={item.storage} />
+          <Row name="deployed" type="string" value={item.deployed} display={item.deployed} route="/blocks/" />
+          <Row name="accttype" type="string" value={item.accttype} display={item.accttype} />
         </tbody></table>
       </div>
     );
@@ -85,7 +83,7 @@ render() {
     var right = "The accounts component of TrueBlocks allows you to assign names to Ethereum addresses. From then on, anywhere that address appears in a TrueBlocks monitor, the name appears beside it. This makes understanding what's going on easier. You may also select names from ENS if you wish. If you choose to share the names you create, others will benefit from that information.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

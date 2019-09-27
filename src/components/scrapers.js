@@ -57,7 +57,7 @@ export default class ScrapersPage extends BasePage {
       "Scrapers interact with the blockchain to prepare data for TrueBlocks to use. You may control the behaviour of the scrapers in this section. There are two scrapers: blockScrape and acctScrape. Click the help icon next to the scraper for more information. One these screens, you are given an option to share the results of your scraper's work with others. If you do so, others will benefit from your scraper's work.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

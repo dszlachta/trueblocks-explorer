@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BasePage, Row } from './common';
+import { BasePage, Row } from './baserow';
 
 export class TraceActionDisplay extends Component {
   render() {
@@ -116,7 +116,7 @@ export default class TracePage extends BasePage {
     var right = "The traces component of TrueBlocks allows you to assign names any Ethereum traces. We've provided a number of default named traces, but you may add your own. This makes understanding the timeline of your interactions with the blockchain easier. If you choose to share the names you create, others will benefit from that information.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

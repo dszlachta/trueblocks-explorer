@@ -18,7 +18,7 @@ export default class HomePage extends BasePage {
     var right = "This is the application's home page.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

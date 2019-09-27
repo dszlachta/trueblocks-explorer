@@ -97,7 +97,7 @@ export default class AnalysisPage extends BasePage {
       "This component shows the status of both the node and the state of the TrueBlocks scrapers. It can also show historical charts of activity on the node such as Blocks per Week, Difficuly over time, etc. Anything to give the user a sense of what's going on with his/her node.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

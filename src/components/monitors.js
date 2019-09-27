@@ -14,7 +14,7 @@ export default class MonitorsPage extends BasePage {
     var right = "The monitoring component runs 'chifra daemon' which continually scrapes your accounts of interest.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

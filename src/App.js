@@ -6,7 +6,8 @@
 import React, { Component } from 'react';
 //import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import './App.css';
 import HomePage from './components/home';
@@ -27,6 +28,9 @@ import NotificationsPage from './components/notifications';
 import CustomPage from './components/custom';
 import PricingPage from './components/pricing';
 import HelpPage from './components/help';
+import ButtonGroup from 'constructicon/button-group'
+import ButtonShare from 'constructicon/button-share'
+
 //import logo from './svg/logo.svg';
 
 class App extends Component {
@@ -54,7 +58,7 @@ class App extends Component {
     return (
       <div>
         <Router>
-          <Link className="react-tabs__tab" to="/">Home</Link>
+          {/* <Link className="react-tabs__tab" to="/">Home</Link>
           |
           <Link className="react-tabs__tab" to="/monitors">Monitors</Link>
           <Link className="react-tabs__tab" to="/scrapers">Scrapers</Link>
@@ -81,7 +85,7 @@ class App extends Component {
           |
           <Link className="react-tabs__tab" to="/pricing">Pricing</Link>
           <Link className="react-tabs__tab" to="/help">Help</Link>
-
+ */}
           <div>
             <Route path="/" exact component={HomePage}/>
             <Route path="/monitors" component={MonitorsPage}/>
@@ -115,13 +119,14 @@ class App extends Component {
     return (
       <div className='App'>
         <div className='App-header'>
-          <div className='header-logo'><img alt='' src="https://quickblocks.io/wp-content/uploads/2017/10/logo-white-website-95px.png" width="25px"/></div>
-          <div className='header-appname'>TrueBlocks<small>&reg;</small></div>
+          {/* <div className='header-logo'><img alt='' src="http://localhost:3002/logo.png"/></div> */}
+          <div className='header-appname'>TrueBlocks<small>&reg;</small> Explorer</div>
           <div className='header-social'>
-            {/* <ButtonGroup>
+            {
+               <ButtonGroup>
               <ButtonShare size={-4} share type='facebook' />
               <ButtonShare size={-4} share type='twitter' />
-            </ButtonGroup> */}
+            </ButtonGroup>}
           </div>
         </div>
         {this.renderTabs()}
@@ -129,7 +134,6 @@ class App extends Component {
           TrueBlocks &reg; 2019 ~ <a href="mailto:info@trueblocks.io"><font color="#b1b1b1">info@trueblocks.io</font></a> ~ <a href="https://trueblocks.io"><font color="#b1b1b1">https://trueblocks.io</font></a>
         </div>
       </div>
-
     );
   }
 }

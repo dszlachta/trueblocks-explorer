@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BasePage, Row } from './common';
+import { BasePage, Row } from './baserow';
 
 export class LogDisplay extends Component {
   render() {
@@ -95,7 +95,7 @@ export default class LogsPage extends BasePage {
     var right = "The logs component of TrueBlocks allows you to assign names any Ethereum logs. We've provided a number of default named logs, but you may add your own. This makes understanding the timeline of your interactions with the logchain easier. If you choose to share the names you create, others will benefit from that information.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

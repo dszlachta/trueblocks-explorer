@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BasePage, Grid, GridColumn } from './common'
+import { BasePage, Grid, GridColumn } from './baserow'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
@@ -119,7 +119,7 @@ export default class FunctionsPage extends BasePage {
     var right = "This component shows known and shared functions and ABIs.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

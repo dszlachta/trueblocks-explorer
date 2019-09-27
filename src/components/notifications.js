@@ -49,7 +49,7 @@ export default class NotificationsPage extends BasePage {
     var right = "The accounting component is a for-pay portion of TrueBlocks. Please contact us for more information.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />

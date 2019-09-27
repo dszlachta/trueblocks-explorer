@@ -13,32 +13,24 @@ export default class BasePage extends Component {
     render() {
         return (
             <div>
-                <Grid styles={{ backgroundColor: 'lightyellow', color: 'brown', border: '1px dotted black' }}>
-                    <GridColumn xs={1} lg={1} styles={{ padding: '1px' }} >
+                <Grid>
+
+                    <GridColumn xs={1} lg={1}>
                     </GridColumn>
-                    <GridColumn xs={1} lg={9}>
-                    <br/>
-                        <h2>{this.props.lSection}</h2>
+
+                    <GridColumn xs={1} lg={10}>
                         <Section styles={{ border: '1px dotted black' }} background='shade'>
                             {this.props.mSection}
                         </Section>
                     </GridColumn>
-                    <GridColumn xs={1} lg={2}>
-                        <Section>
-                            <br/>
-                            {this.props.rSection}
-                        </Section>
+
+                    <GridColumn xs={1} lg={1}>
                     </GridColumn>
                     
-                    <GridColumn xs={1} lg={8} styles={{ padding: 0, margin: 0 }}>
+                    <GridColumn xs={2} lg={12}>
+                        <br />
                     </GridColumn>
-                    <GridColumn xs={1} lg={2} styles={{ padding: 0, margin: 0 }}>
-                        <Section>
-                            <h3>{this.props.lSection}</h3>
-                        </Section>
-                    </GridColumn>
-                    <GridColumn xs={1} lg={2} styles={{ padding: 0, margin: 0 }}>
-                    </GridColumn>
+
                 </Grid>
             </div>
         );

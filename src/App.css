@@ -1,11 +1,17 @@
+.App {
+  background-color: white;
+}
+
 .App-header {
-  background-color: rgba(85, 166, 247, 0.639);
-  padding: 20px;
+  background-color: rgba(12, 91, 170, 0.639);
+  padding: 15px;
   color: rgb(4, 4, 80);
   text-align: left;
   vertical-align: middle;
   font-size: x-large;
   height: 70px;
+  margin-left: 8.3%;
+  margin-right: 8.3%;
 }
 
 .App-intro {
@@ -35,25 +41,27 @@
 }
 
 .header-logo {
+  background-image: image("/Logo.svg");
+  background-size: 35px;
   position: static;
   display: inline-block;
-  height: 30px;
+  height: 40px;
+  width: 40px;
   vertical-align: middle;
-  border: 1px dashed black;
 }
 
 .header-appname {
   position: relative;
-  left: 50px;
-  top: -28px;
+  left: 10px;
+  top: 5px;
   color: rgb(7, 2, 89);
   vertical-align: middle;
 }
 
 .header-social {
   position: relative;
-  top: -60px;
-  right: -1300px;
+  top: -30px;
+  right: -1200px;
 }
 
 .prism-code {
@@ -382,10 +390,10 @@ h3 {
 }
 .data_type {
   display: inline-block;
-  font-size: smaller;
+  font-size: x-small;
   font-style: italic;
   font-family: monospace;
-  font-size: 10pt;
+  font-size: 8pt;
   vertical-align: text-top;
 }
 .data_link {
@@ -419,30 +427,10 @@ h3 {
   font-family: monospace;
   vertical-align: text-top;
 }
-.row_type_1 {
-  background-color: rgb(237, 202, 137);
-  color: rebeccapurple;
-  margin: 4px;
-}
-.row_type_2 {
-  background-color: #064788;
-  color: #C5C8C6;
-  margin: 4px;
-}
-.row_type_3 {
-  background-color: #f5874c;
-  color: rgb(2, 41, 15);
-  margin: 4px;
-}
-.row_type_4 {
-  background-color: #9a90cdcd;
-  color: rgb(2, 62, 22);
-  margin: 4px;
-}
 .no_class {
   background-color: none !important;
 }
-.logo_col {
+.icon_column {
   vertical-align: middle;
 }
 

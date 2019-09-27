@@ -1,117 +1,44 @@
 import React, { Component } from 'react'
-import { BasePage, Row } from "./common"
-import { Link } from "react-router-dom";
-
-class TransListSeek extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      listResults: [],
-      currentIndex: 0,
-      currentAddress: ""
-    };
-  }
-
-  fetchList = (address) => {
-    return fetch(`${process.env.REACT_APP_API_URL}/list?address=${address}`, { mode: 'cors' })
-      .then((res) => {
-        console.log(res.text());
-        return res.text()
-      }).then((res) => {
-        return this.setState({
-          listResults: res.replace(/[^\S\r\n]/g, ".").trim().split("\n")
-      });
-      }).then(() => {
-        this.setState({
-          currentIndex: this.state.listResults.length - 1,
-          currentAddress: address
-        });
-      })
-    .catch((e) => {
-        console.log(e)
-      });
-  }
-
-  componentDidMount = () => {
-    console.log(this.props);
-    this.props.account !== "" && this.fetchList(this.props.account);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.account === prevProps.account)
-     return false;
-    if(this.props.account.length !== 42 & this.props.account.length !== 0)
-      return false;
-    console.log("updating");
-    this.props.account !== "" && this.fetchList(this.props.account).then(
-        () => {
-          console.log(this.state.listResults[this.state.listResults.length - 1])
-          //this.props.history.push(`/transactions/${this.state.listResults[this.state.listResults.length - 1]}`)
-    });
-    
-  }
-
-  render = () => {
-
-    this.makeList = (chifraList) => {
-      return <div>
-        {chifraList.map((bnTxid) => {
-          return (<span key={bnTxid}><Link to={`/transactions/${bnTxid}`}>{bnTxid}</Link>&nbsp;&nbsp;&nbsp;</span> )
-        })
-      }
-      </div>
-    }
-
-    return (
-      <div className="account-filter" >
-        Account filter: <input className="address-input" value={this.props.account} maxLength="42" onChange={this.props.changeAccount.bind(this)}/>
-        {this.props.account === this.state.currentAddress && this.makeList(this.state.listResults)}
-      </div>
-    )
-      
-  }
-}
+import { BasePage, Row } from "./baserow"
 
 export class TransDisplay extends Component {
   render() {
     let item = this.props.trans;
-    let cur = item.blockNumber + "." + item.transactionIndex;
-    let first = "45000.0.next";  // bounds
-    let prev = item.blockNumber + "." + (item.transactionIndex + ".prev");  // bounds
-    let prevblk = (item.blockNumber - 1) + "." + (1 + ".prev");  // bounds
-    let next = item.blockNumber + "." + (item.transactionIndex + ".next");  // bounds
-    let nextblk = item.blockNumber + ".10000.next";  // bounds
     return (
       <div key={this.props.name}>
         <table width="100%">
           <tbody>
-            <Row name="transId" type="nav:cur" value={cur} bold={true}></Row>
-            <Row className="row_type_1" name="from" type="address" value={item.from} route="/accounts/"></Row>
-            <Row className="row_type_1" name="to" type="address" value={item.to} route="/accounts/"></Row>
-            <Row className="row_type_1" name="date" type="date:date" value={item.date}></Row>
-            <Row className="row_type_1" name="value.wei" type="num:wei" value={item.value}></Row>
-            <Row className="row_type_1" name="value.ether" type="num:ether" value={item.ether}></Row>
-            <Row className="row_type_1" name="age" type="date:lights" value={item.age}></Row>
+            <Row name="transId" type="nav:cur" value={item.blockNumber + "." + item.transactionIndex} bold={true}></Row>
+            <Row name="from" type="address" value={item.from} route="/accounts/"></Row>
+            <Row name="to" type="address" value={item.to} route="/accounts/"></Row>
+            <Row name="date" type="date:date" value={item.date}></Row>
+            <Row name="value.wei" type="num:wei" value={item.value}></Row>
+            <Row name="value.ether" type="num:ether" value={item.ether}></Row>
+            <Row name="age" type="date:lights" value={item.age}></Row>
+
             <tr><td width="100%" colSpan="3" height="10px"></td></tr>
-            <Row className="row_type_2" name="transactionIndex" type="num:txid" value={item.transactionIndex}></Row>
-            <Row className="row_type_2" name="hash" type="hash:tx" value={item.hash} route="/transactions/"></Row>
-            <Row className="row_type_2" name="date short" type="date:datesh" value={item.datesh}></Row>
-            <Row className="row_type_2" name="time" type="date:time" value={item.time}></Row>
-            <Row className="row_type_2" name="timestamp" type="date:ts" value={item.timestamp}></Row>
-            <Row className="row_type_2" name="input" type="bytes" value={item.input} route="/transactions/"></Row>
-            <Row className="row_type_2" name="gasUsed" type="num:gas" value={item.gasUsed}></Row>
+            <Row name="transactionIndex" type="num:txid" value={item.transactionIndex}></Row>
+            <Row name="hash" type="hash:tx" value={item.hash} route="/transactions/"></Row>
+            <Row name="date short" type="date:datesh" value={item.datesh}></Row>
+            <Row name="time" type="date:time" value={item.time}></Row>
+            <Row name="timestamp" type="date:ts" value={item.timestamp}></Row>
+            <Row name="input" type="bytes" value={item.input} route="/transactions/"></Row>
+            <Row name="gasUsed" type="num:gas" value={item.gasUsed}></Row>
+
             <tr><td width="100%" colSpan="3" height="10px"></td></tr>
-            <Row className="row_type_3" name="receipt" type="obj:receipt" value={item.hash} display="<expand>" route="/receipts/"></Row>
-            <Row className="row_type_3" name="traces" type="array:trace" value={item.hash} display="<expand>" route="/traces/"></Row>
+            <Row name="receipt" type="obj:receipt" value={item.hash} display="<expand>" route="/receipts/"></Row>
+            <Row name="traces" type="array:trace" value={item.hash} display="<expand>" route="/traces/"></Row>
+
             <tr><td width="100%" colSpan="3" height="10px"></td></tr>
-            <Row className="row_type_4" name="blockNumber" type="num:blk" value={item.blockNumber} route="/blocks/"></Row>
-            <Row className="row_type_4" name="blockHash" type="hash:blk" value={item.blockHash} route="/blocks/"></Row>
+            <Row name="blockNumber" type="num:blk" value={item.blockNumber} route="/blocks/"></Row>
+            <Row name="blockHash" type="hash:blk" value={item.blockHash} route="/blocks/"></Row>
+
             <tr><td width="100%" colSpan="3" height="10px"></td></tr>
-            <Row name="1st tx in prev blk" type="nav:prev" value={prevblk} route="/transactions/"></Row>
-            <Row name="1st tx in next blk" type="nav:next" value={nextblk} route="/transactions/"></Row>
-            <Row name="previous tx" type="nav:prev" value={prev} route="/transactions/"></Row>
-            <Row name="next tx" type="nav:next" value={next} route="/transactions/"></Row>
-            <Row name="first tx" type="nav:first" value={first} route="/transactions/"></Row>
+            <Row name="1st tx in prev blk" type="nav:prev" value={(item.blockNumber - 1) + "." + (1 + ".prev")} route="/transactions/"></Row>
+            <Row name="1st tx in next blk" type="nav:next" value={item.blockNumber + ".10000.next"} route="/transactions/"></Row>
+            <Row name="previous tx" type="nav:prev" value={item.blockNumber + "." + (item.transactionIndex + ".prev")} route="/transactions/"></Row>
+            <Row name="next tx" type="nav:next" value={item.blockNumber + "." + (item.transactionIndex + ".next")} route="/transactions/"></Row>
+            <Row name="first tx" type="nav:first" value="45000.0.next" route="/transactions/"></Row>
             <Row name="latest tx" type="nav:last" value={"latest"} route="/transactions/"></Row>
         </tbody>
         </table>
@@ -130,9 +57,12 @@ export default class TransPage extends BasePage {
   }
 
   fetchTx = async () => {
+    console.log(`${process.env.REACT_APP_API_URL}`)
     let txID = this.props.match.params.trans;
     if (txID === undefined) txID = "latest";
-    var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions?trans_list=${txID}`, { mode: 'cors' });
+//    var response = await fetch(`${process.env.REACT_APP_API_URL}/transactions?trans_list=${txID}`, { mode: 'cors' });
+    var response = await fetch(`http://localhost:8080/transactions?trans_list=${txID}`, { mode: 'cors' });
+    console.log(response);
     var result = await response.json();
     console.log(result)
     this.setState({ data: result.data });
@@ -151,8 +81,6 @@ export default class TransPage extends BasePage {
     this.makeContent = () => {
       if (this.state.data.length === 0)
         return "";
-      //let TransListSeekwRouter = TransListSeek;
-      //{//<TransListSeek account={this.props.account} changeAccount={this.props.changeAccount}/>}
       return (
         <div>
         {this.state.data.map(trans => 
@@ -162,12 +90,12 @@ export default class TransPage extends BasePage {
       );
     }
 
-    var left = "Trans Module";
+    var left = "Transaction";
     var middle = this.makeContent();
     var right = "The transactions component of TrueBlocks allows you to assign names any Ethereum transactions. We've provided a number of default named transactions, but you may add your own. This makes understanding the timeline of your interactions with the blockchain easier. If you choose to share the names you create, others will benefit from that information.";
     return (
       <BasePage
-        lSection={left}
+        pageTitle={left}
         mSection={middle}
         rSection={right}
       />
