@@ -82,7 +82,7 @@ export default class TracePage extends BasePage {
     if (theID === undefined)
       theID = "latest";
     try {
-      var response = await fetch(`${process.env.REACT_APP_API_URL}/traces?trans_list=${theID}`, { mode: 'cors' });
+      var response = await fetch(`${process.env.REACT_APP_API_URL}/traces?transactions=${theID}`, { mode: 'cors' });
       var result = await response.json();
       console.log("result: ");
       console.log(result);

@@ -61,7 +61,7 @@ export default class LogsPage extends BasePage {
     let theID = this.props.match.params.theID;
     if (theID === undefined)
       theID = "latest";
-    fetch(`${process.env.REACT_APP_API_URL}/logs?trans_list=${theID}`, { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/logs?transactions=${theID}`, { mode: 'cors' })
       .then(response => response.json())
       .then(result => {
         this.setState({ data: result })

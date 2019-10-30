@@ -34,7 +34,7 @@ export default class AccountsPage extends BasePage {
   fetchData = async () => {
     let theID = this.props.match.params.theID;
     if (theID === undefined) theID = "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359";
-    var response = await fetch(`${process.env.REACT_APP_API_URL}/accounts?terms=${theID}`, { mode: 'cors' });
+    var response = await fetch(`${process.env.REACT_APP_API_URL}/names?terms=${theID}`, { mode: 'cors' });
     var result = await response.json();
     this.setState({ data: result });
   }
@@ -43,7 +43,7 @@ export default class AccountsPage extends BasePage {
     let theID = this.props.match.params.theID;
     if (theID === undefined)
       theID = "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359"; // tip jar if nothing else
-    fetch(`${process.env.REACT_APP_API_URL}/accounts?terms=${theID}`, { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/names?terms=${theID}`, { mode: 'cors' })
       .then ((response) => {
         this.setState({ data: [] })
           if (response.status !== 200) {

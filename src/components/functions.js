@@ -38,7 +38,7 @@ export class TabbedSubview extends Component {
   }
 
   componentDidMount() {
-    fetch(`${process.env.REACT_APP_API_URL}/functions`, { mode: 'cors' })
+    fetch(`${process.env.REACT_APP_API_URL}/abi`, { mode: 'cors' })
       .then(response => response.json())
       .then(data => {
 //        this.setState({ data: data })
