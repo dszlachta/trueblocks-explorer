@@ -1,36 +1,29 @@
 {
   "name": "trueblocks-explorer",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "constructicon": "^2.0.10",
-    "d3": "^5.9.2",
-    "list-react-files": "^0.2.0",
-    "react": "^16.8.6",
-    "react-addons": "^0.9.1-deprecated",
-    "react-addons-update": "^15.3.0",
-    "react-dom": "^16.8.6",
-    "react-router": "^5.0.0",
-    "react-router-dom": "^5.0.0",
-    "react-scripts": "^3.0.0",
-    "react-tabs": "^3.0.0",
-    "react-test-renderer": "16.0.0"
+    "axios": "^0.19.2",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-scripts": "^3.4.0"
   },
   "scripts": {
-    "start": "PORT=3002 REACT_APP_API_URL=http://localhost:8080 react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
+    "start": "react-scripts start"
   },
-  "unused": {
-    "react-addons-css-transition-group": "^15.3.0"
+  "eslintConfig": {
+    "extends": "react-app"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "devDependencies": {
-    "husky": "^3.1.0"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
