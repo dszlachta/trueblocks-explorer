@@ -1,141 +1,50 @@
-/*-------------------------------------------------------------------------
- * This source code is confidential proprietary information which is
- * Copyright (c) 2019 by Great Hill Corporation.
- * All Rights Reserved
- *------------------------------------------------------------------------*/
-import React, { Component } from 'react';
-//import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React, { Fragment } from 'react';
 
-import './App.css';
-import HomePage from './components/home';
-import MonitorsPage from './components/monitors';
-import ScrapersPage from './components/scrapers';
-import AccountsPage from './components/accounts';
-import BlocksPage from './components/blocks';
-import TransPage from './components/transactions';
-import LogsPage from './components/logs';
-import ReceiptPage from './components/receipts';
-import TracePage from './components/traces';
-import FunctionsPage from './components/functions';
-import AnalysisPage from './components/analysis';
-import ChartsPage from './components/charts';
-import AccountingPage from './components/accounting';
-import AuditingPage from './components/auditing';
-import NotificationsPage from './components/notifications';
-import CustomPage from './components/custom';
-import PricingPage from './components/pricing';
-import HelpPage from './components/help';
-import ButtonGroup from 'constructicon/button-group'
-import ButtonShare from 'constructicon/button-share'
+function App() {
+  return (
+    <div>
+      <Header />
+      <Nav />
+      <Content status={<Status />} page={<Page />} help={<Help />}>
+      </Content>
+      <Footer />
+    </div>
+  );
+}
 
-//import logo from './svg/logo.svg';
+const Header = () => {
+  const style = { backgroundColor: 'red' }
+  return <div style={style}>Header</div>
+}
 
-class App extends Component {
+const Nav = () => {
+  const style = { backgroundColor: 'green' }
+  return <div style={style}>Nav</div>
+}
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      hits: [],
-      lastTab: 6,
-      account: "0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359"
-    };
-  }
+const Content = ({ status, page, help }) => {
+  const style = { backgroundColor: 'blue' }
+  return <div style={style}>Content {status} {page} {help}</div>
+}
 
-  componentDidMount = () => {
-    console.log(this.props)
-  }
+const Status = () => {
+  const style = { backgroundColor: 'orange' }
+  return <div style={style}>Status</div>
+}
 
-  handleAccountChange = (e) => {
-    let account = e.target.value.trim();
-    this.setState({account: account});
-    return false;
-  }
+const Page = () => {
+  const style = { backgroundColor: 'purple' }
+  return <div style={style}>Page</div>
+}
 
-  renderTabs = () => {
-    return (
-      <div>
-        <Router>
-          {/* <Link className="react-tabs__tab" to="/">Home</Link>
-          |
-          <Link className="react-tabs__tab" to="/monitors">Monitors</Link>
-          <Link className="react-tabs__tab" to="/scrapers">Scrapers</Link>
+const Help = () => {
+  const style = { backgroundColor: 'yellow' }
+  return <div style={style}>Help</div>
+}
 
-          |
-          <Link className="react-tabs__tab" to="/accounts">Accounts</Link>
-          <Link className="react-tabs__tab" to="/blocks">Blocks</Link>
-          <Link className="react-tabs__tab" to="/transactions">Transactions</Link>
-          <Link className="react-tabs__tab" to="/logs">Logs</Link>
-          <Link className="react-tabs__tab" to="/receipts">Receipts</Link>
-          <Link className="react-tabs__tab" to="/traces">Traces</Link>
-          <Link className="react-tabs__tab" to="/functions">Functions</Link>
-
-          |
-          <Link className="react-tabs__tab" to="/charts">Charts</Link>
-          <Link className="react-tabs__tab" to="/analysis">Analysis</Link>
-
-          |
-          <Link className="react-tabs__tab" to="/accounting">Accounting</Link>
-          <Link className="react-tabs__tab" to="/auditing">Auditing</Link>
-          <Link className="react-tabs__tab" to="/notifications">Notifications</Link>
-          <Link className="react-tabs__tab" to="/custom">Custom</Link>
-
-          |
-          <Link className="react-tabs__tab" to="/pricing">Pricing</Link>
-          <Link className="react-tabs__tab" to="/help">Help</Link>
- */}
-          <div>
-            <Route path="/" exact component={HomePage}/>
-            <Route path="/monitors" component={MonitorsPage}/>
-            <Route path="/scrapers" component={ScrapersPage}/>
-
-            <Route path="/accounts/:theID?" component={AccountsPage}/>
-            <Route path="/blocks/:theID?" component={BlocksPage} />
-            <Route path="/logs/:theID?" component={LogsPage} />
-            <Route path="/receipts/:theID?" component={ReceiptPage} />
-            <Route path="/transactions/:trans?" render={(props) => <TransPage {...props} account={this.state.account} changeAccount={this.handleAccountChange}/>} />
-            <Route path="/traces/:theID?" component={TracePage} />
-            <Route path="/functions/:func?" component={FunctionsPage}/>
-
-            <Route path="/charts" component={ChartsPage}/>
-            <Route path="/analysis" component={AnalysisPage} />
-
-            <Route path="/accounting" component={AccountingPage}/>
-            <Route path="/auditing" component={AuditingPage}/>
-            <Route path="/notifications" component={NotificationsPage}/>
-            <Route path="/custom" component={CustomPage}/>
-
-            <Route path="/pricing" component={PricingPage}/>
-            <Route path="/help" component={HelpPage}/>
-          </div>
-        </Router>
-      </div>
-    );
-  }
-
-  render() {
-    return (
-      <div className='App'>
-        <div className='App-header'>
-          {/* <div className='header-logo'><img alt='' src="http://localhost:3002/logo.png"/></div> */}
-          <div className='header-appname'>TrueBlocks<small>&reg;</small> Explorer</div>
-          <div className='header-social'>
-            {
-               <ButtonGroup>
-              <ButtonShare size={-4} share type='facebook' />
-              <ButtonShare size={-4} share type='twitter' />
-            </ButtonGroup>}
-          </div>
-        </div>
-        {this.renderTabs()}
-        <div className='bottom-footer'>
-          TrueBlocks &reg; 2019 ~ <a href="mailto:info@trueblocks.io"><font color="#b1b1b1">info@trueblocks.io</font></a> ~ <a href="https://trueblocks.io"><font color="#b1b1b1">https://trueblocks.io</font></a>
-        </div>
-      </div>
-    );
-  }
+const Footer = () => {
+  const style = { backgroundColor: 'pink' }
+  return <div style={style}>Footer</div>
 }
 
 export default App;
