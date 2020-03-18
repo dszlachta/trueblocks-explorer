@@ -4,206 +4,189 @@ import "./PageContent.css";
 const PageContent = () => {
   return (
     <div className="page-content">
-      <div>page-contents</div>
-      {/* <PageSider />
-      < Status />
-      < Jinky />
-      < Help /> */}
+      <MenuPanel />
+      <Status />
+      <Content />
+      <Help />
     </div >
   );
 }
 
 export default PageContent;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const PageSider = () => {
-  return <div className="page-sider">page-sider</div>
+const MenuPanel = () => {
+  return <div className="menu">menu</div>
 }
 
 const Status = () => {
-  return <div className="status"><div>Status</div></div>
+  return <div className="status"><div>status</div></div>
 }
 
 const Help = () => {
-  return <div className="help">Help</div>
+  return <div className="help">help</div>
 }
 
-const Jinky = () => {
+const Content = () => {
   const [big, setBig] = useState(false);
   if (!big) {
-    return (<div className="jinky">
+    return (<div className="content">
       <button onClick={() => setBig(true)}>big</button>
-      <div>Jinky</div>
-      <div>Jinky</div>
-      <div>Jinky</div>
-      <div>Jinky</div>
-      <div>Jinky</div>
-      <div>Jinky</div>
-      <div>Jinky</div>
-      <div>Jinky</div>
+      <div>Content</div>
+      <div>Content</div>
+      <div>Content</div>
+      <div>Content</div>
+      <div>Content</div>
+      <div>Content</div>
+      <div>Content</div>
+      <div>Content</div>
     </div>);
   }
-  return <div className="jinky">
+  return <div className="content">
     <div>page-content</div>
     <button onClick={() => setBig(false)}>small</button>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
-    <div>Jinky</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
+    <div>Content</div>
   </div>
 }

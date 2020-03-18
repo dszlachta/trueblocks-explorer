@@ -9,7 +9,9 @@
     "react-scripts": "^3.4.0"
   },
   "scripts": {
-    "start": "react-scripts start"
+    "start": "PORT=3002 REACT_APP_API_URL=http://localhost:8080 react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -25,5 +27,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "husky": "^3.1.0"
   }
 }

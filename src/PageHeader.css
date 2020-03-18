@@ -14,7 +14,6 @@
   padding: var(--panel-padding);
   background-color: var(--panel-bgcolor);
   color: var(--panel-color);
-  border: var(--panel-border);
 }
 
 .left-header {
