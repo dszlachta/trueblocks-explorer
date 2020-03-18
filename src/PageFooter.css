@@ -1,0 +1,32 @@
+/*------------------------------------------*/
+.page-footer {
+  margin: unset;
+  display: grid;
+  grid-area: page-footer;
+  grid-template-areas: "left-footer center-footer right-footer";
+  grid-template-columns: 250px 2fr minmax(125px, 1fr);
+  grid-template-rows: 1fr;
+}
+.page-footer > div {
+  padding: var(--panel-padding);
+  padding-top: 2px !important;
+  background-color: var(--panel-bgcolor);
+  color: var(--panel-color);
+  border-top: 1px solid var(--panel-color);
+}
+
+/*------------------------------------------*/
+.left-footer {
+  grid-area: left-footer;
+}
+
+/*------------------------------------------*/
+.center-footer {
+  grid-area: center-footer;
+}
+
+/*------------------------------------------*/
+.right-footer {
+  grid-area: right-footer;
+  text-align: right;
+}

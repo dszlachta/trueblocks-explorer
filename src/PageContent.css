@@ -1,0 +1,48 @@
+/*------------------------------------------*/
+.page-content {
+  grid-area: page-content;
+  margin: unset;
+}
+.page-content > div {
+  padding: var(--panel-padding);
+  background-color: var(--panel-bgcolor);
+  color: var(--panel-color);
+  border-top: 1px solid var(--panel-color);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.page-sider {
+  grid-area: page-sider;
+}
+.status {
+  grid-area: status;
+}
+.jinky {
+  grid-area: jinky;
+}
+.help {
+  grid-area: help;
+}

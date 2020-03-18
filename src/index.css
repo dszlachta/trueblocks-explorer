@@ -1,0 +1,23 @@
+/*------------------------------------------*/
+:root {
+  --body-bgcolor: orange;
+  --body-gutter: 0px;
+}
+
+/*-----------------------------------------------------------------------------*/
+@font-face {
+  font-family: 'Lato';
+  src: local('Lato-Thin'), url(./fonts/Lato/Lato-Thin.ttf) format('ttf');
+  font-weight: 300;
+}
+
+/*------------------------------------------*/
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--body-bgcolor);
+  font-family: -apple-system, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+}
