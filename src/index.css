@@ -7,7 +7,7 @@
 /*-----------------------------------------------------------------------------*/
 @font-face {
   font-family: 'Lato';
-  src: local('Lato-Thin'), url(./fonts/Lato/Lato-Thin.ttf) format('ttf');
+  src: local('Lato-Thin'), url(./assets/fonts/Lato/Lato-Thin.ttf) format('ttf');
   font-weight: 300;
 }
 

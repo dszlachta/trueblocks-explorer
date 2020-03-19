@@ -18,7 +18,6 @@
 
 .left-header {
   padding-top: 10px;
-  color: var(--page-color);
   grid-area: left-header;
   justify-self: left;
   align-self: top;

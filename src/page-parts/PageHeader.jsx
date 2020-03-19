@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import logo from './img/logo.png';
+import React from 'react';
 import "./PageHeader.css";
+import logo from 'assets/img/logo.png';
 
 const PageHeader = () => {
   return (

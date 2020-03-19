@@ -1,0 +1,17 @@
+/*------------------------------------------*/
+.page-content {
+  margin: unset;
+  display: grid;
+  grid-area: page-content;
+  grid-template-areas: "menu content status help";
+  grid-template-columns: minmax(200px, 2fr) 20fr minmax(200px, 4fr) minmax(200px, 4fr);
+  grid-template-rows: 1fr;
+}
+.page-content > div {
+  padding: var(--panel-padding);
+  padding-top: 2px !important;
+  background-color: var(--panel-bgcolor);
+  color: var(--panel-color);
+  border-top: var(--panel-border);
+  overflow-y: scroll;
+}

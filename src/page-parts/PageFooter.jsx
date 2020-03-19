@@ -1,9 +1,9 @@
 import React from 'react';
 import "./PageFooter.css";
-import discord from './img/discord.svg';
-import github from './img/github.svg';
-import medium from './img/medium.svg';
-import twitter from './img/twitter.svg';
+import discord from 'assets/img/discord.svg';
+import github from 'assets/img/github.svg';
+import medium from 'assets/img/medium.svg';
+import twitter from 'assets/img/twitter.svg';
 
 const PageFooter = () => {
   return (

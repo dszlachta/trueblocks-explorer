@@ -1,16 +1,17 @@
 /*------------------------------------------*/
 :root {
-  --whole-page-gutter: 0px;
-  --whole-page-bgcolor: navy;
-  --whole-page-border: ridge 3px darkgrey;
+  --gutter-whole-page: 0px;
+  --bgcolor-whole-page: navy;
+  --color-whole-page: white;
+  --border-whole-page: ridge 3px darkgrey;
 
-  --page-bgcolor: #265077;
-  --page-color: black;
+  --gutter-page: 0px;
+  --bgcolor-page: #265077;
+  --color-page: black;
   --page-border: 1px solid grey;
-  --page-gutter: 0px;
 
-  --panel-bgcolor: --page-bgcolor;
   --panel-color: lightyellow;
+  --panel-bgcolor: --bgcolor-page;
   --panel-border: 1px dotted rgba(255,255,224,30%);
   --panel-padding: 10px;
 
@@ -20,7 +21,7 @@
 
 /*------------------------------------------*/
 .whole-page {
-  --this-gutter: var(--whole-page-gutter);
+  --this-gutter: var(--gutter-whole-page);
   --parent-gutter: var(--body-gutter);
   --parent-border: 3px;
 
@@ -30,9 +31,9 @@
   height: calc( 100vh - calc( var(--parent-gutter) * 2) - calc(var(--parent-border) * 2) - calc(var(--this-gutter) * 2));
   min-height: calc(50px + 300px + 25px);
 
-  border: var(--whole-page-border);
+  border: var(--border-whole-page);
 
-  background-color: var(--whole-page-bgcolor);
+  background-color: var(--bgcolor-whole-page);
 
   display: grid;
   grid-template-rows: minmax(50px, 70px) minmax(300px, auto) minmax(25px, 60px);
@@ -43,7 +44,7 @@
 } 
 .whole-page > div {
   padding-bottom: 0px !important;
-  margin: var(--whole-page-gutter) var(--whole-page-gutter) 0px var(--whole-page-gutter);
-  color: var(--page-color);
-  background-color: var(--page-bgcolor);
+  margin: var(--gutter-whole-page) var(--gutter-whole-page) 0px var(--gutter-whole-page);
+  color: var(--color-page);
+  background-color: var(--bgcolor-page);
 }
