@@ -1,0 +1,52 @@
+/*------------------------------------------*/
+.menu {
+  grid-area: menu;
+  background-color: var(--bgcolor-panel);
+  color: var(--color-panel);
+}
+
+/*------------------------------------------*/
+.content {
+  border-left: var(--border2-panel);
+  grid-area: content;
+  background-color: var(--bgcolor2-panel);
+  color: var(--color2-panel);
+}
+
+/*------------------------------------------*/
+.status {
+  border-left: var(--border2-panel);
+  grid-area: status;
+  background-color: var(--bgcolor2-panel);
+  color: var(--color2-panel);
+}
+
+/*------------------------------------------*/
+.help {
+  border-left: var(--border2-panel);
+  grid-area: help;
+  background-color: var(--bgcolor2-panel);
+  color: var(--color2-panel);
+}
+
+/*------------------------------------------*/
+.panel-header {
+  color: #4c7c9c;
+  font-size: 1.4em;
+  font-weight: 300;
+  text-transform: capitalize;
+  border-bottom: 1px solid;
+  margin-bottom: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/*------------------------------------------*/
+.panel-icon {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  margin-left: auto;
+  margin-right: 0;
+  height: 1.4em;
+}
