@@ -2,10 +2,10 @@ import React from 'react';
 import Settings from 'assets/icons/settings';
 import { useExpanded } from 'components/Panels/Panel';
 import './PageFooter.css';
-import discord from 'assets/img/discord.svg';
-import github from 'assets/img/github.svg';
-import medium from 'assets/img/medium.svg';
-import twitter from 'assets/img/twitter.svg';
+import Discord from 'assets/icons/discord';
+import GitHub from 'assets/icons/github';
+import Medium from 'assets/icons/medium';
+import Twitter from 'assets/icons/twitter';
 
 //----------------------------------------------------------------------
 const PageFooter = () => {
@@ -29,20 +29,20 @@ const PageFooter = () => {
       </div>
       <div className="right-footer">
         <a href="http://twitter.com/@quickblocks" target="_blank" rel="noopener noreferrer">
-          <img className="footer-social" alt={twitter} src={twitter} />
+          <Twitter className="footer-social icon_color" height='24px' />
         </a>
         <a href="http://github.com/Great-Hill-Corporation/trueblocks-core" target="_blank" rel="noopener noreferrer">
-          <img className="footer-social" alt={github} src={github} />
+          <GitHub className="footer-social icon_color" height='24px' />
         </a>
         <a href="http://medium.com/@tjayrush" target="_blank" rel="noopener noreferrer">
-          <img className="footer-social" alt={medium} src={medium} />
+          <Medium className="footer-social icon_color" height='24px' />
         </a>
         <a
           href="https://discordapp.com/channels/570963863428661248/570963863428661250"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img className="footer-social" alt={discord} src={discord} />
+          <Discord className="footer-social icon_color" height='24px' />
         </a>
       </div>
     </div>

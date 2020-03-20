@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const HelpCircle = (props) => {
-  const { color, size, ...otherProps } = props;
+  const { color, size, stroke, ...otherProps } = props;
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -11,7 +11,7 @@ const HelpCircle = (props) => {
       viewBox="0 0 24 24"
       fill="none"
       stroke={color}
-      strokeWidth="2"
+      strokeWidth={stroke}
       strokeLinecap="round"
       strokeLinejoin="round"
       {...otherProps}
@@ -30,7 +30,8 @@ HelpCircle.propTypes = {
 
 HelpCircle.defaultProps = {
   color: 'currentColor',
-  size: '24'
+  size: '24',
+  stroke: '2'
 };
 
 export default HelpCircle;

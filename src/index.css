@@ -1,7 +1,31 @@
 /*------------------------------------------*/
 :root {
-  --body-bgcolor: orange;
-  --body-gutter: 0px;
+  --bgcolor-body: #265077;
+  --gutter-body: 0px;
+
+  --gutter-whole-page: 0px;
+  --color-whole-page: lightyellow;
+  --bgcolor-whole-page: #265077;
+  --border-whole-page: ridge 3px darkgrey;
+
+  --gutter-page: 0px;
+  --color-page: lightyellow;
+  --bgcolor-page: #265077;
+  --border-page: 1px solid grey;
+
+  --color-panel: lightyellow;
+  --bgcolor-panel: #265077;
+  --hicolor-panel: orange;
+  --border-panel: 1px dotted rgba(255, 255, 224, 30%);
+  --padding-panel: 10px;
+
+  --color2-panel: #265077;
+  --bgcolor2-panel: white;
+  --border2-panel: 1px dotted #265077;
+  --padding2-panel: 10px;
+
+  --color-img-filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(2106%) hue-rotate(68deg)
+    brightness(125%) contrast(111%);
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -16,7 +40,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background-color: var(--body-bgcolor);
+  background-color: var(--bgcolor-body);
   font-family: -apple-system, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
   font-size: 1rem;
   line-height: 1.5;

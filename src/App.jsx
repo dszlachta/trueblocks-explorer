@@ -5,12 +5,14 @@ import PageContent from 'components/Panels/PageContent';
 import { panelStateDefault, panelReducer, PanelContext } from 'components/Panels/Panel';
 import 'App.css';
 
+const axios = require('axios').default;
+
 function App() {
   const panelStorage = localStorage.getItem('panelState');
   const panelDefault = panelStorage === null ? panelStateDefault : JSON.parse(panelStorage);
-  const [panelState, togglePanel] = useReducer(panelReducer, panelDefault);
+  const [panelState, dispatch2Panel] = useReducer(panelReducer, panelDefault);
   return (
-    <PanelContext.Provider value={{ panelState: panelState, togglePanel: togglePanel }}>
+    <PanelContext.Provider value={{ panelState: panelState, dispatch2Panel: dispatch2Panel }}>
       <div className="whole-page">
         <PageHeader />
         <PageContent />

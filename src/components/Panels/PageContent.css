@@ -7,11 +7,9 @@
   grid-template-rows: 1fr;
 }
 .page-content > div {
-  padding: var(--panel-padding);
+  padding: var(--padding-panel);
   padding-top: 2px !important;
-  background-color: var(--panel-bgcolor-1);
-  color: var(--panel-color-1);
-  border-top: var(--panel-border);
+  border-top: var(--border-panel);
   overflow-y: scroll;
 }
 

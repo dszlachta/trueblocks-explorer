@@ -3,6 +3,7 @@ import ChevronLeft from 'assets/icons/chevron-left';
 import ChevronRight from 'assets/icons/chevron-right';
 import HelpCircle from 'assets/icons/help-circle';
 import './Panel.css';
+import './PageContent.css';
 
 //----------------------------------------------------------------------
 const Panel = ({ title, type, collapseLeft, noIcon, children }) => {
@@ -18,10 +19,10 @@ export default Panel;
 //----------------------------------------------------------------------
 const ExpandIcon = ({ type, collapseLeft }) => {
   const toggleAction = { type: type };
-  const { togglePanel } = useContext(PanelContext);
-  const leftIcon = <ChevronLeft onClick={() => togglePanel(toggleAction)} />;
-  const rightIcon = <ChevronRight onClick={() => togglePanel(toggleAction)} />;
-  const helpIcon = <HelpCircle onClick={() => togglePanel(toggleAction)} />;
+  const { dispatch2Panel } = useContext(PanelContext);
+  const leftIcon = <ChevronLeft onClick={() => dispatch2Panel(toggleAction)} />;
+  const rightIcon = <ChevronRight onClick={() => dispatch2Panel(toggleAction)} />;
+  const helpIcon = <HelpCircle fill="green" color="#333" onClick={() => dispatch2Panel(toggleAction)} />;
   const expanded = useExpanded(type);
 
   if (type === 'help') return helpIcon;
@@ -47,7 +48,7 @@ const PanelHeader = ({ title, type, collapseLeft, noIcon }) => {
 
 //----------------------------------------------------------------------
 export const panelStateDefault = {
-  menu: true,
+  menu: false,
   content: true,
   status: true,
   help: false,
@@ -82,7 +83,7 @@ export const panelReducer = (state, action) => {
 //----------------------------------------------------------------------
 export const PanelContext = React.createContext({
   panelState: {},
-  togglePanel: () => { }
+  dispatch2Panel: () => { }
 });
 
 //----------------------------------------------------------------------

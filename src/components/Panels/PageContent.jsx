@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import Panel, { PanelContext, useExpanded } from 'components/Panels/Panel';
+import Status from 'components/Status/Status';
 import './PageContent.css';
 
 const usePanelBits = () => {
@@ -14,9 +15,7 @@ const usePanelBits = () => {
 
 //----------------------------------------------------------------------
 const PageContent = () => {
-  const { panelState } = useContext(PanelContext);
   const shape = 'shape_' + usePanelBits();
-  console.log(panelState, shape);
   return (
     <div className={'page-content ' + shape}>
       <Menu />
@@ -52,16 +51,6 @@ export const Content = () => {
   );
   return (
     <Panel title="Content" type="content" collapseLeft={true} noIcon>
-      {content}
-    </Panel>
-  );
-};
-
-//----------------------------------------------------------------------
-export const Status = () => {
-  const content = useExpanded('status') ? 'Expanded Status' : '';
-  return (
-    <Panel title="Status" type="status">
       {content}
     </Panel>
   );

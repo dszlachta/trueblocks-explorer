@@ -7,17 +7,16 @@
   grid-template-rows: 1fr;
 }
 .page-footer > div {
-  padding: var(--panel-padding);
+  padding: var(--padding-panel);
   padding-top: 2px !important;
-  background-color: var(--panel-bgcolor-1);
-  color: var(--panel-color-1);
+  background-color: var(--bgcolor-panel);
+  color: var(--color-panel);
 }
 
 /*------------------------------------------*/
 .left-footer {
   grid-area: left-footer;
   align-items: flex-end;
-  background-color: white;
   display: flex;
   flex-wrap: wrap;
   align-content: bottom;
@@ -27,27 +26,42 @@
 /*------------------------------------------*/
 .center-footer {
   grid-area: center-footer;
-  border-top: var(--panel-border);
-  border-left: var(--panel-border);
+  border-top: var(--border-panel);
+  border-left: var(--border-panel);
 }
 
 /*------------------------------------------*/
 .right-footer {
   grid-area: right-footer;
   text-align: right;
-  border-top: var(--panel-border);
+  border-top: var(--border-panel);
 }
 
 .footer-links {
   text-decoration: none;
-  color: var(--panel-color-1);
+  color: var(--color-panel);
 }
 
 .footer-social {
   height: 33px;
   width: 33px;
-  color: var(--panel-color-1);
-  filter: var(--color-img-filter);
+  color: var(--color-panel);
+  /* filter: var(--color-img-filter); */
+}
+
+/*------------------------------------------*/
+.icon_color {
+  color: var(--color-panel);
+  fill: var(--bgcolor-panel);
+  opacity: 80%;
+  font-weight: 400;
+}
+
+.icon_color:hover {
+  color: var(--hicolor-panel);
+  fill: var(--bgcolor-panel);
+  opacity: 100%;
+  font-weight: 500;
 }
 
 /*------------------------------------------*/

@@ -11,9 +11,9 @@
   align-content: space-around;
 }
 .page-header > div {
-  padding: var(--panel-padding);
-  background-color: var(--panel-bgcolor-1);
-  color: var(--panel-color-1);
+  padding: var(--padding-panel);
+  background-color: var(--bgcolor-panel);
+  color: var(--color-panel);
 }
 
 .left-header {
@@ -30,16 +30,17 @@
 }
 
 .right-top {
+  font-style: italic;
   padding-top: 2px !important;
   grid-area: right-top;
   align-self: flex-start;
   justify-self: right;
   overflow-x: hidden;
+  font-size: 0.9em;
 }
 
 .right-bottom {
   padding-bottom: 2px !important;
-  color: grey;
   grid-area: right-bottom;
   align-self: flex-end;
   justify-self: right;
