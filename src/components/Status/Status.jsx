@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Panel, { useExpanded } from '../Panels/Panel';
+import { Panel, useExpanded } from '../Panel';
 
 //----------------------------------------------------------------------
 const Status = () => {

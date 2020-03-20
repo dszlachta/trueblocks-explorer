@@ -1,8 +1,8 @@
 import React, { useReducer } from 'react';
-import PageHeader from 'components/Panels/PageHeader';
-import PageFooter from 'components/Panels/PageFooter';
-import PageContent from 'components/Panels/PageContent';
-import { panelStateDefault, panelReducer, PanelContext } from 'components/Panels/Panel';
+import PageHeader from 'components/PageParts/PageHeader';
+import PageFooter from 'components/PageParts/PageFooter';
+import PageContent from 'components/PageParts/PageContent';
+import { panelStateDefault, panelReducer, PanelContext } from 'components/Panel';
 import 'App.css';
 
 const axios = require('axios').default;
