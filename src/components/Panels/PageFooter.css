@@ -50,6 +50,7 @@
   filter: var(--color-img-filter);
 }
 
+/*------------------------------------------*/
 .shape_01 {
   grid-template-columns: minmax(40px, 1fr) 50fr minmax(250px, 13fr);
 }
