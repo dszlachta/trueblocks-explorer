@@ -4,7 +4,6 @@
   display: grid;
   grid-area: page-content;
   grid-template-areas: "menu content status help";
-  grid-template-columns: minmax(200px, 2fr) 20fr minmax(200px, 4fr) minmax(200px, 4fr);
   grid-template-rows: 1fr;
 }
 .page-content > div {
@@ -14,4 +13,84 @@
   color: var(--panel-color);
   border-top: var(--panel-border);
   overflow-y: scroll;
+}
+
+/*------------------------------------------*/
+.shape_0000 {
+  grid-template-columns: 16fr 16fr 16fr 16fr;
+}
+.shape_0001 {
+  grid-template-columns: minmax(40px, 1fr) minmax(40px, 1fr) minmax(40px, 1fr) 61fr;
+}
+.shape_0010 {
+  grid-template-columns: minmax(40px, 1fr) minmax(40px, 1fr) 61fr minmax(
+      40px,
+      1fr
+    );
+}
+.shape_0011 {
+  grid-template-columns: minmax(40px, 1fr) minmax(40px, 1fr) 31fr 31fr;
+}
+.shape_0100 {
+  grid-template-columns: minmax(40px, 1fr) 61fr minmax(40px, 1fr) minmax(
+      40px,
+      1fr
+    );
+}
+.shape_0101 {
+  grid-template-columns: minmax(40px, 1fr) 58fr minmax(40px, 1fr) minmax(
+      250px,
+      4fr
+    );
+}
+.shape_0110 {
+  grid-template-columns: minmax(40px, 1fr) 58fr minmax(250px, 4fr) minmax(
+      40px,
+      1fr
+    );
+}
+.shape_0111 {
+  grid-template-columns: minmax(40px, 1fr) 55fr minmax(250px, 4fr) minmax(
+      250px,
+      4fr
+    );
+}
+.shape_1000 {
+  grid-template-columns: 61fr minmax(40px, 1fr) minmax(40px, 1fr) minmax(
+      40px,
+      1fr
+    );
+}
+.shape_1001 {
+  grid-template-columns: 21fr minmax(40px, 1fr) minmax(40px, 1fr) 41fr;
+}
+.shape_1010 {
+  grid-template-columns: 21fr minmax(40px, 1fr) 41fr minmax(40px, 1fr);
+}
+.shape_1011 {
+  grid-template-columns: 13fr minmax(40px, 1fr) 25fr 25fr;
+}
+.shape_1100 {
+  grid-template-columns: minmax(200px, 2fr) 60fr minmax(40px, 1fr) minmax(
+      40px,
+      1fr
+    );
+}
+.shape_1101 {
+  grid-template-columns: minmax(200px, 2fr) 57fr minmax(40px, 1fr) minmax(
+      250px,
+      4fr
+    );
+}
+.shape_1110 {
+  grid-template-columns: minmax(200px, 2fr) 57fr minmax(250px, 4fr) minmax(
+      40px,
+      1fr
+    );
+}
+.shape_1111 {
+  grid-template-columns: minmax(200px, 2fr) 54fr minmax(250px, 4fr) minmax(
+      250px,
+      4fr
+    );
 }

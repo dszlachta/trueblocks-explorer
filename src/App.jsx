@@ -7,7 +7,7 @@ import "App.css"
 
 function App() {
   const panelStorage = localStorage.getItem('panelState');
-  const panelDefault = panelStorage === '' ? panelStateDefault : JSON.parse(panelStorage);
+  const panelDefault = panelStorage === null ? panelStateDefault : JSON.parse(panelStorage);
   const [panelState, togglePanel] = useReducer(panelReducer, panelDefault);
   return (
     <PanelContext.Provider value={{ panelState: panelState, togglePanel: togglePanel }} >

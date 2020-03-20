@@ -22,37 +22,14 @@
   grid-area: help;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.page-sider {
-  grid-area: page-sider;
-}
-.status {
-  grid-area: status;
-}
-.jinky {
-  grid-area: jinky;
-}
-.help {
-  grid-area: help;
+/*------------------------------------------*/
+.panel-header {
+  color: #4c7c9c;
+  font-size: 1.4em;
+  font-weight: 300;
+  text-transform: capitalize;
+  border-bottom: 1px solid;
+  margin-bottom: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
