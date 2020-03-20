@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
-import { ChevronLeft, ChevronRight } from "assets/icons/chevrons";
-import "./Panel.css";
+import React, { useContext } from 'react';
+import ChevronLeft from 'assets/icons/chevron-left';
+import ChevronRight from 'assets/icons/chevron-right';
+import HelpCircle from 'assets/icons/help-circle';
+import './Panel.css';
 
 //----------------------------------------------------------------------
-const Panel = ({ title, type, collapseLeft, children }) => {
+const Panel = ({ title, type, collapseLeft, noIcon, children }) => {
   return (
     <div key={type} className={type}>
-      <PanelHeader title={title} type={type} collapseLeft={collapseLeft} />
+      <PanelHeader title={title} type={type} collapseLeft={collapseLeft} noIcon={noIcon} />
       {children}
     </div>
   );
@@ -19,20 +21,26 @@ const ExpandIcon = ({ type, collapseLeft }) => {
   const { togglePanel } = useContext(PanelContext);
   const leftIcon = <ChevronLeft onClick={() => togglePanel(toggleAction)} />;
   const rightIcon = <ChevronRight onClick={() => togglePanel(toggleAction)} />;
-
+  const helpIcon = <HelpCircle onClick={() => togglePanel(toggleAction)} />;
   const expanded = useExpanded(type);
+
+  if (type === 'help') return helpIcon;
   if (collapseLeft) return expanded ? leftIcon : rightIcon;
   return expanded ? rightIcon : leftIcon;
 };
 
 //----------------------------------------------------------------------
-const PanelHeader = ({ title, type, collapseLeft }) => {
+const PanelHeader = ({ title, type, collapseLeft, noIcon }) => {
   return (
-    <div className="panel-header">
-      <div>{useExpanded(type) ? title : ""}</div>
-      <div style={{ justifySelf: "right" }}>
-        <ExpandIcon type={type} collapseLeft={collapseLeft} />
-      </div>
+    <div className="panel-header" style={{ align: 'right' }}>
+      <div>{useExpanded(type) ? title : ''}</div>
+      {!noIcon ? (
+        <div className="panel-icon">
+          <ExpandIcon type={type} collapseLeft={collapseLeft} />
+        </div>
+      ) : (
+          <></>
+        )}
     </div>
   );
 };
@@ -42,52 +50,52 @@ export const panelStateDefault = {
   menu: true,
   content: true,
   status: true,
-  help: true
+  help: false,
 };
 
 //----------------------------------------------------------------------
 export const panelReducer = (state, action) => {
   let retState = state;
   switch (action.type) {
-    case "menu":
+    case 'menu':
       retState = { ...state, menu: !state.menu };
       break;
-    case "content":
+    case 'content':
       retState = { ...state, content: !state.content };
       break;
-    case "status":
+    case 'status':
       retState = { ...state, status: !state.status };
       break;
-    case "help":
+    case 'help':
       retState = { ...state, help: !state.help };
       break;
-    case "reset":
+    case 'reset':
       retState = panelStateDefault;
       break;
     default:
       break;
   }
-  localStorage.setItem("panelState", JSON.stringify(retState));
+  localStorage.setItem('panelState', JSON.stringify(retState));
   return retState;
 };
 
 //----------------------------------------------------------------------
 export const PanelContext = React.createContext({
   panelState: {},
-  togglePanel: () => {}
+  togglePanel: () => { }
 });
 
 //----------------------------------------------------------------------
-export const useExpanded = type => {
+export const useExpanded = (type) => {
   const { panelState } = useContext(PanelContext);
   switch (type) {
-    case "menu":
+    case 'menu':
       return panelState.menu;
-    case "content":
+    case 'content':
       return panelState.content;
-    case "status":
+    case 'status':
       return panelState.status;
-    case "help":
+    case 'help':
       return panelState.help;
     default:
       return true;

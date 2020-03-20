@@ -4,16 +4,16 @@
   display: grid;
   grid-area: page-header;
   grid-template-areas:
-  "left-header right-top"
-  "left-header right-bottom";
+    'left-header right-top'
+    'left-header right-bottom';
   grid-template-columns: minmax(390px, 7fr) auto;
   grid-template-rows: 50% 50%;
   align-content: space-around;
 }
 .page-header > div {
   padding: var(--panel-padding);
-  background-color: var(--panel-bgcolor);
-  color: var(--panel-color);
+  background-color: var(--panel-bgcolor-1);
+  color: var(--panel-color-1);
 }
 
 .left-header {

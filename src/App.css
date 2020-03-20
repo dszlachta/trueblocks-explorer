@@ -1,18 +1,18 @@
 /*------------------------------------------*/
 :root {
-  --gutter-whole-page: 0px;
-  --bgcolor-whole-page: navy;
-  --color-whole-page: white;
-  --border-whole-page: ridge 3px darkgrey;
+  --whole-page-gutter: 0px;
+  --whole-page-color: lightyellow;
+  --whole-page-bgcolor: #265077;
+  --whole-page-border: ridge 3px darkgrey;
 
-  --gutter-page: 0px;
-  --bgcolor-page: #265077;
-  --color-page: black;
-  --page-border: 1px solid grey;
+  --page-gutter: 0px;
+  --page-color: --whole-page-color;
+  --page-bgcolor: --whole-page-bgcolor;
+  --border-page: 1px solid grey;
 
-  --panel-color: lightyellow;
-  --panel-bgcolor: --bgcolor-page;
-  --panel-border: 1px dotted rgba(255,255,224,30%);
+  --panel-color-1: --page-color;
+  --panel-bgcolor-1: --page-bgcolor;
+  --panel-border: 1px dotted rgba(255, 255, 224, 30%);
   --panel-padding: 10px;
 
   --color-img-filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(2106%) hue-rotate(68deg)
@@ -21,30 +21,31 @@
 
 /*------------------------------------------*/
 .whole-page {
-  --this-gutter: var(--gutter-whole-page);
+  --this-gutter: var(--whole-page-gutter);
   --parent-gutter: var(--body-gutter);
   --parent-border: 3px;
 
   margin: var(--parent-gutter);
   padding-bottom: var(--this-gutter);
-  width:  calc( 100vw - calc( var(--parent-gutter) * 2) - calc(var(--parent-border) * 2));
-  height: calc( 100vh - calc( var(--parent-gutter) * 2) - calc(var(--parent-border) * 2) - calc(var(--this-gutter) * 2));
+  width: calc(100vw - calc(var(--parent-gutter) * 2) - calc(var(--parent-border) * 2));
+  height: calc(100vh - calc(var(--parent-gutter) * 2) - calc(var(--parent-border) * 2) - calc(var(--this-gutter) * 2));
   min-height: calc(50px + 300px + 25px);
 
-  border: var(--border-whole-page);
+  border: var(--whole-page-border);
 
-  background-color: var(--bgcolor-whole-page);
+  color: var(--whole-page-color);
+  background-color: var(--whole-page-bgcolor);
 
   display: grid;
   grid-template-rows: minmax(50px, 70px) minmax(300px, auto) minmax(25px, 60px);
   grid-template-areas:
-  "page-header"
-  "page-content"
-  "page-footer";
-} 
+    'page-header'
+    'page-content'
+    'page-footer';
+}
 .whole-page > div {
   padding-bottom: 0px !important;
-  margin: var(--gutter-whole-page) var(--gutter-whole-page) 0px var(--gutter-whole-page);
-  color: var(--color-page);
-  background-color: var(--bgcolor-page);
+  margin: var(--whole-page-gutter) var(--whole-page-gutter) 0px var(--whole-page-gutter);
+  color: var(--page-color);
+  background-color: var(--page-bgcolor);
 }
