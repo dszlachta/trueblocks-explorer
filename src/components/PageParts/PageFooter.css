@@ -20,7 +20,8 @@
   display: flex;
   flex-wrap: wrap;
   align-content: bottom;
-  width: 1.4em;
+  width: minmax(1.4em, 250px);
+  color: var(--color-panel);
 }
 
 /*------------------------------------------*/
@@ -28,6 +29,7 @@
   grid-area: center-footer;
   border-top: var(--border-panel);
   border-left: var(--border-panel);
+  overflow: hidden;
 }
 
 /*------------------------------------------*/
@@ -35,6 +37,7 @@
   grid-area: right-footer;
   text-align: right;
   border-top: var(--border-panel);
+  overflow: hidden;
 }
 
 .footer-links {
@@ -47,6 +50,19 @@
   width: 33px;
   color: var(--color-panel);
   /* filter: var(--color-img-filter); */
+}
+
+/*------------------------------------------*/
+.nofill_icon_color {
+  color: var(--color-panel);
+  opacity: 80%;
+  font-weight: 400;
+}
+
+.nofill_icon_color:hover {
+  color: var(--hicolor-panel);
+  opacity: 100%;
+  font-weight: 500;
 }
 
 /*------------------------------------------*/

@@ -1,10 +1,14 @@
-import React, { useContext } from 'react';
-import { Panel, PanelContext, useExpanded } from 'components/Panel';
-import Status from 'components/Status/Status';
+import React, { Fragment, useContext } from 'react';
+import GlobalContext from 'store';
+import { Panel, useExpanded } from 'components/Panels';
+import { PanelMenu } from 'components/Panels';
+import { PanelStatus } from 'components/Panels';
+import { PanelHelp } from 'components/Panels';
 import './PageContent.css';
 
 const usePanelBits = () => {
-  const { panelState } = useContext(PanelContext);
+  const { state } = useContext(GlobalContext).panels;
+  const panelState = state; // so we can find it
   let ret = '';
   ret += panelState.menu ? '1' : '0';
   ret += panelState.content ? '1' : '0';
@@ -15,52 +19,31 @@ const usePanelBits = () => {
 
 //----------------------------------------------------------------------
 const PageContent = () => {
-  const shape = 'shape_' + usePanelBits();
   return (
-    <div className={'page-content ' + shape}>
-      <Menu />
-      <Status />
+    <div className={'page-content shape_' + usePanelBits()}>
+      <PanelMenu />
+      <PanelStatus />
       <Content />
-      <Help />
+      <PanelHelp />
     </div>
   );
 };
 export default PageContent;
 
 //----------------------------------------------------------------------
-export const Menu = () => {
-  const content = useExpanded('menu') ? 'Expanded Menu' : 'Collapsed Menu';
-  return (
-    <Panel title="Menu" type="menu" collapseLeft={true}>
-      {content}
-    </Panel>
-  );
-};
-
-//----------------------------------------------------------------------
 export const Content = () => {
   const n = useExpanded('content') ? 100 : 10;
   const content = (
-    <>
+    <Fragment>
       {Array(n)
         .fill()
         .map((_, i) => (
           <div>{i * i}</div>
         ))}
-    </>
+    </Fragment>
   );
   return (
-    <Panel title="Content" type="content" collapseLeft={true} noIcon>
-      {content}
-    </Panel>
-  );
-};
-
-//----------------------------------------------------------------------
-export const Help = () => {
-  const content = useExpanded('help') ? 'Expanded Help' : '';
-  return (
-    <Panel title="Help" type="help">
+    <Panel title={window.location.pathname} type="content" collapseLeft={true} noIcon>
       {content}
     </Panel>
   );

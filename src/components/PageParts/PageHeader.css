@@ -4,8 +4,8 @@
   display: grid;
   grid-area: page-header;
   grid-template-areas:
-    'left-header right-top'
-    'left-header right-bottom';
+    "left-header right-top"
+    "left-header right-bottom";
   grid-template-columns: minmax(390px, 7fr) auto;
   grid-template-rows: 50% 50%;
   align-content: space-around;
@@ -21,7 +21,7 @@
   grid-area: left-header;
   justify-self: left;
   align-self: top;
-  overflow-y: hidden;
+  overflow: hidden;
   font-size: 1.8em;
   font-weight: 300;
   text-transform: capitalize;
@@ -35,7 +35,7 @@
   grid-area: right-top;
   align-self: flex-start;
   justify-self: right;
-  overflow-x: hidden;
+  overflow: hidden;
   font-size: 0.9em;
 }
 
@@ -44,7 +44,7 @@
   grid-area: right-bottom;
   align-self: flex-end;
   justify-self: right;
-  overflow-x: hidden;
+  overflow: hidden;
   font-size: 0.8em;
 }
 

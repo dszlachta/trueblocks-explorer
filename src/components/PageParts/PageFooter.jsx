@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Settings from 'assets/icons/settings';
-import { useExpanded } from 'components/Panel';
+import { useExpanded } from 'components/Panels';
 import Discord from 'assets/icons/discord';
 import GitHub from 'assets/icons/github';
 import Medium from 'assets/icons/medium';
@@ -12,8 +13,9 @@ const PageFooter = () => {
   return (
     <div className={'page-footer ' + (useExpanded('menu') ? 'shape_11' : 'shape_01')}>
       <div className="left-footer">
-        <Settings />
-        {/* {useExpanded('menu') ? <div style={{ display: 'inline' }}> Settings</div> : <></>} */}
+        <Link to="/settings">
+          <Settings className="nofill_icon_color" />
+        </Link>
       </div>
       <div className="center-footer">
         <div>TrueBlocks, LLC • 1010 N Hancock St, Philadelpia, PA 19123</div>
@@ -29,20 +31,20 @@ const PageFooter = () => {
       </div>
       <div className="right-footer">
         <a href="http://twitter.com/@quickblocks" target="_blank" rel="noopener noreferrer">
-          <Twitter className="footer-social icon_color" height='24px' />
+          <Twitter className="footer-social icon_color" height="24px" />
         </a>
         <a href="http://github.com/Great-Hill-Corporation/trueblocks-core" target="_blank" rel="noopener noreferrer">
-          <GitHub className="footer-social icon_color" height='24px' />
+          <GitHub className="footer-social icon_color" height="24px" />
         </a>
         <a href="http://medium.com/@tjayrush" target="_blank" rel="noopener noreferrer">
-          <Medium className="footer-social icon_color" height='24px' />
+          <Medium className="footer-social icon_color" height="24px" />
         </a>
         <a
           href="https://discordapp.com/channels/570963863428661248/570963863428661250"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Discord className="footer-social icon_color" height='24px' />
+          <Discord className="footer-social icon_color" height="24px" />
         </a>
       </div>
     </div>
