@@ -11,7 +11,7 @@ export const PanelContent = () => {
       {Array(n)
         .fill()
         .map((_, i) => (
-          <div>{i * i}</div>
+          <div key={i}>{i * i}</div>
         ))}
     </Fragment>
   );

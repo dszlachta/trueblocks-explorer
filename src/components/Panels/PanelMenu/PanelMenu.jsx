@@ -5,10 +5,16 @@ import './PanelMenu.css';
 
 //----------------------------------------------------------------------
 export const PanelMenu = () => {
+  const style = {
+    textDecoration: 'none'
+  }
   return (
     <Panel title="Menu" type="menu" collapseLeft={true}>
-      <Link to="/">Home</Link>
-      <Link to="/users">Users</Link> <Link to="/contact">Contact</Link>
+      <ul>
+        <li><Link to="/"><span style={{ style }}>Home</span></Link></li>
+        <li><Link to="/users"><span style={{ style }}>Users</span></Link></li>
+        <li><Link to="/contact"><span style={{ style }}>Contact</span></Link></li>
+      </ul>
     </Panel>
   );
 };

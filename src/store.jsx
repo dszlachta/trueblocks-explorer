@@ -19,7 +19,7 @@ export const panelDefault = {
 
 //----------------------------------------------------------------------
 export const loadingReducer = (state, action) => {
-  console.log(state, action);
+  // console.log(state, action);
   switch (action.type) {
     case 'on':
       return true;
@@ -83,7 +83,7 @@ export const statusDefault = {
 
 //----------------------------------------------------------------------
 export const statusReducer = (state, action) => {
-  console.log(state.data[0], action);
+  // console.log(state.data[0], action);
   let ret = state;
   switch (action.type) {
     case 'start':

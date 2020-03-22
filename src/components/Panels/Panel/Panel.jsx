@@ -23,7 +23,7 @@ const ExpandIcon = ({ type, collapseLeft }) => {
   const rightIcon = <ChevronRight onClick={() => panels.dispatch(toggleAction)} />;
   const helpIcon = <HelpCircle fill="green" color="#333" onClick={() => panels.dispatch(toggleAction)} />;
 
-  const expanded = isExpanded(panels, type);
+  const expanded = isExpanded(panels.state, type);
   if (type === 'help') return helpIcon;
   if (collapseLeft) return expanded ? leftIcon : rightIcon;
   return expanded ? rightIcon : leftIcon;
