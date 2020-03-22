@@ -6,7 +6,7 @@ import './PanelMenu.css';
 //----------------------------------------------------------------------
 export const PanelMenu = () => {
   return (
-    <Panel className="menu" title="Menu" type="menu" collapseLeft={true}>
+    <Panel title="Menu" type="menu" collapseLeft={true}>
       <Link to="/">Home</Link>
       <Link to="/users">Users</Link> <Link to="/contact">Contact</Link>
     </Panel>

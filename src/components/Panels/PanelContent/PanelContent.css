@@ -1,8 +1,10 @@
 /*------------------------------------------*/
-.status {
+.content {
   border-left: var(--border2-panel);
-  grid-area: status;
+  grid-area: content;
   background-color: var(--bgcolor2-panel);
   color: var(--color2-panel);
-  overflow: hidden;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
+

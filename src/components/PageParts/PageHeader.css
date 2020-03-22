@@ -30,16 +30,16 @@
 }
 
 .right-top {
-  font-style: italic;
   padding-top: 2px !important;
   grid-area: right-top;
   align-self: flex-start;
   justify-self: right;
   overflow: hidden;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 .right-bottom {
+  /* font-style: italic; */
   padding-bottom: 2px !important;
   grid-area: right-bottom;
   align-self: flex-end;
@@ -52,4 +52,29 @@
   width: 35px;
   height: 43px;
   filter: var(--color-img-filter);
+}
+
+.pill {
+  text-align: center;
+  display: inline;
+  margin: 0px 4px;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.warning {
+  background-color: brown;
+  color: yellow;
+}
+
+.okay {
+  background-color: green;
+  color: white;
+}
+
+.strikeout {
+  background-color: lightyellow;
+  color: black;
+  text-decoration: line-through;
+  opacity: 90%;
 }

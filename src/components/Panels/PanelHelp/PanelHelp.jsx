@@ -1,10 +1,11 @@
 import React from 'react';
-import { Panel, useExpanded } from 'components/Panels';
+import { usePanels } from 'store';
+import { Panel } from 'components/Panels';
 import './PanelHelp.css';
 
 //----------------------------------------------------------------------
 export const PanelHelp = () => {
-  const content = useExpanded('help') ? 'Expanded Help' : '';
+  const content = usePanels().state.help ? 'Expanded Help' : '';
   return (
     <Panel title="Help" type="help">
       {content}

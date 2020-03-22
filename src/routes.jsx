@@ -4,10 +4,14 @@ import App from "./App";
 
 const routes = (
   <BrowserRouter>
-    <Route exact path="/" component={App} />
-    <Route path="/users" component={App} />
+    <Route path="/" component={App} />
+    {/* <Route path="/users" component={App} />
     <Route path="/contact" component={App} />
-    <Route path="/settings" component={App} />
+    <Route exact path="/settings" component={App} />
+    <Route exact path="/settings/api" component={App} />
+    <Route exact path="/settings/node" component={App} />
+    <Route exact path="/settings/scraping" component={App} />
+    <Route exact path="/settings/sharing" component={App} /> */}
   </BrowserRouter>
 );
 

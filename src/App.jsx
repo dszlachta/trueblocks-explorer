@@ -3,17 +3,21 @@ import GlobalContext from 'store';
 import PageHeader from 'components/PageParts/PageHeader';
 import PageFooter from 'components/PageParts/PageFooter';
 import PageContent from 'components/PageParts/PageContent';
-import { panelStateDefault, panelReducer } from 'components/Panels';
-import { statusDefault, statusReducer } from 'components/Panels';
+import {
+  loadingReducer,
+  panelDefault, panelReducer,
+  statusDefault, statusReducer
+} from 'store';
 import 'App.css';
 
+//-----------------------------------------------------
 function App() {
-  const panelStorage = localStorage.getItem('panelState');
-  const panelDefault = panelStorage === null ? panelStateDefault : JSON.parse(panelStorage);
-  const [panelState, panelDispatch] = useReducer(panelReducer, panelDefault);
-  const [statusState, statusDispatch] = useReducer(statusReducer, statusDefault);
+  const [loadingState, loadingDispatch] = useReducer(loadingReducer, false);
+  const [panelState, panelDispatch] = useReducer(panelReducer, stateFromStorage('panelState', panelDefault));
+  const [statusState, statusDispatch] = useReducer(statusReducer, statusDefault);  // status is delivered from backend, no local storage
 
   const theGlobalState = {
+    loading: { state: loadingState, dispatch: loadingDispatch },
     panels: { state: panelState, dispatch: panelDispatch },
     status: { state: statusState, dispatch: statusDispatch }
   };
@@ -28,7 +32,14 @@ function App() {
     </GlobalContext.Provider>
   );
 }
-
 export default App;
+
+//-----------------------------------------------------
+const stateFromStorage = (key, defaultState) => {
+  const storage = localStorage.getItem(key);
+  if (storage === null)
+    return defaultState;
+  return JSON.parse(storage)
+}
 
 // https://bashooka.com/coding/react-icon-components/
