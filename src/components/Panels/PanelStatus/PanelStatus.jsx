@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import useSWR from 'swr';
 import { Panel } from 'components/Panels';
-import { useStatus, statusDefault, useLoading, usePanels } from 'store';
+import { useStatus, statusDefault } from 'store';
 import './PanelStatus.css';
 
 const fetcher = url => fetch(url).then(r => r.json())
 //----------------------------------------------------------------------
 export const PanelStatus = () => {
-  const { state, dispatch } = useStatus();
+  const { dispatch } = useStatus();
 //  const { data, error } = useSWR("http://localhost:8080/status", fetcher, { refreshInterval: 7 });
   const { data, error } = useSWR("http://localhost:8080/status", fetcher);
   let content = '';
@@ -64,7 +64,3 @@ export const PanelStatus = () => {
   //   loadingDispatch({ type: 'off' })
   // }, [isLoading, expanded, JSON.stringify(state)]);
 };
-
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}

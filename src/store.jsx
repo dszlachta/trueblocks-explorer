@@ -19,7 +19,6 @@ export const panelDefault = {
 
 //----------------------------------------------------------------------
 export const loadingReducer = (state, action) => {
-  // console.log(state, action);
   switch (action.type) {
     case 'on':
       return true;
@@ -83,7 +82,6 @@ export const statusDefault = {
 
 //----------------------------------------------------------------------
 export const statusReducer = (state, action) => {
-  // console.log(state.data[0], action);
   let ret = state;
   switch (action.type) {
     case 'start':
@@ -106,4 +104,14 @@ export const statusReducer = (state, action) => {
 //----------------------------------------------------------------------
 export const useStatus = () => {
   return useContext(GlobalContext).status;
+}
+
+//----------------------------------------------------------------------
+export const usePage = () => {
+  const parts = window.location.pathname.split('/');
+  if (!parts[1] || parts[1] === '')
+    parts[1] = 'dashboard';
+  if (!parts[2])
+    parts[2] = '';
+  return { page: parts[1], subpage: parts[2] };
 }

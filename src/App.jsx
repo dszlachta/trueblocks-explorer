@@ -1,9 +1,6 @@
 import React, { useReducer } from 'react';
-import GlobalContext from 'store';
-import PageHeader from 'components/PageParts/PageHeader';
-import PageFooter from 'components/PageParts/PageFooter';
-import PageContent from 'components/PageParts/PageContent';
-import {
+import { PageHeader, PageFooter, PageContent } from 'components/PageParts';
+import GlobalContext, {
   loadingReducer,
   panelDefault, panelReducer,
   statusDefault, statusReducer

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useGlobals, useStatus, useLoading } from 'store';
+import { useStatus, useLoading } from 'store';
 import logo from 'assets/img/logo.png';
 import './PageHeader.css';
 
 //-----------------------------------------------------
-const PageHeader = () => {
+export const PageHeader = () => {
   return (
     <div className="page-header">
       <PageHeaderLeft />
@@ -14,7 +14,6 @@ const PageHeader = () => {
     </div>
   );
 };
-export default PageHeader;
 
 //-----------------------------------------------------
 const PageHeaderLeft = () => {
@@ -31,15 +30,12 @@ const PageHeaderLeft = () => {
 //-----------------------------------------------------
 const PageHeaderUpperRight = () => {
   const {state } = useStatus();
-  // console.log(useGlobals());
-  // if (useGlobals().loading)
-  //   return <></>;
   return (
     <div className="right-top">
       <Pill text="api" status={state.data[0].trueblocks_version !== ''} decorate={true} route="/settings/api" />
       <Pill text="node" status={state.data[0].client_version !== ''} decorate={true} route="/settings/node" />
-      <Pill text="scraping" status={state.data[0].is_scraping} decorate={false} route="/settings/scraping" />
-      <Pill text="sharing" status={false} decorate={false} route="/settings/sharing" />
+      <Pill text="scraper" status={state.data[0].is_scraping} decorate={false} route="/settings/scraper" />
+      <Pill text="ipfs" status={false} decorate={false} route="/settings/ipfs" />
     </div>
   );
 }
@@ -75,8 +71,6 @@ const PageHeaderLowerRight = () => {
   const ud = (meta.client - u);
   const stats = <span>{f} ({fd}) / {s} ({sd}) / {u} ({ud}) / {meta.client} - </span>
 
-  sleep(10000);
-
   let secs = 0;
   const nowStr = (new Date()).toISOString();
   // console.log('nowStr: ', nowStr);
@@ -84,7 +78,7 @@ const PageHeaderLowerRight = () => {
   // console.log('nowDate: ', nowDate);
   const nowSecs = nowDate.getTime(); //date2Secs(nowDate);
   // console.log('nowSecs: ', nowSecs);
-  const newDate = new Date(nowSecs);
+  // const newDate = new Date(nowSecs);
   // console.log('newDate: ', newDate);
 
   let thenStr = 0;
@@ -97,7 +91,7 @@ const PageHeaderLowerRight = () => {
     // console.log('thenDate: ', thenDate);
     thenSecs = thenDate.getTime(); //date2Secs(thenDate);
     // console.log('thenSecs: ', thenSecs);
-    const new2Date = new Date(thenSecs);
+    // const new2Date = new Date(thenSecs);
     // console.log('new2Date: ', new2Date);
     secs = (nowSecs - thenSecs) / 1000;
   }
@@ -113,20 +107,22 @@ const PageHeaderLowerRight = () => {
 
 //-----------------------------------------------------
 function max(a, b) { return a > b ? a : b }
-function pad2(n) {
-  if (n > 9)
-    return n;
-  return '0' + n;
-}
-function formatDate(givenDate) {
-  const mos = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  const dys = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const moName = mos[givenDate.getUTCMonth()];
-  const daName = dys[givenDate.getUTCDay()];
-  const date = daName + ', ' + moName + ' ' + givenDate.getUTCDate() + ', ' + givenDate.getUTCFullYear();
-  const time = pad2(givenDate.getUTCHours()) + ":" + pad2(givenDate.getUTCMinutes()) + ":" + pad2(givenDate.getUTCSeconds());
-  return date + ' ' + time + ' UTC';
-}
+
+// function pad2(n) {
+//   if (n > 9)
+//     return n;
+//   return '0' + n;
+// }
+
+// function formatDate(givenDate) {
+//   const mos = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+//   const dys = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+//   const moName = mos[givenDate.getUTCMonth()];
+//   const daName = dys[givenDate.getUTCDay()];
+//   const date = daName + ', ' + moName + ' ' + givenDate.getUTCDate() + ', ' + givenDate.getUTCFullYear();
+//   const time = pad2(givenDate.getUTCHours()) + ":" + pad2(givenDate.getUTCMinutes()) + ":" + pad2(givenDate.getUTCSeconds());
+//   return date + ' ' + time + ' UTC';
+// }
 
 function str2Date(dateTimeIn) {
   dateTimeIn = dateTimeIn.replace(/T/, " ");
@@ -152,6 +148,6 @@ function str2Date(dateTimeIn) {
   return ret;
 }
 
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
-}
+// const sleep = (milliseconds) => {
+//   return new Promise(resolve => setTimeout(resolve, milliseconds))
+// }

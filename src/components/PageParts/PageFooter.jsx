@@ -5,7 +5,7 @@ import { Settings, Discord, GitHub, Medium, Twitter } from './PageFooterIcons';
 import './PageFooter.css';
 
 //----------------------------------------------------------------------
-const PageFooter = () => {
+export const PageFooter = () => {
   return (
     <div className={'page-footer ' + (usePanels().state.menu ? 'shape_11' : 'shape_01')}>
       <LeftFooter />
@@ -14,7 +14,6 @@ const PageFooter = () => {
     </div>
   );
 };
-export default PageFooter;
 
 //----------------------------------------------------------------------
 const LeftFooter = () => {

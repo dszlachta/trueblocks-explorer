@@ -4,7 +4,7 @@ import { PanelMenu, PanelContent, PanelStatus, PanelHelp } from 'components/Pane
 import './PageContent.css';
 
 //----------------------------------------------------------------------
-const PageContent = () => {
+export const PageContent = () => {
   return (
     <div className={'page-content shape_' + usePanelBits()}>
       <PanelMenu />
@@ -14,7 +14,6 @@ const PageContent = () => {
     </div>
   );
 };
-export default PageContent;
 
 //----------------------------------------------------------------------
 const usePanelBits = () => {
