@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useStatus, useLoading } from 'store';
+import { useStatus } from 'store';
 import logo from 'assets/img/logo.png';
 import './PageHeader.css';
 
@@ -22,7 +22,7 @@ const PageHeaderLeft = () => {
       <Link to="/">
         <img className="logo" alt={logo} src={logo} />
       </Link>
-      <div>{useLoading().state ? "loading" : "TrueBlocks Account Explorer"}</div>
+      <div>{"TrueBlocks Account Explorer"}</div>
     </div>
   );
 }
@@ -35,7 +35,7 @@ const PageHeaderUpperRight = () => {
       <Pill text="api" status={state.data[0].trueblocks_version !== ''} decorate={true} route="/settings/api" />
       <Pill text="node" status={state.data[0].client_version !== ''} decorate={true} route="/settings/node" />
       <Pill text="scraper" status={state.data[0].is_scraping} decorate={false} route="/settings/scraper" />
-      <Pill text="ipfs" status={false} decorate={false} route="/settings/ipfs" />
+      <Pill text="sharing" status={false} decorate={false} route="/settings/sharing" />
     </div>
   );
 }

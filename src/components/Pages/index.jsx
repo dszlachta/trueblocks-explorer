@@ -20,8 +20,8 @@ const SettingsScraper = () => {
   return <div className="okay">Actual Settings Scraper Page</div>
 }
 
-const SettingsIPFS = () => {
-  return <div className="okay">Actual Settings IPFS Page</div>
+const SettingsSharing = () => {
+  return <div className="okay">Actual Settings Sharing Page</div>
 }
 
 const Generic = ({ page }) => {
@@ -41,7 +41,7 @@ export const thePages = {
   'settings/api': { component: <SettingsApi /> },
   'settings/node': { component: <SettingsNode /> },
   'settings/scraper': { component: <SettingsScraper /> },
-  'settings/ipfs': { component: <SettingsIPFS /> },
+  'settings/sharing': { component: <SettingsSharing /> },
   'support/': { component: <Generic page="Names" /> },
   'support/free': { component: <Generic page="Free Support" /> },
   'support/incident': { component: <Generic page="Per Incident" /> },

@@ -32,7 +32,7 @@ const SettingsMenu = () => {
       <MenuItem indent to='/settings/api' text='API' />
       <MenuItem indent to='/settings/node' text='Node' />
       <MenuItem indent to='/settings/scraper' text='Scraper' />
-      <MenuItem indent to='/settings/ipfs' text='IPFS' />
+      <MenuItem indent to='/settings/sharing' text='Sharing' />
     </MenuItem>
   );
 }

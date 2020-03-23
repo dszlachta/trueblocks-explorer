@@ -4,9 +4,13 @@ import { Panel } from 'components/Panels';
 import { useStatus, statusDefault } from 'store';
 import './StatusPanel.css';
 
-const fetcher = url => fetch(url).then(r => r.json())
+const fetcher = url => fetch(url).then((r) => {
+  return r.json()
+});
+
 //----------------------------------------------------------------------
 export const StatusPanel = () => {
+  //sleep(500);
   const { dispatch } = useStatus();
 //  const { data, error } = useSWR("http://localhost:8080/status", fetcher, { refreshInterval: 7 });
   const { data, error } = useSWR("http://localhost:8080/status", fetcher);
@@ -29,38 +33,15 @@ export const StatusPanel = () => {
       <pre>{content}</pre>
     </Panel>
   );
-  //  return <div>{JSON.stringify(data)}</div>
-
-  // const isLoading = useLoading().state;
-  // const loadingDispatch = useLoading().dispatch;
-  // const { state, dispatch } = useStatus();
-  // const expanded = usePanels().status;
-  // console.log('status: ', state);
-  // // useEffect(() => {
-  // //   const interval = setInterval(
-  // //     () => {
-  // //       // console.log('status: ', state.data[0])
-  // //       dispatch({ type: 'toggle_api' })
-  // //       // console.log('status: ', state.data[0])
-  // //     }, 1000
-  // //   );
-  // //   return () => {
-  // //     clearInterval(interval);
-  // //   };
-  // // }, []);
-  // //const [lastRefresh, setLastRefresh] = useState(0);
-  // const needsRefresh = true; //usePanels().state.status; //(status.state.meta.client > lastRefresh + 1);
-  // useEffect(() => {
-  //   if (needsRefresh) {
-  //     loadingDispatch({ type: 'on' })
-  //     fetch('http://localhost:8080/status')
-  //       .then((response) => { return response.json(); })
-  //       .then((json) => {
-  //         const action = { type: 'success', payload: json };
-  //         dispatch(action);
-  //       })
-  //       .catch((response) => { });
-  //   }
-  //   loadingDispatch({ type: 'off' })
-  // }, [isLoading, expanded, JSON.stringify(state)]);
 };
+
+// loading:
+// 'on'
+// 'off'
+// loading
+
+function sleep(ms) {
+  var start = new Date().getTime(), expire = start + ms;
+  while (new Date().getTime() < expire) { }
+  return;
+}

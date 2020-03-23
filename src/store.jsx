@@ -18,22 +18,6 @@ export const panelDefault = {
 };
 
 //----------------------------------------------------------------------
-export const loadingReducer = (state, action) => {
-  switch (action.type) {
-    case 'on':
-      return true;
-    case 'off':
-      return false;
-    default: return state;
-  }
-}
-
-//----------------------------------------------------------------------
-export const useLoading = () => {
-  return useContext(GlobalContext).loading;
-}
-
-//----------------------------------------------------------------------
 export const panelReducer = (state, action) => {
   let ret = state;
   switch (action.type) {
@@ -84,8 +68,8 @@ export const statusDefault = {
 export const statusReducer = (state, action) => {
   let ret = state;
   switch (action.type) {
-    case 'start':
-      return {...state, loading: true};
+    //case 'start':
+    //  return {...state};
     case 'success':
       ret = action.payload;
       break;
