@@ -1,13 +1,13 @@
 import { Panel } from './Panel';
-import { PanelMenu } from './PanelMenu';
-import { PanelContent } from './PanelContent';
-import { PanelStatus } from './PanelStatus';
-import { PanelHelp } from './PanelHelp';
+import { MenuPanel } from './MenuPanel';
+import { ContentPanel } from './ContentPanel';
+import { StatusPanel } from './StatusPanel';
+import { HelpPanel } from './HelpPanel';
 
 export {
   Panel,
-  PanelMenu,
-  PanelContent,
-  PanelStatus,
-  PanelHelp
+  MenuPanel,
+  ContentPanel,
+  StatusPanel,
+  HelpPanel
 };

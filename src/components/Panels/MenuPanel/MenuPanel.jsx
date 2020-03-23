@@ -1,10 +1,10 @@
 import React from 'react';
 import { Panel } from 'components/Panels';
 import { Menu, MenuItem } from 'components/Menu';
-import './PanelMenu.css';
+import './MenuPanel.css';
 
 //----------------------------------------------------------------------
-export const PanelMenu = () => {
+export const MenuPanel = () => {
   const selected = window.location.pathname.replace(/^\/([^/]+).*/, '$1');
   return (
     <Panel title="Menu" type="menu" collapseLeft={true}>

@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import ReactMarkdown from 'react-markdown';
 import { usePanels, usePage } from 'store';
 import { Panel } from 'components/Panels';
-import './PanelHelp.css';
+import './HelpPanel.css';
 
 let setter = null;
 const fetcher = (url) => {
@@ -16,7 +16,7 @@ const fetcher = (url) => {
 }
 
 //----------------------------------------------------------------------
-export const PanelHelp = () => {
+export const HelpPanel = () => {
   const expanded = usePanels().state.help;
   const [help, setHelp] = useState('');
   setter = setHelp;

@@ -1,16 +1,16 @@
 import React from 'react';
 import { usePanels } from 'store';
-import { PanelMenu, PanelContent, PanelStatus, PanelHelp } from 'components/Panels';
+import { MenuPanel, ContentPanel, StatusPanel, HelpPanel } from 'components/Panels';
 import './PageContent.css';
 
 //----------------------------------------------------------------------
 export const PageContent = () => {
   return (
     <div className={'page-content shape_' + usePanelBits()}>
-      <PanelMenu />
-      <PanelStatus />
-      <PanelContent />
-      <PanelHelp />
+      <MenuPanel />
+      <StatusPanel />
+      <ContentPanel />
+      <HelpPanel />
     </div>
   );
 };

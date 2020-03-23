@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { usePage } from 'store';
-import { thePages } from 'components/Pages';
 import { Panel } from 'components/Panels';
-import './PanelContent.css';
+import { thePages } from 'components/Pages';
+import './ContentPanel.css';
 
 //----------------------------------------------------------------------
-export const PanelContent = () => {
+export const ContentPanel = () => {
   const { page, subpage } = usePage();
   return (
     <Panel title={page + (subpage ? ' : ' + subpage : '')} type="content" collapseLeft={true} noIcon>

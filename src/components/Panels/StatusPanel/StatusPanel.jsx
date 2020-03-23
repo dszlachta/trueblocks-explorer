@@ -2,11 +2,11 @@ import React from 'react';
 import useSWR from 'swr';
 import { Panel } from 'components/Panels';
 import { useStatus, statusDefault } from 'store';
-import './PanelStatus.css';
+import './StatusPanel.css';
 
 const fetcher = url => fetch(url).then(r => r.json())
 //----------------------------------------------------------------------
-export const PanelStatus = () => {
+export const StatusPanel = () => {
   const { dispatch } = useStatus();
 //  const { data, error } = useSWR("http://localhost:8080/status", fetcher, { refreshInterval: 7 });
   const { data, error } = useSWR("http://localhost:8080/status", fetcher);
