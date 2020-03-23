@@ -1,6 +1,8 @@
 import React from 'react';
-import { Panel } from 'components/Panels';
+
 import { usePage } from 'store';
+import { thePages } from 'components/Pages';
+import { Panel } from 'components/Panels';
 import './PanelContent.css';
 
 //----------------------------------------------------------------------
@@ -13,47 +15,10 @@ export const PanelContent = () => {
   );
 };
 
+//----------------------------------------------------------------------
 const InnerPage = () => {
   const { page, subpage } = usePage();
-  switch (page) {
-    case 'settings':
-      switch (subpage) {
-        case 'api':
-          return <SettingsApi />
-        case 'node':
-          return <SettingsNode />
-        case 'scraper':
-          return <SettingsScraper />
-        case 'ipfs':
-          return <SettingsIPFS />
-        default:
-          return <Settings />;
-      }
-    default:
-      return <DashBoard />
-  }
-}
-
-const DashBoard = () => {
-  return <div>DashBoard</div>
-}
-
-const Settings = () => {
-  return <div>Settings</div>
-}
-
-const SettingsApi = () => {
-  return <div>Settings Api</div>
-}
-
-const SettingsNode = () => {
-  return <div>Settings Node</div>
-}
-
-const SettingsScraper = () => {
-  return <div>Settings Scraper</div>
-}
-
-const SettingsIPFS = () => {
-  return <div>Settings IPFS</div>
+  const ret = thePages[page + '/' + subpage];
+  console.log('menuKey: ', page + '/' + subpage, 'menuValue: ', ret);
+  return (ret ? ret.component : <div className="warning">Missing Inner Page</div>);
 }

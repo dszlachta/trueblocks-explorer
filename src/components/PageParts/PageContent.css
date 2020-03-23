@@ -59,37 +59,37 @@
     );
 }
 .shape_1001 {
-  grid-template-columns: minmax(200px, 2fr) minmax(40px, 1fr) minmax(40px, 1fr) 60fr;
+  grid-template-columns: minmax(175px, 2fr) minmax(40px, 1fr) minmax(40px, 1fr) 60fr;
 }
 .shape_1010 {
-  grid-template-columns: minmax(200px, 2fr) minmax(40px, 1fr) 60fr minmax(
+  grid-template-columns: minmax(175px, 2fr) minmax(40px, 1fr) 60fr minmax(
       40px,
       1fr
     );
 }
 .shape_1011 {
-  grid-template-columns: minmax(200px, 3fr) minmax(40px, 1fr) 30fr 30fr;
+  grid-template-columns: minmax(175px, 3fr) minmax(40px, 1fr) 30fr 30fr;
 }
 .shape_1100 {
-  grid-template-columns: minmax(200px, 2fr) 60fr minmax(40px, 1fr) minmax(
+  grid-template-columns: minmax(175px, 2fr) 60fr minmax(40px, 1fr) minmax(
       40px,
       1fr
     );
 }
 .shape_1101 {
-  grid-template-columns: minmax(200px, 2fr) 57fr minmax(40px, 1fr) minmax(
+  grid-template-columns: minmax(175px, 2fr) 57fr minmax(40px, 1fr) minmax(
       250px,
       4fr
     );
 }
 .shape_1110 {
-  grid-template-columns: minmax(200px, 2fr) 57fr minmax(250px, 4fr) minmax(
+  grid-template-columns: minmax(175px, 2fr) 57fr minmax(250px, 4fr) minmax(
       40px,
       1fr
     );
 }
 .shape_1111 {
-  grid-template-columns: minmax(200px, 2fr) 54fr minmax(250px, 4fr) minmax(
+  grid-template-columns: minmax(175px, 2fr) 54fr minmax(250px, 4fr) minmax(
       250px,
       4fr
     );
