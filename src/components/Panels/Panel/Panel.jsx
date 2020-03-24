@@ -1,62 +1,42 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { usePanels } from 'store';
 import ChevronLeft from 'assets/icons/chevron-left';
 import ChevronRight from 'assets/icons/chevron-right';
-import HelpCircle from 'assets/icons/help-circle';
 import './Panel.css';
 
 //----------------------------------------------------------------------
-export const Panel = ({ title, type, collapseLeft, noIcon, headCn='', children }) => {
+export const Panel = ({ title, options, children }) => {
+  const { headerLink = '', headClass = '' } = options;
+  let header = <PanelHeader title={title} headClass={headClass} options={options} />; 
+  if (headerLink !== '')
+    header = <Link to={headerLink}><PanelHeader title={title} headClass={headClass} options={options} /></Link>; 
   return (
-    <div key={type} className={type}>
-      <PanelHeader title={title} type={type} collapseLeft={collapseLeft} noIcon={noIcon} headCn={headCn}/>
+    <div key={options.type} className={options.type}>
+      {header}
       {children}
     </div>
   );
 };
 
 //----------------------------------------------------------------------
-const ExpandIcon = ({ type, collapseLeft }) => {
-  const panels = usePanels();
-  const toggleAction = { type: type };
-  const leftIcon = <ChevronLeft onClick={() => panels.dispatch(toggleAction)} />;
-  const rightIcon = <ChevronRight onClick={() => panels.dispatch(toggleAction)} />;
-  const helpIcon = <HelpCircle fill="green" color="#333" onClick={() => panels.dispatch(toggleAction)} />;
-
-  const expanded = isExpanded(panels.state, type);
-  if (type === 'help') return helpIcon;
-  if (collapseLeft) return expanded ? leftIcon : rightIcon;
-  return expanded ? rightIcon : leftIcon;
-};
-
-//----------------------------------------------------------------------
-const PanelHeader = ({ title, type, collapseLeft, noIcon, headCn }) => {
+const PanelHeader = ({ title, headClass, options }) => {
   return (
-    <div className={headCn !== '' ? headCn : "panel-header"} style={{ align: 'right' }}>
-      <div>{isExpanded(usePanels().state, type) ? title : ''}</div>
-      {!noIcon ? (
-        <div className="panel-icon">
-          <ExpandIcon type={type} collapseLeft={collapseLeft} />
-        </div>
-      ) : (
-        <></>
-      )}
+    <div className={headClass !== '' ? headClass : "panel-header"}>
+      <div>{options.expanded ? title : ''}</div>
+      <div className="panel-icon">
+        {options.inCon ? options.inCon : <ExpandIcon options={options} />}
+      </div>
     </div>
   );
 };
 
 //----------------------------------------------------------------------
-const isExpanded = (panelState, type) => {
-  switch (type) {
-    case 'menu':
-      return panelState.menu;
-    case 'content':
-      return panelState.content;
-    case 'status':
-      return panelState.status;
-    case 'help':
-      return panelState.help;
-    default:
-      return true;
-  }
+const ExpandIcon = ({ options }) => {
+  const panels = usePanels();
+  const leftIcon = <ChevronLeft onClick={() => panels.dispatch({ type: options.type })} />;
+  const rightIcon = <ChevronRight onClick={() => panels.dispatch({ type: options.type })} />;
+
+  if (options.dir === 'left') return options.expanded ? leftIcon : rightIcon;
+  return options.expanded ? rightIcon : leftIcon;
 };

@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 const MenuContext = React.createContext({})
 //----------------------------------------------------------------------
 export const Menu = ({ menus, selected }) => {
-  console.log('selected: ', selected);
   return (
     <MenuContext.Provider value={{selected: selected}}>
       {menus.map((item) => {

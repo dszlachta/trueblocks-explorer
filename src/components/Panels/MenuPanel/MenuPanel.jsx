@@ -1,13 +1,13 @@
 import React from 'react';
-import { Panel } from 'components/Panels';
-import { Menu, MenuItem } from 'components/Menu';
+import { usePanels } from 'store';
+import { Panel, Menu, MenuItem } from 'components/';
 import './MenuPanel.css';
 
 //----------------------------------------------------------------------
 export const MenuPanel = () => {
   const selected = window.location.pathname.replace(/^\/([^/]+).*/, '$1');
   return (
-    <Panel title="Menu" type="menu" collapseLeft={true}>
+    <Panel title="Menu" options={{ type: 'menu', dir: 'left', expanded: usePanels().state.menu }}>
       <Menu menus={theMenus} selected={selected} />
     </Panel>
   );
@@ -63,10 +63,12 @@ const SupportMenu = () => {
 
 //----------------------------------------------------------------------
 const theMenus = [
-  <MenuItem exact to='/' text='Dashboard' />,
-  <ProjectMenu />,
-  <MonitorsMenu />,
-  <MenuItem to='/names' text='Names' />,
-  <SettingsMenu />,
-  <SupportMenu />,
+  <MenuItem key="dashboard" exact to='/' text='Dashboard' />,
+  <ProjectMenu key="projects" />,
+  <MonitorsMenu key="monitors" />,
+  <MenuItem key="names" to='/names' text='Names' />,
+  <MenuItem key="signatures" to='/signatures' text='Signatures' />,
+  <MenuItem key="caches" to='/caches' text='Caches' />,
+  <SettingsMenu key="settings" />,
+  <SupportMenu key="support" />,
 ];

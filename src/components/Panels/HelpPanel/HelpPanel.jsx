@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import useSWR from 'swr';
 import ReactMarkdown from 'react-markdown';
 import { usePanels, usePage } from 'store';
-import { Panel } from 'components/Panels';
+import { Panel } from 'components/';
+import HelpCircle from 'assets/icons/help-circle';
 import './HelpPanel.css';
 
 let setter = null;
@@ -17,6 +18,7 @@ const fetcher = (url) => {
 
 //----------------------------------------------------------------------
 export const HelpPanel = () => {
+  const dispatch = usePanels().dispatch;
   const expanded = usePanels().state.help;
   const [help, setHelp] = useState('');
   setter = setHelp;
@@ -24,8 +26,9 @@ export const HelpPanel = () => {
   const helpURL = "http://localhost:8080/help/" + page + (subpage !== '' ? "/" + subpage : '') + ".md";
   useSWR(helpURL, fetcher);
 
+  const helpIcon = <HelpCircle fill="green" color="#333" onClick={() => dispatch({ type: 'help' })} />;
   return (
-    <Panel title={"Help"} type="help">
+    <Panel title="Help" options={{ type: 'help', expanded: expanded, inCon: helpIcon }}>
       {expanded ? <ReactMarkdown source={help} /> : <></>}
     </Panel>
   );

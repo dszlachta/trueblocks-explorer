@@ -1,0 +1,28 @@
+.card {
+  margin: 0px 0px 25px 25px;
+  padding: 2px;
+  width: 300px;
+  border-style: outset;
+  background-color: var(--bgcolor-card);
+  color: var(--color-card);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card:hover {
+  background-color: var(--bghover-menu);
+  color: var(--color-page);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-header {
+  padding: 3px;
+  border: 3px groove var(--color-page);
+  background-color: var(--bgcolor-page);
+  color: var(--color-page);
+  font-size: 1.1em;
+  text-transform: capitalize;
+  margin-bottom: 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+}

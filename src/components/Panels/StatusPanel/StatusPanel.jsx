@@ -1,9 +1,11 @@
 import React from 'react';
 import useSWR from 'swr';
-import { Panel } from 'components/Panels';
+import { Panel } from 'components/';
 import { useStatus, statusDefault } from 'store';
 import './StatusPanel.css';
+import { usePanels } from 'store';
 
+//----------------------------------------------------------------------
 const fetcher = url => fetch(url).then((r) => {
   return r.json()
 });
@@ -28,20 +30,15 @@ export const StatusPanel = () => {
   }
   content = JSON.stringify(content, null, 2);
   return (
-    <Panel title="Status" type="status">
+    <Panel title="Status" options={{ type: 'status', expanded: usePanels().state.status }}>
       {error && <div className="warning">Error: Is the API running?</div>}
       <pre>{content}</pre>
     </Panel>
   );
 };
 
-// loading:
-// 'on'
-// 'off'
-// loading
-
-function sleep(ms) {
-  var start = new Date().getTime(), expire = start + ms;
-  while (new Date().getTime() < expire) { }
-  return;
-}
+// function sleep(ms) {
+//   var start = new Date().getTime(), expire = start + ms;
+//   while (new Date().getTime() < expire) { }
+//   return;
+// }

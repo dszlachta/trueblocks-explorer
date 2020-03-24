@@ -1,6 +1,6 @@
 import React from 'react';
 import { usePanels } from 'store';
-import { MenuPanel, ContentPanel, StatusPanel, HelpPanel } from 'components/Panels';
+import { MenuPanel, ContentPanel, StatusPanel, HelpPanel } from 'components/';
 import './PageContent.css';
 
 //----------------------------------------------------------------------

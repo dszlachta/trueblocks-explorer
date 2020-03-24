@@ -1,5 +1,6 @@
 import React from 'react';
-import { DashBoard } from './DashBoard';
+import { Dashboard } from './Dashboard';
+import { Projects, ProjectsNew, ProjectsOpen, ProjectsSave, ProjectsExport } from './Projects'
 import { Support, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
 
 const Settings = () => {
@@ -31,14 +32,16 @@ const Generic = ({ page }) => {
 }
 
 export const thePages = {
-  'dashboard/': { component: <DashBoard /> },
-  'projects/': { component: <Generic page="Projects" /> },
-  'projects/new': { component: <Generic page="Projects : New" /> },
-  'projects/open': { component: <Generic page="Projects : Open" /> },
-  'projects/save': { component: <Generic page="Projects : Save" /> },
-  'projects/export': { component: <Generic page="Projects : Export" /> },
+  'dashboard/': { component: <Dashboard /> },
+  'projects/': { component: <Projects /> },
+  'projects/new': { component: <ProjectsNew /> },
+  'projects/open': { component: <ProjectsOpen /> },
+  'projects/save': { component: <ProjectsSave /> },
+  'projects/export': { component: <ProjectsExport /> },
   'monitors/': { component: <Generic page="Monitors" /> },
   'names/': { component: <Generic page="Names" /> },
+  'signatures/': { component: <Generic page="Signatures" /> },
+  'caches/': { component: <Generic page="Caches" /> },
   'settings/': { component: <Settings /> },
   'settings/api': { component: <SettingsApi /> },
   'settings/node': { component: <SettingsNode /> },

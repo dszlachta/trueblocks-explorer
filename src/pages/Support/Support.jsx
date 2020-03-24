@@ -155,9 +155,9 @@ export const SupportAbout = () => {
       <div style={{ marginLeft: '2%' }}>
         <div>
           In <b>late 2015</b> and <b>early 2016</b>, we became completely obsessed with the blockchain and <b>The
-          DAO</b> in particular. We were among the first participants in The DAO's discussion site, DaoHub. We 
-          created a number of ancillary websites (now defunct): http://doadeepdive.com, http://whalewatch.io, 
-          http://daowatch.io, and it was during this time that we released our first blockchain-based software product, 
+          DAO</b> in particular. We were among the first participants in The DAO's discussion site, DaoHub. We
+          created a number of ancillary websites (now defunct): http://doadeepdive.com, http://whalewatch.io,
+          http://daowatch.io, and it was during this time that we released our first blockchain-based software product,
           EthSlurp™. While we spent countless hours studying the DAO's smart contract, we completely missed the hack.
           <p></p>
           Since the <b>fall of 2016</b>, we’ve been working on the TrueBlocks™ system which is the software you are
