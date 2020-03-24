@@ -6,10 +6,10 @@ import HelpCircle from 'assets/icons/help-circle';
 import './Panel.css';
 
 //----------------------------------------------------------------------
-export const Panel = ({ title, type, collapseLeft, noIcon, children }) => {
+export const Panel = ({ title, type, collapseLeft, noIcon, headCn='', children }) => {
   return (
     <div key={type} className={type}>
-      <PanelHeader title={title} type={type} collapseLeft={collapseLeft} noIcon={noIcon} />
+      <PanelHeader title={title} type={type} collapseLeft={collapseLeft} noIcon={noIcon} headCn={headCn}/>
       {children}
     </div>
   );
@@ -30,9 +30,9 @@ const ExpandIcon = ({ type, collapseLeft }) => {
 };
 
 //----------------------------------------------------------------------
-const PanelHeader = ({ title, type, collapseLeft, noIcon }) => {
+const PanelHeader = ({ title, type, collapseLeft, noIcon, headCn }) => {
   return (
-    <div className="panel-header" style={{ align: 'right' }}>
+    <div className={headCn !== '' ? headCn : "panel-header"} style={{ align: 'right' }}>
       <div>{isExpanded(usePanels().state, type) ? title : ''}</div>
       {!noIcon ? (
         <div className="panel-icon">

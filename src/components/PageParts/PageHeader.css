@@ -78,3 +78,13 @@
   text-decoration: line-through;
   opacity: 90%;
 }
+
+h4 {
+  margin-top: 2px;
+  width: 100%;
+  padding-left: 0;
+  font-size: 0.8em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #03415d;
+}

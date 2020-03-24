@@ -30,8 +30,8 @@
 
 .menu-item.is-active {
   font-weight: 700;
-  color: #42505f;
-  background-color: #e2e5f0;
+  color: #42505f !important;
+  background-color: #e2e5f0 !important;
   opacity: 1;
   border: 1px dashed #6b7a89;
 }

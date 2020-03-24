@@ -1,8 +1,6 @@
 import React from 'react';
-
-const DashBoard = () => {
-  return <div className="okay">Actual DashBoard</div>
-}
+import { DashBoard } from './DashBoard';
+import { Support, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
 
 const Settings = () => {
   return <div className="okay">Actual Settings Page</div>
@@ -24,6 +22,10 @@ const SettingsSharing = () => {
   return <div className="okay">Actual Settings Sharing Page</div>
 }
 
+const SettingsSkins = () => {
+  return <div className="okay">Actual Skins Page</div>
+}
+
 const Generic = ({ page }) => {
   return <div style={{ backgroundColor: 'yellow' }}>Undefined Generic Page: {page}</div>
 }
@@ -42,10 +44,11 @@ export const thePages = {
   'settings/node': { component: <SettingsNode /> },
   'settings/scraper': { component: <SettingsScraper /> },
   'settings/sharing': { component: <SettingsSharing /> },
-  'support/': { component: <Generic page="Names" /> },
-  'support/free': { component: <Generic page="Free Support" /> },
-  'support/incident': { component: <Generic page="Per Incident" /> },
-  'support/documentation': { component: <Generic page="Documentation" /> },
-  'support/contact': { component: <Generic page="Contact" /> },
-  'support/about': { component: <Generic page="About" /> },
+  'settings/skins': { component: <SettingsSkins /> },
+  'support/': { component: <Support /> },
+  'support/free': { component: <SupportFree /> },
+  'support/incident': { component: <SupportIncident /> },
+  'support/documentation': { component: <SupportDocumentation /> },
+  'support/contact': { component: <SupportContact /> },
+  'support/about': { component: <SupportAbout /> },
 }

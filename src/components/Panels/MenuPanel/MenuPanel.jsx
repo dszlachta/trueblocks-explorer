@@ -26,6 +26,16 @@ const ProjectMenu = () => {
 }
 
 //----------------------------------------------------------------------
+const MonitorsMenu = () => {
+  return (
+    <MenuItem to='/monitors' text='Monitors'>
+      <MenuItem indent to='/monitors/yours' text='Your Monitors' />
+      <MenuItem indent to='/monitors/shared' text='Shared Monitors' />
+    </MenuItem>
+  );
+}
+
+//----------------------------------------------------------------------
 const SettingsMenu = () => {
   return (
     <MenuItem to='/settings' text='Settings'>
@@ -33,6 +43,7 @@ const SettingsMenu = () => {
       <MenuItem indent to='/settings/node' text='Node' />
       <MenuItem indent to='/settings/scraper' text='Scraper' />
       <MenuItem indent to='/settings/sharing' text='Sharing' />
+      <MenuItem indent to='/settings/skins' text='Skins' />
     </MenuItem>
   );
 }
@@ -54,7 +65,7 @@ const SupportMenu = () => {
 const theMenus = [
   <MenuItem exact to='/' text='Dashboard' />,
   <ProjectMenu />,
-  <MenuItem to='/monitors' text='Monitors' />,
+  <MonitorsMenu />,
   <MenuItem to='/names' text='Names' />,
   <SettingsMenu />,
   <SupportMenu />,

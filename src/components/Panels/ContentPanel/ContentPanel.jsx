@@ -10,7 +10,7 @@ export const ContentPanel = () => {
   const { page, subpage } = usePage();
   return (
     <Panel title={page + (subpage ? ' : ' + subpage : '')} type="content" collapseLeft={true} noIcon>
-      <InnerPage />
+      <div style={{ margin: '2px 30px 2px 10px', padding: '5px' }}><InnerPage /></div>
     </Panel>
   );
 };
