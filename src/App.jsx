@@ -1,4 +1,6 @@
 import React, { useReducer } from 'react';
+import PropTypes from 'prop-types';
+
 import { PageHeader, PageFooter, PageContent } from 'page-parts';
 import GlobalContext, {
   panelDefault, panelReducer,

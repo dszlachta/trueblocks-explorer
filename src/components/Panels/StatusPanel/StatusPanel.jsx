@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import useSWR from 'swr';
 import { Panel } from 'components/';
 import { useStatus, statusDefault } from 'store';

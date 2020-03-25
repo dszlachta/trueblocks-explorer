@@ -1,10 +1,13 @@
 import { useContext } from 'react';
+import PropTypes from 'prop-types';
+
 import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
 export const projectsDefault = [
   {
     id: '0x12..01',
+    projectGroup: "Group 1",
     monitored: true,
     name: 'Anderson, Andy',
     addrs: 5,
@@ -15,6 +18,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..02',
+    projectGroup: "Group 1",
     monitored: false,
     name: 'John\'s Bookstore',
     addrs: 23,
@@ -25,6 +29,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..03',
+    projectGroup: "Group 1",
     monitored: true,
     name: 'Carson, Jane',
     addrs: 23,
@@ -35,6 +40,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..04',
+    projectGroup: "Group 1",
     monitored: false,
     name: 'May Construction',
     addrs: 23,
@@ -45,6 +51,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..05',
+    projectGroup: "Group 2",
     monitored: true,
     name: 'Marks, Sarah',
     addrs: 23,
@@ -55,6 +62,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..06',
+    projectGroup: "Group 2",
     monitored: false,
     name: 'Maker DAO',
     addrs: 23,
@@ -65,6 +73,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..07',
+    projectGroup: "Group 2",
     monitored: true,
     name: 'Project 22',
     addrs: 23,
@@ -75,6 +84,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..08',
+    projectGroup: "Group 3",
     monitored: false,
     name: 'Project 3',
     addrs: 23,
@@ -85,6 +95,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..09',
+    projectGroup: "Group 3",
     monitored: true,
     name: 'Project 4',
     addrs: 23,
@@ -95,6 +106,7 @@ export const projectsDefault = [
   },
   {
     id: '0x12..10',
+    projectGroup: "Group 3",
     monitored: false,
     name: 'Project 5',
     addrs: 23,

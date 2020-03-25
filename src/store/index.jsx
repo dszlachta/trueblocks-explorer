@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { panelDefault, panelReducer, usePanels } from './store_panel';
 import { statusDefault, statusReducer, useStatus } from './store_status';
 import { projectsDefault, projectsReducer, useProjects } from './store_projects';
@@ -18,13 +20,17 @@ export {
 //----------------------------------------------------------------------
 export const usePage = () => {
   const parts = window.location.pathname.split('/');
-  if (!parts[1] || parts[1] === '')
-    parts[1] = 'dashboard';
-  if (!parts[2])
-    parts[2] = '';
-  return { page: parts[1], subpage: parts[2] };
+  const query = window.location.search.substr(1).split('&');
+  if (parts.length < 2 || parts[1] === '') parts[1] = 'dashboard';
+  if (parts.length < 3 || parts[2] === '') parts[2] = '';
+  return { page: parts[1], subpage: parts[2], params: query };
 }
 
 export const useMocks = () => {
   return false;
+}
+
+export const handleClick = (e, dispatch, action) => {
+  e.preventDefault();
+  dispatch(action);
 }

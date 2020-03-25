@@ -1,8 +1,9 @@
-import { Projects, ProjectsNew, ProjectsOpen, ProjectsSave, ProjectsExport } from './Projects'
+import { Projects, ProjectsNew, ProjectsOpen, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects'
 export {
   Projects,
   ProjectsNew,
   ProjectsOpen,
+  ProjectsEdit,
   ProjectsSave,
   ProjectsExport,
 } 

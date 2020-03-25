@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
 import { usePanels } from 'store';
 import { Settings, Discord, GitHub, Medium, Twitter } from './PageFooterIcons';
 import './PageFooter.css';

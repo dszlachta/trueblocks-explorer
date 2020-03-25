@@ -1,51 +1,30 @@
 import React from 'react';
-import { useProjects } from 'store';
-import { Card } from 'components/';
+import PropTypes from 'prop-types';
+
+import { useProjects, usePage, handleClick } from 'store';
+import { Card, ObjectTable } from 'components/';
 import ToggleLeft from 'assets/icons/toggle-left';
 import ToggleRight from 'assets/icons/toggle-right';
 import './Projects.css';
 
-//----------------------------------------------------------------------------
 export const Projects = () => {
-  const projects = useProjects().state;
-  const projectDispatch = useProjects().dispatch;
+  const { state, dispatch } = useProjects();
+  const projects = state;
   return (
-    <div key="dash" className="dashboard">
-      {/* <Group title="Projects"> */}
-      {/* <div>skip</div> */}
+    <div key="projects" className="projects">
       {projects.map((project) => {
         const action = { type: 'toggle', id: project.id };
-        const on = <ToggleRight key={'icon' + project.id} fill="lightyellow" color="green" onClick={() => projectDispatch(action)} />;
-        const off = <ToggleLeft key={'icon' + project.id} fill="lightyellow" color="red" onClick={() => projectDispatch(action)} />;
+        const on = <ToggleRight key={'icon' + project.id} fill="lightyellow" color="green" onClick={(e) => handleClick(e, dispatch, action)} />;
+        const off = <ToggleLeft key={'icon' + project.id} fill="lightyellow" color="red" onClick={(e) => handleClick(e, dispatch, action)} />;
         const toggleIcon = project.monitored ? on : off;
+        const fields = Object.keys(project);
+        const route = '/projects/edit?id=' + project.id;
         return (
-          <Card key={project.id} title={project.name} type="monitor" inCon={toggleIcon}>
-            <table style={{ display: 'block', width: '80%' }}>
-              <tbody>
-                <tr>
-                  <td width='10%'></td><td width="40%">id:</td><td align="right" width="40%">{project.id}</td>
-                </tr>
-                <tr>
-                  <td width='10%'></td><td width="40%">addresses:</td><td align="right" width="40%">{project.addrs}</td>
-                </tr>
-                <tr>
-                  <td width='10%'></td><td width="40%">transactions:</td><td align="right" width="40%">{project.txs}</td>
-                </tr>
-                <tr>
-                  <td width='10%'></td><td width="40%">bytes:</td><td align="right" width="40%">{project.size}</td>
-                </tr>
-                <tr>
-                  <td width='10%'></td><td width="40%">traces:</td><td align="right" width="40%">{project.traces}</td>
-                </tr>
-                <tr>
-                  <td width='10%'></td><td width="40%">deltas:</td><td align="right" width="40%">{project.deltas}</td>
-                </tr>
-              </tbody>
-            </table>
+          <Card key={project.id} title={project.name} inCon={toggleIcon} headerLink={route}>
+            <ObjectTable data={project} fields={fields} />
           </Card>
         );
       })}
-      {/* </Group> */}
     </div >
   );
 }
@@ -54,9 +33,16 @@ export const Projects = () => {
 export const ProjectsNew = () => {
   return <div>Projects New</div>
 }
+
 //----------------------------------------------------------------------------
 export const ProjectsOpen = () => {
   return <div>Projects Open</div>
+}
+
+//----------------------------------------------------------------------------
+export const ProjectsEdit = () => {
+  const { page, subpage, params } = usePage();
+  return <div>Projects Edit: {page + '-' + subpage + ': ' + params + '.'}</div>
 }
 
 //----------------------------------------------------------------------------

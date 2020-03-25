@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { usePage, usePanels } from 'store';
 import { Panel } from 'components/';

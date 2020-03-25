@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { usePanels } from 'store';
 import { Panel, Menu, MenuItem } from 'components/';
 import './MenuPanel.css';
@@ -19,6 +21,7 @@ const ProjectMenu = () => {
     <MenuItem to='/projects' text='Projects'>
       <MenuItem indent to='/projects/new' text='New...' />
       <MenuItem indent to='/projects/open' text='Open...' />
+      <MenuItem indent to='/projects/edit' text='Edit...' />
       <MenuItem indent to='/projects/save' text='Save' />
       <MenuItem indent to='/projects/export' text='Export' />
     </MenuItem>

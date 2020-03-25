@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { Dashboard } from './Dashboard';
-import { Projects, ProjectsNew, ProjectsOpen, ProjectsSave, ProjectsExport } from './Projects'
+import { Projects, ProjectsNew, ProjectsOpen, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects'
 import { Support, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
 
 const Settings = () => {
@@ -36,6 +38,7 @@ export const thePages = {
   'projects/': { component: <Projects /> },
   'projects/new': { component: <ProjectsNew /> },
   'projects/open': { component: <ProjectsOpen /> },
+  'projects/edit': { component: <ProjectsEdit /> },
   'projects/save': { component: <ProjectsSave /> },
   'projects/export': { component: <ProjectsExport /> },
   'monitors/': { component: <Generic page="Monitors" /> },
