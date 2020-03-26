@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { useProjects, usePage, handleClick } from 'store';
@@ -14,15 +14,22 @@ import './Projects.css';
 export const Projects = () => {
   const { state, dispatch } = useProjects();
   let projects = state;
-  sortArray(projects, ['deleted', 'projectGroup', 'name'], true);
+  sortArray(projects, ['deleted', 'group', 'name'], true);
   return (
     <div key="projects" className="projects">
+      <div onClick={(e) => handleClick(e, dispatch, { type: 'reset' })}>Reset</div>
       <h4>Active Projects</h4>
       {spinProjects(projects, dispatch, true)}
       <h4>Paused Projects</h4>
       {spinProjects(projects, dispatch, false)}
     </div >
   );
+}
+
+//----------------------------------------------------------------------------
+export const ProjectsView = () => {
+  const { page, subpage, params } = usePage();
+  return <div>Projects View: {page + '-' + subpage + ': ' + params + '.'}</div>
 }
 
 //----------------------------------------------------------------------------
@@ -46,7 +53,6 @@ const sortArray = (array, fieldArray, asc) => {
   array.sort(function (a, b) {
     const aValue = fieldArray.map(f => { return a[f] }).join(',');
     const bValue = fieldArray.map(f => { return b[f] }).join(',');
-    console.log('a: ', aValue, ' b: ', bValue);
     if (asc) {
       return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
     } else {
@@ -59,17 +65,22 @@ const sortArray = (array, fieldArray, asc) => {
 const spinProjects = (projects, dispatch, active) => {
   let count = 0;
   const ret = (
-    projects.map((project) => {
-      if (active && project.deleted || !active && !project.deleted)
-        return <></>
+    projects.map((project, idx) => {
+      if ((active && project.deleted) || (!active && !project.deleted))
+        return <Fragment key={idx}></Fragment>
 
       count++;
       const noIcon = <div style={{ width: '22px', color: 'grey' }}>xx</div>
 
-      const monitorCallback = (e) => handleClick(e, dispatch, { type: 'toggle_monitor', id: project.id });
+      let monitorCallback = (e) => handleClick(e, dispatch, { type: 'toggle_monitor', id: project.id });
       const on = <ToggleRight key={'ic' + project.id} fill="lightyellow" color="green" onClick={monitorCallback} />;
       const off = <ToggleLeft key={'ic' + project.id} fill="lightyellow" color="red" onClick={monitorCallback} />;
-      const topIcon = (project.deleted ? <></> : project.monitored ? on : off);
+
+      let noopCallback = (e) => { e.preventDefault(); /* do nothing */ };
+      const on_dis = <ToggleRight key={'ic' + project.id} fill="grey" color="lightgrey" onClick={noopCallback}/>;
+      const off_dis = <ToggleLeft key={'ic' + project.id} fill="grey" color="lightgrey" onClick={noopCallback}/>;
+
+      let topIcon = (project.deleted ? (project.monitored ? on_dis : off_dis) : (project.monitored ? on : off));
 
       const removeCallback = (e) => handleClick(e, dispatch, { type: 'remove_project', id: project.id });
       const remove = (project.deleted ? <Remove size="18" onClick={removeCallback} /> : noIcon);
@@ -83,7 +94,7 @@ const spinProjects = (projects, dispatch, active) => {
       const tray = [edit, del, remove];
 
       const fields = Object.keys(project);
-      const route = '/projects/edit?id=' + project.id;
+      const route = project.deleted ? '' : '/projects/view?id=' + project.id;
       const cn = "card-header " + (project.deleted ? "deleted-project" : "");
 
       return (

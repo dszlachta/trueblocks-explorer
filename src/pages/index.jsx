@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Dashboard } from './Dashboard';
-import { Projects, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects'
+import { Projects, ProjectsView, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects'
 import { Support, SupportKeys, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
 
 const Settings = () => {
@@ -36,6 +36,7 @@ const Generic = ({ page }) => {
 export const thePages = {
   'dashboard/': { component: <Dashboard /> },
   'projects/': { component: <Projects /> },
+  'projects/view': { component: <ProjectsView /> },
   'projects/edit': { component: <ProjectsEdit /> },
   'projects/save': { component: <ProjectsSave /> },
   'projects/export': { component: <ProjectsExport /> },

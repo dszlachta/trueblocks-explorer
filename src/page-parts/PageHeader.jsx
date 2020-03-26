@@ -32,7 +32,6 @@ const PageHeaderLeft = () => {
 //-----------------------------------------------------
 const PageHeaderUpperRight = () => {
   const data = useStatusData();
-  console.log('data: ', data);
   return (
     <div className="right-top">
       <Pill text="api" status={data.trueblocks_version !== ''} decorate={true} route="/settings/api" />

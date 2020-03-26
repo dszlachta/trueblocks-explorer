@@ -1,0 +1,1181 @@
+openapi: 3.0.0
+info:
+  title: TrueBlocks API
+  description: |-
+    **TrueBlocks** enhances your locally-running or remote Ethereum node by providing easy access and local caching to the **blocks**, **transactions**, **receipts**, **logs**, **traces**, **abis**, **names**, **transaction histories*, and **prices**. An Ethereum RPC endpoint, such as Infura, QuickNodes, or (our preference) your own node, is required.
+
+    The primary focus of **TrueBlocks** is delivering complete, fully-detailed, audit-quality historical lists of transactions for individual or groups of Ethereum addresses in a 100% decentralized manner. It is decentralized from first principals making it possible to run locally, while permitting (if desired) running the code on a cloud server.
+    If you run the code locally, any data available from the node is presented to your application directly, without the intervention of any third party (including us!). Some portions of the data, such as USD prices and abi definitions, are provided from immutable data stores with an optional mechanism to participate in community-wide sharing of that data.
+    ## Installation / Tutorials / Examples
+    Instructions for installing the package, examples of its usage, and tutorials are available here.
+  version: 0.6.2-alpha
+servers:
+- url: http://localhost:8090/
+tags:
+- name: Accounts
+- name: State
+- name: Data
+- name: Other
+- name: Admin
+paths:
+  /list:
+    get:
+      tags:
+      - Accounts
+      summary: /list
+      operationId: listGET
+      parameters:
+      - name: addrs
+        in: query
+        description: one or more Ethereum addresses
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            text/json:
+              examples:
+                response:
+                  value:
+                    $ref: '#/components/schemas/tx_list'
+            text/plain:
+              examples:
+                response:
+                  value: |
+                    89796   6
+                    89880   3
+                    94675   17
+                    94754   3
+                    99979   10
+                    101279  0
+                    105338  18
+                    105439  2
+                    110350  40
+                    110457  1
+                    112698  35
+                    112789  0
+      x-swagger-router-controller: Accounts
+  /export:
+    get:
+      tags:
+      - Accounts
+      summary: /export
+      operationId: exportGET
+      parameters:
+      - name: addrs
+        in: query
+        description: one or more addresses (0x...) to export
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: appearances
+        in: query
+        description: export a list of appearances
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: logs
+        in: query
+        description: export logs instead of transaction list
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: traces
+        in: query
+        description: export traces instead of transaction list
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: balances
+        in: query
+        description: export balance history instead of transaction list
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: count_only
+        in: query
+        description: display only the count of the number of data items requested
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: articulate
+        in: query
+        description: articulate transactions&#44; traces&#44; logs&#44; and outputs
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. text/plain
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: text/plain
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    data:
+                    - age: "21450442"
+                      blockHash: 0xda4c0d8c4df359aeb0dbcdc98767da4f31f95c3a9eb705a96933bd5322c8007f
+                      blockNumber: 89796
+                      date: 2015-08-15 09:02:23 UTC
+                      datesh: 2015-08-15
+                      ether: 83.37206775717503
+                      from: 0xe6a7a1d47ff21b6321162aea7c6cb457d5476bca
+                      gas: 22000
+                      gasCost: 1172130519441000
+                      gasPrice: 55815739021
+                      gasUsed: 21000
+                      hash: 0x184ff1f00c1c5da9c62774e4e2bf0925de39046e056c13edf31f0bb9ce4d9b38
+                      isError: 0
+                      receipt:
+                        contractAddress: 0x0
+                        gasUsed: 21000
+                        logs: []
+                      time: 9:02:23 UTC
+                      timestamp: 1439629343
+                      to: 0x3b01ebd2419f6d39db6ab4471e6382848716641f
+                      traces: []
+                      transactionIndex: 6
+                      value: 83372067757175030000
+                    status: ok
+      x-swagger-router-controller: Accounts
+  /slurp:
+    get:
+      tags:
+      - Accounts
+      summary: /slurp
+      operationId: slurpGET
+      parameters:
+      - name: addrs
+        in: query
+        description: one or more addresses to slurp from Etherscan
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: blocks
+        in: query
+        description: an optional range of blocks to slurp
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: type
+        in: query
+        description: which types of transaction to request
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Accounts
+  /abi:
+    get:
+      tags:
+      - Accounts
+      summary: /abi
+      operationId: abiGET
+      parameters:
+      - name: addrs
+        in: query
+        description: list of one or more smart contracts whose ABI to grab from EtherScan
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: canonical
+        in: query
+        description: convert all types to their canonical represenation and remove
+          all spaces from display
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: generate
+        in: query
+        description: generate C++ code into the current folder for all functions and
+          events found in the ABI
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: noconst
+        in: query
+        description: generate encodings for non-constant functions and events only
+          (always true when generating)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: sol
+        in: query
+        description: create the ABI file from a .sol file in the local directory
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Accounts
+  /blocks:
+    get:
+      tags:
+      - Data
+      summary: /blocks
+      operationId: blocksGET
+      parameters:
+      - name: blocks
+        in: query
+        description: a space-separated list of one or more blocks to retrieve
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: hashes_only
+        in: query
+        description: display only transaction hashes&#44; default is to display full
+          transaction detail
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: addrs
+        in: query
+        description: display all addresses included in the block
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: uniq
+        in: query
+        description: display only uniq addresses found per block
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: uniq_tx
+        in: query
+        description: display only uniq addresses found per transaction
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: count_only
+        in: query
+        description: display counts of appearances (for --addrs&#44; --uniq&#44; or
+          --uniq_tx only)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Data
+  /logs:
+    get:
+      tags:
+      - Data
+      summary: /logs
+      operationId: logsGET
+      parameters:
+      - name: transactions
+        in: query
+        description: a space-separated list of one or more transaction identifiers
+          (tx_hash&#44; bn.txID&#44; blk_hash.txID)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: articulate
+        in: query
+        description: articulate the transactions if an ABI is found for the 'to' address
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Data
+  /names:
+    get:
+      tags:
+      - Accounts
+      summary: /names
+      operationId: namesGET
+      parameters:
+      - name: terms
+        in: query
+        description: a space separated list of one or more search terms
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: expand
+        in: query
+        description: expand search to include all fields (default searches name&#44;
+          address&#44; and symbol only)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: match_case
+        in: query
+        description: do case-sensitive search
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: owned
+        in: query
+        description: include personal accounts in the search
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: custom
+        in: query
+        description: include your custom named accounts
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: prefund
+        in: query
+        description: include prefund accounts
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: named
+        in: query
+        description: include well know token and airdrop addresses in the search
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: addr
+        in: query
+        description: display only addresses in the results (useful for scripting)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                    data:
+                    - accttype: EOA
+                      address: 0x06012c8cf97bead5deae237070f9587f8e7a266d
+                      balance: 0
+                      blockNumber: 1365929
+                      cname: EthState
+                      code: 0x
+                      deleted: 0
+                      deployed: 0
+                      ether: 0
+                      nonce: 0
+                      schema: 5005
+                      showing: 1
+                      storage: ""
+                    meta:
+                      client: 1365929
+                      finalized: 539800
+                      pending: 622000
+                      staging: 622000
+                    type: CEthState
+      x-swagger-router-controller: Accounts
+  /quotes:
+    get:
+      tags:
+      - Other
+      summary: /quotes
+      operationId: quotesGET
+      parameters:
+      - name: freshen
+        in: query
+        description: Freshen price database (append new data)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: period
+        in: query
+        description: display prices in this increment
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: pair
+        in: query
+        description: which price pair to freshen or list (see Poloniex)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Other
+  /receipts:
+    get:
+      tags:
+      - Data
+      summary: /receipts
+      operationId: receiptsGET
+      parameters:
+      - name: transactions
+        in: query
+        description: a space-separated list of one or more transaction identifiers
+          (tx_hash&#44; bn.txID&#44; blk_hash.txID)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: articulate
+        in: query
+        description: articulate the transactions if an ABI is found for the 'to' address
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: logs
+        in: query
+        description: display the receipt's logs
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Data
+  /state:
+    get:
+      tags:
+      - State
+      summary: /state
+      operationId: stateGET
+      parameters:
+      - name: addrs
+        in: query
+        description: one or more addresses (0x...) from which to retrieve balances
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: blocks
+        in: query
+        description: an optional list of one or more blocks at which to report balances&#44;
+          defaults to 'latest'
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: mode
+        in: query
+        description: control which state to export
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: changes
+        in: query
+        description: only report a balance when it changes from one block to the next
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: no_zero
+        in: query
+        description: suppress the display of zero balance accounts
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: State
+  /status:
+    get:
+      tags:
+      - Admin
+      summary: /status
+      operationId: statusGET
+      parameters:
+      - name: modes
+        in: query
+        description: which data to retrieve
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: details
+        in: query
+        description: include details about items found in monitors&#44; slurps&#44;
+          abis&#44; or price caches
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: list
+        in: query
+        description: display results in Linux ls -l format (assumes --detail)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: report
+        in: query
+        description: show a summary of the current status of the blockchain and TrueBlocks
+          scrapers
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Admin
+  /traces:
+    get:
+      tags:
+      - Data
+      summary: /traces
+      operationId: tracesGET
+      parameters:
+      - name: transactions
+        in: query
+        description: a space-separated list of one or more transaction identifiers
+          (tx_hash&#44; bn.txID&#44; blk_hash.txID)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: articulate
+        in: query
+        description: articulate the transactions if an ABI is found for the 'to' address
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: count_only
+        in: query
+        description: show the number of traces for the transaction only (fast)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Data
+  /transactions:
+    get:
+      tags:
+      - Data
+      summary: /transactions
+      operationId: transactionsGET
+      parameters:
+      - name: transactions
+        in: query
+        description: a space-separated list of one or more transaction identifiers
+          (tx_hash&#44; bn.txID&#44; blk_hash.txID)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: articulate
+        in: query
+        description: articulate the transactions if an ABI is found for the 'to' address
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: trace
+        in: query
+        description: display the transaction's trace
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fmt
+        in: query
+        description: export format (where appropriate)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: help
+        in: query
+        description: get help on this command
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: Accept
+        in: header
+        description: e.g. application/json
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              examples:
+                response:
+                  value:
+                  - age: "21263796"
+                    blockNumber: 101010
+                    date: 2015-08-17 12:53:09 UTC
+                    difficulty: 3871451743585
+                    finalized: 1
+                    gasLimit: 3141592
+                    gasUsed: 0
+                    hash: 0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d
+                    miner: 0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd
+                    parentHash: 0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b
+                    price: 0
+                    timestamp: 1439815989
+                    transactions: []
+      x-swagger-router-controller: Data
+components:
+  schemas:
+    tx_list: {}
+    ABI: {}
+    Export: {}
+    List: {}
+    Slurp: {}
+    View_State_detail: {}
+    View_block_detail: {}
+    View_logs_detail: {}
+    View_quotes_detail: {}
+    View_receipts_detail: {}
+    View_status_detail: {}
+    View_traces_detail: {}
+    View_transactions_detail: {}
+    names: {}

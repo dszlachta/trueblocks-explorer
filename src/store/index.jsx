@@ -26,11 +26,23 @@ export const usePage = () => {
   return { page: parts[1], subpage: parts[2], params: query };
 }
 
+//----------------------------------------------------------------------
 export const useMocks = () => {
   return false;
 }
 
+//----------------------------------------------------------------------
 export const handleClick = (e, dispatch, action) => {
   e.preventDefault();
   dispatch(action);
+}
+
+//----------------------------------------------------------------------
+export const fetchURL = (url, setHelp) => {
+  fetch(url)
+    .then((r) => { if (r.status !== 200) throw new Error(); return r.text(); })
+    .then((t) => { setHelp(t) })
+    .catch((e) => {
+      return setHelp('#### Error\nFailed to load: **' + url.replace(/http:\/\/localhost:8080\/help\//, '') + "**");
+    });
 }

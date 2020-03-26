@@ -33,7 +33,6 @@ export const StatusPanel = () => {
   }
 
   const expanded = usePanels().state.status;
-  const content = JSON.stringify(status, null, 2);
   return (
     <Panel title="Status" options={{ type: 'status', expanded: expanded }}>
       {

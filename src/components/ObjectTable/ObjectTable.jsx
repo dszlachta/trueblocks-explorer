@@ -8,6 +8,14 @@ export const ObjectTable = ({ data, fields }) => {
         if (key === 'id')
           return true;
         let value = data[key];
+        if (typeof value === 'object') {
+          let count = 0;
+          Object.keys(value).map((v) => {
+            count++;
+            return true;
+          });
+          value = count;
+        }
         if (value === '') {
           if (key === 'sharedTo')
             value = 'Not shared';

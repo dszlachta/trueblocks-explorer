@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Mousetrap from 'mousetrap';
 
@@ -10,7 +10,6 @@ import GlobalContext, {
   statusDefault, statusReducer,
 } from 'store';
 import 'App.css';
-import { usePanels } from 'store/store_panel';
 
 //-----------------------------------------------------
 function App() {

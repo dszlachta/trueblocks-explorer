@@ -19,6 +19,7 @@ export const MenuPanel = () => {
 const ProjectMenu = () => {
   return (
     <MenuItem to='/projects' text='Projects'>
+      <MenuItem indent to='/projects/view' text='View...' />
       <MenuItem indent to='/projects/edit' text='Edit...' />
       <MenuItem indent to='/projects/save' text='Save' />
       <MenuItem indent to='/projects/export' text='Export' />

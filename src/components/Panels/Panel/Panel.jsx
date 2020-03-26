@@ -16,8 +16,8 @@ export const Panel = ({ title, options, children }) => {
   }
   let iconTray = <></>;
   if (options.iconTray) {
-    iconTray = options.iconTray.map((icon) => {
-      return <div>{icon}</div>
+    iconTray = options.iconTray.map((icon,idx) => {
+      return <div key={idx}>{icon}</div>
     })
     iconTray = <div className="icon-tray">{iconTray}</div>;
   }
@@ -40,6 +40,16 @@ const PanelHeader = ({ title, headerClass, options }) => {
       {icon}
     </div>
   );
+};
+PanelHeader.propTypes = {
+  title: PropTypes.string.isRequired,
+  headerClass: PropTypes.string,
+  options: PropTypes.object,
+};
+PanelHeader.defaultProps = {
+  title: '',
+  headerClass: '',
+  options: {},
 };
 
 //----------------------------------------------------------------------
