@@ -44,3 +44,31 @@ export const statusReducer = (state, action) => {
 export const useStatus = () => {
   return useContext(GlobalContext).status;
 }
+export const useStatusData = () => {
+  const { state } = useStatus();
+  console.log('data state: ', state);
+  if (!state) {
+    console.log('no state: ', state);
+    return statusDefault.data[0];
+  }
+  if (!state || !state.data) {
+    console.log('no state data: ', state);
+    return statusDefault.data[0];
+  }
+  if (!state || !state.data || !state.data[0]) {
+    console.log('no state data[0]: ', state);
+    return statusDefault.data[0];
+  }
+  if (!state || !state.data || !state.data[0] || state.error) {
+    console.log('error: ', state);
+    return statusDefault.data[0];
+  }
+  return state.data[0];
+}
+export const useStatusMeta = () => {
+  const { state } = useStatus();
+  console.log('meta state: ', state);
+  if (!state || !state.data || !state.data[0] || state.error)
+    return statusDefault.meta;
+  return state.meta;
+}

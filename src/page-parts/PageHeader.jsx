@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
-import { useStatus } from 'store';
+import { useStatusData, useStatusMeta } from 'store';
 import logo from 'assets/img/logo.png';
 import './PageHeader.css';
 
@@ -31,12 +31,13 @@ const PageHeaderLeft = () => {
 
 //-----------------------------------------------------
 const PageHeaderUpperRight = () => {
-  const {state } = useStatus();
+  const data = useStatusData();
+  console.log('data: ', data);
   return (
     <div className="right-top">
-      <Pill text="api" status={state.data[0].trueblocks_version !== ''} decorate={true} route="/settings/api" />
-      <Pill text="node" status={state.data[0].client_version !== ''} decorate={true} route="/settings/node" />
-      <Pill text="scraper" status={state.data[0].is_scraping} decorate={false} route="/settings/scraper" />
+      <Pill text="api" status={data.trueblocks_version !== ''} decorate={true} route="/settings/api" />
+      <Pill text="node" status={data.client_version !== ''} decorate={true} route="/settings/node" />
+      <Pill text="scraper" status={data.is_scraping} decorate={false} route="/settings/scraper" />
       <Pill text="sharing" status={false} decorate={false} route="/settings/sharing" />
     </div>
   );
@@ -63,8 +64,7 @@ const Pill = ({ text, status, decorate, route }) => {
 
 //-----------------------------------------------------
 const PageHeaderLowerRight = () => {
-  const status = useStatus().state;
-  const meta = status.meta;
+  const meta = useStatusMeta();
   const f = meta.finalized;
   const fd = (meta.client - f);
   const s = meta.staging;
@@ -83,11 +83,12 @@ const PageHeaderLowerRight = () => {
   // const newDate = new Date(nowSecs);
   // console.log('newDate: ', newDate);
 
+  const data = useStatusData();
   let thenStr = 0;
   let thenSecs = 0;
   // console.log(status.data[0]);
-  if (status.data[0].date) {
-    thenStr = status.data[0].date.replace(/ UTC/, ".000Z").replace(/ /, 'T');
+  if (data.date) {
+    thenStr = data.date.replace(/ UTC/, ".000Z").replace(/ /, 'T');
     // console.log('thenStr: ', thenStr);
     const thenDate = str2Date(thenStr);
     // console.log('thenDate: ', thenDate);

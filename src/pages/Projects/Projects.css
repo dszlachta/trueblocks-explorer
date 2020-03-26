@@ -3,3 +3,8 @@
   flex-wrap: wrap;
   justify-items: center;
 }
+
+.deleted-project {
+  color: lightcoral;
+  text-decoration: line-through;
+}

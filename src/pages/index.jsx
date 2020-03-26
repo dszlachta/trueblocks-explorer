@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Dashboard } from './Dashboard';
-import { Projects, ProjectsNew, ProjectsOpen, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects'
-import { Support, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
+import { Projects, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects'
+import { Support, SupportKeys, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
 
 const Settings = () => {
   return <div className="okay">Actual Settings Page</div>
@@ -36,8 +36,6 @@ const Generic = ({ page }) => {
 export const thePages = {
   'dashboard/': { component: <Dashboard /> },
   'projects/': { component: <Projects /> },
-  'projects/new': { component: <ProjectsNew /> },
-  'projects/open': { component: <ProjectsOpen /> },
   'projects/edit': { component: <ProjectsEdit /> },
   'projects/save': { component: <ProjectsSave /> },
   'projects/export': { component: <ProjectsExport /> },
@@ -52,6 +50,7 @@ export const thePages = {
   'settings/sharing': { component: <SettingsSharing /> },
   'settings/skins': { component: <SettingsSkins /> },
   'support/': { component: <Support /> },
+  'support/keys': { component: <SupportKeys /> },
   'support/free': { component: <SupportFree /> },
   'support/incident': { component: <SupportIncident /> },
   'support/documentation': { component: <SupportDocumentation /> },

@@ -19,3 +19,13 @@
   margin-right: 0;
   height: 1.4em;
 }
+
+.icon-tray {
+  padding-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  border-top: 1px dashed darkgrey;
+  background-color: grey;
+}

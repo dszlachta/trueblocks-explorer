@@ -11,7 +11,7 @@ export const ContentPanel = () => {
   const { page, subpage } = usePage();
   const title = page + (subpage ? ' : ' + subpage : '');
   return (
-    <Panel title={title} options={{ inCon: <></>, type: 'content', expanded: usePanels().state.content }}>
+    <Panel title={title} options={{ topIcon: <></>, type: 'content', expanded: usePanels().state.content }}>
       <div style={{ margin: '2px 30px 2px 10px', padding: '5px' }}><InnerPage /></div>
     </Panel>
   );

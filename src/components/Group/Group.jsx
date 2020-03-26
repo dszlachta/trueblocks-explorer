@@ -7,7 +7,7 @@ import './Group.css';
 export const Group = ({ title, children }) => {
   return (
     <div className="group">
-      <Panel title={'[ ' + title + ' ]'} options={{ headClass: "group-header", type: "group", expanded: true, inCon: <></> }}>
+      <Panel title={'[ ' + title + ' ]'} options={{ headerClass: "group-header", type: "group", expanded: true, topIcon: <></> }}>
         {children}
       </Panel>
     </div>

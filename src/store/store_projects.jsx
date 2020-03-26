@@ -8,143 +8,147 @@ export const projectsDefault = [
   {
     id: '0x12..01',
     projectGroup: "Group 1",
-    monitored: true,
-    name: 'Anderson, Andy',
+    name: 'Project 1',
+    client: 'Anderson, Andy',
     addrs: 5,
     txs: 2291,
     traces: 100,
     size: '1,201,019',
     deltas: 8,
+    monitored: true,
+    deleted: true,
   },
   {
     id: '0x12..02',
     projectGroup: "Group 1",
-    monitored: false,
-    name: 'John\'s Bookstore',
+    name: 'Project 2',
+    client: 'John\'s Bookstore',
     addrs: 23,
     txs: 1000,
     traces: 100,
     size: '899,100',
     deltas: 8,
+    monitored: false,
+    deleted: false,
   },
   {
     id: '0x12..03',
     projectGroup: "Group 1",
-    monitored: true,
-    name: 'Carson, Jane',
+    name: 'Carson Flowers',
+    client: 'Carson, Jane',
     addrs: 23,
     txs: 1000,
     traces: 100,
     size: 12010010,
     deltas: 8,
+    monitored: true,
+    deleted: true,
   },
   {
     id: '0x12..04',
     projectGroup: "Group 1",
-    monitored: false,
     name: 'May Construction',
+    client: 'May John',
     addrs: 23,
     txs: 1000,
     traces: 100,
     size: 12010010,
     deltas: 8,
+    monitored: false,
+    deleted: false,
   },
   {
     id: '0x12..05',
     projectGroup: "Group 2",
-    monitored: true,
-    name: 'Marks, Sarah',
+    name: 'The Poetry Shop',
+    client: 'Tudhope, Andy',
     addrs: 23,
     txs: 1000,
     traces: 100,
     size: 12010010,
     deltas: 8,
+    monitored: true,
+    deleted: true,
   },
   {
     id: '0x12..06',
     projectGroup: "Group 2",
-    monitored: false,
     name: 'Maker DAO',
+    client: 'Maker',
     addrs: 23,
     txs: 1000,
     traces: 100,
     size: 12010010,
     deltas: 8,
+    monitored: false,
+    deleted: false,
   },
   {
     id: '0x12..07',
     projectGroup: "Group 2",
-    monitored: true,
-    name: 'Project 22',
+    name: 'Whale No. 1',
+    client: 'Buter, in',
     addrs: 23,
     txs: 1000,
     traces: 100,
     size: 12010010,
     deltas: 8,
+    monitored: true,
+    deleted: true,
   },
   {
     id: '0x12..08',
     projectGroup: "Group 3",
+    name: 'Whale No. 2',
+    client: 'Lub, in',
+    addrs: 23,
+    txs: 1000,
+    traces: 100,
+    size: 12010010,
+    deltas: 8,
     monitored: false,
-    name: 'Project 3',
-    addrs: 23,
-    txs: 1000,
-    traces: 100,
-    size: 12010010,
-    deltas: 8,
-  },
-  {
-    id: '0x12..09',
-    projectGroup: "Group 3",
-    monitored: true,
-    name: 'Project 4',
-    addrs: 23,
-    txs: 1000,
-    traces: 100,
-    size: 12010010,
-    deltas: 8,
-  },
-  {
-    id: '0x12..10',
-    projectGroup: "Group 3",
-    monitored: false,
-    name: 'Project 5',
-    addrs: 23,
-    txs: 1000,
-    traces: 100,
-    size: 12010010,
-    deltas: 8,
+    deleted: false,
   },
 ];
 
 //----------------------------------------------------------------------
 export const projectsReducer = (state, action) => {
-  //console.log('state: ', state, ' action: ', action);
   let ret = state;
+  let project = ret.find((p) => p.id === action.id);
   switch (action.type) {
-    //case 'start':
-    //  return {...state};
     case 'success':
       ret = action.payload;
       break;
-    case 'toggle':
-      ret = toggleProject(ret, action.id);
+    case 'toggle_monitor':
+      project.monitored = !project.monitored;
+      ret = replaceRecord(ret, project, action.id);
+      break;
+    case 'toggle_deleted':
+      project.deleted = !project.deleted;
+      project.monitored = false;
+      ret = replaceRecord(ret, project, action.id);
+      break;
+    case 'edit_project':
+      window.location = "/projects/edit?id=" + project.id;
+      break;
+    case 'remove_project':
+      window.location = "/projects/edit?id=" + project.id;
       break;
     case 'fail':
       break;
     default:
       break;
   }
-  // write whatever you need to put in localStorage here...
+  // TODO(tjayrush): this does not write to the back end
+  localStorage.setItem('projectsState', JSON.stringify(ret));
   return ret;
 };
 
 //----------------------------------------------------------------------
-const toggleProject = (projects, id) => {
+const replaceRecord = (projects, record, id) => {
   projects = projects.map((project) => {
-    if (project.id === id) {
-      project.monitored = project.monitored ? false : true;
-    }
+    if (project.id === id)
+      return record;
     return project;
   });
   return projects;

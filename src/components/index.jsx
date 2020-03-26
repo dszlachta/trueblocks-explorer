@@ -7,6 +7,7 @@ import { MenuPanel } from './Panels/MenuPanel';
 import { ContentPanel } from './Panels/ContentPanel';
 import { StatusPanel } from './Panels/StatusPanel';
 import { HelpPanel } from './Panels/HelpPanel';
+import { formatNumber } from './utils';
 
 export {
   Card,
@@ -17,5 +18,6 @@ export {
   MenuPanel,
   ContentPanel,
   StatusPanel,
-  HelpPanel
+  HelpPanel,
+  formatNumber
 };

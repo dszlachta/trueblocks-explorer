@@ -14,7 +14,17 @@ export const panelDefault = {
 //----------------------------------------------------------------------
 export const panelReducer = (state, action) => {
   let ret = state;
+  console.log('action: ', action);
+  console.log('ret: ', ret);
   switch (action.type) {
+    case 'collapse':
+      ret = { menu: false, content: true, status: false, help: false };
+      console.log(action, ret);
+      break;
+    case 'expand':
+      ret = { menu: true, content: true, status: true, help: true };
+      console.log(action, ret);
+      break;
     case 'menu':
       ret = { ...state, menu: !state.menu };
       break;

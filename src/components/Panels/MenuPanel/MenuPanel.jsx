@@ -19,8 +19,6 @@ export const MenuPanel = () => {
 const ProjectMenu = () => {
   return (
     <MenuItem to='/projects' text='Projects'>
-      <MenuItem indent to='/projects/new' text='New...' />
-      <MenuItem indent to='/projects/open' text='Open...' />
       <MenuItem indent to='/projects/edit' text='Edit...' />
       <MenuItem indent to='/projects/save' text='Save' />
       <MenuItem indent to='/projects/export' text='Export' />
@@ -55,6 +53,7 @@ const SettingsMenu = () => {
 const SupportMenu = () => {
   return (
     <MenuItem to='/support' text='Support'>
+      <MenuItem indent to='/support/keys' text='Hot Keys' />
       <MenuItem indent to='/support/free' text='Free Support' />
       <MenuItem indent to='/support/incident' text='Per Incident' />
       <MenuItem indent to='/support/documentation' text='Documentation' />

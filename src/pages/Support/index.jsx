@@ -1,2 +1,2 @@
-import { Support, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
-export { Support, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout };
+import { Support, SupportKeys, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
+export { Support, SupportKeys, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout };

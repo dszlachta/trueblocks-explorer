@@ -56,20 +56,11 @@
 
 .pill {
   text-align: center;
+  text-decoration: underline;
   display: inline;
   margin: 0px 4px;
   padding: 2px 8px;
   border-radius: 8px;
-}
-
-.warning {
-  background-color: brown;
-  color: yellow;
-}
-
-.okay {
-  background-color: green;
-  color: white;
 }
 
 .strikeout {
@@ -77,14 +68,4 @@
   color: black;
   text-decoration: line-through;
   opacity: 90%;
-}
-
-h4 {
-  margin-top: 2px;
-  width: 100%;
-  padding-left: 0;
-  font-size: 0.8em;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #03415d;
 }

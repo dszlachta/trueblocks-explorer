@@ -9,25 +9,33 @@ import './Panel.css';
 
 //----------------------------------------------------------------------
 export const Panel = ({ title, options, children }) => {
-  const { headerLink = '', headClass = '' } = options;
-  let header = <PanelHeader title={title} headClass={headClass} options={options} />;
+  const { headerLink = '', headerClass = '' } = options;
+  let header = <PanelHeader title={title} headerClass={headerClass} options={options} />;
   if (headerLink !== '') {
-    header = <Link to={headerLink}><PanelHeader title={title} headClass={headClass} options={options} /></Link>;
+    header = <Link to={headerLink}><PanelHeader title={title} headerClass={headerClass} options={options} /></Link>;
+  }
+  let iconTray = <></>;
+  if (options.iconTray) {
+    iconTray = options.iconTray.map((icon) => {
+      return <div>{icon}</div>
+    })
+    iconTray = <div className="icon-tray">{iconTray}</div>;
   }
   return (
     <div key={options.type} className={options.type}>
       {header}
       {children}
+      {iconTray}
     </div>
   );
 };
 
 //----------------------------------------------------------------------
-const PanelHeader = ({ title, headClass, options }) => {
-  const showIcon = !options.headClass || !options.headClass.includes('center');
-  const icon = (showIcon ? <div className="panel-icon">{options.inCon ? options.inCon : <ExpandIcon options={options} />}</div> : <></>);
+const PanelHeader = ({ title, headerClass, options }) => {
+  const showIcon = !options.headerClass || !options.headerClass.includes('center');
+  const icon = (showIcon ? <div className="panel-icon">{options.topIcon ? options.topIcon : <ExpandIcon options={options} />}</div> : <></>);
   return (
-    <div className={headClass !== '' ? headClass : "panel-header"}>
+    <div className={headerClass !== '' ? headerClass : "panel-header"}>
       <div>{options.expanded ? title : ''}</div>
       {icon}
     </div>

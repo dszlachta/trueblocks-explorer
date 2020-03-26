@@ -29,9 +29,9 @@ export const HelpPanel = () => {
   useSWR(helpURL, fetcher);
 
   const action = { type: 'help' }
-  const helpIcon = <HelpCircle fill="green" color="#333" onClick={(e) => handleClick(e, dispatch, action)} />;
+  const helpIcon = <HelpCircle fill="forestgreen" color="#333" onClick={(e) => handleClick(e, dispatch, action)} />;
   return (
-    <Panel title="Help" options={{ type: 'help', expanded: expanded, inCon: helpIcon }}>
+    <Panel title="Help" options={{ type: 'help', expanded: expanded, topIcon: helpIcon }}>
       {expanded ? <ReactMarkdown source={help} /> : <></>}
     </Panel>
   );

@@ -13,7 +13,7 @@ export const Dashboard = () => {
       {boards.map((board) => {
         const fields = Object.keys(board);
         return (
-          <Card key={board.id} title={board.name} inCon={<></>} headerLink={board.route} headClass="card-center">
+          <Card key={board.id} title={board.name} headerLink={board.route} headerClass="card-center">
             <ObjectTable data={board} fields={fields} />
           </Card>
         );

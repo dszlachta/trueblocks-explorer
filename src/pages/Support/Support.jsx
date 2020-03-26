@@ -7,6 +7,33 @@ export const Support = () => {
 }
 
 //-----------------------------------------------------------
+export const SupportKeys = () => {
+  return (
+    <pre>
+      <div style={{ fontWeight: '600' }}>Accessing Screens</div>
+      <div> </div>
+      {"command+1\t/dashboard\t\tOpen Dashboard screen\n"}
+      {"command+2\t/projects\t\tOpen Projects screen\n"}
+      {"command+3\t/monitors\t\tOpen Monitors screen\n"}
+      {"command+4\t/names\t\t\tOpen Names screen\n"}
+      {"command+5\t/signatures\t\tOpen Signatures screen\n"}
+      {"command+6\t/settings/skins\t\tChange skins\n"}
+      {"command+7\t/support/keys\t\tView this screen\n"}
+      {"command+8\t/support/free\t\tView free support options\n"}
+      <div> </div>
+      <div style={{ fontWeight: '600' }}>Showing / Hiding Panels</div>
+      <div> </div>
+      {"q l\t\tcollapse\t\tHide help, status, and men panels\n"}
+      {"q a\t\texpand\t\t\tExpand all panels\n"}
+      {"q h\t\thelp\t\t\tShow / hide help panel\n"}
+      {"q m\t\tmenu\t\t\tShow / hide menu panel\n"}
+      {"q c\t\tcontent\t\t\tShow / hide content panel\n"}
+      {"q s\t\tstatus\t\t\tShow / hide status panel\n"}
+    </pre>
+  );
+}
+
+//-----------------------------------------------------------
 export const SupportFree = () => {
   return (
     <Fragment>

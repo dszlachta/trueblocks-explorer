@@ -6,3 +6,7 @@
   color: var(--color2-panel);
   overflow: hidden;
 }
+
+.help-text {
+  background-color: rosybrown;
+}

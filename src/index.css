@@ -33,6 +33,12 @@
   --bghover-menu: #77879c;
   --color-card: black;
   --bgcolor-card: white;
+  /* --green-color: #97cc3b; search for this elsewhere */
+  --green-color: #6b902a;  /* search for this elsewhere */
+  --red-color: #b40505;
+  --yellow-color: yellow;
+  --white-color: white;
+  --h4-color: #03415d;
 }
 
 /*-----------------------------------------------------------------------------*/
@@ -51,4 +57,24 @@ body {
   font-family: -apple-system, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
   font-size: 1rem;
   line-height: 1.5;
+}
+
+.warning {
+  background-color: var(--red-color);
+  color: var(--yellow-color);
+}
+
+.okay {
+  background-color: var(--green-color);
+  color: var(--white-color);
+}
+
+h4 {
+  margin-top: 2px;
+  width: 100%;
+  padding-left: 0;
+  font-size: 0.8em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--h4-color);
 }
