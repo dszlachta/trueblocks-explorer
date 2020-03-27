@@ -15,17 +15,21 @@ export const HelpPanel = () => {
   const [help, setHelp] = useState('');
   //setter = setHelp;
   const { page, subpage } = usePage();
-  const helpURL = "http://localhost:8080/help/" + page + (subpage !== '' ? "/" + subpage : '') + ".md";
+  const helpURL = 'http://localhost:8080/help/' + page + (subpage !== '' ? '/' + subpage : '') + '.md';
   useSWR(helpURL, fetchURL(helpURL, setHelp));
 
-  const action = { type: 'help' }
+  const action = { type: 'help' };
   const helpIcon = <HelpCircle fill="forestgreen" color="#333" onClick={(e) => handleClick(e, dispatch, action)} />;
   return (
     <Panel title="Help" options={{ type: 'help', expanded: expanded, topIcon: helpIcon }}>
       {expanded ? <ReactMarkdown source={help} /> : <></>}
       <h4>Other</h4>
       <ul>
-        <lli><a href="http://localhost:8090/docs" target="_blank">API Docs</a></lli>
+        <li>
+          <a href="http://localhost:8090/docs" target="_blank" rel="noopener noreferrer">
+            API Docs
+          </a>
+        </li>
       </ul>
     </Panel>
   );

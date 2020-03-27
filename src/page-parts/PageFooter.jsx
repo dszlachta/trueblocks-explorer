@@ -26,7 +26,7 @@ const LeftFooter = () => {
       </Link>
     </div>
   );
-}
+};
 
 //----------------------------------------------------------------------
 const CenterFooter = () => {
@@ -34,11 +34,12 @@ const CenterFooter = () => {
     <div className="center-footer">
       <div>TrueBlocks, LLC • 1010 N Hancock St, Philadelpia, PA 19123</div>
       <div>
-        <FooterLink link="http://www.quickblocks.io" /> • <FooterLink link="mailto:info@quickblocks.io?subject=Inquiry" text="info@quickblocks.io" />
+        <FooterLink link="http://www.quickblocks.io" /> •{' '}
+        <FooterLink link="mailto:info@quickblocks.io?subject=Inquiry" text="info@quickblocks.io" />
       </div>
     </div>
   );
-}
+};
 
 //----------------------------------------------------------------------
 const RightFooter = () => {
@@ -62,16 +63,16 @@ const RightFooter = () => {
       />
     </div>
   );
-}
+};
 
 //----------------------------------------------------------------------
 const FooterLink = ({ link, text }) => {
   return (
-    <a className="footer-links" href={link} target="_blank" rel="noopener noreferrer" >
+    <a className="footer-links" href={link} target="_blank" rel="noopener noreferrer">
       {text !== undefined ? text : link}
-    </a >
+    </a>
   );
-}
+};
 
 //----------------------------------------------------------------------
 const ClickableIcon = ({ link, icon }) => {
@@ -80,5 +81,4 @@ const ClickableIcon = ({ link, icon }) => {
       {icon}
     </a>
   );
-}
-
+};

@@ -50,5 +50,4 @@ export const panelReducer = (state, action) => {
 //----------------------------------------------------------------------
 export const usePanels = () => {
   return useContext(GlobalContext).panels;
-}
-
+};
