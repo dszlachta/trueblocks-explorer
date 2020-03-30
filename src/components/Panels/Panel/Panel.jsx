@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -13,14 +13,19 @@ export const Panel = ({ title, options, children }) => {
 
   let header = <PanelHeader title={title} headerClass={headerClass} options={options} />;
   if (headerLink !== '') {
-    header = <Link to={headerLink}><PanelHeader title={title} headerClass={headerClass} options={options} /></Link>;
+    header = (
+      <Link to={headerLink}>
+        <PanelHeader title={title} headerClass={headerClass} options={options} />
+      </Link>
+    );
   }
 
-  let iconTray = <></>;
+  let iconTray = <Fragment></Fragment>;
+
   if (options.iconTray) {
-    iconTray = options.iconTray.map((icon,idx) => {
-      return <div key={idx}>{icon}</div>
-    })
+    iconTray = options.iconTray.map((icon, idx) => {
+      return <div key={idx}>{icon}</div>;
+    });
     iconTray = <div className="icon-tray">{iconTray}</div>;
   }
 
@@ -36,9 +41,13 @@ export const Panel = ({ title, options, children }) => {
 //----------------------------------------------------------------------
 const PanelHeader = ({ title, headerClass, options }) => {
   const showIcon = !options.headerClass || !options.headerClass.includes('center');
-  const icon = (showIcon ? <div className="panel-icon">{options.topIcon ? options.topIcon : <ExpandIcon options={options} />}</div> : <></>);
+  const icon = showIcon ? (
+    <div className="panel-icon">{options.topIcon ? options.topIcon : <ExpandIcon options={options} />}</div>
+  ) : (
+    <Fragment></Fragment>
+  );
   return (
-    <div className={headerClass !== '' ? headerClass : "panel-header"}>
+    <div className={headerClass !== '' ? headerClass : 'panel-header'}>
       <div>{options.expanded ? title : ''}</div>
       {icon}
     </div>
@@ -47,12 +56,12 @@ const PanelHeader = ({ title, headerClass, options }) => {
 PanelHeader.propTypes = {
   title: PropTypes.string.isRequired,
   headerClass: PropTypes.string,
-  options: PropTypes.object,
+  options: PropTypes.object
 };
 PanelHeader.defaultProps = {
   title: '',
   headerClass: '',
-  options: {},
+  options: {}
 };
 
 //----------------------------------------------------------------------
