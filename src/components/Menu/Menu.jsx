@@ -1,36 +1,36 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
+
+import { currentPage } from 'components/utils';
 import './Menu.css';
 
 //----------------------------------------------------------------------
-export const Menu = ({ menu, parent = '', selected }) => {
-
-  const MenuContext = React.createContext({});
-
+export const Menu = ({ menu, parent = '' }) => {
   return (
-    <MenuContext.Provider value={{ selected: selected }}>
-      {menus.items.map((item) => {
-        const { label, exact, path, items } = item;
+    <>
+      {menu.map((item) => {
+        const enabled = true; //(item.enableFunc ? item.enableFunc(currentPage().page, currentPage().subpage) : true) && item.enabled;
+        const { label, exact, items } = item;
+        const path = cleanPath(label, parent, item.path);
         if (items) {
           return (
-            <></>
-            );
-        } else {
-          <MenuItem text={label} to={'/' + parent + '/' + path} indent={parent !== ''} exact={exact} enabled={true} />;
+            <MenuItem key={path} text={label} indent={parent !== ''} to={path}>
+              <Menu menu={items} parent={label.toLowerCase()} exact={exact}/>
+            </MenuItem>
+          );
         }
-        <MenuItem text={item.label}, to, indent, exact, enabled, children }) => {
-        return <pre>{JSON.stringify(item, null, 2)}</pre>;
+        return (<MenuItem key={path} text={label} indent={parent !== ''} to={path} exact={exact} enabled={enabled} />);
       })}
-    </MenuContext.Provider>
+    </>
   );
 };
 
 //----------------------------------------------------------------------
 export const MenuItem = ({ text, to, indent, exact, enabled, children }) => {
   const style = indent ? { margin: '4px 10px' } : {};
-  const selected = useContext(MenuContext).selected;
-  const expanded = selected !== '/' && to.includes(selected);
+  const { page } = currentPage();
+  const expanded = page !== '/' && to.includes(page);
 
   if (!enabled) {
     return (
@@ -56,9 +56,20 @@ MenuItem.propTypes = {
   indent: PropTypes.bool,
   exact: PropTypes.bool,
   enabled: PropTypes.bool.isRequired,
-  children: PropTypes.array
+  children: PropTypes.element
 };
 
 MenuItem.defaultProps = {
   enabled: true
 };
+
+const cleanPath = (label, parent, pathIn) => {
+  let ret = pathIn;
+  if (!ret || ret === '')
+    ret = '/' + label.toLowerCase().replace(/\.\.\./, '');
+  else
+    ret = '/' + (ret === '/' ? '' : ret);
+  if (parent !== '')
+    ret = '/' + parent + ret;
+  return ret;
+}

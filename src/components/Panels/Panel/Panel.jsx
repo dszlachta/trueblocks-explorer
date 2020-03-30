@@ -9,11 +9,13 @@ import './Panel.css';
 
 //----------------------------------------------------------------------
 export const Panel = ({ title, options, children }) => {
-  const { headerLink = '', headerClass = '' } = options;
+  let { headerLink = '', headerClass = '' } = options;
+
   let header = <PanelHeader title={title} headerClass={headerClass} options={options} />;
   if (headerLink !== '') {
     header = <Link to={headerLink}><PanelHeader title={title} headerClass={headerClass} options={options} /></Link>;
   }
+
   let iconTray = <></>;
   if (options.iconTray) {
     iconTray = options.iconTray.map((icon,idx) => {
@@ -21,6 +23,7 @@ export const Panel = ({ title, options, children }) => {
     })
     iconTray = <div className="icon-tray">{iconTray}</div>;
   }
+
   return (
     <div key={options.type} className={options.type}>
       {header}

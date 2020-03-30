@@ -1,11 +1,9 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import GlobalContext from 'store';
-
-//----------------------------------------------------------------------
-import { dashboadMock } from './store_dashboard_json.jsx';
-export { dashboadMock as dashboardDefault };
+import GlobalContext, { verbose } from 'store';
+import { dashboardMock } from './store_dashboard_json.jsx';
+export { dashboardMock as dashboardDefault };
 
 //----------------------------------------------------------------------
 export const dashboardReducer = (state, action) => {

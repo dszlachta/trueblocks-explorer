@@ -1,8 +1,16 @@
-import React, { useReducer } from 'react';
-import PropTypes from 'prop-types';
-import Mousetrap from 'mousetrap';
+// useMenus
+// usePanels
+// useStatus()
 
-import { PageHeader, PageFooter, PageContent } from 'page-parts';
+// useDashboard
+// useProjects
+// useSignatures
+
+import React, { useReducer } from "react";
+import PropTypes from "prop-types";
+import Mousetrap from "mousetrap";
+
+import { PageHeader, PageFooter, PageContent } from "page-parts";
 import GlobalContext, {
   panelDefault,
   panelReducer,
@@ -10,73 +18,89 @@ import GlobalContext, {
   dashboardReducer,
   projectsDefault,
   projectsReducer,
+  signaturesDefault,
+  signaturesReducer,
   statusDefault,
   statusReducer,
   menusDefault,
   menusReducer
-} from 'store';
-import 'App.css';
+} from "store";
+import "App.css";
 
 //-----------------------------------------------------
 function App() {
-  const [panelState, panelDispatch] = useReducer(panelReducer, stateFromStorage('panelState', panelDefault));
-  const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, dashboardDefault);
+  const [panelState, panelDispatch] = useReducer(
+    panelReducer,
+    stateFromStorage("panelState", panelDefault)
+  );
+  const [dashboardState, dashboardDispatch] = useReducer(
+    dashboardReducer,
+    dashboardDefault
+  );
   const [projectsState, projectsDispatch] = useReducer(
     projectsReducer,
-    stateFromStorage('projectsState', projectsDefault)
+    stateFromStorage("projectsState", projectsDefault)
   );
-  const [statusState, statusDispatch] = useReducer(statusReducer, statusDefault);
+  const [signaturesState, signaturesDispatch] = useReducer(
+    signaturesReducer,
+    signaturesDefault
+  );
+  const [statusState, statusDispatch] = useReducer(
+    statusReducer,
+    statusDefault
+  );
   const [menusState, menusDispatch] = useReducer(menusReducer, menusDefault);
 
   const theGlobalState = {
     panels: { state: panelState, dispatch: panelDispatch },
     dashboard: { state: dashboardState, dispatch: dashboardDispatch },
     projects: { state: projectsState, dispatch: projectsDispatch },
+    signatures: { state: signaturesState, dispatch: signaturesDispatch },
     status: { state: statusState, dispatch: statusDispatch },
     menus: { state: menusState, dispatch: menusDispatch }
   };
 
-  Mousetrap.bind(['command+1'], function() {
-    window.location = '/dashboard';
+  Mousetrap.bind(["command+1"], function() {
+    window.location = "/dashboard";
   });
-  Mousetrap.bind(['command+2'], function() {
-    window.location = '/projects';
+  Mousetrap.bind(["command+2"], function() {
+    window.location = "/projects";
   });
-  Mousetrap.bind(['command+3'], function() {
-    window.location = '/monitors';
+  Mousetrap.bind(["command+3"], function() {
+    window.location = "/monitors";
   });
-  Mousetrap.bind(['command+4'], function() {
-    window.location = '/names';
+  Mousetrap.bind(["command+4"], function() {
+    window.location = "/names";
   });
-  Mousetrap.bind(['command+5'], function() {
-    window.location = '/signatures';
+  Mousetrap.bind(["command+5"], function() {
+    window.location = "/signatures";
   });
-  Mousetrap.bind(['command+6'], function() {
-    window.location = '/settings/skins';
+  Mousetrap.bind(["command+6"], function() {
+    window.location = "/settings/skins";
   });
-  Mousetrap.bind(['command+7'], function() {
-    window.location = '/support/keys';
+  Mousetrap.bind(["command+7"], function() {
+    window.location = "/support/keys";
   });
-  Mousetrap.bind(['command+8'], function() {
-    window.location = '/support/free';
+  Mousetrap.bind(["command+8"], function() {
+    window.location = "/support/free";
   });
-  Mousetrap.bind(['q l'], function() {
-    panelDispatch({ type: 'collapse' });
+  Mousetrap.bind(["q l"], function() {
+    panelDispatch({ type: "collapse" });
   });
-  Mousetrap.bind(['q a'], function() {
-    panelDispatch({ type: 'expand' });
+  Mousetrap.bind(["q a"], function() {
+    panelDispatch({ type: "expand" });
   });
-  Mousetrap.bind(['q h'], function() {
-    panelDispatch({ type: 'help' });
+  Mousetrap.bind(["q h"], function() {
+    panelDispatch({ type: "help" });
   });
-  Mousetrap.bind(['q m'], function() {
-    panelDispatch({ type: 'menu' });
+  Mousetrap.bind(["q m"], function() {
+    panelDispatch({ type: "menu" });
   });
-  Mousetrap.bind(['q c'], function() {
-    panelDispatch({ type: 'content' });
+  Mousetrap.bind(["q c"], function() {
+    panelDispatch({ type: "content" });
   });
-  Mousetrap.bind(['q s'], function() {
-    panelDispatch({ type: 'status' });
+  Mousetrap.bind(["q s"], function() {
+    panelDispatch({ type: "status" });
   });
 
   return (

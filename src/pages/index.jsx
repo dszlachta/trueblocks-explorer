@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Dashboard } from './Dashboard';
 import { Projects, ProjectsView, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects'
+import { Signatures } from './Signatures'
 import { Support, SupportKeys, SupportFree, SupportIncident, SupportDocumentation, SupportContact, SupportAbout } from './Support';
 
 const Settings = () => {
@@ -42,7 +43,7 @@ export const thePages = {
   'projects/export': { component: <ProjectsExport /> },
   'monitors/': { component: <Generic page="Monitors" /> },
   'names/': { component: <Generic page="Names" /> },
-  'signatures/': { component: <Generic page="Signatures" /> },
+  'signatures/': { component: <Signatures /> },
   'caches/': { component: <Generic page="Caches" /> },
   'settings/': { component: <Settings /> },
   'settings/api': { component: <SettingsApi /> },

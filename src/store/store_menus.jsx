@@ -7,7 +7,12 @@ export const menusDefault = {
     { label: 'Dashboard', path: '/', exact: true },
     {
       label: 'Projects',
-      items: [{ label: 'View...' }, { label: 'Edit...' }, { label: 'Save' }, { label: 'Export' }]
+      items: [
+        { label: 'View...', enableFunc: (page) => { return page === 'view' } },
+        { label: 'Edit...' },
+        { label: 'Save' },
+        { label: 'Export' }
+      ]
     },
     {
       label: 'Monitors',
@@ -24,7 +29,7 @@ export const menusDefault = {
       items: [{ label: 'API' }, { label: 'Node' }, { label: 'Scraper' }, { label: 'Sharing' }, { label: 'Skins' }]
     },
     {
-      label: 'Settings',
+      label: 'Support',
       items: [
         { label: 'Hot Keys', path: 'keys' },
         { label: 'Free Support', path: 'free' },
@@ -39,6 +44,8 @@ export const menusDefault = {
 
 //----------------------------------------------------------------------
 export const menusReducer = (state, action) => {
+  if (action.type === 'toggle') {
+  }
   let ret = state;
   // console.log('menu: ', ret, action);
   // const found = ret.find((item) => {

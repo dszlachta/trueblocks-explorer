@@ -1,20 +1,143 @@
+/*
+export const Logo = () => (
+  <div
+    style={{
+      margin: "1rem auto",
+      display: "flex",
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "center"
+    }}
+  >
+  Centered in window
+  </div>
+);
+*/
+//----------------------------------------------------------------------
+export const range = len => {
+  const arr = [];
+  for (let i = 0; i < len; i++) {
+    arr.push(i);
+  }
+  return arr;
+};
 
-export const formatNumber = (n, dd = 0, type = '', delim = ',', dec = '.') => {
-  if (!n)
-    return '';
-  const number = (type === '' ? n.toString() : n.toFixed(dd));
-  const prefix = (type === '' ? '' : (type === '$' ? (type + ' ') : ''));
-  const postfx = (type === '' ? '' : (type === '$' ? '' : (' ' + type)));
+//----------------------------------------------------------------------
+export const currentPage = () => {
+  const parts = window.location.pathname.split("/");
+  const query = window.location.search.substr(1).split("&");
+  const params = query.map(item => {
+    const p = item.split("=");
+    return { name: p[0], value: p[1] };
+  });
+  if (parts.length < 2 || parts[1] === "") parts[1] = "dashboard";
+  if (parts.length < 3 || parts[2] === "") parts[2] = "";
+  return { page: parts[1], subpage: parts[2], params: params };
+};
 
-  let ret = (number.replace('.', dec).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1' + delim));
-  if (!ret.includes(dec))
-    return prefix + ret + postfx;
+//---------------------------------------------------------------
+export const formatFieldByType = (type, value, countArrays) => {
+  //console.log('formatFieldByType: ', type, value);
+  switch (type) {
+    case "object":
+      if (typeof value === "object") value = JSON.stringify(value, null, 2);
+      break;
+    case "array":
+      if (countArrays) {
+        value = countArrayItems(value);
+      } else {
+        value = JSON.stringify(value);
+      }
+      break;
+    case "bool":
+      value = value ? "true" : "false";
+      break;
+    case "filesize":
+      value = humanFileSize(value, true);
+      break;
+    case "number":
+      value = formatNumber(value);
+      break;
+    case "string":
+    default:
+      break;
+  }
+  //console.log('out: ', type, value);
+  return value;
+};
+
+//---------------------------------------------------------------
+const countArrayItems = array => {
+  let count = 0;
+  Object.keys(array).map(v => {
+    count++;
+    return true;
+  });
+  return count;
+};
+
+//----------------------------------------------------------------------------
+//https://flaviocopes.com/react-hook-useeffect/
+export const sortArray = (array, fieldArray, orderArray) => {
+  array.sort(function(a, b) {
+    const aValue = fieldArray
+      .map(f => {
+        return a[f];
+      })
+      .join(",");
+    const bValue = fieldArray
+      .map(f => {
+        return b[f];
+      })
+      .join(",");
+    if (orderArray[0]) {
+      return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+    } else {
+      return bValue > aValue ? 1 : bValue < aValue ? -1 : 0;
+    }
+  });
+  return array;
+};
+
+//----------------------------------------------------------------------------
+export const humanFileSize = numInBytes => {
+  numInBytes = formatNumber(numInBytes).replace(/[,.]/g, ""); // clean it
+  if (numInBytes === 0) return "0 B";
+  // return numInBytes;
+  const si = true;
+  var thresh = si ? 1000 : 1024;
+  if (Math.abs(numInBytes) < thresh) {
+    return numInBytes + " B";
+  }
+  var units = si
+    ? ["KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    : ["KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
+  var u = -1;
+  do {
+    numInBytes /= thresh;
+    ++u;
+  } while (Math.abs(numInBytes) >= thresh && u < units.length - 1);
+  return numInBytes.toFixed(2) + " " + units[u];
+};
+
+//----------------------------------------------------------------------------
+export const formatNumber = (n, dd = 0, type = "", delim = ",", dec = ".") => {
+  if (!n) return "";
+  const number = type === "" ? n.toString() : n.toFixed(dd);
+  const prefix = type === "" ? "" : type === "$" ? type + " " : "";
+  const postfx = type === "" ? "" : type === "$" ? "" : " " + type;
+
+  let ret = number
+    .replace(".", dec)
+    .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1" + delim);
+  if (!ret.includes(dec)) return prefix + ret + postfx;
 
   const parts = ret.split(dec);
-  parts[1] = (dec === '.' ? parts[1].replace(/,/g, '') : parts[1].replace(/\./g, ''));
+  parts[1] =
+    dec === "." ? parts[1].replace(/,/g, "") : parts[1].replace(/\./g, "");
   ret = parts[0] + dec + parts[1];
   return prefix + ret + postfx;
-}
+};
 
 /*
 TESTING

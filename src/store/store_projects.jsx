@@ -9,7 +9,7 @@ export const projectsDefault = [
     id: '0x12..01',
     group: "Group 1",
     name: 'Project 1',
-    client: 'Anderson, Andy',
+    client: { name: 'Anderson, Andy', phone: '215-257-9759' },
     addresses: [
       "0x5555533333555553333355555333335555533333",
       "0x654e7f49b474e2f5ac29cc5f2f0d41c8a93d6d0a",
@@ -22,7 +22,7 @@ export const projectsDefault = [
     ],
     txs: 2291,
     traces: 100,
-    size: '1,201,019',
+    sizeInBytes: '1,201,019',
     deltas: 8,
     monitored: false,
     deleted: true,
@@ -31,22 +31,22 @@ export const projectsDefault = [
     id: '0x12..02',
     group: "Group 1",
     name: 'Project 2',
-    client: 'John\'s Bookstore',
+    client: { name: 'John\'s Bookstore' },
     addresses: [
       "0x001d14804b399c6ef80e64576f657660804fec0b",
     ],
     txs: 1000,
     traces: 100,
-    size: '899,100',
+    sizeInBytes: '899,100',
     deltas: 8,
     monitored: false,
     deleted: false,
   },
   {
     id: '0x12..03',
-    group: "Group 1",
+    group: "",
     name: 'Carson Flowers',
-    client: 'Carson, Jane',
+    client: '',
     addresses: [
       "0x001d14804b399c6ef80e64576f657660804fec0b",
       "0x005a9c03f69d17d66cbb8ad721008a9ebbb836fb",
@@ -55,7 +55,7 @@ export const projectsDefault = [
     ],
     txs: 1000,
     traces: 100,
-    size: 12010010,
+    sizeInBytes: 12010010,
     deltas: 8,
     monitored: true,
     deleted: true,
@@ -74,7 +74,7 @@ export const projectsDefault = [
     ],
     txs: 1000,
     traces: 100,
-    size: 12010010,
+    sizeInBytes: 110,
     deltas: 8,
     monitored: true,
     deleted: false,
@@ -89,7 +89,7 @@ export const projectsDefault = [
     ],
     txs: 1000,
     traces: 100,
-    size: 12010010,
+    sizeInBytes: 100009102910291,
     deltas: 8,
     monitored: false,
     deleted: true,
@@ -105,7 +105,7 @@ export const projectsDefault = [
     ],
     txs: 1000,
     traces: 100,
-    size: 12010010,
+    sizeInBytes: 1,
     deltas: 8,
     monitored: true,
     deleted: false,
@@ -113,7 +113,7 @@ export const projectsDefault = [
   {
     id: '0x12..07',
     group: "Group 2",
-    name: 'Whale No. 1',
+    name: 'Whale Jim',
     client: 'Buter, in',
     addresses: [
       "0x001d14804b399c6ef80e64576f657660804fec0b",
@@ -121,7 +121,7 @@ export const projectsDefault = [
     ],
     txs: 1000,
     traces: 100,
-    size: 12010010,
+    sizeInBytes: 0,
     deltas: 8,
     monitored: true,
     deleted: true,
@@ -137,7 +137,7 @@ export const projectsDefault = [
     ],
     txs: 1000,
     traces: 100,
-    size: 12010010,
+    sizeInBytes: 1212101010,
     deltas: 8,
     monitored: false,
     deleted: false,
@@ -148,6 +148,8 @@ export const projectsDefault = [
 export const projectsReducer = (state, action) => {
   let ret = state;
   let project = ret.find((p) => p.id === action.id);
+  console.log('project: ', project);
+  console.log('action: ', action);
   switch (action.type) {
     case 'success':
       ret = action.payload;
@@ -166,6 +168,11 @@ export const projectsReducer = (state, action) => {
     case 'remove_project':
       ret = ret.filter((project) => project.id !== action.id);
       break;
+    case 'update':
+      project[action.fieldName] = action.value;
+      console.log('project: ', project);
+      ret = replaceRecord(ret, project, action.id);
+      console.log('ret: ', ret.find((p) => p.id === action.id));
     case 'reset':
       ret = projectsDefault;
       break;

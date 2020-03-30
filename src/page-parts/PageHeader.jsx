@@ -24,7 +24,9 @@ const PageHeaderLeft = () => {
       <Link to="/">
         <img className="logo" alt={logo} src={logo} />
       </Link>
-      <div>{"TrueBlocks Account Explorer"}</div>
+      <div>
+        {"TrueBlocks Account Explorer"}
+      </div>
     </div>
   );
 }

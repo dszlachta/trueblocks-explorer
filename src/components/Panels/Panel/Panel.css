@@ -20,6 +20,7 @@
   height: 1.4em;
 }
 
+/*------------------------------------------*/
 .icon-tray {
   padding-top: 4px;
   display: flex;
@@ -28,4 +29,8 @@
   justify-content: space-around;
   border-top: 1px dashed darkgrey;
   background-color: grey;
+}
+
+.no-dec {
+  text-decoration: none !important;
 }

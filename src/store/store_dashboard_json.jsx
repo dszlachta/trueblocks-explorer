@@ -1,56 +1,56 @@
-export const dashboadMock = [
+export const dashboardMock = [
   {
     id: '0x13..01',
     name: 'Projects',
     route: '/projects',
     count: 200,
-    size: 102001,
+    sizeInBytes: 102001,
     custom: 'each node',
-    date: 'March 2020'
+    date: '2020-03-27 12:42:50 UTC',
+    timestamp: 1585312970
   },
   {
     id: '0x13..02',
     name: 'Monitors',
     route: '/monitors',
     count: 200,
-    size: 102001,
+    sizeInBytes: 102001,
     custom: 'each node',
-    date: 'March 2020'
+    date: '2020-01-02 08:30:49 UTC',
+    timestamp: 1577953849
   },
   {
     id: '0x13..04',
     name: 'Names',
     route: '/names',
     count: 200,
-    size: 102001,
+    sizeInBytes: 102001,
     custom: 'each node',
-    date: 'June 2019'
+    date: 'June 2019',
+    timestamp: 1577953849
   },
   {
     id: '0x13..14',
     name: 'Signatures',
     route: '/signatures',
     count: 200,
-    size: 102001,
-    custom: 'each node',
-    date: 'Not shared'
+    sizeInBytes: 102001,
+    timestamp: 1577953849
   },
   {
     id: '0x13..12',
     name: 'Caches',
     route: '/caches',
     count: 10101,
-    size: 104203122,
-    custom: 'each node',
-    date: 'Not shared'
+    sizeInBytes: 104203122,
+    timestamp: 1577953849
   },
   {
     id: '0x13..05',
     name: 'Skins',
     route: '/settings/skins',
     count: 4903,
-    size: 35000000,
-    custom: 'each node',
-    date: 'Not shared'
+    sizeInBytes: 35000000,
+    timestamp: 1577953849
   },
 ];

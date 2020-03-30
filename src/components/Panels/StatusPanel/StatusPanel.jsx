@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { formatNumber } from 'components';
-
 import useSWR from 'swr';
+
+import { formatNumber } from 'components/utils';
 import { Panel } from 'components/';
 import { useStatus, useStatusMeta, useStatusData, statusDefault } from 'store';
 import { usePanels } from 'store';
@@ -20,17 +20,19 @@ export const StatusPanel = () => {
   const { data, error } = useSWR("http://localhost:8080/status", fetcher);
 
   let status = '';
-  if (error) {
-    status = statusDefault;
-  } else {
-    if (!data)
-      status = 'loading...'
-    else {
-      delete data['types'];
-      status = data;
-      dispatch({ 'type': 'success', 'payload': status })
+  useEffect(() => {
+    if (error) {
+      status = statusDefault;
+    } else {
+      if (!data)
+        status = 'loading...'
+      else {
+        delete data['types'];
+        status = data;
+        dispatch({ 'type': 'success', 'payload': status })
+      }
     }
-  }
+  }, [data]);
 
   const expanded = usePanels().state.status;
   return (

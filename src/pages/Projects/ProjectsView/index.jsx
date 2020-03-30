@@ -1,22 +1,18 @@
-import React from 'react';
+import React from "react";
 
-import { usePage, useProjects, useMenus } from 'store';
+import { useProjects, useMenus } from "store";
+import { currentPage } from "components/utils";
 
 //----------------------------------------------------------------------------
 export const ProjectsView = () => {
   const { dispatch } = useMenus();
   const projects = useProjects().state;
-  const { page, subpage, params } = usePage();
+  const { page, subpage, params } = currentPage();
 
-  if (!params || params[0].name === '') {
-    dispatch({ type: 'disable_sub', text: 'Projects' });
-    return <div className="warning">No project specified</div>;
-  }
-
-  const project = projects.find((project) => project.id === params[0].value);
+  const project = projects.find(project => project.id === params[0].value);
   return (
     <>
-      <div>Projects View: {page + '-' + subpage + ': ' + params + '.'}</div>
+      <div>Projects View: {page + "-" + subpage + ": " + params + "."}</div>
       <div>
         <pre>{JSON.stringify(params, null, 2)}</pre>
       </div>
