@@ -15,7 +15,7 @@ The TrueBlocks system creates an index of on-chain appearances of Ethereum addre
 
 ### Installing TrueBlocks Core and Core Applications
 
-Download and install the **trueblocks-core** repo. First you need to setup your build environment. Do that by following the instructions for your operating system on this page: [trueblocks-core](https://github.com/Great-Hill-Corporation/trueblocks-core/blob/master/src/other/install/INSTALL.md). The, in your development folder:
+Download and install the **trueblocks-core** repo. First you need to setup your build environment. Do that by following the instructions for your operating system on this page: [Installation Instructions](https://github.com/Great-Hill-Corporation/trueblocks-core/blob/master/src/other/install/INSTALL.md). Summarizing:
 
 ```
 git clone https://github.com/Great-Hill-Corporation/trueblocks-core
@@ -25,11 +25,11 @@ cmake ../src
 make
 ```
 
-Before proceeding, add TrueBlocks' ./bin folder to your **$PATH** (i.e `./trueblocks/core/bin`).
+Before proceeding, add the TrueBlocks `./bin` folder to your **$PATH** (i.e `./trueblocks/core/bin`).
 
 ----
 
-### Installing User Interface, API, and Documentation
+### Installing the User Interface, API, and Documentation
 
 Once you've installed the core, you may install the user interface, the api (which requires data from the core), and the documentation server. All of this is contained in a single repo (this one). From your development folder:
 
