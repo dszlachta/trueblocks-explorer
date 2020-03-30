@@ -1,0 +1,29 @@
+.object-table {
+  margin: 1px;
+  margin-top: -4px;
+  margin-bottom: 2px;
+  display: grid;
+  grid-template-columns: 2fr 10fr 1fr 1fr 20fr 1fr;
+}
+
+.table-sider-col {
+  background-color: #a7b7c2;
+  opacity: 0.75;
+  padding-top: var(--data-table-padding);
+}
+
+.editable-col {
+  border-bottom: 1px solid #eeeeee;
+}
+
+.editable-col:hover {
+  border-bottom: 1px solid #eeeeee;
+  color: var(--color2-panel);
+  background-color: #a7b7c2;
+  opacity: 0.75;
+}
+
+.inner-col {
+  border-bottom: 1px solid #eeeeee;
+  padding-top: var(--data-table-padding);
+}

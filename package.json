@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.19.2",
+    "husky": "^4.2.3",
     "jquery": "^3.4.1",
     "mousetrap": "^1.6.5",
     "react": "^16.13.0",

@@ -1,0 +1,22 @@
+.data-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  border-top: var(--data-table-border);
+  border-left: var(--data-table-border);
+}
+
+.dt-header-col {
+  background-color: #a7b7c2;
+  opacity: 0.75;
+  border-right: var(--data-table-border);
+  border-bottom: var(--data-table-border);
+  justify-self: stretch;
+  font-weight: 600;
+  padding: var(--data-table-padding);
+}
+
+.dt-inner-col {
+  border-right: var(--data-table-border);
+  border-bottom: var(--data-table-border);
+  padding-top: var(--data-table-padding);
+}
