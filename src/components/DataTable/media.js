@@ -16,7 +16,7 @@ export const media = {
       ${css(...args)}
     }
   `,
-  custom: value => (...args) => css`
+  custom: (value) => (...args) => css`
     @media screen and (max-width: ${value}px) {
       ${css(...args)}
     }

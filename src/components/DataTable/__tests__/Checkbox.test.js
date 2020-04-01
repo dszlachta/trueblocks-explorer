@@ -13,7 +13,7 @@ test('component <Checkbox component/> should render correctly with a custom chec
   // eslint-disable-next-line react/prefer-stateless-function
   class CustomComp extends React.Component {
     render() {
-      return (<div>25 schmeckles</div>);
+      return <div>25 schmeckles</div>;
     }
   }
 

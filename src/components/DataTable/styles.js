@@ -1,7 +1,7 @@
 import merge from 'deepmerge';
 import { defaultThemes } from './themes';
 
-export const defaultStyles = theme => ({
+export const defaultStyles = (theme) => ({
   table: {
     style: {
       color: theme.text.primary,

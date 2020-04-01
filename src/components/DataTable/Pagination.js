@@ -20,7 +20,7 @@ const PaginationWrapper = styled.nav`
   padding-right: 8px;
   padding-left: 8px;
   width: 100%;
-  ${props => props.theme.pagination.style};
+  ${(props) => props.theme.pagination.style};
 `;
 
 const Button = styled.button`
@@ -28,8 +28,8 @@ const Button = styled.button`
   display: block;
   user-select: none;
   border: none;
-  ${props => props.theme.pagination.pageButtonsStyle};
-  ${props => props.isRTL && 'transform: scale(-1, -1)'};
+  ${(props) => props.theme.pagination.pageButtonsStyle};
+  ${(props) => props.isRTL && 'transform: scale(-1, -1)'};
 `;
 
 const PageList = styled.div`
@@ -51,13 +51,7 @@ const RowLabel = styled(Span)`
   margin: 0 4px;
 `;
 
-const Pagination = ({
-  rowsPerPage,
-  rowCount,
-  onChangePage,
-  onChangeRowsPerPage,
-  currentPage,
-}) => {
+const Pagination = ({ rowsPerPage, rowCount, onChangePage, onChangeRowsPerPage, currentPage }) => {
   const {
     paginationRowsPerPageOptions,
     paginationIconLastPage,
@@ -68,19 +62,30 @@ const Pagination = ({
   } = useTableContext();
   const numPages = getNumberOfPages(rowCount, rowsPerPage);
   const lastIndex = currentPage * rowsPerPage;
-  const firstIndex = (lastIndex - rowsPerPage) + 1;
+  const firstIndex = lastIndex - rowsPerPage + 1;
   const disabledLesser = currentPage === 1;
   const disabledGreater = currentPage === numPages;
-  const { rowsPerPageText, rangeSeparatorText, noRowsPerPage } = { ...defaultComponentOptions, ...paginationComponentOptions };
-  const range = currentPage === numPages
-    ? `${firstIndex}-${rowCount} ${rangeSeparatorText} ${rowCount}`
-    : `${firstIndex}-${lastIndex} ${rangeSeparatorText} ${rowCount}`;
+  const { rowsPerPageText, rangeSeparatorText, noRowsPerPage } = {
+    ...defaultComponentOptions,
+    ...paginationComponentOptions,
+  };
+  const range =
+    currentPage === numPages
+      ? `${firstIndex}-${rowCount} ${rangeSeparatorText} ${rowCount}`
+      : `${firstIndex}-${lastIndex} ${rangeSeparatorText} ${rowCount}`;
 
   const handlePrevious = useCallback(() => onChangePage(currentPage - 1), [currentPage, onChangePage]);
   const handleNext = useCallback(() => onChangePage(currentPage + 1), [currentPage, onChangePage]);
   const handleFirst = useCallback(() => onChangePage(1), [onChangePage]);
-  const handleLast = useCallback(() => onChangePage(getNumberOfPages(rowCount, rowsPerPage)), [onChangePage, rowCount, rowsPerPage]);
-  const handleRowsPerPage = useCallback(({ target }) => onChangeRowsPerPage(Number(target.value), currentPage), [currentPage, onChangeRowsPerPage]);
+  const handleLast = useCallback(() => onChangePage(getNumberOfPages(rowCount, rowsPerPage)), [
+    onChangePage,
+    rowCount,
+    rowsPerPage,
+  ]);
+  const handleRowsPerPage = useCallback(({ target }) => onChangeRowsPerPage(Number(target.value), currentPage), [
+    currentPage,
+    onChangeRowsPerPage,
+  ]);
   const isRTL = detectRTL();
 
   return (
@@ -89,20 +94,15 @@ const Pagination = ({
         <>
           <RowLabel>{rowsPerPageText}</RowLabel>
           <Select onChange={handleRowsPerPage} defaultValue={rowsPerPage}>
-            {paginationRowsPerPageOptions.map(num => (
-              <option
-                key={num}
-                value={num}
-              >
+            {paginationRowsPerPageOptions.map((num) => (
+              <option key={num} value={num}>
                 {num}
               </option>
             ))}
           </Select>
-        </>
+        </> //
       )}
-      <Range>
-        {range}
-      </Range>
+      <Range>{range}</Range>
       <PageList>
         <Button
           id="pagination-first-page"

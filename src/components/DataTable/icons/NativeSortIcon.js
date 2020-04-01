@@ -7,12 +7,14 @@ const Icon = styled.span`
   color: inherit;
   flex-grow: 0;
   flex-shrink: 0;
-  ${props => (props.sortActive ? 'opacity: 1' : 'opacity: 0')};
-  ${props => props.sortDirection === 'desc' && 'transform: rotate(180deg)'};
+  ${(props) => (props.sortActive ? 'opacity: 1' : 'opacity: 0')};
+  ${(props) => props.sortDirection === 'desc' && 'transform: rotate(180deg)'};
 `;
 
 const NativeSortIcon = ({ sortActive, sortDirection, sortIcon }) => (
-  <Icon sortActive={sortActive} sortDirection={sortDirection}>{sortIcon}</Icon>
+  <Icon sortActive={sortActive} sortDirection={sortDirection}>
+    {sortIcon}
+  </Icon>
 );
 
 NativeSortIcon.propTypes = {

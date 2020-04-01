@@ -24,7 +24,7 @@ test('should render correctly with default props', () => {
         onChangePage={jest.fn()}
         onChangeRowsPerPage={jest.fn()}
       />
-    </DataTableProvider>,
+    </DataTableProvider>
   );
 
   expect(container.firstChild).toMatchSnapshot();
@@ -42,7 +42,7 @@ describe('when clicking the First Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.click(container.querySelector('button#pagination-first-page'));
@@ -60,7 +60,7 @@ describe('when clicking the First Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.click(container.querySelector('button#pagination-first-page'));
@@ -80,7 +80,7 @@ describe('when clicking the Last Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.click(container.querySelector('button#pagination-last-page'));
@@ -98,7 +98,7 @@ describe('when clicking the Last Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.click(container.querySelector('button#pagination-last-page'));
@@ -118,7 +118,7 @@ describe('when clicking the Next Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.click(container.querySelector('button#pagination-next-page'));
@@ -136,7 +136,7 @@ describe('when clicking the Next Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.click(container.querySelector('button#pagination-next-page'));
@@ -156,7 +156,7 @@ describe('when clicking the Previous Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.click(container.querySelector('button#pagination-previous-page'));
@@ -174,14 +174,13 @@ describe('when clicking the Previous Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.click(container.querySelector('button#pagination-previous-page'));
     expect(onChangePageMock).not.toBeCalled();
   });
 });
-
 
 describe('when there is no paging to be done', () => {
   test('should NOT call onChangePage with correct with any nav action when there are less rows that the page size', () => {
@@ -195,9 +194,8 @@ describe('when there is no paging to be done', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={jest.fn()}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
-
 
     fireEvent.click(container.querySelector('button#pagination-last-page'));
     expect(onChangePageMock).not.toBeCalled();
@@ -233,7 +231,7 @@ describe('when clicking the Previous Page button', () => {
           onChangePage={onChangePageMock}
           onChangeRowsPerPage={onChangeRowsPerPageMock}
         />
-      </DataTableProvider>,
+      </DataTableProvider>
     );
 
     fireEvent.change(container.querySelector('select'), { target: { value: 20 } });

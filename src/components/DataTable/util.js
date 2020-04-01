@@ -45,40 +45,44 @@ export const getProperty = (row, selector, format) => {
   }, row);
 };
 
-export const insertItem = (array = [], item = {}, index = 0) => [
-  ...array.slice(0, index),
-  item,
-  ...array.slice(index),
-];
+export const insertItem = (array = [], item = {}, index = 0) => [...array.slice(0, index), item, ...array.slice(index)];
 
 export const removeItem = (array = [], item = {}, keyField) => {
   const newArray = array.slice();
 
   if (item[keyField]) {
-    newArray.splice(newArray.findIndex(a => a[keyField] === item[keyField]), 1);
+    newArray.splice(
+      newArray.findIndex((a) => a[keyField] === item[keyField]),
+      1
+    );
   } else {
-    newArray.splice(newArray.findIndex(a => a === item), 1);
+    newArray.splice(
+      newArray.findIndex((a) => a === item),
+      1
+    );
   }
 
   return newArray;
 };
 
 // Make sure columns have unique id's
-export const decorateColumns = columns => columns.map(column => ({ id: shortid.generate(), ...column }));
+export const decorateColumns = (columns) => columns.map((column) => ({ id: shortid.generate(), ...column }));
 
-export const getSortDirection = direction => (direction ? 'asc' : 'desc');
+export const getSortDirection = (direction) => (direction ? 'asc' : 'desc');
 
 export const handleFunctionProps = (object, ...args) => {
   let newObject;
 
-  Object.keys(object).map(o => object[o]).forEach((value, index) => {
-    const oldObject = object;
+  Object.keys(object)
+    .map((o) => object[o])
+    .forEach((value, index) => {
+      const oldObject = object;
 
-    if (typeof value === 'function') {
-      newObject = { ...oldObject, [Object.keys(object)[index]]: value(...args) };
-      delete oldObject[value];
-    }
-  });
+      if (typeof value === 'function') {
+        newObject = { ...oldObject, [Object.keys(object)[index]]: value(...args) };
+        delete oldObject[value];
+      }
+    });
 
   return newObject || object;
 };
@@ -93,7 +97,7 @@ export const getConditionalStyle = (row = {}, conditionalRowStyles = []) => {
   let rowStyle = {};
 
   if (conditionalRowStyles.length) {
-    conditionalRowStyles.forEach(exp => {
+    conditionalRowStyles.forEach((exp) => {
       if (!exp.when || typeof exp.when !== 'function') {
         throw new Error('"when" must be defined in the conditional style object and must be function');
       }
@@ -110,10 +114,10 @@ export const getConditionalStyle = (row = {}, conditionalRowStyles = []) => {
 
 export const isRowSelected = (row = {}, selectedRows = [], keyField = 'id') => {
   if (row[keyField]) {
-    return selectedRows.some(r => r[keyField] === row[keyField]);
+    return selectedRows.some((r) => r[keyField] === row[keyField]);
   }
 
-  return selectedRows.some(r => r === row);
+  return selectedRows.some((r) => r === row);
 };
 
 export const detectRTL = () =>

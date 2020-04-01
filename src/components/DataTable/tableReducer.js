@@ -54,11 +54,12 @@ export function tableReducer(state, action) {
         sortDirection,
         currentPage: 1,
         // when using server-side paging reset selected row counts when sorting
-        ...pagination && paginationServer && ({
-          allSelected: false,
-          selectedCount: 0,
-          selectedRows: [],
-        }),
+        ...(pagination &&
+          paginationServer && {
+            allSelected: false,
+            selectedCount: 0,
+            selectedRows: [],
+          }),
       };
     }
 
@@ -68,7 +69,7 @@ export function tableReducer(state, action) {
         ...state,
         currentPage: page,
         // when using server-side paging reset selected row counts
-        ...paginationServer && ({
+        ...(paginationServer && {
           allSelected: false,
           selectedCount: 0,
           selectedRows: [],

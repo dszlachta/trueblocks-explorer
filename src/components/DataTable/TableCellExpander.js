@@ -7,27 +7,12 @@ import ExpanderButton from './ExpanderButton';
 const TableCellExpanderStyle = styled(CellBase)`
   white-space: nowrap;
   font-weight: 400;
-  ${props => props.theme.expanderCell.style};
+  ${(props) => props.theme.expanderCell.style};
 `;
 
-const TableCellExpander = ({
-  column,
-  row,
-  expanded,
-  onRowExpandToggled,
-  disabled,
-}) => (
-  <TableCellExpanderStyle
-    column={column}
-    onClick={e => e.stopPropagation()}
-    noPadding
-  >
-    <ExpanderButton
-      onToggled={onRowExpandToggled}
-      row={row}
-      expanded={expanded}
-      disabled={disabled}
-    />
+const TableCellExpander = ({ column, row, expanded, onRowExpandToggled, disabled }) => (
+  <TableCellExpanderStyle column={column} onClick={(e) => e.stopPropagation()} noPadding>
+    <ExpanderButton onToggled={onRowExpandToggled} row={row} expanded={expanded} disabled={disabled} />
   </TableCellExpanderStyle>
 );
 

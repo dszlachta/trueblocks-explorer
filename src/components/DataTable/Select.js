@@ -47,7 +47,7 @@ const SelectWrapper = styled.div`
   }
 `;
 
-const Select = props => (
+const Select = (props) => (
   <SelectWrapper>
     <SelectControl {...props} />
     <DropDownIcon />

@@ -11,10 +11,13 @@ jest.mock('shortid', () => {
 });
 
 // eslint-disable-next-line arrow-body-style
-const dataMock = colProps => {
+const dataMock = (colProps) => {
   return {
     columns: [{ name: 'Test', selector: 'some.name', ...colProps }],
-    data: [{ id: 1, some: { name: 'Apple' } }, { id: 2, some: { name: 'Zuchinni' } }],
+    data: [
+      { id: 1, some: { name: 'Apple' } },
+      { id: 2, some: { name: 'Zuchinni' } },
+    ],
   };
 };
 
@@ -25,7 +28,7 @@ test('should render and empty table correctly', () => {
 });
 
 test('should render the correctly when using selector function', () => {
-  const columns = [{ name: 'Name', selector: row => row.name }];
+  const columns = [{ name: 'Name', selector: (row) => row.name }];
   const data = [{ id: 1, name: 'Leia' }];
   const { container } = render(<DataTable data={data} columns={columns} />);
 
@@ -33,7 +36,7 @@ test('should render the correctly when using selector function', () => {
 });
 
 test('should render the correctly when using selector function and a format function', () => {
-  const columns = [{ name: 'Name', selector: row => row.name, format: row => row.name.slice(0, 2) }];
+  const columns = [{ name: 'Name', selector: (row) => row.name, format: (row) => row.name.slice(0, 2) }];
   const data = [{ id: 1, name: 'Leia' }];
   const { container } = render(<DataTable data={data} columns={columns} />);
 
@@ -58,26 +61,14 @@ test('should fallback to array indexes if data has no unique key', () => {
 
 test('should render correctly when disabled', () => {
   const mock = dataMock();
-  const { container } = render(
-    <DataTable
-      data={mock.data}
-      columns={mock.columns}
-      disabled
-    />,
-  );
+  const { container } = render(<DataTable data={mock.data} columns={mock.columns} disabled />);
 
   expect(container.firstChild).toMatchSnapshot();
 });
 
 test('should not show the TableHead when noTableHead is true', () => {
   const mock = dataMock();
-  const { container } = render(
-    <DataTable
-      data={mock.data}
-      columns={mock.columns}
-      noTableHead
-    />,
-  );
+  const { container } = render(<DataTable data={mock.data} columns={mock.columns} noTableHead />);
 
   expect(container.firstChild).toMatchSnapshot();
 });
@@ -87,12 +78,7 @@ describe('DataTable::onSelectedRowsChange', () => {
     const mock = dataMock();
     const updatedMock = jest.fn();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        onSelectedRowsChange={updatedMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows onSelectedRowsChange={updatedMock} />
     );
 
     fireEvent.click(container.querySelector('input[name="select-all-rows"]'));
@@ -108,12 +94,7 @@ describe('DataTable::onSelectedRowsChange', () => {
     const mock = dataMock();
     const updatedMock = jest.fn();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        onSelectedRowsChange={updatedMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows onSelectedRowsChange={updatedMock} />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-2"]'));
@@ -130,12 +111,7 @@ describe('DataTable::onSelectedRowsChange', () => {
     const mock = dataMock();
     const updatedMock = jest.fn();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        onSelectedRowsChange={updatedMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows onSelectedRowsChange={updatedMock} />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -151,19 +127,9 @@ describe('DataTable::onSelectedRowsChange', () => {
 describe('data prop changes', () => {
   test('should update state if the data prop changes', () => {
     const mock = dataMock();
-    const { container, rerender } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container, rerender } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
-    rerender(
-      <DataTable
-        data={[{ id: 1, some: { name: 'Someone else' } }]}
-        columns={mock.columns}
-      />,
-    );
+    rerender(<DataTable data={[{ id: 1, some: { name: 'Someone else' } }]} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -179,193 +145,112 @@ describe('DataTable::columns', () => {
 
   test('should render correctly when column.sortable = true', () => {
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly when column.wrap = true', () => {
     const mock = dataMock({ wrap: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly when column.allowOverflow = true', () => {
     const mock = dataMock({ allowOverflow: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly when column.compact = true', () => {
     const mock = dataMock({ compact: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly when column.button = true', () => {
     const mock = dataMock({ button: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
-
   test('should render correctly when ignoreRowClick = true', () => {
     const mock = dataMock({ ignoreRowClick: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly when column.cell is set to a component', () => {
-    const mock = dataMock({ cell: row => <div>{row.some.name}</div> });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const mock = dataMock({ cell: (row) => <div>{row.some.name}</div> });
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.right', () => {
     const mock = dataMock({ right: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.center', () => {
     const mock = dataMock({ center: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.minWidth', () => {
     const mock = dataMock({ minWidth: '200px' });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.maxWidth', () => {
     const mock = dataMock({ maxWidth: '600px' });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.width', () => {
     const mock = dataMock({ width: '200px' });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.hide sm', () => {
     const mock = dataMock({ hide: 'sm' });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.hide md', () => {
     const mock = dataMock({ hide: 'md' });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.hide lg', () => {
     const mock = dataMock({ hide: 'lg' });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly if column.hide is an integer', () => {
     const mock = dataMock({ hide: 300 });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -375,12 +260,7 @@ describe('DataTable::columns', () => {
     const mockColumns = mock.columns.slice();
     mockColumns.push({ id: 2, name: 'HideMe', selector: 'some.name', omit: true });
 
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mockColumns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mockColumns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -390,13 +270,7 @@ describe('DataTable:RowClicks', () => {
   test('should not call onRowClicked when ignoreRowClick = true', () => {
     const onRowClickedMock = jest.fn();
     const mock = dataMock({ ignoreRowClick: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        onRowClicked={onRowClickedMock}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} onRowClicked={onRowClickedMock} />);
 
     fireEvent.click(container.querySelector('div[id="cell-1-1"]'));
     expect(onRowClickedMock).not.toBeCalled();
@@ -405,13 +279,7 @@ describe('DataTable:RowClicks', () => {
   test('should not call onRowClicked when button = true', () => {
     const onRowClickedMock = jest.fn();
     const mock = dataMock({ button: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        onRowClicked={onRowClickedMock}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} onRowClicked={onRowClickedMock} />);
 
     fireEvent.click(container.querySelector('div[id="cell-1-1"]'));
     expect(onRowClickedMock).not.toBeCalled();
@@ -421,11 +289,7 @@ describe('DataTable:RowClicks', () => {
     const onRowDoubleClickedMock = jest.fn();
     const mock = dataMock({ ignoreRowClick: true });
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        onRowDoubleClicked={onRowDoubleClickedMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} onRowDoubleClicked={onRowDoubleClickedMock} />
     );
 
     fireEvent.click(container.querySelector('div[id="cell-1-1"]'));
@@ -436,11 +300,7 @@ describe('DataTable:RowClicks', () => {
     const onRowDoubleClickedMock = jest.fn();
     const mock = dataMock({ button: true });
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        onRowDoubleClicked={onRowDoubleClickedMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} onRowDoubleClicked={onRowDoubleClickedMock} />
     );
 
     fireEvent.click(container.querySelector('div[id="cell-1-1"]'));
@@ -452,12 +312,7 @@ describe('DataTable::progress/nodata', () => {
   test('should render correctly when progressPending is true', () => {
     const mock = dataMock();
     const { container, getByText } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-        progressPending
-      />,
+      <DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" progressPending />
     );
 
     expect(getByText('Loading...')).toBeDefined();
@@ -467,22 +322,10 @@ describe('DataTable::progress/nodata', () => {
   test('should only show Loading if progressPending prop changes', () => {
     const mock = dataMock();
     const { getByText, rerender, container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-        progressPending={false}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" progressPending={false} />
     );
 
-    rerender(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-        progressPending
-      />,
-    );
+    rerender(<DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" progressPending />);
 
     expect(getByText('Loading...')).toBeDefined();
     expect(container.querySelector('.rdt_TableHead')).toBeNull();
@@ -499,7 +342,7 @@ describe('DataTable::progress/nodata', () => {
           defaultSortField="some.name"
           progressPending={false}
           persistTableHead
-        />,
+        />
       );
 
       rerender(
@@ -509,7 +352,7 @@ describe('DataTable::progress/nodata', () => {
           defaultSortField="some.name"
           progressPending
           persistTableHead
-        />,
+        />
       );
 
       expect(getByText('Loading...')).toBeDefined();
@@ -520,12 +363,7 @@ describe('DataTable::progress/nodata', () => {
     test('should disable TableHead if no data', () => {
       const mock = dataMock();
       const { container } = render(
-        <DataTable
-          data={[]}
-          columns={mock.columns}
-          defaultSortField="some.name"
-          persistTableHead
-        />,
+        <DataTable data={[]} columns={mock.columns} defaultSortField="some.name" persistTableHead />
       );
 
       expect(container.firstChild).toMatchSnapshot();
@@ -534,13 +372,7 @@ describe('DataTable::progress/nodata', () => {
     test('should disable TableHead if progressPending', () => {
       const mock = dataMock();
       const { container } = render(
-        <DataTable
-          data={[]}
-          columns={mock.columns}
-          defaultSortField="some.name"
-          persistTableHead
-          progressPending
-        />,
+        <DataTable data={[]} columns={mock.columns} defaultSortField="some.name" persistTableHead progressPending />
       );
 
       expect(container.firstChild).toMatchSnapshot();
@@ -558,7 +390,7 @@ describe('DataTable::progress/nodata', () => {
           progressPending={false}
           persistTableHead
           noTableHead
-        />,
+        />
       );
 
       rerender(
@@ -569,7 +401,7 @@ describe('DataTable::progress/nodata', () => {
           progressPending
           persistTableHead
           noTableHead
-        />,
+        />
       );
 
       expect(getByText('Loading...')).toBeDefined();
@@ -580,12 +412,7 @@ describe('DataTable::progress/nodata', () => {
 
   test('should render correctly when progressPending is false and there are no row items', () => {
     const mock = dataMock();
-    const { container, getByText } = render(
-      <DataTable
-        data={[]}
-        columns={mock.columns}
-      />,
-    );
+    const { container, getByText } = render(<DataTable data={[]} columns={mock.columns} />);
 
     expect(getByText('There are no records to display')).toBeDefined();
     expect(container.firstChild).toMatchSnapshot();
@@ -600,7 +427,7 @@ describe('DataTable::progress/nodata', () => {
         defaultSortField="some.name"
         progressPending
         progressComponent="A Component that is passed in"
-      />,
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -615,7 +442,7 @@ describe('DataTable::progress/nodata', () => {
         defaultSortField="some.name"
         progressPending
         progressComponent={<div>A String that is passed in</div>}
-      />,
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -625,25 +452,14 @@ describe('DataTable::progress/nodata', () => {
 describe('DataTable::responsive', () => {
   test('should render correctly responsive by default', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly when responsive=false', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        responsive={false}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} responsive={false} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -651,31 +467,18 @@ describe('DataTable::responsive', () => {
   test('should not apply overFlowY without an overflowYOffset or not responsive', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        responsive
-        overflowY
-        overflowYOffset="250px"
-      />,
+      <DataTable data={mock.data} columns={mock.columns} responsive overflowY overflowYOffset="250px" />
     );
 
     expect(container.firstChild).toMatchSnapshot();
   });
 });
 
-
 describe('DataTable::sorting', () => {
   test('should not call onSort if the column is not sortable', () => {
     const onSortMock = jest.fn();
     const mock = dataMock({ sortable: false });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        onSort={onSortMock}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} onSort={onSortMock} />);
 
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
 
@@ -684,38 +487,21 @@ describe('DataTable::sorting', () => {
 
   test('should render correctly with a default sort field and the native sort icon', () => {
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly with a default sort field and the icon to the right when column.right = true and the native sort icon', () => {
     const mock = dataMock({ sortable: true, right: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('should render correctly and not be sorted when a column.sort === false', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
 
@@ -724,12 +510,7 @@ describe('DataTable::sorting', () => {
 
   test('should render correctly when a column is sorted in default asc', () => {
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
 
@@ -738,12 +519,7 @@ describe('DataTable::sorting', () => {
 
   test('should render correctly when a column is sorted from asc to desc', () => {
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     // select the column to sort
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
@@ -757,12 +533,7 @@ describe('DataTable::sorting', () => {
 
   test('should sort if the column is selected and the Enter key is pressed', () => {
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     // select the column to sort
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
@@ -775,13 +546,7 @@ describe('DataTable::sorting', () => {
   test('should call onSort with the correct params', () => {
     const onSortMock = jest.fn();
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        onSort={onSortMock}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} onSort={onSortMock} />);
 
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
 
@@ -791,13 +556,7 @@ describe('DataTable::sorting', () => {
   test('should call onSort with the correct params if the sort is clicked twice', () => {
     const onSortMock = jest.fn();
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        onSort={onSortMock}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} onSort={onSortMock} />);
 
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
     expect(onSortMock).toBeCalledWith({ id: 1, ...mock.columns[0] }, 'asc');
@@ -809,12 +568,7 @@ describe('DataTable::sorting', () => {
   test('should render correctly with a custom sortIcon', () => {
     const mock = dataMock({ sortable: true });
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-        sortIcon={<div>ASC</div>}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" sortIcon={<div>ASC</div>} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -823,12 +577,7 @@ describe('DataTable::sorting', () => {
   test('should render correctly with a custom sortIcon and column.right = true', () => {
     const mock = dataMock({ sortable: true, right: true });
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-        sortIcon={<div>ASC</div>}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" sortIcon={<div>ASC</div>} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -837,12 +586,7 @@ describe('DataTable::sorting', () => {
   test('should render correctly with a defaultSortAsc = false', () => {
     const mock = dataMock({ sortable: true });
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-        defaultSortAsc={false}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" defaultSortAsc={false} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -850,13 +594,7 @@ describe('DataTable::sorting', () => {
 
   test('should render correctly and bypass internal sort when sortServer = true and asc sort', () => {
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        sortServer
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} sortServer />);
 
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
     // note row order should not change, but sort arrows should
@@ -865,13 +603,7 @@ describe('DataTable::sorting', () => {
 
   test('should render correctly and bypass internal sort when sortServer = true and desc sort', () => {
     const mock = dataMock({ sortable: true });
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        sortServer
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} sortServer />);
 
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
     fireEvent.click(container.querySelector('div[id="column-some.name"]'));
@@ -880,17 +612,10 @@ describe('DataTable::sorting', () => {
   });
 });
 
-
 describe('DataTable::expandableRows', () => {
   test('should render correctly when expandableRows is true', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} expandableRows />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -898,12 +623,7 @@ describe('DataTable::expandableRows', () => {
   test('should render correctly when expandableRowsHideExpander is true', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRows
-        expandableRowsHideExpander
-      />,
+      <DataTable data={mock.data} columns={mock.columns} expandableRows expandableRowsHideExpander />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -913,11 +633,7 @@ describe('DataTable::expandableRows', () => {
     const mock = dataMock();
     mock.data[0].defaultExpanded = true;
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRowExpanded={row => row.defaultExpanded}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} expandableRowExpanded={(row) => row.defaultExpanded} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -925,13 +641,7 @@ describe('DataTable::expandableRows', () => {
 
   test('should render correctly when expandableRows is true and the row is toggled', () => {
     const mock = dataMock();
-    const { container, getByTestId } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRows
-      />,
-    );
+    const { container, getByTestId } = render(<DataTable data={mock.data} columns={mock.columns} expandableRows />);
 
     fireEvent.click(getByTestId('expander-button-1'));
 
@@ -946,8 +656,8 @@ describe('DataTable::expandableRows', () => {
         data={mock.data}
         columns={mock.columns}
         expandableRows
-        expandableRowExpanded={row => row.defaultExpanded}
-      />,
+        expandableRowExpanded={(row) => row.defaultExpanded}
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -957,12 +667,7 @@ describe('DataTable::expandableRows', () => {
     const mock = dataMock();
     mock.data[0].disabled = true;
     const { container, getByTestId } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRows
-        expandableRowDisabled={row => row.disabled}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} expandableRows expandableRowDisabled={(row) => row.disabled} />
     );
     fireEvent.click(getByTestId('expander-button-1'));
 
@@ -971,13 +676,7 @@ describe('DataTable::expandableRows', () => {
 
   test('should not expand a row if expandableRows is false and expandOnRowClicked is true ', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandOnRowClicked
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} expandOnRowClicked />);
 
     fireEvent.click(container.querySelector('div[data-tag="___react-data-table-allow-propagation___"]'));
 
@@ -987,12 +686,7 @@ describe('DataTable::expandableRows', () => {
   test('should expand a row if expandableRows is true and expandOnRowClicked is true', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRows
-        expandOnRowClicked
-      />,
+      <DataTable data={mock.data} columns={mock.columns} expandableRows expandOnRowClicked />
     );
 
     fireEvent.click(container.querySelector('div[data-tag="___react-data-table-allow-propagation___"]'));
@@ -1003,13 +697,7 @@ describe('DataTable::expandableRows', () => {
 
   test('should not expand a row if expandableRows is false and expandOnRowDoubleClicked is true ', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandOnRowDoubleClicked
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} expandOnRowDoubleClicked />);
 
     fireEvent.doubleClick(container.querySelector('div[data-tag="___react-data-table-allow-propagation___"]'));
 
@@ -1019,12 +707,7 @@ describe('DataTable::expandableRows', () => {
   test('should expand a row if expandableRows is true and expandOnRowDoubleClicked is true', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRows
-        expandOnRowDoubleClicked
-      />,
+      <DataTable data={mock.data} columns={mock.columns} expandableRows expandOnRowDoubleClicked />
     );
 
     fireEvent.doubleClick(container.querySelector('div[data-tag="___react-data-table-allow-propagation___"]'));
@@ -1042,8 +725,8 @@ describe('DataTable::expandableRows', () => {
         columns={mock.columns}
         expandableRows
         expandOnRowClicked
-        expandableRowDisabled={row => row.disabled}
-      />,
+        expandableRowDisabled={(row) => row.disabled}
+      />
     );
 
     fireEvent.click(container.querySelector('div[data-tag="___react-data-table-allow-propagation___"]'));
@@ -1052,17 +735,11 @@ describe('DataTable::expandableRows', () => {
     expect(container.firstChild).toMatchSnapshot();
   });
 
-
   test('should call onRowExpandToggled with the correct values if a row is expanded', () => {
     const onRowExpandToggledMock = jest.fn();
     const mock = dataMock();
     const { getByTestId } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRows
-        onRowExpandToggled={onRowExpandToggledMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} expandableRows onRowExpandToggled={onRowExpandToggledMock} />
     );
 
     fireEvent.click(getByTestId('expander-button-1'));
@@ -1073,12 +750,7 @@ describe('DataTable::expandableRows', () => {
     const onRowExpandToggledMock = jest.fn();
     const mock = dataMock();
     const { getByTestId } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        expandableRows
-        onRowExpandToggled={onRowExpandToggledMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} expandableRows onRowExpandToggled={onRowExpandToggledMock} />
     );
 
     fireEvent.click(getByTestId('expander-button-1'));
@@ -1096,7 +768,7 @@ describe('DataTable::expandableRows', () => {
         expandableRows
         expandOnRowClicked
         onRowExpandToggled={onRowExpandToggledMock}
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('div[data-tag="___react-data-table-allow-propagation___"]'));
@@ -1113,7 +785,7 @@ describe('DataTable::expandableRows', () => {
         expandableRows
         expandOnRowDoubleClicked
         onRowExpandToggled={onRowExpandToggledMock}
-      />,
+      />
     );
 
     fireEvent.doubleClick(container.querySelector('div[data-tag="___react-data-table-allow-propagation___"]'));
@@ -1124,13 +796,7 @@ describe('DataTable::expandableRows', () => {
 describe('DataTable::selectableRows', () => {
   test('should render correctly when selectableRows is true', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} selectableRows />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -1138,12 +804,7 @@ describe('DataTable::selectableRows', () => {
   test('should render correctly when selectableRowsHighlight is true and a row is selected', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        selectableRowsHighlight
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows selectableRowsHighlight />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -1154,12 +815,7 @@ describe('DataTable::selectableRows', () => {
   test('should not render a select all checkbox when selectableRowsNoSelectAll is true', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        selectableRowsNoSelectAll
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows selectableRowsNoSelectAll />
     );
 
     expect(container.querySelector('input[name="select-all-rows"]')).toBe(null);
@@ -1168,13 +824,7 @@ describe('DataTable::selectableRows', () => {
 
   test('select-all-rows should be true is all rows are selected', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} selectableRows />);
 
     fireEvent.click(container.querySelector('input[name=select-all-rows]'));
 
@@ -1183,13 +833,7 @@ describe('DataTable::selectableRows', () => {
 
   test('select-all-rows should be false and not when all rows is de-selected', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} selectableRows />);
 
     fireEvent.click(container.querySelector('input[name=select-all-rows]'));
     fireEvent.click(container.querySelector('input[name=select-all-rows]'));
@@ -1199,13 +843,7 @@ describe('DataTable::selectableRows', () => {
 
   test('should render correctly when selectableRows is true and a single row is checked', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} selectableRows />);
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
 
@@ -1215,13 +853,7 @@ describe('DataTable::selectableRows', () => {
 
   test('select-all-rows should not be indeterminate when all rows are selected', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} selectableRows />);
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
     fireEvent.click(container.querySelector('input[name="select-row-2"]'));
@@ -1231,13 +863,7 @@ describe('DataTable::selectableRows', () => {
 
   test('select-all-rows should be indeterminate when a single row is selected', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} selectableRows />);
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
 
@@ -1248,12 +874,7 @@ describe('DataTable::selectableRows', () => {
     const mock = dataMock();
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        selectableRowSelected={row => row.selected}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows selectableRowSelected={(row) => row.selected} />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -1263,13 +884,7 @@ describe('DataTable::selectableRows', () => {
 
   test('should render correctly when selectableRows is true and a single row is un-checked', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} selectableRows />);
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -1282,12 +897,7 @@ describe('DataTable::selectableRows', () => {
     mock.data[0].disabled = true;
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        selectableRowDisabled={row => row.disabled}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows selectableRowDisabled={(row) => row.disabled} />
     );
 
     fireEvent.click(container.querySelector('input[name=select-all-rows]'));
@@ -1301,12 +911,7 @@ describe('DataTable::selectableRows', () => {
     mock.data[0].disabled = true;
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        selectableRowDisabled={row => row.disabled}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows selectableRowDisabled={(row) => row.disabled} />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -1321,12 +926,7 @@ describe('DataTable::selectableRows', () => {
     mock.data[1].disabled = true;
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        selectableRowDisabled={row => row.disabled}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows selectableRowDisabled={(row) => row.disabled} />
     );
 
     fireEvent.click(container.querySelector('input[name=select-all-rows]'));
@@ -1341,12 +941,7 @@ describe('DataTable::selectableRows', () => {
     mock.data[0].selected = true;
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        selectableRowSelected={row => row.selected}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows selectableRowSelected={(row) => row.selected} />
     );
 
     expect(container.querySelector('input[name="select-row-1"]').checked).toBe(true);
@@ -1359,12 +954,7 @@ describe('DataTable::selectableRows', () => {
     mock.data[1].selected = true;
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        selectableRowSelected={row => row.selected}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows selectableRowSelected={(row) => row.selected} />
     );
 
     expect(container.querySelector('input[name="select-all-rows"]').checked).toBe(true);
@@ -1373,24 +963,11 @@ describe('DataTable::selectableRows', () => {
 
   test('should render correctly when clearSelectedRows is toggled', () => {
     const mock = dataMock();
-    const { container, rerender } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-      />,
-    );
+    const { container, rerender } = render(<DataTable data={mock.data} columns={mock.columns} selectableRows />);
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
 
-    rerender(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        clearSelectedRows
-      />,
-    );
+    rerender(<DataTable data={mock.data} columns={mock.columns} selectableRows clearSelectedRows />);
 
     expect(container.querySelector('input[name="select-row-1"]').checked).toBe(false);
   });
@@ -1399,12 +976,7 @@ describe('DataTable::selectableRows', () => {
     const rowClickedMock = jest.fn();
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        selectableRows
-        onRowClicked={rowClickedMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} selectableRows onRowClicked={rowClickedMock} />
     );
 
     fireEvent.click(container.querySelector('div[data-tag="___react-data-table-allow-propagation___"]'));
@@ -1417,13 +989,7 @@ describe('DataTable::selectableRows', () => {
 describe('DataTable::Pagination', () => {
   test('should render correctly if pagination is enabled', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        pagination
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} pagination />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -1437,7 +1003,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         pagination
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-next-page'));
@@ -1456,7 +1022,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         pagination
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-previous-page'));
@@ -1474,7 +1040,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         pagination
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-last-page'));
@@ -1493,7 +1059,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         pagination
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-first-page'));
@@ -1511,7 +1077,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         pagination
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-next-page'));
@@ -1531,8 +1097,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         pagination
-
-      />,
+      />
     );
 
     // move to last page
@@ -1546,7 +1111,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         pagination
-      />,
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -1569,7 +1134,7 @@ describe('DataTable::Pagination', () => {
         onChangeRowsPerPage={onChangeRowsPerPageMock}
         paginationServer
         pagination
-      />,
+      />
     );
 
     // move to last page
@@ -1586,7 +1151,7 @@ describe('DataTable::Pagination', () => {
         onChangeRowsPerPage={onChangeRowsPerPageMock}
         paginationServer
         pagination
-      />,
+      />
     );
 
     expect(container).toMatchSnapshot();
@@ -1605,7 +1170,7 @@ describe('DataTable::Pagination', () => {
         paginationRowsPerPageOptions={[1, 2]}
         pagination
         paginationServer
-      />,
+      />
     );
 
     // move to last page
@@ -1620,7 +1185,7 @@ describe('DataTable::Pagination', () => {
         paginationRowsPerPageOptions={[1, 2]}
         pagination
         paginationServer
-      />,
+      />
     );
 
     expect(onChangePageMock).not.toBeCalled();
@@ -1637,7 +1202,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         onChangePage={onChangePageMock}
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-next-page'));
@@ -1655,7 +1220,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         onChangePage={onChangePageMock}
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-next-page'));
@@ -1674,7 +1239,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         selectableRows
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('input[name="select-all-rows"]'));
@@ -1694,7 +1259,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         selectableRows
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('input[name="select-all-rows"]'));
@@ -1714,7 +1279,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         selectableRows
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('input[name="select-all-rows"]'));
@@ -1735,7 +1300,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1}
         paginationRowsPerPageOptions={[1, 2]}
         onChangePage={onChangePageMock}
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-next-page'));
@@ -1746,12 +1311,7 @@ describe('DataTable::Pagination', () => {
     const onChangeRowsPerPageMock = jest.fn();
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        pagination
-        onChangeRowsPerPage={onChangeRowsPerPageMock}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} pagination onChangeRowsPerPage={onChangeRowsPerPageMock} />
     );
 
     fireEvent.change(container.querySelector('select'), { target: { value: 20 } });
@@ -1768,7 +1328,7 @@ describe('DataTable::Pagination', () => {
         pagination
         paginationServer
         onChangeRowsPerPage={onChangeRowsPerPageMock}
-      />,
+      />
     );
 
     fireEvent.change(container.querySelector('select'), { target: { value: 20 } });
@@ -1783,7 +1343,7 @@ describe('DataTable::Pagination', () => {
         columns={mock.columns}
         pagination
         paginationComponentOptions={{ rowsPerPageText: 'Fila por página' }}
-      />,
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -1797,7 +1357,7 @@ describe('DataTable::Pagination', () => {
         columns={mock.columns}
         pagination
         paginationComponentOptions={{ noRowsPerPage: true }}
-      />,
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -1812,7 +1372,7 @@ describe('DataTable::Pagination', () => {
         paginationPerPage={1} // force 2 pages
         paginationRowsPerPageOptions={[1, 2]} // force 2 pages
         pagination
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('button#pagination-next-page'));
@@ -1825,7 +1385,7 @@ describe('DataTable::Pagination', () => {
         paginationRowsPerPageOptions={[1, 2]} // force 2 pages
         pagination
         paginationResetDefaultPage // this will toggle true and reset to page 1
-      />,
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -1836,28 +1396,16 @@ describe('DataTable::subHeader', () => {
   test('should render correctly when a subheader is enabled', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        subHeader
-        subHeaderComponent={<div />}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} subHeader subHeaderComponent={<div />} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
-
   test('should render when subHeaderWrap is false', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        subHeader
-        subHeaderComponent={<div />}
-        subHeaderWrap={false}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} subHeader subHeaderComponent={<div />} subHeaderWrap={false} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -1866,13 +1414,7 @@ describe('DataTable::subHeader', () => {
   test('should render correctly with left align', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        subHeader
-        subHeaderComponent={<div />}
-        subHeaderAlign="left"
-      />,
+      <DataTable data={mock.data} columns={mock.columns} subHeader subHeaderComponent={<div />} subHeaderAlign="left" />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -1887,7 +1429,7 @@ describe('DataTable::subHeader', () => {
         subHeader
         subHeaderComponent={<div />}
         subHeaderAlign="center"
-      />,
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -1902,37 +1444,24 @@ describe('DataTable::subHeader', () => {
         subHeader
         subHeaderComponent={<div />}
         subHeaderAlign="right"
-      />,
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
   });
 });
 
-
 describe('DataTable::Header', () => {
   test('should render without a header if noHeader is true', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        noHeader
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} noHeader />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
 
   test('title should render correctly', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        title="whoa!"
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} title="whoa!" />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -1945,8 +1474,12 @@ describe('DataTable::Header', () => {
         columns={mock.columns}
         title="whoa!"
         // eslint-disable-next-line react/jsx-one-expression-per-line
-        actions={<><div>some action</div>, <div>some action 2</div></>}
-      />,
+        actions={
+          <>
+            <div>some action</div>, <div>some action 2</div>
+          </>
+        }
+      />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -1954,14 +1487,7 @@ describe('DataTable::Header', () => {
 
   test('should render the default context menu when using selectableRows', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        title="whoa!"
-        selectableRows
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} title="whoa!" selectableRows />);
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
 
@@ -1977,8 +1503,12 @@ describe('DataTable::Header', () => {
         title="whoa!"
         selectableRows
         // eslint-disable-next-line react/jsx-one-expression-per-line
-        contextActions={<><div>some action</div>, <div>some action 2</div></>}
-      />,
+        contextActions={
+          <>
+            <div>some action</div>, <div>some action 2</div>
+          </>
+        }
+      />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -1995,7 +1525,7 @@ describe('DataTable::Header', () => {
         title="whoa!"
         selectableRows
         contextMessage={{ singular: 'artículo', plural: 'artículos', message: 'seleccionada' }}
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -2012,7 +1542,7 @@ describe('DataTable::Header', () => {
         title="whoa!"
         selectableRows
         contextMessage={{ singular: 'artículo', plural: 'artículos' }}
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -2023,13 +1553,7 @@ describe('DataTable::Header', () => {
   test('should not render a context menu when noContextMenu and a row is selected', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        title="whoa!"
-        selectableRows
-        noContextMenu
-      />,
+      <DataTable data={mock.data} columns={mock.columns} title="whoa!" selectableRows noContextMenu />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -2040,7 +1564,9 @@ describe('DataTable::Header', () => {
   test('should render a custom component within the context menu when contextComponent', () => {
     const mock = dataMock();
     // eslint-disable-next-line react/prop-types
-    const CustomContext = ({ selectedCount }) => <div>{`Nice! You totally just selected ${selectedCount} sweet items!`}</div>;
+    const CustomContext = ({ selectedCount }) => (
+      <div>{`Nice! You totally just selected ${selectedCount} sweet items!`}</div>
+    );
     const { container } = render(
       <DataTable
         data={mock.data}
@@ -2049,7 +1575,7 @@ describe('DataTable::Header', () => {
         selectableRows
         // eslint-disable-next-line react/jsx-one-expression-per-line
         contextComponent={<CustomContext />}
-      />,
+      />
     );
 
     fireEvent.click(container.querySelector('input[name="select-row-1"]'));
@@ -2061,13 +1587,7 @@ describe('DataTable::Header', () => {
 describe('DataTable::fixedHeader', () => {
   test('should render correctly when fixedHeader', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        fixedHeader
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} fixedHeader />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -2075,12 +1595,7 @@ describe('DataTable::fixedHeader', () => {
   test('should render correctly when fixedHeader and fixedHeaderScrollHeight', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        fixedHeader
-        fixedHeaderScrollHeight="100px"
-      />,
+      <DataTable data={mock.data} columns={mock.columns} fixedHeader fixedHeaderScrollHeight="100px" />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -2088,14 +1603,7 @@ describe('DataTable::fixedHeader', () => {
 
   test('should render correctly when fixedHeader with an offset', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        fixedHeader
-        overflowY
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} fixedHeader overflowY />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -2103,13 +1611,7 @@ describe('DataTable::fixedHeader', () => {
   test('should render correctly when fixedHeader with an offset with a value', () => {
     const mock = dataMock();
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        fixedHeader
-        overflowY
-        offset="100px"
-      />,
+      <DataTable data={mock.data} columns={mock.columns} fixedHeader overflowY offset="100px" />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -2119,13 +1621,7 @@ describe('DataTable::fixedHeader', () => {
 describe('DataTable::striped', () => {
   test('should render correctly when striped', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        striped
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} striped />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -2134,13 +1630,7 @@ describe('DataTable::striped', () => {
 describe('DataTable::highlightOnHover', () => {
   test('should render correctly when highlightOnHover', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        highlightOnHover
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} highlightOnHover />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -2149,13 +1639,7 @@ describe('DataTable::highlightOnHover', () => {
 describe('DataTable::pointerOnHover', () => {
   test('should render correctly when pointerOnHover', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        pointerOnHover
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} pointerOnHover />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -2164,13 +1648,7 @@ describe('DataTable::pointerOnHover', () => {
 describe('DataTable::dense', () => {
   test('should render correctly when dense', () => {
     const mock = dataMock();
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        dense
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} dense />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -2185,12 +1663,7 @@ describe('DataTable::Theming', () => {
       },
     };
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-        customStyles={customStyles}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" customStyles={customStyles} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -2205,12 +1678,7 @@ describe('DataTable::Theming', () => {
       },
     };
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        defaultSortField="some.name"
-        customStyles={customStyles}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} defaultSortField="some.name" customStyles={customStyles} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -2224,11 +1692,7 @@ describe('DataTable::conditionalRowStyles', () => {
     const conditionalRowStyles = [];
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        conditionalRowStyles={conditionalRowStyles}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} conditionalRowStyles={conditionalRowStyles} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -2239,7 +1703,7 @@ describe('DataTable::conditionalRowStyles', () => {
     mock.data[0].completed = true;
     const conditionalRowStyles = [
       {
-        when: row => row.completed,
+        when: (row) => row.completed,
         style: {
           backgroundColor: 'rgba(63, 195, 128, 0.9)',
           color: 'white',
@@ -2251,11 +1715,7 @@ describe('DataTable::conditionalRowStyles', () => {
     ];
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        conditionalRowStyles={conditionalRowStyles}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} conditionalRowStyles={conditionalRowStyles} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -2266,7 +1726,7 @@ describe('DataTable::conditionalRowStyles', () => {
     mock.data[0].completed = false;
     const conditionalRowStyles = [
       {
-        when: row => row.completed,
+        when: (row) => row.completed,
         style: {
           backgroundColor: 'rgba(63, 195, 128, 0.9)',
           color: 'white',
@@ -2278,11 +1738,7 @@ describe('DataTable::conditionalRowStyles', () => {
     ];
 
     const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-        conditionalRowStyles={conditionalRowStyles}
-      />,
+      <DataTable data={mock.data} columns={mock.columns} conditionalRowStyles={conditionalRowStyles} />
     );
 
     expect(container.firstChild).toMatchSnapshot();
@@ -2294,7 +1750,7 @@ test('should render correctly when conditionalRowStyles is used with an expandab
   mock.data[0].completed = true;
   const conditionalRowStyles = [
     {
-      when: row => row.completed,
+      when: (row) => row.completed,
       style: {
         backgroundColor: 'rgba(63, 195, 128, 0.9)',
         color: 'white',
@@ -2312,14 +1768,13 @@ test('should render correctly when conditionalRowStyles is used with an expandab
       conditionalRowStyles={conditionalRowStyles}
       expandableRows
       expandableInheritConditionalStyles
-    />,
+    />
   );
 
   fireEvent.click(getByTestId('expander-button-1'));
 
   expect(container.firstChild).toMatchSnapshot();
 });
-
 
 describe('DataTable::column.style', () => {
   test('should render correctly when a style is set on a column', () => {
@@ -2328,12 +1783,7 @@ describe('DataTable::column.style', () => {
       backgroundColor: 'rgba(63, 195, 128, 0.9)',
     };
 
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -2345,19 +1795,14 @@ describe('DataTable::conditionalCellStyles', () => {
     mock.data[0].completed = true;
     mock.columns[0].conditionalCellStyles = [
       {
-        when: row => row.completed,
+        when: (row) => row.completed,
         style: {
           backgroundColor: 'rgba(63, 195, 128, 0.9)',
         },
       },
     ];
 
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -2367,19 +1812,14 @@ describe('DataTable::conditionalCellStyles', () => {
     mock.data[0].completed = false;
     mock.columns[0].conditionalCellStyles = [
       {
-        when: row => row.completed,
+        when: (row) => row.completed,
         style: {
           backgroundColor: 'rgba(63, 195, 128, 0.9)',
         },
       },
     ];
 
-    const { container } = render(
-      <DataTable
-        data={mock.data}
-        columns={mock.columns}
-      />,
-    );
+    const { container } = render(<DataTable data={mock.data} columns={mock.columns} />);
 
     expect(container.firstChild).toMatchSnapshot();
   });

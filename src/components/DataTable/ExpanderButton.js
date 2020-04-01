@@ -10,15 +10,13 @@ const ButtonStyle = styled.button`
   white-space: nowrap;
   border: none;
   background-color: transparent;
-  ${props => props.theme.expanderButton.style};
+  ${(props) => props.theme.expanderButton.style};
 `;
 
 const ExpanderButton = ({ expanded, row, onToggled, disabled }) => {
   const { expandableIcon, keyField } = useTableContext();
-  const icon = expanded
-    ? expandableIcon.expanded
-    : expandableIcon.collapsed;
-  const handleToggle = e => onToggled && onToggled(row, e);
+  const icon = expanded ? expandableIcon.expanded : expandableIcon.collapsed;
+  const handleToggle = (e) => onToggled && onToggled(row, e);
 
   return (
     <ButtonStyle

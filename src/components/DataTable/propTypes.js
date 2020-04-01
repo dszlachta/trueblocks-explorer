@@ -8,21 +8,13 @@ import ExpanderCollapsedIcon from './icons/ExpanderCollapsedIcon';
 import ExpanderExpandedIcon from './icons/ExpanderExpandedIcon';
 
 export const propTypes = {
-  title: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-  ]),
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   selectableRows: PropTypes.bool,
   selectableRowsHighlight: PropTypes.bool,
   selectableRowsNoSelectAll: PropTypes.bool,
   selectableRowSelected: PropTypes.func,
   selectableRowDisabled: PropTypes.func,
-  selectableRowsComponent: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  selectableRowsComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func, PropTypes.object]),
   selectableRowsComponentProps: PropTypes.object,
   onRowsSelectedUpdate: PropTypes.func,
   clearSelectedRows: PropTypes.bool,
@@ -36,28 +28,12 @@ export const propTypes = {
   expandableInheritConditionalStyles: PropTypes.bool,
   keyField: PropTypes.string,
   progressPending: PropTypes.bool,
-  progressComponent: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func,
-  ]),
+  progressComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func]),
   persistTableHead: PropTypes.bool,
-  expandableRowsComponent: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.func,
-  ]),
+  expandableRowsComponent: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node, PropTypes.func]),
   expandableIcon: PropTypes.shape({
-    collapsed: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.node,
-      PropTypes.func,
-    ]),
-    expanded: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.node,
-      PropTypes.func,
-    ]),
+    collapsed: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func]),
+    expanded: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func]),
   }),
   sortIcon: PropTypes.oneOfType([PropTypes.bool, PropTypes.node]),
   sortFunction: PropTypes.func,
@@ -66,24 +42,15 @@ export const propTypes = {
   striped: PropTypes.bool,
   highlightOnHover: PropTypes.bool,
   pointerOnHover: PropTypes.bool,
-  actions: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
+  actions: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   noContextMenu: PropTypes.bool,
   contextMessage: PropTypes.shape({
     singular: PropTypes.string.isRequired,
     plural: PropTypes.string.isRequired,
     message: PropTypes.string,
   }),
-  contextActions: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
-  contextComponent: PropTypes.oneOfType([
-    PropTypes.node,
-    PropTypes.func,
-  ]),
+  contextActions: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+  contextComponent: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
   defaultSortField: PropTypes.string,
   defaultSortAsc: PropTypes.bool,
   columns: PropTypes.array,
@@ -93,22 +60,14 @@ export const propTypes = {
   responsive: PropTypes.bool,
   overflowY: PropTypes.bool,
   overflowYOffset: PropTypes.string,
-  noDataComponent: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func,
-  ]),
+  noDataComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func]),
   disabled: PropTypes.bool,
   noTableHead: PropTypes.bool,
   noHeader: PropTypes.bool,
   subHeader: PropTypes.bool,
   subHeaderAlign: PropTypes.string,
   subHeaderWrap: PropTypes.bool,
-  subHeaderComponent: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string,
-  ]),
+  subHeaderComponent: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node, PropTypes.string]),
   onRowClicked: PropTypes.func,
   onRowDoubleClicked: PropTypes.func,
   fixedHeader: PropTypes.bool,
@@ -122,38 +81,18 @@ export const propTypes = {
   paginationRowsPerPageOptions: PropTypes.array,
   onChangePage: PropTypes.func,
   onChangeRowsPerPage: PropTypes.func,
-  paginationComponent: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.func,
-  ]),
+  paginationComponent: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node, PropTypes.func]),
   paginationComponentOptions: PropTypes.object,
-  paginationIconFirstPage: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func,
-  ]),
-  paginationIconLastPage: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func,
-  ]),
-  paginationIconNext: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func,
-  ]),
-  paginationIconPrevious: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func,
-  ]),
+  paginationIconFirstPage: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func]),
+  paginationIconLastPage: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func]),
+  paginationIconNext: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func]),
+  paginationIconPrevious: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func]),
   dense: PropTypes.bool,
   conditionalRowStyles: PropTypes.arrayOf(
     PropTypes.shape({
       when: PropTypes.func.isRequired,
       style: PropTypes.object.isRequired,
-    }),
+    })
   ),
   theme: PropTypes.string,
   customStyles: PropTypes.object,
@@ -182,7 +121,9 @@ export const defaultProps = {
   progressPending: false,
   progressComponent: <div style={{ fontSize: '24px', fontWeight: 700, padding: '24px' }}>Loading...</div>,
   persistTableHead: false,
-  expandableRowsComponent: <div style={{ padding: '24px' }}>Add a custom expander component. Use props.data for row data</div>,
+  expandableRowsComponent: (
+    <div style={{ padding: '24px' }}>Add a custom expander component. Use props.data for row data</div>
+  ),
   expandableIcon: {
     collapsed: <ExpanderCollapsedIcon />,
     expanded: <ExpanderExpandedIcon />,

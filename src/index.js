@@ -1,8 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { Route, BrowserRouter } from "react-router-dom";
-import App from "./App";
-import "index.css";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Route, BrowserRouter } from 'react-router-dom';
+import App from './App';
+import 'index.css';
 
 const routes = (
   <BrowserRouter>
@@ -11,4 +11,4 @@ const routes = (
 );
 export default routes;
 
-ReactDOM.render(routes, document.getElementById("root"));
+ReactDOM.render(routes, document.getElementById('root'));

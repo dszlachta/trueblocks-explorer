@@ -9,6 +9,6 @@ export default function useFirstUpdate(fn, inputs) {
     }
 
     fn();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, inputs);
 }

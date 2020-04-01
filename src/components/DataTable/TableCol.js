@@ -6,7 +6,7 @@ import { useTableContext } from './DataTableContext';
 import NativeSortIcon from './icons/NativeSortIcon';
 
 const TableColStyle = styled(Cell)`
-  ${props => props.column.button && 'text-align: center'};
+  ${(props) => props.column.button && 'text-align: center'};
 `;
 
 const ColumnSortable = styled.div`
@@ -15,12 +15,12 @@ const ColumnSortable = styled.div`
   height: 100%;
   line-height: 1;
   user-select: none;
-  ${props => (props.sortActive ? props.theme.headCells.activeSortStyle : props.theme.headCells.inactiveSortStyle)};
+  ${(props) => (props.sortActive ? props.theme.headCells.activeSortStyle : props.theme.headCells.inactiveSortStyle)};
 
   span.__rdt_custom_sort_icon__ {
     i,
     svg {
-      ${props => (props.sortActive ? 'opacity: 1' : 'opacity: 0')};
+      ${(props) => (props.sortActive ? 'opacity: 1' : 'opacity: 0')};
       color: inherit;
       font-size: 18px !important;
       height: 18px !important;
@@ -48,11 +48,7 @@ const ColumnSortable = styled.div`
   }
 `;
 
-
-const TableCol = memo(({
-  column,
-  sortIcon,
-}) => {
+const TableCol = memo(({ column, sortIcon }) => {
   const { dispatch, pagination, paginationServer, sortColumn, sortDirection } = useTableContext();
 
   if (column.omit) {
@@ -79,24 +75,18 @@ const TableCol = memo(({
     }
   };
 
-  const handleKeyPress = event => {
+  const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       handleSortChange();
     }
   };
 
-  const renderNativeSortIcon = sortActive => (
-    <NativeSortIcon
-      column={column}
-      sortActive={sortActive}
-      sortDirection={sortDirection}
-    />
+  const renderNativeSortIcon = (sortActive) => (
+    <NativeSortIcon column={column} sortActive={sortActive} sortDirection={sortDirection} />
   );
 
   const renderCustomSortIcon = () => (
-    <span className={[sortDirection, '__rdt_custom_sort_icon__'].join(' ')}>
-      {sortIcon}
-    </span>
+    <span className={[sortDirection, '__rdt_custom_sort_icon__'].join(' ')}>{sortIcon}</span>
   );
 
   const sortActive = column.sortable && sortColumn === column.selector;
@@ -125,9 +115,7 @@ const TableCol = memo(({
         >
           {customSortIconRight && renderCustomSortIcon()}
           {nativeSortIconRight && renderNativeSortIcon(sortActive)}
-          <div>
-            {column.name}
-          </div>
+          <div>{column.name}</div>
           {customSortIconLeft && renderCustomSortIcon()}
           {nativeSortIconLeft && renderNativeSortIcon(sortActive)}
         </ColumnSortable>
@@ -138,10 +126,7 @@ const TableCol = memo(({
 
 TableCol.propTypes = {
   column: PropTypes.object.isRequired,
-  sortIcon: PropTypes.oneOfType([
-    PropTypes.bool,
-    PropTypes.object,
-  ]).isRequired,
+  sortIcon: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]).isRequired,
 };
 
 export default TableCol;

@@ -13,13 +13,13 @@ const TableHeaderStyle = styled.header`
   justify-content: space-between;
   width: 100%;
   flex-wrap: wrap;
-  ${props => props.theme.header.style}
+  ${(props) => props.theme.header.style}
 `;
 
 const Title = styled.div`
   flex: 1 0 auto;
-  color: ${props => props.theme.header.fontColor};
-  font-size: ${props => props.theme.header.fontSize};
+  color: ${(props) => props.theme.header.fontColor};
+  font-size: ${(props) => props.theme.header.fontSize};
   font-weight: 400;
 `;
 
@@ -36,27 +36,17 @@ const Actions = styled.div`
 
 const TableHeader = ({ title, actions, showMenu }) => (
   <TableHeaderStyle className="rdt_TableHeader">
-    <Title>
-      {title}
-    </Title>
+    <Title>{title}</Title>
 
-    <Actions>
-      {actions}
-    </Actions>
+    <Actions>{actions}</Actions>
 
     {showMenu && <ContextMenu />}
   </TableHeaderStyle>
 );
 
 TableHeader.propTypes = {
-  title: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-  ]).isRequired,
-  actions: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-  ]),
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
+  actions: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
   showMenu: PropTypes.bool,
 };
 

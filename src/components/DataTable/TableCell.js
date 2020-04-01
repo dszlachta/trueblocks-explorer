@@ -5,17 +5,17 @@ import { Cell } from './Cell';
 import { getProperty, getConditionalStyle } from './util';
 
 const TableCellStyle = styled(Cell)`
-  font-size: ${props => props.theme.rows.fontSize};
+  font-size: ${(props) => props.theme.rows.fontSize};
   font-weight: 400;
 
   div:first-child {
-    white-space: ${props => (props.column.wrap ? 'normal' : 'nowrap')};
-    overflow: ${props => (props.column.allowOverflow ? 'visible' : 'hidden')};
+    white-space: ${(props) => (props.column.wrap ? 'normal' : 'nowrap')};
+    overflow: ${(props) => (props.column.allowOverflow ? 'visible' : 'hidden')};
     text-overflow: ellipsis;
   }
 
-  ${props => props.column.style};
-  ${props => props.extendedCellStyle};
+  ${(props) => props.column.style};
+  ${(props) => props.extendedCellStyle};
 `;
 
 const TableCell = memo(({ id, column, row }) => {
@@ -36,11 +36,7 @@ const TableCell = memo(({ id, column, row }) => {
       className="rdt_TableCell"
       extendedCellStyle={extendedCellStyle}
     >
-      {!column.cell && (
-        <div data-tag={dataTag}>
-          {getProperty(row, column.selector, column.format)}
-        </div>
-      )}
+      {!column.cell && <div data-tag={dataTag}>{getProperty(row, column.selector, column.format)}</div>}
       {column.cell && column.cell(row)}
     </TableCellStyle>
   );

@@ -2,25 +2,17 @@ import React, { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { handleFunctionProps, noop } from './util';
 
-const calculateBaseStyle = disabled => ({
+const calculateBaseStyle = (disabled) => ({
   fontSize: '18px',
-  ...!disabled && { cursor: 'pointer' },
+  ...(!disabled && { cursor: 'pointer' }),
   padding: 0,
   marginTop: '1px',
   verticalAlign: 'middle',
   position: 'relative',
 });
 
-const Checkbox = memo(({
-  component,
-  componentOptions,
-  indeterminate,
-  checked,
-  name,
-  onClick,
-  disabled,
-}) => {
-  const setCheckboxRef = checkbox => {
+const Checkbox = memo(({ component, componentOptions, indeterminate, checked, name, onClick, disabled }) => {
+  const setCheckboxRef = (checkbox) => {
     if (checkbox) {
       // eslint-disable-next-line no-param-reassign
       checkbox.indeterminate = indeterminate;
@@ -29,7 +21,10 @@ const Checkbox = memo(({
 
   const TagName = component;
   const baseStyle = TagName !== 'input' ? componentOptions.style : calculateBaseStyle(disabled);
-  const resolvedComponentOptions = useMemo(() => handleFunctionProps(componentOptions, indeterminate), [componentOptions, indeterminate]);
+  const resolvedComponentOptions = useMemo(() => handleFunctionProps(componentOptions, indeterminate), [
+    componentOptions,
+    indeterminate,
+  ]);
 
   return (
     <TagName
@@ -51,12 +46,7 @@ const Checkbox = memo(({
 Checkbox.propTypes = {
   name: PropTypes.string.isRequired,
   indeterminate: PropTypes.bool,
-  component: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.node,
-    PropTypes.func,
-    PropTypes.object,
-  ]),
+  component: PropTypes.oneOfType([PropTypes.string, PropTypes.node, PropTypes.func, PropTypes.object]),
   componentOptions: PropTypes.object,
   checked: PropTypes.bool,
   disabled: PropTypes.bool,

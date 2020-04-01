@@ -30,7 +30,7 @@ Settings.propTypes = {
 Settings.defaultProps = {
   color: 'currentColor',
   size: '24',
-  stroke: '1'
+  stroke: '1',
 };
 
 export default Settings;

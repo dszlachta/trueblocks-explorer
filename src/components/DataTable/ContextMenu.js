@@ -8,8 +8,8 @@ const Title = styled.div`
   align-items: center;
   flex: 1 0 auto;
   height: 100%;
-  color: ${props => props.theme.contextMenu.fontColor};
-  font-size: ${props => props.theme.contextMenu.fontSize};
+  color: ${(props) => props.theme.contextMenu.fontColor};
+  font-size: ${(props) => props.theme.contextMenu.fontSize};
   font-weight: 400;
 `;
 
@@ -31,8 +31,8 @@ const ContextMenuStyle = styled.div`
   align-items: center;
   justify-content: space-between;
   display: flex;
-  ${props => props.theme.contextMenu.style};
-  ${props => props.visible && props.theme.contextMenu.activeStyle};
+  ${(props) => props.theme.contextMenu.style};
+  ${(props) => props.visible && props.theme.contextMenu.activeStyle};
 `;
 
 const generateDefaultContextTitle = (contextMessage, selectedCount) => {
@@ -55,21 +55,13 @@ const ContextMenu = () => {
   const visible = selectedCount > 0;
 
   if (contextComponent) {
-    return (
-      <ContextMenuStyle visible={visible}>
-        {cloneElement(contextComponent, { selectedCount })}
-      </ContextMenuStyle>
-    );
+    return <ContextMenuStyle visible={visible}>{cloneElement(contextComponent, { selectedCount })}</ContextMenuStyle>;
   }
 
   return (
     <ContextMenuStyle visible={visible}>
-      <Title>
-        {generateDefaultContextTitle(contextMessage, selectedCount)}
-      </Title>
-      <ContextActions>
-        {contextActions}
-      </ContextActions>
+      <Title>{generateDefaultContextTitle(contextMessage, selectedCount)}</Title>
+      <ContextActions>{contextActions}</ContextActions>
     </ContextMenuStyle>
   );
 };

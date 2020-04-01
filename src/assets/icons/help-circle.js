@@ -25,13 +25,13 @@ const HelpCircle = (props) => {
 
 HelpCircle.propTypes = {
   color: PropTypes.string,
-  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 HelpCircle.defaultProps = {
   color: 'currentColor',
   size: '24',
-  stroke: '2'
+  stroke: '2',
 };
 
 export default HelpCircle;

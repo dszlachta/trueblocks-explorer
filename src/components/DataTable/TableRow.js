@@ -11,7 +11,7 @@ const STOP_PROP_TAG = '___react-data-table-allow-propagation___';
 
 const highlightCSS = css`
   &:hover {
-    ${props => props.highlightOnHover && props.theme.rows.highlightOnHoverStyle};
+    ${(props) => props.highlightOnHover && props.theme.rows.highlightOnHoverStyle};
   }
 `;
 
@@ -27,126 +27,124 @@ const TableRowStyle = styled.div`
   align-content: stretch;
   width: 100%;
   box-sizing: border-box;
-  ${props => props.theme.rows.style};
-  ${props => (props.dense && props.theme.rows.denseStyle)};
-  ${props => props.striped && props.theme.rows.stripedStyle};
-  ${props => props.highlightOnHover && highlightCSS};
-  ${props => props.pointerOnHover && pointerCSS};
-  ${props => props.selected && props.theme.rows.selectedHighlighStyle};
-  ${props => props.extendedRowStyle};
+  ${(props) => props.theme.rows.style};
+  ${(props) => props.dense && props.theme.rows.denseStyle};
+  ${(props) => props.striped && props.theme.rows.stripedStyle};
+  ${(props) => props.highlightOnHover && highlightCSS};
+  ${(props) => props.pointerOnHover && pointerCSS};
+  ${(props) => props.selected && props.theme.rows.selectedHighlighStyle};
+  ${(props) => props.extendedRowStyle};
 `;
 
-const TableRow = memo(({
-  id,
-  keyField,
-  columns,
-  row,
-  onRowClicked,
-  onRowDoubleClicked,
-  selectableRows,
-  expandableRows,
-  striped,
-  highlightOnHover,
-  pointerOnHover,
-  dense,
-  expandableRowsComponent,
-  defaultExpanderDisabled,
-  defaultExpanded,
-  expandableRowsHideExpander,
-  expandOnRowClicked,
-  expandOnRowDoubleClicked,
-  conditionalRowStyles,
-  inheritConditionalStyles,
-  onRowExpandToggled,
-  selected,
-  selectableRowsHighlight,
-}) => {
-  const [expanded, setExpanded] = useState(defaultExpanded);
-  const handleExpanded = useCallback(() => {
-    setExpanded(!expanded);
-    onRowExpandToggled(!expanded, row);
-  }, [expanded, onRowExpandToggled, row]);
+const TableRow = memo(
+  ({
+    id,
+    keyField,
+    columns,
+    row,
+    onRowClicked,
+    onRowDoubleClicked,
+    selectableRows,
+    expandableRows,
+    striped,
+    highlightOnHover,
+    pointerOnHover,
+    dense,
+    expandableRowsComponent,
+    defaultExpanderDisabled,
+    defaultExpanded,
+    expandableRowsHideExpander,
+    expandOnRowClicked,
+    expandOnRowDoubleClicked,
+    conditionalRowStyles,
+    inheritConditionalStyles,
+    onRowExpandToggled,
+    selected,
+    selectableRowsHighlight,
+  }) => {
+    const [expanded, setExpanded] = useState(defaultExpanded);
+    const handleExpanded = useCallback(() => {
+      setExpanded(!expanded);
+      onRowExpandToggled(!expanded, row);
+    }, [expanded, onRowExpandToggled, row]);
 
-  const showPointer = pointerOnHover || (expandableRows && (expandOnRowClicked || expandOnRowDoubleClicked));
+    const showPointer = pointerOnHover || (expandableRows && (expandOnRowClicked || expandOnRowDoubleClicked));
 
-  const handleRowClick = useCallback(e => {
-    // use event delegation allow events to propagate only when the element with data-tag ___react-data-table-allow-propagation___ is present
-    if (e.target && e.target.getAttribute('data-tag') === STOP_PROP_TAG) {
-      onRowClicked(row, e);
+    const handleRowClick = useCallback(
+      (e) => {
+        // use event delegation allow events to propagate only when the element with data-tag ___react-data-table-allow-propagation___ is present
+        if (e.target && e.target.getAttribute('data-tag') === STOP_PROP_TAG) {
+          onRowClicked(row, e);
 
-      if (!defaultExpanderDisabled && expandableRows && expandOnRowClicked) {
-        handleExpanded();
-      }
-    }
-  }, [defaultExpanderDisabled, expandOnRowClicked, expandableRows, handleExpanded, onRowClicked, row]);
+          if (!defaultExpanderDisabled && expandableRows && expandOnRowClicked) {
+            handleExpanded();
+          }
+        }
+      },
+      [defaultExpanderDisabled, expandOnRowClicked, expandableRows, handleExpanded, onRowClicked, row]
+    );
 
-  const handleRowDoubleClick = useCallback(e => {
-    if (e.target && e.target.getAttribute('data-tag') === STOP_PROP_TAG) {
-      onRowDoubleClicked(row, e);
-      if (!defaultExpanderDisabled && expandableRows && expandOnRowDoubleClicked) {
-        handleExpanded();
-      }
-    }
-  }, [defaultExpanderDisabled, expandOnRowDoubleClicked, expandableRows, handleExpanded, onRowDoubleClicked, row]);
+    const handleRowDoubleClick = useCallback(
+      (e) => {
+        if (e.target && e.target.getAttribute('data-tag') === STOP_PROP_TAG) {
+          onRowDoubleClicked(row, e);
+          if (!defaultExpanderDisabled && expandableRows && expandOnRowDoubleClicked) {
+            handleExpanded();
+          }
+        }
+      },
+      [defaultExpanderDisabled, expandOnRowDoubleClicked, expandableRows, handleExpanded, onRowDoubleClicked, row]
+    );
 
-  const extendedRowStyle = getConditionalStyle(row, conditionalRowStyles);
-  const hightlightSelected = selectableRowsHighlight && selected;
-  const inheritStyles = inheritConditionalStyles ? extendedRowStyle : null;
+    const extendedRowStyle = getConditionalStyle(row, conditionalRowStyles);
+    const hightlightSelected = selectableRowsHighlight && selected;
+    const inheritStyles = inheritConditionalStyles ? extendedRowStyle : null;
 
-  return (
-    <>
-      <TableRowStyle
-        id={`row-${id}`}
-        role="row"
-        striped={striped}
-        highlightOnHover={highlightOnHover}
-        pointerOnHover={!defaultExpanderDisabled && showPointer}
-        dense={dense}
-        onClick={handleRowClick}
-        onDoubleClick={handleRowDoubleClick}
-        className="rdt_TableRow"
-        extendedRowStyle={extendedRowStyle}
-        selected={hightlightSelected}
-      >
-        {selectableRows && (
-          <TableCellCheckbox
-            name={`select-row-${row[keyField]}`}
-            row={row}
-            selected={selected}
-          />
-        )}
-
-        {expandableRows && !expandableRowsHideExpander && (
-          <TableCellExpander
-            expanded={expanded}
-            row={row}
-            onRowExpandToggled={handleExpanded}
-            disabled={defaultExpanderDisabled}
-          />
-        )}
-
-        {columns.map(column => (
-          <TableCell
-            id={`cell-${column.id}-${row[keyField]}`}
-            key={`cell-${column.id}-${row[keyField]}`}
-            column={column}
-            row={row}
-          />
-        ))}
-      </TableRowStyle>
-
-      {expandableRows && expanded && (
-        <ExpanderRow
-          key={`expander--${row[keyField]}`}
-          data={row}
-          extendedRowStyle={inheritStyles}
+    return (
+      <>
+        <TableRowStyle
+          id={`row-${id}`}
+          role="row"
+          striped={striped}
+          highlightOnHover={highlightOnHover}
+          pointerOnHover={!defaultExpanderDisabled && showPointer}
+          dense={dense}
+          onClick={handleRowClick}
+          onDoubleClick={handleRowDoubleClick}
+          className="rdt_TableRow"
+          extendedRowStyle={extendedRowStyle}
+          selected={hightlightSelected}
         >
-          {expandableRowsComponent}
-        </ExpanderRow>
-      )}
-    </>
-  );
-});
+          {selectableRows && <TableCellCheckbox name={`select-row-${row[keyField]}`} row={row} selected={selected} />}
+
+          {expandableRows && !expandableRowsHideExpander && (
+            <TableCellExpander
+              expanded={expanded}
+              row={row}
+              onRowExpandToggled={handleExpanded}
+              disabled={defaultExpanderDisabled}
+            />
+          )}
+
+          {columns.map((column) => (
+            <TableCell
+              id={`cell-${column.id}-${row[keyField]}`}
+              key={`cell-${column.id}-${row[keyField]}`}
+              column={column}
+              row={row}
+            />
+          ))}
+        </TableRowStyle>
+
+        {expandableRows && expanded && (
+          <ExpanderRow key={`expander--${row[keyField]}`} data={row} extendedRowStyle={inheritStyles}>
+            {expandableRowsComponent}
+          </ExpanderRow>
+        )}
+      </> //
+    );
+  }
+);
 
 TableRow.propTypes = {
   id: PropTypes.any.isRequired,
@@ -164,11 +162,8 @@ TableRow.propTypes = {
   highlightOnHover: PropTypes.bool.isRequired,
   pointerOnHover: PropTypes.bool.isRequired,
   dense: PropTypes.bool.isRequired,
-  expandableRowsComponent: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.func,
-  ]).isRequired,
+  expandableRowsComponent: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node, PropTypes.func])
+    .isRequired,
   expandableRowsHideExpander: PropTypes.bool.isRequired,
   expandOnRowClicked: PropTypes.bool.isRequired,
   expandOnRowDoubleClicked: PropTypes.bool.isRequired,

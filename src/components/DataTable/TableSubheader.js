@@ -16,9 +16,9 @@ const SubheaderWrapper = styled.header`
   align-items: center;
   padding: 4px 16px 4px 24px;
   width: 100%;
-  justify-content: ${props => alignMap[props.align]};
-  flex-wrap: ${props => (props.wrapContent ? 'wrap' : 'nowrap')};
-  ${props => props.theme.subHeader.style}
+  justify-content: ${(props) => alignMap[props.align]};
+  flex-wrap: ${(props) => (props.wrapContent ? 'wrap' : 'nowrap')};
+  ${(props) => props.theme.subHeader.style}
 `;
 
 const TableSubheader = ({ align, wrapContent, children }) => (
@@ -28,11 +28,7 @@ const TableSubheader = ({ align, wrapContent, children }) => (
 );
 
 TableSubheader.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.node),
-    PropTypes.node,
-    PropTypes.string,
-  ]),
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node, PropTypes.string]),
   align: PropTypes.oneOf(['center', 'left', 'right']),
   wrapContent: PropTypes.bool,
 };

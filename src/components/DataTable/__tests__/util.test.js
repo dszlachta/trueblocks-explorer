@@ -12,7 +12,11 @@ import {
   isRowSelected,
 } from '../util';
 
-const row = Object.freeze({ id: 1, name: 'iamaname', properties: { nested: 'iamnesting', items: [{ id: 1, name: 'iamarrayname' }] } });
+const row = Object.freeze({
+  id: 1,
+  name: 'iamaname',
+  properties: { nested: 'iamnesting', items: [{ id: 1, name: 'iamarrayname' }] },
+});
 
 describe('isEmpty', () => {
   test('if the value is a number return false', () => {
@@ -84,7 +88,11 @@ describe('sort', () => {
   });
 
   test('built in sort nested keys', () => {
-    const rows = sort([{ item: { name: 'anakin' } }, { item: { name: 'leia' } }, { item: { name: 'vadar' } }], 'item.name', 'desc');
+    const rows = sort(
+      [{ item: { name: 'anakin' } }, { item: { name: 'leia' } }, { item: { name: 'vadar' } }],
+      'item.name',
+      'desc'
+    );
 
     expect(rows[0].item.name).toEqual('vadar');
     expect(rows[rows.length - 1].item.name).toEqual('anakin');
@@ -139,13 +147,13 @@ describe('getProperty', () => {
   });
 
   test('getProperty sreturn a value when a string selector is an function', () => {
-    const property = getProperty(row, r => r.name);
+    const property = getProperty(row, (r) => r.name);
 
     expect(property).toEqual('iamaname');
   });
 
   test('getProperty should handle when a format function is passed', () => {
-    const property = getProperty(row, 'name', r => r.name.toUpperCase());
+    const property = getProperty(row, 'name', (r) => r.name.toUpperCase());
 
     expect(property).toEqual('IAMANAME');
   });
@@ -165,7 +173,14 @@ describe('insertItem', () => {
 
 describe('removeItem', () => {
   test('should return the correct array items', () => {
-    const array = removeItem([{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }], { id: 2, name: 'bar' }, 'id');
+    const array = removeItem(
+      [
+        { id: 1, name: 'foo' },
+        { id: 2, name: 'bar' },
+      ],
+      { id: 2, name: 'bar' },
+      'id'
+    );
 
     expect(array).toEqual([{ id: 1, name: 'foo' }]);
   });
@@ -177,7 +192,14 @@ describe('removeItem', () => {
   });
 
   test('should fallback to referne check is the keyField is mismatched', () => {
-    const array = removeItem([{ id: 1, name: 'foo' }, { id: 2, name: 'bar' }], { id: 2, name: 'bar' }, 'UUID');
+    const array = removeItem(
+      [
+        { id: 1, name: 'foo' },
+        { id: 2, name: 'bar' },
+      ],
+      { id: 2, name: 'bar' },
+      'UUID'
+    );
 
     expect(array).toEqual([{ id: 1, name: 'foo' }]);
   });
@@ -208,13 +230,13 @@ describe('getSortDirection', () => {
 
 describe('handleFunctionProps', () => {
   test('should resolve the property if it is a function with indeterminate = true', () => {
-    const prop = handleFunctionProps({ fakeProp: indeterminate => (indeterminate ? 'yay' : 'nay') }, true);
+    const prop = handleFunctionProps({ fakeProp: (indeterminate) => (indeterminate ? 'yay' : 'nay') }, true);
 
     expect(prop).toEqual({ fakeProp: 'yay' });
   });
 
   test('should resolve the property if it is a function with indeterminate = false', () => {
-    const prop = handleFunctionProps({ fakeProp: indeterminate => (indeterminate ? 'yay' : 'nay') }, false);
+    const prop = handleFunctionProps({ fakeProp: (indeterminate) => (indeterminate ? 'yay' : 'nay') }, false);
 
     expect(prop).toEqual({ fakeProp: 'nay' });
   });
@@ -226,12 +248,11 @@ describe('handleFunctionProps', () => {
   });
 });
 
-
 describe('getConditionalStyle', () => {
   test('should return a row style if the expression matches', () => {
     const rowStyleExpression = [
       {
-        when: r => r.name === 'luke',
+        when: (r) => r.name === 'luke',
         style: {
           backgroundColor: 'green',
         },
@@ -246,7 +267,7 @@ describe('getConditionalStyle', () => {
   test('should return {} if the expression does not match', () => {
     const rowStyleExpression = [
       {
-        when: r => r.name === 'wookie',
+        when: (r) => r.name === 'wookie',
         style: {
           backgroundColor: 'green',
         },
@@ -269,7 +290,7 @@ describe('getConditionalStyle', () => {
   test('should default to an empty object if the style property is not provided', () => {
     const rowStyleExpression = [
       {
-        when: r => r.name === 'luke',
+        when: (r) => r.name === 'luke',
       },
     ];
 
@@ -311,7 +332,10 @@ describe('getConditionalStyle', () => {
 describe('isRowSelected', () => {
   test('when there is a keyField in the data set', () => {
     const currentRow = { id: 2, name: 'vadar' };
-    const selectedRows = [{ id: 1, name: 'luke' }, { id: 2, name: 'vadar' }];
+    const selectedRows = [
+      { id: 1, name: 'luke' },
+      { id: 2, name: 'vadar' },
+    ];
 
     expect(isRowSelected(currentRow, selectedRows, 'id')).toBe(true);
   });
@@ -325,7 +349,10 @@ describe('isRowSelected', () => {
 
   test('when the row is not selected', () => {
     const currentRow = { id: 3, name: 'leia' };
-    const selectedRows = [{ id: 1, name: 'luke' }, { id: 2, name: 'vadar' }];
+    const selectedRows = [
+      { id: 1, name: 'luke' },
+      { id: 2, name: 'vadar' },
+    ];
 
     expect(isRowSelected(currentRow, selectedRows, 'id')).toBe(false);
   });
