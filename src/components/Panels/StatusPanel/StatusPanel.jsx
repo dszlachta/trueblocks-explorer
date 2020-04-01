@@ -19,12 +19,11 @@ export const StatusPanel = () => {
     if (error) {
       status = statusDefault;
     } else {
-      if (!data)
-        status = 'loading...'
+      if (!data) status = 'loading...';
       else {
         delete data['types'];
         status = data;
-        dispatch({ 'type': 'success', 'payload': status })
+        dispatch({ type: 'success', payload: status });
       }
     }
   }, [data]);
@@ -32,24 +31,21 @@ export const StatusPanel = () => {
   const expanded = usePanels().state.status;
   return (
     <Panel title="Status" options={{ type: 'status', expanded: expanded }}>
-      {
-        expanded ?
-          <>
-            <StatusTable status={status} />
-            <StatusError error={error} />
-          </>
-          :
-          <></>
-      }
+      {expanded ? (
+        <>
+          <StatusTable status={status} />
+          <StatusError error={error} />
+        </> //
+      ) : (
+        <></> //
+      )}
     </Panel>
   );
 };
 
 const StatusError = ({ error }) => {
-  return (
-    error ? <div className="warning">Error: Is the API running?</div> : <></>
-  );
-}
+  return error ? <div className="warning">Error: Is the API running?</div> : <></>; //
+};
 
 const StatusTable = () => {
   const status = useStatusData();
@@ -69,9 +65,31 @@ const StatusTable = () => {
   const greenlight = <GridIcon fill="#6b902a" color="#333" size="15px" />;
   const yellowlight = <GridIcon fill="yellow" color="#333" size="15px" />;
   const redlight = <GridIcon fill="red" color="#333" size="15px" />;
-  const fDetails = <><br /><small><i>{'final_behind'}</i></small></>;
-  const sDetails = <><br /><small><i>{'staging_behind'}</i></small></>;
-  const uDetails = <><br /><small><i>{'unripe_behind'}</i></small></>;
+  const fDetails = (
+    <>
+      <br />
+      <small>
+        <i>{'final_behind'}</i>
+      </small>
+    </> //
+  );
+  const sDetails = (
+    <>
+      <br />
+      <small>
+        <i>{'staging_behind'}</i>
+      </small>
+    </> //
+  );
+  const uDetails = (
+    <>
+      <br />
+      <small>
+        <i>{'unripe_behind'}</i>
+      </small>
+    </> //
+  );
+
   return (
     <div>
       <div className="status-details">
@@ -96,24 +114,26 @@ const StatusTable = () => {
         </Section>
 
         <Section title="Software Versions">
-          <div className="doublewide">
-            - {status.client_version}
-          </div>
-          <div className="doublewide">
-            - {status.trueblocks_version}
-          </div>
+          <div className="doublewide">- {status.client_version}</div>
+          <div className="doublewide">- {status.trueblocks_version}</div>
         </Section>
       </div>
     </div>
   );
-}
+};
 
 const SectionItem = ({ name, value, wide, icon, details }) => {
   if (!wide) {
     return (
       <>
-        <div className="left">{name}:<br />{icon}</div>
-        <div className="right">{value}{details}</div>
+        <div className="left">
+          {name}:<br />
+          {icon}
+        </div>
+        <div className="right">
+          {value}
+          {details}
+        </div>
       </>
     );
   }
@@ -123,7 +143,7 @@ const SectionItem = ({ name, value, wide, icon, details }) => {
       <div className="bold">{name}:</div> {value}
     </div>
   );
-}
+};
 
 const Section = ({ title, children }) => {
   return (
@@ -131,9 +151,9 @@ const Section = ({ title, children }) => {
       <h4>{title}</h4>
       {children}
       <div className="separator" />
-   </>
+    </>
   );
-}
+};
 
 /*
   var final_behind = '';

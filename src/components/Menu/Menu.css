@@ -36,6 +36,14 @@
 }
 
 /*------------------------------------------*/
+.menu-separator {
+  align-self: center;
+  color: var(--grey-color);
+  background-color: none !important;
+  opacity: 0.75;
+}
+
+/*------------------------------------------*/
 .menu-disabled {
   display: flex;
   justify-content: space-between;

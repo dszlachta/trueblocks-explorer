@@ -38,10 +38,11 @@
   --color-card: black;
   --bgcolor-card: white;
   /* --green-color: #97cc3b; search for this elsewhere */
-  --green-color: #6b902a;  /* search for this elsewhere */
+  --green-color: #6b902a; /* search for this elsewhere */
   --red-color: #b40505;
   --yellow-color: yellow;
   --white-color: white;
+  --grey-color: #999;
   --h4-color: #03415d;
 }
 
