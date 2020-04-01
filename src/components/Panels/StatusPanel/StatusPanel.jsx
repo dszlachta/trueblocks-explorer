@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useSWR from 'swr';
 
-import { formatNumber } from 'components/utils';
+import { formatNumber, dataFetcher } from 'components/utils';
 import { Panel } from 'components/';
 import { useStatus, useStatusMeta, useStatusData, statusDefault } from 'store';
 import { usePanels } from 'store';
@@ -10,14 +10,9 @@ import GridIcon from 'assets/icons/gridicon';
 import './StatusPanel.css';
 
 //----------------------------------------------------------------------
-const fetcher = url => fetch(url).then((r) => {
-  return r.json()
-});
-
-//----------------------------------------------------------------------
 export const StatusPanel = () => {
   const dispatch = useStatus().dispatch;
-  const { data, error } = useSWR("http://localhost:8080/status", fetcher);
+  const { data, error } = useSWR('http://localhost:8080/status', dataFetcher);
 
   let status = '';
   useEffect(() => {

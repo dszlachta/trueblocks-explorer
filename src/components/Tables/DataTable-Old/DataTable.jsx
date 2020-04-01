@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { verbose } from 'store';
+import { isVerbose } from 'store';
 import { Editable } from 'components'
 import { TableColumn, defaultTableOptions } from '../Table';
 import { formatFieldByType } from 'components/utils';
@@ -81,7 +81,7 @@ const DataTableHeader = ({ children }) => {
 
 //---------------------------------------------------------------
 export const defaultDataFields = {
-  id: { hidden: !verbose },
+  id: { hidden: !isVerbose },
   sizeInBytes: { type: 'filesize', name: 'size' },
   deleted: { type: 'bool' }
 }

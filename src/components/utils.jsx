@@ -1,3 +1,13 @@
+//----------------------------------------------------------------------------
+export const notEmpty = (fieldName, value) => {
+  return value === "" ? "field may not be empty" : "";
+};
+
+//----------------------------------------------------------------------
+export const dataFetcher = url => fetch(url).then((r) => {
+  return r.json()
+});
+
 /*
 export const Logo = () => (
   <div

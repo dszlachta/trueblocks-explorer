@@ -4,9 +4,14 @@
   "private": true,
   "dependencies": {
     "axios": "^0.19.2",
+    "deepmerge": "^4.2.2",
     "husky": "^4.2.3",
     "jquery": "^3.4.1",
+    "lodash.orderby": "^4.6.0",
+    "lodash": "^4.17.15",
+    "shortid": "^2.2.15",
     "mousetrap": "^1.6.5",
+    "styled-components": ">= ^3.2.3 || >= ^4.0.0 || >= ^5.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-markdown": "^4.3.1",
@@ -37,7 +42,6 @@
     ]
   },
   "devDependencies": {
-    "husky": "^4.2.3",
-    "react-table": "^7.0.0"
+    "husky": "^4.2.3"
   }
 }

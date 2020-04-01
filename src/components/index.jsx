@@ -4,8 +4,9 @@ import { Menu, MenuItem } from './Menu';
 import { Editable } from './Editable';
 import { SearchBar } from './SearchBar';
 import { Panel } from './Panels/Panel';
-import { DataTable, defDataTableOptions } from './Tables';
-import { ObjectTable, defObjTableOptions } from './Tables';
+import { DataTable } from './DataTable/DataTable';
+import { createTheme } from './DataTable/themes';
+import { ObjectTable, defObjTableOptions } from './Tables/ObjectTable/ObjectTable';
 import { MenuPanel } from './Panels/MenuPanel';
 import { ContentPanel } from './Panels/ContentPanel';
 import { StatusPanel } from './Panels/StatusPanel';
@@ -16,16 +17,17 @@ export {
   Card,
   Group,
   Debug,
-  Menu, MenuItem,
+  Menu,
+  MenuItem,
   Editable,
   SearchBar,
   Panel,
-
-  DataTable, defDataTableOptions,
-  ObjectTable, defObjTableOptions,
-
+  DataTable,
+  createTheme,
+  ObjectTable,
+  defObjTableOptions,
   MenuPanel,
   ContentPanel,
   StatusPanel,
-  HelpPanel,
+  HelpPanel
 };

@@ -34,12 +34,13 @@ const PageHeaderLeft = () => {
 //-----------------------------------------------------
 const PageHeaderUpperRight = () => {
   const data = useStatusData();
+  const meta = useStatusMeta();
   return (
-    <div className="right-top">
-      <Pill text="api" status={data.trueblocks_version !== ''} decorate={true} route="/settings/api" />
-      <Pill text="node" status={data.client_version !== ''} decorate={true} route="/settings/node" />
-      <Pill text="scraper" status={data.is_scraping} decorate={false} route="/settings/scraper" />
-      <Pill text="sharing" status={false} decorate={false} route="/settings/sharing" />
+    <div className='right-top'>
+      <Pill text="api" status={data.trueblocks_version !== ''} decorate={true} route='/settings/api' />
+      <Pill text='node' status={Number.isInteger(meta.client)} decorate={true} route='/settings/node' />
+      <Pill text='scraper' status={data.is_scraping} decorate={false} route='/settings/scraper' />
+      <Pill text='sharing' status={false} decorate={false} route='/settings/sharing' />
     </div>
   );
 }
@@ -128,17 +129,19 @@ function max(a, b) { return a > b ? a : b }
 //   return date + ' ' + time + ' UTC';
 // }
 
-function str2Date(dateTimeIn) {
+function str2Date(dateTimeIn = "2020-02-02 02:02:02.") {
   dateTimeIn = dateTimeIn.replace(/T/, " ");
-//  console.log('dateTimeIn: ', dateTimeIn);
-  let dateTime = dateTimeIn.includes("T") ? dateTimeIn.split("T") : dateTimeIn.split(" ");
-//  console.log('dateTime: ', dateTime, 'len: ', dateTime);
+  let dateTime = dateTimeIn.split(" ");
+  if (dateTime.length < 1)
+    return new Date();
 
   var date = dateTime[0].split("-");
   var yyyy = date[0];
   var mm = date[1];
   var dd = date[2];
 //  console.log(yyyy, mm, dd);
+
+  if (dateTime.length < 2) return new Date(yyyy, mm, dd, 0, 0, 0);
 
   var time = dateTime[1].split(":");
   var h = time[0];

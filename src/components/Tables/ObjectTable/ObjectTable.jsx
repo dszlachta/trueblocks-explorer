@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types';
 
-import { verbose } from 'store';
+import { isVerbose } from 'store';
 import { Editable } from 'components'
 import { TableColumn, defaultTableOptions } from '../Table';
 import { formatFieldByType } from 'components/utils';
@@ -65,8 +65,8 @@ const ObjectTableSider = ({ children }) => {
 
 //---------------------------------------------------------------
 export const defaultObjFields = {
-  id: { hidden: !verbose },
-  deleted: { type: 'bool', hidden: !verbose },
-  route: { hidden: !verbose },
+  id: { hidden: !isVerbose() },
+  deleted: { type: 'bool', hidden: !isVerbose() },
+  route: { hidden: !isVerbose() },
   sizeInBytes: { type: 'filesize', name: 'size' },
 }

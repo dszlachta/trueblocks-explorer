@@ -1,4 +1,4 @@
-export const dashboardMock = [
+export const dashboardConfig = [
   {
     id: '0x13..01',
     name: 'Projects',

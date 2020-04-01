@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import { panelDefault, panelReducer, usePanels } from './store_panel';
 import { statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta } from './store_status';
-import { projectsDefault, projectsReducer, useProjects } from './store_projects';
-import { signaturesDefault, signaturesReducer, useSignatures } from './store_signatures';
-import { dashboardDefault, dashboardReducer, useDashboard } from './store_dashboard';
+import { projectSchema, projectsDefault, projectsReducer, useProjects } from './store_projects';
+import { signatureSchema, signaturesDefault, signaturesReducer, useSignatures } from './store_signatures';
+import { dashboardSchema, dashboardDefault, dashboardReducer, useDashboard } from './store_dashboard';
 import { menusDefault, menusReducer, useMenus } from './store_menus';
 
 //----------------------------------------------------------------------
@@ -13,23 +13,29 @@ const GlobalContext = React.createContext({});
 export default GlobalContext;
 
 export {
-  panelDefault,
-  panelReducer,
-  usePanels,
-  statusDefault,
-  statusReducer,
-  useStatus,
-  useStatusData,
-  useStatusMeta,
-  projectsDefault,
-  projectsReducer,
-  useProjects,
-  signaturesDefault,
-  signaturesReducer,
-  useSignatures,
+  dashboardSchema,
   dashboardDefault,
   dashboardReducer,
   useDashboard,
+
+  projectSchema,
+  projectsDefault,
+  projectsReducer,
+  useProjects,
+  
+  signatureSchema,
+  signaturesDefault,
+  signaturesReducer,
+  useSignatures,
+
+  panelDefault,
+  panelReducer,
+  usePanels,
+
+  statusDefault,
+  statusReducer,
+  useStatus, useStatusData, useStatusMeta,
+
   menusDefault,
   menusReducer,
   useMenus
@@ -57,5 +63,7 @@ export const fetchURL = (url, setHelp) => {
 };
 
 //----------------------------------------------------------------------
-export const verbose = false;
+export function isVerbose() {
+  return false;
+}
 export const debug = true;

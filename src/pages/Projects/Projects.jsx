@@ -1,8 +1,7 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
-import { verbose } from "store";
-import { useProjects, handleClick } from "store";
+import { useProjects, projectSchema, handleClick } from "store";
 import { Card, ObjectTable, Debug } from "components/";
 import { sortArray, currentPage } from "components/utils";
 import ToggleLeft from "assets/icons/toggle-left";
@@ -131,7 +130,7 @@ const spinProjects = (projects, dispatch, updateFunc, active) => {
       >
         <ObjectTable
           data={project}
-          fields={projectFields}
+          fields={projectSchema}
           updateFunc={updateFunc}
         />
       </Card>
@@ -142,26 +141,6 @@ const spinProjects = (projects, dispatch, updateFunc, active) => {
     return <div style={{ marginLeft: "2%", marginBottom: "2%" }}>[None]</div>;
 
   return ret;
-};
-
-//----------------------------------------------------------------------------
-const notEmpty = (fieldName, value) => {
-  return value === "" ? "field may not be empty" : "";
-};
-
-//----------------------------------------------------------------------------
-const projectFields = {
-  id: { hidden: !verbose },
-  group: { editable: true, onValidate: notEmpty, onAccept: null },
-  name: { editable: true, onValidate: null, onAccept: null },
-  client: { type: "object", editable: true, onValidate: null, onAccept: null },
-  addresses: { type: "array" },
-  txs: { name: "trans cnt", type: "number" },
-  traces: { name: "trace cnt", type: "number" },
-  sizeInBytes: { name: "size", type: "filesize" },
-  deltas: { type: "number" },
-  monitored: { hidden: !verbose, type: "bool" },
-  deleted: { hidden: !verbose, type: "bool" }
 };
 
 //----------------------------------------------------------------------------

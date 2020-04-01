@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import GlobalContext from 'store';
+import GlobalContext, { isVerbose } from "store";
+import { notEmpty } from 'components/utils';
 
 //----------------------------------------------------------------------
 export const projectsDefault = [
@@ -200,3 +201,18 @@ const replaceRecord = (projects, record, id) => {
 export const useProjects = () => {
   return useContext(GlobalContext).projects;
 }
+
+//----------------------------------------------------------------------------
+export const projectSchema = {
+  id: { hidden: !isVerbose() },
+  group: { editable: true, onValidate: notEmpty, onAccept: null },
+  name: { editable: true, onValidate: null, onAccept: null },
+  client: { type: "object", editable: true, onValidate: null, onAccept: null },
+  addresses: { type: "array" },
+  txs: { name: "trans cnt", type: "number" },
+  traces: { name: "trace cnt", type: "number" },
+  sizeInBytes: { name: "size", type: "filesize" },
+  deltas: { type: "number" },
+  monitored: { hidden: !isVerbose(), type: "bool" },
+  deleted: { hidden: !isVerbose(), type: "bool" }
+};
