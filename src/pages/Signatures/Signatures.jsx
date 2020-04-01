@@ -13,54 +13,19 @@ import { dataFetcher } from 'components/utils';
 
 import './Signatures.css';
 
-// async function dataFetcher2(url) {
-//   return await fetch(url)
-//     .then(response => {
-//       console.log('first: ', response);
-//       return response.json();
-//     })
-//     .then(body => {
-//       console.log('second: ', body.data);
-//       return body.data;
-//     })
-// }
-
-// fetch(url).then((r) => {
-//     return r.json();
-//   });
-
-//----------------------------------------------------------------------
-// export const fetchURL2 = (url) => {
-//   return dataFetcher(url);
-// //   return fetch(url)
-// //     .then((r) => {
-// //       if (r.status !== 200) throw new Error();
-// //       return r.text();
-// //     })
-// //     .then((t) => {
-// // //      console.log('result: ', t);
-// // //      console.log('result: ', JSON.parse(t).data);
-// //       const parsed = JSON.parse(t); //.then((p) => { return p; });
-// //       return { data: parsed, error: null };
-// //     })
-// //     .catch((e) => {
-// //       console.log('error: ', e);
-// //       return { data: null, error: e }
-// //     });
-// };
-
 export class Signatures extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
+      error: '',
       source: 'monitored',
       sigs: []
-    }
+    };
   }
 
   async getData(source) {
-    const url = 'http://localhost:8080/abi?' + source + "&verbose=10";
+    const url = 'http://localhost:8080/abi?' + source;
     const response = await fetch(url);
     const data = await response.json();
     console.log('data: ', data);
@@ -68,18 +33,30 @@ export class Signatures extends React.Component {
     return data.data;
   }
 
-  async changeSource(me, newSource) {
+  async changeSource(me) {
     me.setState({
-      loading: true,
+      loading: true
     });
-    console.log('source: ', me.state.source, 'newSource: ', newSource);
-    const data = await me.getData(newSource);
+    let source = this.state.source;
+    switch (source) {
+      case 'monitored':
+        source = 'known';
+        break;
+      case 'known':
+        source = 'known&monitored';
+        break;
+      case 'known&monitored':
+        source = 'monitored';
+        break;
+      default:
+      // do nothing
+    }
     me.setState({
       ...me.state,
-      sigs: data,
+      sigs: await me.getData(source),
+      source: source,
       loading: false,
-      source: newSource
-    })
+    });
   }
 
   async componentDidMount() {
@@ -93,67 +70,75 @@ export class Signatures extends React.Component {
   }
 
   render() {
+    const nRecords = formatNumber(!isNaN(this.state.sigs.length) ? this.state.sigs.length : 0);
     return (
-      <div>
-        {this.state.loading ? (
-          <Panel
-            key='panel12'
-            options={{
-              expanded: true,
-              topIcon: <div className='table-message'>{formatNumber(this.state.sigs.length)} {this.state.source} encodings</div>
-            }}>
-            <button
-              key='button12'
-              onClick={() => {
-                this.changeSource(this, this.state.source === 'monitored' ? 'known' : 'monitored');
-              }}>
-              {`Current status: ${this.state.source ? 'on' : 'off'}`}
-            </button>
-            <div key='div12'>
-              {'Loading...'}
+      <Panel
+        key='sig_panel'
+        options={{
+          expanded: true,
+          topIcon: (
+            <div className='table-message'>
+              {nRecords} {this.state.source} encodings
             </div>
-          </Panel>
+          )
+        }}>
+        <button
+          key='sig_switch'
+          onClick={() => {
+            this.changeSource(this);
+          }}>
+          {`Switch source: ${this.state.source}`}
+        </button>
+        {this.state.loading ? (
+          <div key='sig_loading'>{'Loading...'}</div>
         ) : (
-            <Panel
-              key='panel12'
-              options={{
-                expanded: true,
-                topIcon: <div className='table-message'>{formatNumber(this.state.sigs.length)} {this.state.source} encodings</div>
-              }}>
-              <button
-                key='button12'
-                onClick={() => {
-                  this.changeSource(this, this.state.source === 'monitored' ? 'known' : 'monitored');
-                }}>
-                {`Current status: ${this.state.source ? 'on' : 'off'}`}
-              </button>
-              {/* <pre>{JSON.stringify(this.state.sigs, null, 2)}</pre> */}
-              <DataTable
-                key='dt12'
-                theme='solarized'
-                title='Function and Event Signatures'
-                defaultSortField='encoding'
-                columns={signatureSchema}
-                data={this.state.sigs}
-                keyField='encoding'
-                expandableRows
-                fixedHeader
-                pagination
-                // TrueBlocks customizations
-                paginateAtTop
-              />
-            </Panel>
-          )}
-      </div>
+          <DataTable
+            key='sig_data_table'
+            theme='solarized'
+            title='Function and Event Signatures'
+            defaultSortField='encoding'
+            columns={signatureSchema}
+            data={this.state.sigs}
+            keyField='encoding'
+            expandableRows
+            fixedHeader
+            pagination
+            // TrueBlocks customizations
+            paginateAtTop
+          />
+        )}
+      </Panel>
     );
   }
 }
 
-/*
-    );
-*/
+createTheme('defalutTableTheme', {
+  text: {
+    primary: '#268bd2',
+    secondary: '#2aa198'
+  },
+  background: {
+    default: 'none'
+  },
+  context: {
+    background: '#cb4b16',
+    text: '#FFFFFF'
+  },
+  divider: {
+    default: '#073642'
+  },
+  button: {
+    default: '#2aa198',
+    hover: 'rgba(0,0,0,.08)',
+    focus: 'rgba(255,255,255,.12)',
+    disabled: 'rgba(0,0,0,.12)'
+  },
+  sortFocus: {
+    default: '#2aa198'
+  }
+});
 
-// //----------------------------------------------------
+//----------------------------------------------------
 // export const Signatures = () => {
 //   const { state, dispatch } = useSignatures();
 //   const signatures = state;
@@ -258,28 +243,38 @@ export class Signatures extends React.Component {
   customStyles,
   */
 
-createTheme('defalutTableTheme', {
-  text: {
-    primary: '#268bd2',
-    secondary: '#2aa198'
-  },
-  background: {
-    default: 'none'
-  },
-  context: {
-    background: '#cb4b16',
-    text: '#FFFFFF'
-  },
-  divider: {
-    default: '#073642'
-  },
-  button: {
-    default: '#2aa198',
-    hover: 'rgba(0,0,0,.08)',
-    focus: 'rgba(255,255,255,.12)',
-    disabled: 'rgba(0,0,0,.12)'
-  },
-  sortFocus: {
-    default: '#2aa198'
-  }
-});
+// async function dataFetcher2(url) {
+//   return await fetch(url)
+//     .then(response => {
+//       console.log('first: ', response);
+//       return response.json();
+//     })
+//     .then(body => {
+//       console.log('second: ', body.data);
+//       return body.data;
+//     })
+// }
+
+// fetch(url).then((r) => {
+//     return r.json();
+//   });
+
+//----------------------------------------------------------------------
+// export const fetchURL2 = (url) => {
+//   return dataFetcher(url);
+// //   return fetch(url)
+// //     .then((r) => {
+// //       if (r.status !== 200) throw new Error();
+// //       return r.text();
+// //     })
+// //     .then((t) => {
+// // //      console.log('result: ', t);
+// // //      console.log('result: ', JSON.parse(t).data);
+// //       const parsed = JSON.parse(t); //.then((p) => { return p; });
+// //       return { data: parsed, error: null };
+// //     })
+// //     .catch((e) => {
+// //       console.log('error: ', e);
+// //       return { data: null, error: e }
+// //     });
+// };
