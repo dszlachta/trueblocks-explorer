@@ -4,7 +4,7 @@
   grid-area: status;
   background-color: var(--bgcolor2-panel);
   color: var(--color2-panel);
-  overflow: scroll;
+  overflow: hidden;
 }
 
 .status-details {
