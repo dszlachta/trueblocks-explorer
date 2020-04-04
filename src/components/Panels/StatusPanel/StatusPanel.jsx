@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useSWR from 'swr';
 
-import { formatNumber, dataFetcher } from 'components/utils';
+import { fmtNum, dataFetcher } from 'components/utils';
 import { Panel } from 'components/';
 import { useStatus, useStatusMeta, useStatusData, statusDefault } from 'store';
 import { usePanels } from 'store';
@@ -51,6 +51,10 @@ const StatusTable = () => {
   const status = useStatusData();
   const meta = useStatusMeta();
   const client = meta.client;
+  const finalized = meta.finalized;
+  const staging = meta.staging;
+  const unripe = meta.unripe;
+
   var status1 = (
     <div className={`${Number.isInteger(client) ? 'connected' : 'disconnected'}`}>
       {Number.isInteger(client) ? 'Connected' : 'Not Connected'}
@@ -62,6 +66,49 @@ const StatusTable = () => {
     </div>
   );
 
+  var final_behind = '';
+  if (client > 0) {
+    final_behind = '(';
+    final_behind += (client - finalized).toString();
+    var mins = (Math.floor(((client - finalized) * 100) / (60 / 14)) / 100).toString();
+    var x = mins + ' minutes';
+    if (mins > 120) {
+      x = fmtNum(mins / 60, 1, ' ') + ' hrs';
+    }
+    if (mins > 60 * 24) {
+      x = fmtNum(mins / (60 * 24), 1, ' ') + ' days';
+    }
+    final_behind += ' behind, ' + x;
+    final_behind += ')';
+  }
+
+  var staging_behind = '';
+  if (client > 0) {
+    staging_behind = '(' + (client - staging).toString();
+    mins = (Math.floor(((client - staging) * 100) / (60 / 14)) / 100).toString();
+    x = mins + ' minutes';
+    if (mins > 120) {
+      x = fmtNum(mins / 60, 1, ' ') + ' hrs';
+    }
+    if (mins > 60 * 24) {
+      x = fmtNum(mins / (60 * 24), 1, ' ') + ' days';
+    }
+    staging_behind += ' behind, ' + x;
+    staging_behind += ')';
+  }
+
+  var unripe_behind = '';
+  if (client > 0) {
+    unripe_behind = '(';
+    if (client - unripe > 0) {
+      unripe_behind += (client - unripe).toString();
+      unripe_behind += ' behind';
+    } else {
+      unripe_behind += 'caught up';
+    }
+    unripe_behind += ')';
+  }
+
   const greenlight = <GridIcon fill="#6b902a" color="#333" size="15px" />;
   const yellowlight = <GridIcon fill="yellow" color="#333" size="15px" />;
   const redlight = <GridIcon fill="red" color="#333" size="15px" />;
@@ -69,7 +116,7 @@ const StatusTable = () => {
     <>
       <br />
       <small>
-        <i>{'final_behind'}</i>
+        <i>{final_behind}</i>
       </small>
     </> //
   );
@@ -77,7 +124,7 @@ const StatusTable = () => {
     <>
       <br />
       <small>
-        <i>{'staging_behind'}</i>
+        <i>{staging_behind}</i>
       </small>
     </> //
   );
@@ -85,7 +132,7 @@ const StatusTable = () => {
     <>
       <br />
       <small>
-        <i>{'unripe_behind'}</i>
+        <i>{unripe_behind}</i>
       </small>
     </> //
   );
@@ -95,14 +142,14 @@ const StatusTable = () => {
       <div className="status-details">
         <Section title="Ethereum Node">
           <SectionItem name="Status" value={status1} />
-          <SectionItem name="Latest" value={formatNumber(meta.client)} />
+          <SectionItem name="Latest" value={fmtNum(meta.client)} />
         </Section>
 
         <Section title="TrueBlocks">
           <SectionItem name="Status" value={status2} />
-          <SectionItem name="Final" value={formatNumber(meta.finalized)} icon={greenlight} details={fDetails} />
-          <SectionItem name="Staging" value={formatNumber(meta.staging)} icon={yellowlight} details={sDetails} />
-          <SectionItem name="Unripe" value={formatNumber(meta.unripe)} icon={redlight} details={uDetails} />
+          <SectionItem name="Final" value={fmtNum(meta.finalized)} icon={greenlight} details={fDetails} />
+          <SectionItem name="Staging" value={fmtNum(meta.staging)} icon={yellowlight} details={sDetails} />
+          <SectionItem name="Unripe" value={fmtNum(meta.unripe)} icon={redlight} details={uDetails} />
         </Section>
 
         <Section title="Options">
@@ -134,7 +181,7 @@ const SectionItem = ({ name, value, wide, icon, details }) => {
           {value}
           {details}
         </div>
-      </>
+      </> //
     );
   }
 
@@ -151,51 +198,6 @@ const Section = ({ title, children }) => {
       <h4>{title}</h4>
       {children}
       <div className="separator" />
-    </>
+    </> //
   );
 };
-
-/*
-  var final_behind = '';
-  if (client > 0) {
-    final_behind = '(';
-    final_behind += (client - finalized).toString();
-    var mins = (Math.floor(((client - finalized) * 100) / (60 / 14)) / 100).toString();
-    var x = mins + ' minutes';
-    if (mins > 120) {
-      x = formatNumber(mins / 60, 1, ' ') + ' hours';
-    }
-    if (mins > 60 * 24) {
-      x = formatNumber(mins / (60 * 24), 1, ' ') + ' days';
-    }
-    final_behind += ' behind, ' + x;
-    final_behind += ')';
-  }
-
-  var staging_behind = '';
-  if (client > 0) {
-    staging_behind = '(' + (client - staging).toString();
-    mins = (Math.floor(((client - staging) * 100) / (60 / 14)) / 100).toString();
-    x = mins + ' minutes';
-    if (mins > 120) {
-      x = formatNumber(mins / 60, 1, ' ') + ' hours';
-    }
-    if (mins > 60 * 24) {
-      x = formatNumber(mins / (60 * 24), 1, ' ') + ' days';
-    }
-    staging_behind += ' behind, ' + x;
-    staging_behind += ')';
-  }
-
-  var unripe_behind = '';
-  if (client > 0) {
-    unripe_behind = '(';
-    if (client - object.unripe > 0) {
-      unripe_behind += (client - object.unripe).toString();
-      unripe_behind += ' behind';
-    } else {
-      unripe_behind += 'caught up';
-    }
-    unripe_behind += ')';
-  }
-*/

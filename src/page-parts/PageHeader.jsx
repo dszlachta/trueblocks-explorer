@@ -1,10 +1,11 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import { Link } from "react-router-dom";
-import { useStatusData, useStatusMeta } from "store";
-import logo from "assets/img/logo.png";
-import "./PageHeader.css";
+import { Link } from 'react-router-dom';
+import { useStatusData, useStatusMeta } from 'store';
+import { fmtNum } from 'components/utils';
+import logo from 'assets/img/logo.png';
+import './PageHeader.css';
 
 //-----------------------------------------------------
 export const PageHeader = () => {
@@ -24,7 +25,7 @@ const PageHeaderLeft = () => {
       <Link to="/">
         <img className="logo" alt={logo} src={logo} />
       </Link>
-      <div>{"TrueBlocks Account Explorer"}</div>
+      <div>{'TrueBlocks Account Explorer'}</div>
     </div>
   );
 };
@@ -33,70 +34,33 @@ const PageHeaderLeft = () => {
 const PageHeaderUpperRight = () => {
   const data = useStatusData();
   const meta = useStatusMeta();
-  const apiStatus = data.trueblocks_version !== "" && !data.is_testing;
-  const apiErrMsg = apiStatus
-    ? ""
-    : data.is_testing
-    ? "testing"
-    : "unavailable";
+  const apiStatus = data.trueblocks_version !== '' && !data.is_testing;
+  const apiErrMsg = apiStatus ? '' : data.is_testing ? 'testing' : 'unavailable';
   return (
     <div className="right-top">
-      <Pill
-        text="api"
-        status={apiStatus}
-        errMsg={apiErrMsg}
-        decorate={true}
-        route="/settings/api"
-      />
-      <Pill
-        text="node"
-        status={Number.isInteger(meta.client)}
-        decorate={true}
-        route="/settings/node"
-      />
-      <Pill
-        text="scraper"
-        status={data.is_scraping}
-        decorate={false}
-        route="/settings/scraper"
-      />
-      <Pill
-        text="sharing"
-        status={false}
-        decorate={false}
-        route="/settings/sharing"
-      />
+      <Pill text="api" status={apiStatus} errMsg={apiErrMsg} decorate={true} route="/settings/api" />
+      <Pill text="node" status={Number.isInteger(meta.client)} decorate={true} route="/settings/node" />
+      <Pill text="scraper" status={data.is_scraping} decorate={false} route="/settings/scraper" />
+      <Pill text="sharing" status={false} decorate={false} route="/settings/sharing" />
     </div>
   );
 };
 
 //-----------------------------------------------------
-const Pill = ({ text, status, errMsg = "unavailable", decorate, route }) => {
-  if (route !== undefined && route !== "") {
+const Pill = ({ text, status, errMsg = 'unavailable', decorate, route }) => {
+  if (route !== undefined && route !== '') {
     return (
       <Link to={route}>
-        <div
-          className={
-            "pill " +
-            (status ? "okay" : "warning") +
-            (!status && !decorate ? " strikeout" : "")
-          }
-        >
-          {text + " " + (decorate ? (status ? "ok" : " : " + errMsg) : "")}
+        <div className={'pill ' + (status ? 'okay' : 'warning') + (!status && !decorate ? ' strikeout' : '')}>
+          {text + ' ' + (decorate ? (status ? 'ok' : ' : ' + errMsg) : '')}
         </div>
       </Link>
     );
   }
 
   return (
-    <div
-      className={
-        "pill " +
-        (status ? "okay" : "warning") +
-        (!status && !decorate ? " strikeout" : "")
-      }
-    >
-      {text + (decorate ? (status ? " ok" : " unavailable") : "")}
+    <div className={'pill ' + (status ? 'okay' : 'warning') + (!status && !decorate ? ' strikeout' : '')}>
+      {text + (decorate ? (status ? ' ok' : ' unavailable') : '')}
     </div>
   );
 };
@@ -112,7 +76,7 @@ const PageHeaderLowerRight = () => {
   const ud = meta.client - u;
   const stats = (
     <span>
-      {f} ({fd}) / {s} ({sd}) / {u} ({ud}) / {meta.client} -{" "}
+      {f} ({fmtNum(fd)}) / {s} ({fmtNum(sd)}) / {u} ({fmtNum(ud)}) / {meta.client} -{' '}
     </span>
   );
 
@@ -131,7 +95,7 @@ const PageHeaderLowerRight = () => {
   let thenSecs = 0;
   // console.log(status.data[0]);
   if (data.date) {
-    thenStr = data.date.replace(/ UTC/, ".000Z").replace(/ /, "T");
+    thenStr = data.date.replace(/ UTC/, '.000Z').replace(/ /, 'T');
     // console.log('thenStr: ', thenStr);
     const thenDate = str2Date(thenStr);
     // console.log('thenDate: ', thenDate);
@@ -162,28 +126,13 @@ function max(a, b) {
   return a > b ? a : b;
 }
 
-// function pad2(n) {
-//   if (n > 9)
-//     return n;
-//   return '0' + n;
-// }
-
-// function formatDate(givenDate) {
-//   const mos = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-//   const dys = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-//   const moName = mos[givenDate.getUTCMonth()];
-//   const daName = dys[givenDate.getUTCDay()];
-//   const date = daName + ', ' + moName + ' ' + givenDate.getUTCDate() + ', ' + givenDate.getUTCFullYear();
-//   const time = pad2(givenDate.getUTCHours()) + ":" + pad2(givenDate.getUTCMinutes()) + ":" + pad2(givenDate.getUTCSeconds());
-//   return date + ' ' + time + ' UTC';
-// }
-
-function str2Date(dateTimeIn = "2020-02-02 02:02:02.") {
-  dateTimeIn = dateTimeIn.replace(/T/, " ");
-  let dateTime = dateTimeIn.split(" ");
+//-----------------------------------------------------
+function str2Date(dateTimeIn = '2020-02-02 02:02:02.') {
+  dateTimeIn = dateTimeIn.replace(/T/, ' ');
+  let dateTime = dateTimeIn.split(' ');
   if (dateTime.length < 1) return new Date();
 
-  var date = dateTime[0].split("-");
+  var date = dateTime[0].split('-');
   var yyyy = date[0];
   var mm = date[1];
   var dd = date[2];
@@ -191,10 +140,10 @@ function str2Date(dateTimeIn = "2020-02-02 02:02:02.") {
 
   if (dateTime.length < 2) return new Date(yyyy, mm, dd, 0, 0, 0);
 
-  var time = dateTime[1].split(":");
+  var time = dateTime[1].split(':');
   var h = time[0];
   var m = time[1];
-  var x = time[2].split("."); //get rid of that 00.0;
+  var x = time[2].split('.'); //get rid of that 00.0;
   var s = x[0];
   //  console.log(h, m, s);
 

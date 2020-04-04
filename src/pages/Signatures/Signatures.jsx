@@ -6,7 +6,7 @@ import { DataTable, createTheme } from 'components/';
 
 import { useSignatures, signatureSchema } from 'store';
 import { Panel } from 'components/';
-import { formatNumber } from 'components/utils';
+import { fmtNum } from 'components/utils';
 import { currentPage } from 'components/utils';
 import { fetchURL } from 'store';
 import { dataFetcher } from 'components/utils';
@@ -20,7 +20,7 @@ export class Signatures extends React.Component {
       loading: true,
       error: '',
       source: 'monitored',
-      sigs: []
+      sigs: [],
     };
   }
 
@@ -35,7 +35,7 @@ export class Signatures extends React.Component {
 
   async changeSource(me) {
     me.setState({
-      loading: true
+      loading: true,
     });
     let source = this.state.source;
     switch (source) {
@@ -65,41 +65,43 @@ export class Signatures extends React.Component {
     this.setState({
       ...this.state,
       sigs: data,
-      loading: false
+      loading: false,
     });
   }
 
   render() {
-    const nRecords = formatNumber(!isNaN(this.state.sigs.length) ? this.state.sigs.length : 0);
+    const nRecords = fmtNum(!isNaN(this.state.sigs.length) ? this.state.sigs.length : 0);
     return (
       <Panel
-        key='sig_panel'
+        key="sig_panel"
         options={{
           expanded: true,
           topIcon: (
-            <div className='table-message'>
+            <div className="table-message">
               {nRecords} {this.state.source} encodings
             </div>
-          )
-        }}>
+          ),
+        }}
+      >
         <button
-          key='sig_switch'
+          key="sig_switch"
           onClick={() => {
             this.changeSource(this);
-          }}>
+          }}
+        >
           {`Switch source: ${this.state.source}`}
         </button>
         {this.state.loading ? (
-          <div key='sig_loading'>{'Loading...'}</div>
+          <div key="sig_loading">{'Loading...'}</div>
         ) : (
           <DataTable
-            key='sig_data_table'
-            theme='solarized'
-            title='Function and Event Signatures'
-            defaultSortField='encoding'
+            key="sig_data_table"
+            theme="solarized"
+            title="Function and Event Signatures"
+            defaultSortField="encoding"
             columns={signatureSchema}
             data={this.state.sigs}
-            keyField='encoding'
+            keyField="encoding"
             expandableRows
             fixedHeader
             pagination
@@ -115,27 +117,27 @@ export class Signatures extends React.Component {
 createTheme('defalutTableTheme', {
   text: {
     primary: '#268bd2',
-    secondary: '#2aa198'
+    secondary: '#2aa198',
   },
   background: {
-    default: 'none'
+    default: 'none',
   },
   context: {
     background: '#cb4b16',
-    text: '#FFFFFF'
+    text: '#FFFFFF',
   },
   divider: {
-    default: '#073642'
+    default: '#073642',
   },
   button: {
     default: '#2aa198',
     hover: 'rgba(0,0,0,.08)',
     focus: 'rgba(255,255,255,.12)',
-    disabled: 'rgba(0,0,0,.12)'
+    disabled: 'rgba(0,0,0,.12)',
   },
   sortFocus: {
-    default: '#2aa198'
-  }
+    default: '#2aa198',
+  },
 });
 
 //----------------------------------------------------
