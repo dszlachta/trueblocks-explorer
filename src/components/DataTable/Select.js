@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import DropDownIcon from './icons/Dropdown';
+import Dropdown from 'assets/icons/dropdown';
 
 const SelectControl = styled.select`
   cursor: pointer;
@@ -50,7 +50,7 @@ const SelectWrapper = styled.div`
 const Select = (props) => (
   <SelectWrapper>
     <SelectControl {...props} />
-    <DropDownIcon />
+    <Dropdown />
   </SelectWrapper>
 );
 

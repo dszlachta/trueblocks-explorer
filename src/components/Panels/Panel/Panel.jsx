@@ -2,7 +2,8 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { usePanels, handleClick } from 'store';
+import { usePanels } from 'store';
+import { handleClick } from 'components/utils';
 import ChevronLeft from 'assets/icons/chevron-left';
 import ChevronRight from 'assets/icons/chevron-right';
 import './Panel.css';

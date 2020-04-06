@@ -6,7 +6,7 @@ import { SearchBar } from './SearchBar';
 import { Panel } from './Panels/Panel';
 import { DataTable } from './DataTable/DataTable';
 import { createTheme } from './DataTable/themes';
-import { ObjectTable, defObjTableOptions } from './Tables/ObjectTable/ObjectTable';
+import { ObjectTable2, ObjectTable, defObjTableOptions } from './Tables/ObjectTable/ObjectTable';
 import { MenuPanel } from './Panels/MenuPanel';
 import { ContentPanel } from './Panels/ContentPanel';
 import { StatusPanel } from './Panels/StatusPanel';
@@ -24,6 +24,7 @@ export {
   Panel,
   DataTable,
   createTheme,
+  ObjectTable2,
   ObjectTable,
   defObjTableOptions,
   MenuPanel,

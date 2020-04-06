@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import useSWR from 'swr';
 import ReactMarkdown from 'react-markdown';
 
-import { usePanels, handleClick, fetchURL } from 'store';
+import { usePanels } from 'store';
 import { Panel } from 'components/';
-import { currentPage } from 'components/utils';
+import { currentPage, getHelpMarkdown, handleClick } from 'components/utils';
+
 import HelpCircle from 'assets/icons/help-circle';
 import './HelpPanel.css';
 
@@ -18,8 +19,8 @@ export const HelpPanel = () => {
   //setter = setHelp;
   const { page, subpage } = currentPage();
   const helpURL = 'http://localhost:8080/help/' + page + (subpage !== '' ? '/' + subpage : '') + '.md';
-  useSWR(helpURL, fetchURL(helpURL, setHelp));
-
+  useSWR(helpURL, getHelpMarkdown(helpURL, setHelp));
+//'#### Error\nFailed to load: **' + url.replace(/http:\/\/localhost:8080\/help\//, '') + '**'
   const action = { type: 'help' };
   const helpIcon = <HelpCircle fill="forestgreen" color="#333" onClick={(e) => handleClick(e, dispatch, action)} />;
   return (

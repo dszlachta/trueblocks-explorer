@@ -39,15 +39,39 @@ export const menusDefault = {
       ],
     },
     { label: 'Separator' },
-    { label: 'Names' },
+    {
+      label: 'Names',
+      exact: true,
+      items: [
+        { label: 'Your Names' },
+        { label: 'Wallets' },
+        { label: 'Tokens' },
+        { label: 'Prefunds' },
+        { label: 'Other Names' },
+        { label: 'Groups' },
+        { label: 'Separator' },
+        { label: 'Downloaded' },
+        { label: 'Common' },
+        { label: 'Names' },
+        { label: 'Params' },
+        { label: 'Cross' },
+        { label: 'Separator' },
+        { label: 'Your Blocks' },
+        { label: 'Known Blocks' },
+        { label: 'Dated Blocks' },
+      ]
+    },
     {
       label: 'Signatures',
-      items: [{ label: 'Known' }, { label: 'Monitored' }, { label: 'Both' }],
+      exact: true,
+      items: [
+        { label: 'Known' },
+        { label: 'Monitored' }
+      ],
     },
     {
       label: 'Digests',
       items: [
-        { label: 'Finalized' },
         { label: 'Finalized' },
         { label: 'Staged' },
         { label: 'Unripe' },

@@ -1,3 +1,44 @@
+//-----------------------------------------------------
+export const stateFromStorage = (key, defaultState) => {
+  const storage = localStorage.getItem(key);
+  if (storage === null) return defaultState;
+  return JSON.parse(storage);
+};
+
+//----------------------------------------------------------------------
+export const handleClick = (e, dispatch, action = {}) => {
+  e.preventDefault();
+  dispatch(action);
+};
+
+//----------------------------------------------------------------------
+export const getHelpMarkdown = (url, onSuccess, onFail) => {
+  fetch(url)
+    .then((r) => {
+      if (r.status !== 200) throw new Error('fetch to ' + url + ' failed.');
+      return r.text();
+    })
+    .then((t) => {
+      if (onSuccess)
+        onSuccess(t);
+    })
+    .catch((err) => {
+      if (onFail) {
+        onFail(err.name + ": " + err.message);
+      } else if (onSuccess) {
+        onSuccess(err.name + ": " + err.message);
+      }
+    });
+};
+
+//----------------------------------------------------------------------------
+export async function getServerData(route, query) {
+  const url = route + "?" + query;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data.data;
+}
+
 //----------------------------------------------------------------------------
 export const notEmpty = (fieldName, value) => {
   return value === '' ? 'field may not be empty' : '';

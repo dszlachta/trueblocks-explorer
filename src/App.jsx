@@ -1,23 +1,3 @@
-// DashBoard
-// dash
-// dashboard
-// dashboardDefault
-// dashboardDispatch
-// dashboardSchema
-// dashboardConfig
-// dashboardReducer
-// dashboardState
-// store_dashboard
-// store_dashboard_json
-// useDashboard
-
-// useMenus
-// usePanels
-// useStatus()
-// useDashboard
-// useProjects
-// useSignatures
-
 import React, { useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Mousetrap from 'mousetrap';
@@ -26,27 +6,26 @@ import { PageHeader, PageFooter, PageContent } from 'page-parts';
 import GlobalContext, {
   panelDefault,
   panelReducer,
-  dashboardDefault,
-  dashboardReducer,
-  projectsDefault,
-  projectsReducer,
-  signaturesDefault,
-  signaturesReducer,
   statusDefault,
   statusReducer,
   menusDefault,
   menusReducer,
 } from 'store';
+import { dashboardDefault, dashboardReducer } from 'store/dashboard';
+import { projectsDefault, projectsReducer } from 'store/projects';
+import { namesDefault, namesReducer } from 'store/names';
+import { signaturesDefault, signaturesReducer } from 'store/signatures';
+import { stateFromStorage } from 'components/utils';
+
 import 'App.css';
 
 //-----------------------------------------------------
 function App() {
+
   const [panelState, panelDispatch] = useReducer(panelReducer, stateFromStorage('panelState', panelDefault));
   const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, dashboardDefault);
-  const [projectsState, projectsDispatch] = useReducer(
-    projectsReducer,
-    stateFromStorage('projectsState', projectsDefault)
-  );
+  const [projectsState, projectsDispatch] = useReducer(projectsReducer, stateFromStorage('projectsState', projectsDefault));
+  const [namesState, namesDispatch] = useReducer(namesReducer, namesDefault);
   const [signaturesState, signaturesDispatch] = useReducer(signaturesReducer, signaturesDefault);
   const [statusState, statusDispatch] = useReducer(statusReducer, statusDefault);
   const [menusState, menusDispatch] = useReducer(menusReducer, menusDefault);
@@ -55,11 +34,28 @@ function App() {
     panels: { state: panelState, dispatch: panelDispatch },
     dashboard: { state: dashboardState, dispatch: dashboardDispatch },
     projects: { state: projectsState, dispatch: projectsDispatch },
+    names: { state: namesState, dispatch: namesDispatch },
     signatures: { state: signaturesState, dispatch: signaturesDispatch },
     status: { state: statusState, dispatch: statusDispatch },
     menus: { state: menusState, dispatch: menusDispatch },
   };
 
+  mapHotKeys(panelDispatch);
+
+  return (
+    <GlobalContext.Provider value={theGlobalState}>
+      <div className="whole-page">
+        <PageHeader />
+        <PageContent />
+        <PageFooter />
+      </div>
+    </GlobalContext.Provider>
+  );
+}
+export default App;
+
+//------------------------------------------------------
+const mapHotKeys = (panelDispatch) => {
   Mousetrap.bind(['alt+0'], function () {
     window.location = '/dashboard';
   });
@@ -108,30 +104,14 @@ function App() {
   Mousetrap.bind(['q s'], function () {
     panelDispatch({ type: 'status' });
   });
-
-  return (
-    <GlobalContext.Provider value={theGlobalState}>
-      <div className="whole-page">
-        <PageHeader />
-        <PageContent />
-        <PageFooter />
-      </div>
-    </GlobalContext.Provider>
-  );
 }
-export default App;
-
-//-----------------------------------------------------
-const stateFromStorage = (key, defaultState) => {
-  const storage = localStorage.getItem(key);
-  if (storage === null) return defaultState;
-  return JSON.parse(storage);
-};
 
 // https://bashooka.com/coding/react-i con-co mponents/
 // https://datatables.net/
 // https://github.com/ccampbell/mousetrap
 // https://blog.logrocket.com/how-react-hooks-can-replace-react-router/
+// https://jaredpalmer.com/formik/docs/overview
+// https://github.com/jbetancur/react-data-table-component
 
 // const useMediaQuery = (queryInput) => {
 //   const props = {

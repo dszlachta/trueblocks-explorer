@@ -1,9 +1,9 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 
-import { useProjects, projectSchema, handleClick } from "store";
+import { useProjects, projectsSchema } from "store/projects";
 import { Card, ObjectTable, Debug } from "components/";
-import { sortArray, currentPage } from "components/utils";
+import { sortArray, currentPage, handleClick } from "components/utils";
 import ToggleLeft from "assets/icons/toggle-left";
 import ToggleRight from "assets/icons/toggle-right";
 import Edit from "assets/icons/edit";
@@ -130,7 +130,7 @@ const spinProjects = (projects, dispatch, updateFunc, active) => {
       >
         <ObjectTable
           data={project}
-          fields={projectSchema}
+          fields={projectsSchema}
           updateFunc={updateFunc}
         />
       </Card>

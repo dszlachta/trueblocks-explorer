@@ -169,11 +169,12 @@ export const projectsReducer = (state, action) => {
     case 'remove_project':
       ret = ret.filter((project) => project.id !== action.id);
       break;
-    case 'update':
-      project[action.fieldName] = action.value;
-      console.log('project: ', project);
-      ret = replaceRecord(ret, project, action.id);
-      console.log('ret: ', ret.find((p) => p.id === action.id));
+//    case 'update':
+//      project[action.fieldName] = action.value;
+//      console.log('project: ', project);
+//      ret = replaceRecord(ret, project, action.id);
+//      console.log('ret: ', ret.find((p) => p.id === action.id));
+      break;
     case 'reset':
       ret = projectsDefault;
       break;
@@ -203,7 +204,7 @@ export const useProjects = () => {
 }
 
 //----------------------------------------------------------------------------
-export const projectSchema = {
+export const projectsSchema = {
   id: { hidden: !isVerbose() },
   group: { editable: true, onValidate: notEmpty, onAccept: null },
   name: { editable: true, onValidate: null, onAccept: null },

@@ -2,8 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Dashboard } from './Dashboard';
+import { currentPage } from 'components/utils';
 import { Projects, ProjectsView, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects';
+import { Names } from './Names';
 import { Signatures } from './Signatures';
+import {
+  Settings,
+  SettingsApi,
+  SettingsNode,
+  SettingsScraper,
+  SettingsSharing,
+  SettingsSkins,
+  SettingsSchemas
+} from "./Settings";
 import {
   Support,
   SupportKeys,
@@ -14,34 +25,6 @@ import {
   SupportContact,
   SupportAbout,
 } from './Support';
-
-const Settings = () => {
-  return <div className="okay">Actual Settings Page</div>;
-};
-
-const SettingsApi = () => {
-  return <div className="okay">Actual Settings Api Page</div>;
-};
-
-const SettingsNode = () => {
-  return <div className="okay">Actual Settings Node Page</div>;
-};
-
-const SettingsScraper = () => {
-  return <div className="okay">Actual Settings Scraper Page</div>;
-};
-
-const SettingsSharing = () => {
-  return <div className="okay">Actual Settings Sharing Page</div>;
-};
-
-const SettingsSkins = () => {
-  return <div className="okay">Actual Settings Skins Page</div>;
-};
-
-const SettingsSchemas = () => {
-  return <div className="okay">Actual Settings Schemas Page</div>;
-};
 
 const Generic = ({ page }) => {
   return <div style={{ backgroundColor: 'yellow' }}>Undefined Generic Page: {page}</div>;
@@ -55,11 +38,19 @@ export const thePages = {
   'projects/save': { component: <ProjectsSave /> },
   'projects/export': { component: <ProjectsExport /> },
   'monitors/': { component: <Generic page="Monitors" /> },
-  'names/': { component: <Generic page="Names" /> },
+  'names/': { component: <Names /> },
+  'names/your%20names': { component: <Names /> },
+  'names/wallets': { component: <Names /> },
+  'names/tokens': { component: <Names /> },
+  'names/prefunds': { component: <Names /> },
+  'names/other%20names': { component: <Names /> },
+  'names/groups': { component: <Names /> },
+  'names/your_blocks': { component: <Names /> },
+  'names/known_blocks': { component: <Names /> },
+  'names/dated_blocks': { component: <Names /> },
   'signatures/': { component: <Signatures /> },
   'signatures/known': { component: <Signatures /> },
   'signatures/monitored': { component: <Signatures /> },
-  'signatures/both': { component: <Signatures /> },
   'digests/': { component: <Generic page="Digests" /> },
   'caches/': { component: <Generic page="Caches" /> },
   'settings/': { component: <Settings /> },
@@ -78,3 +69,10 @@ export const thePages = {
   'support/contact': { component: <SupportContact /> },
   'support/about': { component: <SupportAbout /> },
 };
+
+//----------------------------------------------------------------------
+export const InnerPage = () => {
+  const { page, subpage } = currentPage();
+  const ret = thePages[page + '/' + subpage];
+  return (ret ? ret.component : <div className="warning">Missing Inner Page</div>);
+}

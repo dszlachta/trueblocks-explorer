@@ -1,6 +1,7 @@
 import React from "react";
 
-import { useProjects, useMenus } from "store";
+import { useProjects } from "store/projects";
+import { useMenus } from "store";
 import { currentPage } from "components/utils";
 
 //----------------------------------------------------------------------------
