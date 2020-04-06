@@ -13,21 +13,16 @@ export function Signatures() {
   const [search, setSearch] = useState(true);
   const [title, setTitle] = useState('The Title');
   const [noHeader, setNoHeader] = useState(false);
-  const [filterText, setFilterText] = useState('0xa');
   const dispatch = useSignatures().dispatch;
-  const sigs = useSignatures().state;
+  const signatures = useSignatures().state;
 
   const source = currentPage().subpage;
-  const query = (source === '' ? 'monitored&known' : source);
+  const query = source === '' ? 'monitored&known' : source;
   useEffect(() => {
-    getServerData('http://localhost:8080/abi', query)
-      .then((theData) => {
-        dispatch({ type: 'update', payload: theData })
-      }
-      );
+    getServerData('http://localhost:8080/abi', query).then((theData) => {
+      dispatch({ type: 'update', payload: theData });
+    });
   }, [source]);
-
-  const filteredItems = sigs.filter(item => item.encoding && item.encoding.includes(filterText));
 
   return (
     <div>
@@ -37,24 +32,29 @@ export function Signatures() {
       <button onClick={() => setNoHeader(!noHeader)}>header</button>
       <DT
         columns={signaturesSchema}
-        data={filteredItems}
+        data={signatures}
         title={title}
         pagination={pagination}
         search={search}
+        searchField="encoding"
         noHeader={noHeader}
       />
-      {/* <DataTable
-        columns={signaturesSchema}
-        data={filteredItems}
-        key="sig_data_table" theme="solarized"
-        keyField="encoding" defaultSortField="encoding"
-        noHeader expandableRows
-        fixedHeader pagination
-      /> */}
     </div>
   );
 }
 
+// <DataTable
+//   columns={signaturesSchema}
+//   data={filteredItems}
+//   key="sig_data_table"
+//   // theme="solarized"
+//   keyField="encoding"
+//   defaultSortField="encoding"
+//   noHeader
+//   expandableRows
+//   fixedHeader
+//   pagination
+// />
 /*
 ort React from 'react';
 import styled from 'styled-components';
@@ -133,7 +133,7 @@ const BasicTable = () => {
   }, [filterText, resetPaginationToggle]);
 
   return (
-    <DataTable
+    <Data Table
       title="Contact List"
       columns={columns}
       data={filteredItems}

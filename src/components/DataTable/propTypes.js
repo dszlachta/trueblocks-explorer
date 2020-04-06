@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FirstPageIcon from './icons/FirstPage';
-import LastPageIcon from './icons/LastPage';
-import LeftIcon from './icons/Left';
-import RightIcon from './icons/Right';
+
+import ChevronsLeft from 'assets/icons/ChevronsLeft';
+import ChevronLeft from 'assets/icons/ChevronLeft';
+import ChevronRight from 'assets/icons/ChevronRight';
+import LastPageIcon from 'assets/icons/lastpage';
+
 import ExpanderCollapsedIcon from './icons/ExpanderCollapsedIcon';
 import ExpanderExpandedIcon from './icons/ExpanderExpandedIcon';
 
@@ -166,15 +168,15 @@ export const defaultProps = {
   paginationResetDefaultPage: false,
   paginationTotalRows: 0,
   paginationPerPage: 10,
-  paginationRowsPerPageOptions: [10, 15, 20, 25, 30],
+  paginationRowsPerPageOptions: [5, 10, 15, 20, 25, 30],
   onChangePage: () => null,
   onChangeRowsPerPage: () => null,
   paginationComponent: null,
   paginationComponentOptions: {},
-  paginationIconFirstPage: <FirstPageIcon />,
+  paginationIconFirstPage: <ChevronsLeft />,
+  paginationIconNext: <ChevronRight />,
+  paginationIconPrevious: <ChevronLeft />,
   paginationIconLastPage: <LastPageIcon />,
-  paginationIconNext: <RightIcon />,
-  paginationIconPrevious: <LeftIcon />,
   dense: false,
   conditionalRowStyles: [],
   theme: 'default',

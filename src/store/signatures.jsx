@@ -15,7 +15,7 @@ export const signaturesReducer = (state, action) => {
       ret = action.payload;
       break;
     default:
-      // do nothing
+    // do nothing
   }
   // TODO(tjayrush): this data is on the backend -- we do not store it locally
   // localStorage.setItem('signaturesState', JSON.stringify(ret));
@@ -33,38 +33,38 @@ export const signaturesSchema = [
     width: 2,
     name: 'Encoding',
     selector: 'encoding',
-    sortable: true
+    sortable: true,
   },
   {
     width: 1,
     name: 'Type',
     selector: 'type',
-    sortable: true
+    sortable: true,
   },
   {
     width: 2,
     name: 'Name',
     // cn: 'special',
     selector: 'name',
-    sortable: true
+    sortable: true,
   },
   {
     width: 1,
     name: 'Signature',
     selector: 'signature',
-    sortable: true
+    sortable: true,
   },
   {
     width: 1,
     name: 'Input Names',
     selector: 'input_names',
-    sortable: true
+    sortable: true,
   },
   {
     width: 1,
     // cn: 'special',
     name: 'Output Names',
     selector: 'output_names',
-    sortable: true
-  }
+    sortable: true,
+  },
 ];

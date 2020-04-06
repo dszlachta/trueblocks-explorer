@@ -30,13 +30,13 @@
   --card-width: 325px;
   --object-table-padding: 4px;
   --object-table-border: 1px solid black;
-  --data-table-padding: 8px;
+  --data-table-padding: 10px;
   --data-table-border: 1px solid black;
   --dt-bgcolor-header: var(--bgcolor-panel);
   --dt-color-header: var(--color-panel);
   --dt-bgcolor-body: var(--bgcolor-panel);
   --dt-color-body: var(--color-panel);
-/*
+  /*
   --dt-bgcolor-header: #002b36;
   --dt-color-header: #268bd2;
   --dt-bgcolor-body: #002b36;

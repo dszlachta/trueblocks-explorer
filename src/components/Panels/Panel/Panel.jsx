@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 import { usePanels } from 'store';
 import { handleClick } from 'components/utils';
-import ChevronLeft from 'assets/icons/chevron-left';
-import ChevronRight from 'assets/icons/chevron-right';
+import ChevronLeft from 'assets/icons/ChevronLeft';
+import ChevronRight from 'assets/icons/ChevronRight';
 import './Panel.css';
 
 //----------------------------------------------------------------------
@@ -57,12 +57,12 @@ const PanelHeader = ({ title, headerClass, options }) => {
 PanelHeader.propTypes = {
   title: PropTypes.string.isRequired,
   headerClass: PropTypes.string,
-  options: PropTypes.object
+  options: PropTypes.object,
 };
 PanelHeader.defaultProps = {
   title: '',
   headerClass: '',
-  options: {}
+  options: {},
 };
 
 //----------------------------------------------------------------------
