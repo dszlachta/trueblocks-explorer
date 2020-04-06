@@ -31,10 +31,10 @@ export function Signatures() {
 
   return (
     <div>
-      {/* <button onClick={() => setSearch(!search)}>search</button>
+      <button onClick={() => setSearch(!search)}>search</button>
       <button onClick={() => setTitle(title === '' ? 'The Title' : '')}>title</button>
       <button onClick={() => setPagination(!pagination)}>paginate</button>
-      <button onClick={() => setNoHeader(!noHeader)}>header</button> */}
+      <button onClick={() => setNoHeader(!noHeader)}>header</button>
       <DT
         columns={signaturesSchema}
         data={filteredItems}
@@ -76,22 +76,6 @@ const createUsers = (numUsers = 5) =>
   new Array(numUsers).fill(undefined).map(createUser);
 
 const fakeUsers = createUsers(2000);
-
-const TextField = styled.input`
-  height: 32px;
-  width: 200px;
-  border-radius: 3px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border: 1px solid #e5e5e5;
-  padding: 0 32px 0 16px;
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
 
 const ClearButton = styled(Button)`
   border-top-left-radius: 0;

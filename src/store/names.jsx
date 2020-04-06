@@ -28,6 +28,15 @@ export const useNames = () => {
 }
 
 //----------------------------------------------------------------------------
+export const groupsSchema = [
+  {
+    name: 'Group',
+    selector: 'group',
+    sortable: true
+  },
+];
+
+//----------------------------------------------------------------------------
 export const namesSchema = [
   {
     name: 'Group',

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { namesSchema, useNames } from 'store/names';
+import { namesSchema, groupsSchema, useNames } from 'store/names';
 import { DT } from 'components/DT';
 import { currentPage, getServerData } from 'components/utils';
 import './Names.css';
@@ -51,10 +51,11 @@ export function Names() {
       })
   }, [query]);
 
+  const schema = currentPage().subpage === 'groups' ? groupsSchema : namesSchema;
   return (
     <div>
       <DT
-        columns={namesSchema}
+        columns={schema}
         data={names}
         title={'Names'}
         pagination

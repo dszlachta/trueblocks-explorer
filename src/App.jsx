@@ -112,6 +112,7 @@ const mapHotKeys = (panelDispatch) => {
 // https://blog.logrocket.com/how-react-hooks-can-replace-react-router/
 // https://jaredpalmer.com/formik/docs/overview
 // https://github.com/jbetancur/react-data-table-component
+// https://jbetancur.github.io/react-data-table-component/?path=/story/general--kitchen-sink
 
 // const useMediaQuery = (queryInput) => {
 //   const props = {

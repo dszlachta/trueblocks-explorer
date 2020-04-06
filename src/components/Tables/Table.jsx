@@ -5,7 +5,7 @@ import "./Table.css"
 //----------------------------------------------------
 export const TableColumn = ({ editable = false, options = defColumnOptions, children }) => {
 
-  let cn = 'table-column ' + options.innerClassName + (editable ? ' editable-col' : '');
+  let cn = 'table-column ' + options.innerClassName + (editable ? ' object-table-cell-editable' : '');
   return (
     <>
       {options.padCols ? <div className="table-column"></div> : <></>}
@@ -20,7 +20,7 @@ export const TableColumn = ({ editable = false, options = defColumnOptions, chil
 
 //---------------------------------------------------------------
 export const defColumnOptions = {
-  innerClassName: 'inner-col',
+  innerClassName: 'object-table-cell-inner',
   padCols: true,
 }
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
-import './DT.css';
+import { Pagination } from './Pagination';
 import { ObjectTable2 } from 'components';
 import { stateFromStorage } from 'components/utils';
+
+import './DT.css';
 
 const StyledTable = styled.div`
   display: grid;
@@ -73,7 +75,7 @@ const Toolbar = ({ title, search, pagination, pagingCtx }) => {
   return (
     <div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr' }}>
-        <Search enabled={search} />
+        <Searchbox enabled={search} />
         {<div style={{ alignSelf: 'end', justifySelf: 'center', fontSize: '20pt', height: '27pt' }}>{title}</div>}
         {pagination && <Pagination pagingCtx={pagingCtx} />}
       </div>
@@ -105,45 +107,20 @@ const Header = ({ columns }) => {
 }
 
 
-const Paggy = styled.div`
-  align-self: end;
-  justify-self: end;
-  font-size: .9em;
-`;
-
-const Pagination = ({ pagingCtx }) => {
-  const { perPage, curPage, total, handler } = pagingCtx;
-  const perPageOptions = [ 10, 20, 25, 50, 100 ];
-  const sel = 
-    <select
-      value={perPage}
-      onChange={({target}) => handler({ type: 'perPage', payload: target.value })}
-      style={{
-        cursor: 'pointer',
-        userSelect: 'none',
-        fontSize: 'inherit',
-        backgroundColor: 'transparent',
-        appearance: 'none',
-        direction: 'ltr',
-      }}>
-        {perPageOptions.map((n) => {
-          return (<option>{n}</option>);
-        })}
-    </select>;
-  const start = (perPage * curPage) + 1;
-  const end = (perPage * (curPage + 1));
+const Searchbox = ({ enabled }) => {
   return (
-    <Paggy>
-      {`Rows per page: `}
-      {sel}
-      {` ${start}-${end} of ${total}.......controls`}
-    </Paggy>
-  );
-}
-
-const Search = ({ enabled }) => {
-  return (
-    <div style={{ alignSelf: 'end', justifySelf: 'start' }}>{enabled ? 'Search' : ''}</div>
+    <div style={{ alignSelf: 'end', justifySelf: 'start' }}>
+      {
+        enabled
+        ?
+          <div className="dt-search-container">
+          <input className="dt-search" placeholder="Search..."></input>
+          <button className="dt-search-clear-button">x</button>
+          </div>
+        :
+        ''
+      }
+    </div>
   );
 }
 

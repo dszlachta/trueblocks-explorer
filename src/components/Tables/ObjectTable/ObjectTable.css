@@ -6,24 +6,24 @@
   grid-template-columns: 2fr 10fr 1fr 1fr 20fr 1fr;
 }
 
-.table-sider-col {
+.object-table-sider {
   background-color: #a7b7c2;
   opacity: 0.75;
-  padding-top: var(--data-table-padding);
+  padding-top: var(--object-table-padding);
 }
 
-.editable-col {
+.object-table-cell-editable {
   border-bottom: 1px solid #eeeeee;
 }
 
-.editable-col:hover {
+.object-table-cell-editable:hover {
   border-bottom: 1px solid #eeeeee;
   color: var(--color2-panel);
   background-color: #a7b7c2;
   opacity: 0.75;
 }
 
-.inner-col {
+.object-table-cell-inner {
   border-bottom: 1px solid #eeeeee;
-  padding-top: var(--data-table-padding);
+  padding-top: var(--object-table-padding);
 }

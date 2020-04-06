@@ -32,7 +32,7 @@ export const ObjectTable = ({ data, fields = defaultObjFields, options = defObjT
               {editable
                 ?
                 <Editable
-                  className='inner-col'
+                  className='object-table-cell-inner'
                   record_id={record_id}
                   fieldValue={value}
                   fieldName={fieldName}
@@ -72,7 +72,7 @@ export const ObjectTable2 = ({ data, fieldList }) => {
               {editable
                 ?
                 <Editable
-                  className='inner-col'
+                  className='object-table-cell-inner'
                   record_id={record_id}
                   fieldValue={value}
                   fieldName={fieldName}
@@ -94,11 +94,11 @@ export const ObjectTable2 = ({ data, fieldList }) => {
 const ObjectTableSider = ({ children }) => {
   return (
     <>
-      <div className="table-sider-col"></div>
-      <div className="table-sider-col" align='right'>
+      <div className="object-table-sider"></div>
+      <div className="object-table-sider" align='right'>
         {children}
       </div>
-      <div className="table-sider-col"></div>
+      <div className="object-table-sider"></div>
     </>
   );
 }

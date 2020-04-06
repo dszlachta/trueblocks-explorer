@@ -1,11 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// auto-generate: pages-index-1
+import { Signatures } from './Signatures/Signatures';
+// auto-generate: pages-index-1
+
 import { Dashboard } from './Dashboard';
 import { currentPage } from 'components/utils';
 import { Projects, ProjectsView, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects';
 import { Names } from './Names';
-import { Signatures } from './Signatures';
 import {
   Settings,
   SettingsApi,
@@ -48,9 +51,11 @@ export const thePages = {
   'names/your_blocks': { component: <Names /> },
   'names/known_blocks': { component: <Names /> },
   'names/dated_blocks': { component: <Names /> },
+  // auto-generate: pages-index-2
   'signatures/': { component: <Signatures /> },
   'signatures/known': { component: <Signatures /> },
   'signatures/monitored': { component: <Signatures /> },
+  // auto-generate: pages-index-2
   'digests/': { component: <Generic page="Digests" /> },
   'caches/': { component: <Generic page="Caches" /> },
   'settings/': { component: <Settings /> },
