@@ -9,20 +9,18 @@ import './DT.css';
 
 const StyledTable = styled.div`
   display: grid;
-  grid-template-columns: ${props => props.wids};
+  grid-template-columns: ${(props) => props.wids};
   overflow-y: scroll;
 `;
 
 export const DT = ({ columns, data, noHeader, title, search, pagination }) => {
   const [pagingCtx, setPaging] = useState(stateFromStorage('paging', { perPage: 10, curPage: 0 }));
   let total = columns.reduce((sum, item) => sum + item.width, 0);
-  const wids = columns.map(item => {
-    if (Number.isNaN(total))
-      return '1fr ';
-    return (Math.floor((item.width / total) * 64) + 'fr ');
+  const wids = columns.map((item) => {
+    if (Number.isNaN(total)) return '1fr ';
+    return Math.floor((item.width / total) * 64) + 'fr ';
   });
-  if (Number.isNaN(total))
-    total = columns.length;
+  if (Number.isNaN(total)) total = columns.length;
 
   console.log('p: ', total, wids);
 
@@ -32,25 +30,26 @@ export const DT = ({ columns, data, noHeader, title, search, pagination }) => {
       case 'perPage':
         newCtx = { perPage: action.payload, curPage: 0, total: data.length, handler: pageHandler };
         break;
+      default:
+        break;
     }
     setPaging(newCtx);
     localStorage.setItem('paging', JSON.stringify(newCtx));
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: data.length, handler: pageHandler });
-  },[data]);
+  }, [data]);
 
-  const showTools = (title !== '' || search || pagination);
+  const showTools = title !== '' || search || pagination;
   const showHeader = !noHeader;
   return (
     <>
       {showTools && <Toolbar search={search} title={title} pagination={pagination} pagingCtx={pagingCtx} />}
-      {showHeader && <Header columns={columns}/>}
+      {showHeader && <Header columns={columns} />}
       <StyledTable wids={wids} className="dt-body">
         {data.map((record, index) => {
-          if (index >= pagingCtx.perPage)
-            return <></>;
+          if (index >= pagingCtx.perPage) return <></>; //
           return (
             <>
               <MainRow columns={columns} record={record} />
@@ -63,13 +62,13 @@ export const DT = ({ columns, data, noHeader, title, search, pagination }) => {
                   <div style={{ height: '100%' }}></div>
                 </div>
               </div> */}
-            </>
+            </> //
           );
         })}
       </StyledTable>
-    </>
-  )
-}
+    </> //
+  );
+};
 
 const Toolbar = ({ title, search, pagination, pagingCtx }) => {
   return (
@@ -81,64 +80,51 @@ const Toolbar = ({ title, search, pagination, pagingCtx }) => {
       </div>
     </div>
   );
-}
+};
 
 const Header = ({ columns }) => {
   let total = columns.reduce((sum, item) => sum + item.width, 0);
-  const wids = columns.map(item => {
-    if (Number.isNaN(total))
-      return '1fr ';
-    return (Math.floor((item.width / total) * 64) + 'fr ');
+  const wids = columns.map((item) => {
+    if (Number.isNaN(total)) return '1fr ';
+    return Math.floor((item.width / total) * 64) + 'fr ';
   });
-  if (Number.isNaN(total))
-    total = columns.length;
+  if (Number.isNaN(total)) total = columns.length;
 
   return (
     <StyledHeader wids={wids} columns={columns} className="dt-header">
       {columns.map((column) => {
-        return (
-          <div>
-            {column.name}
-          </div>
-        );
+        return <div>{column.name}</div>;
       })}
     </StyledHeader>
   );
-}
-
+};
 
 const Searchbox = ({ enabled }) => {
   return (
     <div style={{ alignSelf: 'end', justifySelf: 'start' }}>
-      {
-        enabled
-        ?
-          <div className="dt-search-container">
+      {enabled ? (
+        <div className="dt-search-container">
           <input className="dt-search" placeholder="Search..."></input>
           <button className="dt-search-clear-button">x</button>
-          </div>
-        :
+        </div>
+      ) : (
         ''
-      }
+      )}
     </div>
   );
-}
+};
 
 const StyledHeader = styled.div`
   display: grid;
-  grid-template-columns: ${ props => props.wids };
+  grid-template-columns: ${(props) => props.wids};
 `;
 
 const MainRow = ({ columns, record }) => {
   return (
     <>
       {Object.keys(record).map((key, index) => {
-        return (
-          <div className={columns[index].cn ? columns[index].cn : "dt-cell"}>
-            {record[key]}
-          </div>
-        );
+        return <div className={columns[index].cn ? columns[index].cn : 'dt-cell'}>{record[key]}</div>;
       })}
     </>
   );
-}
+};
