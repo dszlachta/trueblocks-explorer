@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// auto-generate: pages-index-1
-import { Signatures } from './Signatures/Signatures';
-import { Names } from './Names/Names';
-// auto-generate: pages-index-1
-
-import { Dashboard } from './Dashboard';
 import { currentPage } from 'components/utils';
-import { Projects, ProjectsView, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects';
+
+// page-related - for searching do not remove
+import { Dashboard } from './Dashboard';
+import { Projects, ProjectsView, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects/Projects';
+import { Names } from './Names/Names';
+import { Signatures } from './Signatures/Signatures';
+import { Digests } from './Digests/Digests';
+import { Caches } from './Caches/Caches';
 import {
   Settings,
   SettingsApi,
@@ -17,7 +18,7 @@ import {
   SettingsSharing,
   SettingsSkins,
   SettingsSchemas,
-} from './Settings';
+} from './Settings/Settings';
 import {
   Support,
   SupportKeys,
@@ -27,13 +28,14 @@ import {
   SupportLicensing,
   SupportContact,
   SupportAbout,
-} from './Support';
+} from './Support/Support';
 
 const Generic = ({ page }) => {
   return <div style={{ backgroundColor: 'yellow' }}>Undefined Generic Page: {page}</div>;
 };
 
 export const thePages = {
+  // page-related - for searching do not remove
   'dashboard/': { component: <Dashboard /> },
   'projects/': { component: <Projects /> },
   'projects/view': { component: <ProjectsView /> },
@@ -47,7 +49,6 @@ export const thePages = {
   'names/tokens': { component: <Names /> },
   'names/prefunds': { component: <Names /> },
   'names/other%20names': { component: <Names /> },
-  // auto-generate: pages-index-2
   'names/groups': { component: <Names /> },
   'names/your_blocks': { component: <Names /> },
   'names/known_blocks': { component: <Names /> },
@@ -55,9 +56,18 @@ export const thePages = {
   'signatures/': { component: <Signatures /> },
   'signatures/known': { component: <Signatures /> },
   'signatures/monitored': { component: <Signatures /> },
-  'digests/': { component: <Generic page="Digests" /> },
-  // auto-generate: pages-index-2
-  'caches/': { component: <Generic page="Caches" /> },
+  'digests/': { component: <Digests /> },
+  'digests/finalized': { component: <Digests /> },
+  'digests/staged': { component: <Digests /> },
+  'digests/unripe': { component: <Digests /> },
+  'digests/columns': { component: <Digests /> },
+  'caches/': { component: <Caches /> },
+  'caches/blocks/': { component: <Caches /> },
+  'caches/txs/': { component: <Caches /> },
+  'caches/traces/': { component: <Caches /> },
+  'caches/slurps/': { component: <Caches /> },
+  'caches/prices/': { component: <Caches /> },
+  'caches/abis/': { component: <Caches /> },
   'settings/': { component: <Settings /> },
   'settings/api': { component: <SettingsApi /> },
   'settings/node': { component: <SettingsNode /> },

@@ -94,14 +94,16 @@ export const DataTable = ({
     }
   };
 
+  const hasData = filteredData ? filteredData.length > 0 : false;
+  const firstInPage = Number(pagingCtx.perPage) * Number(pagingCtx.curPage);
+  const lastInPage = Math.min(Number(firstInPage) + Number(pagingCtx.perPage), hasData ? filteredData.length : 0);
+
   useEffect(() => {
-    setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: filteredData.length });
+    setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: hasData ? filteredData.length : 0 });
   }, [data, filterText]);
 
   const showTools = title !== '' || search || pagination;
   const showHeader = !noHeader;
-  const firstInPage = Number(pagingCtx.perPage) * Number(pagingCtx.curPage);
-  const lastInPage = Math.min(Number(firstInPage) + Number(pagingCtx.perPage), filteredData.length);
   return (
     <>
       {showTools && (
@@ -117,12 +119,13 @@ export const DataTable = ({
       )}
       {showHeader && <Header columns={columns} />}
       <StyledTable wids={wids} className="dt-body">
-        {filteredData.map((record, index) => {
-          if (index < firstInPage || index >= lastInPage) return <></>; //
-          return (
-            <>
-              <MainRow key={index} columns={columns} record={record} />
-              {/* <div style={{ gridColumn: '1 / span 7' }}>
+        {hasData ? (
+          filteredData.map((record, index) => {
+            if (index < firstInPage || index >= lastInPage) return <></>; //
+            return (
+              <>
+                <MainRow key={index} columns={columns} record={record} />
+                {/* <div style={{ gridColumn: '1 / span 7' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr'}}>
                   <div style={{ height: '100%' }}></div>
                   <div style={{ height: '100%' }}>
@@ -131,20 +134,27 @@ export const DataTable = ({
                   <div style={{ height: '100%' }}></div>
                 </div>
               </div> */}
-            </> //
-          );
-        })}
+              </> //
+            );
+          })
+        ) : (
+          <div>Loading...</div>
+        )}
       </StyledTable>
-      <div>
-        Searching fields:{' '}
-        <div style={{ display: 'inline', fontStyle: 'italic' }}>
-          {searchFields
-            .map((field) => {
-              return field;
-            })
-            .join(', ')}
+      {search ? (
+        <div>
+          Searching fields:{' '}
+          <div style={{ display: 'inline', fontStyle: 'italic' }}>
+            {searchFields
+              .map((field) => {
+                return field;
+              })
+              .join(', ')}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div>Searching disabled</div>
+      )}
       <div>Todo: Expandable Rows, Sorting</div>
     </> //
   );

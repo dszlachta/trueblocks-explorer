@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { panelDefault, panelReducer, usePanels } from './store_panel';
-import { statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta } from './store_status';
-import { menusDefault, menusReducer, useMenus } from './store_menus';
+import { panelDefault, panelReducer, usePanels } from './panel_store';
+import { statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta } from './status_store';
+import { menusDefault, menusReducer, useMenus } from './menus_store';
 
 //----------------------------------------------------------------------
 const GlobalContext = React.createContext({});
@@ -13,14 +13,14 @@ export {
   panelDefault,
   panelReducer,
   usePanels,
-
   statusDefault,
   statusReducer,
-  useStatus, useStatusData, useStatusMeta,
-
+  useStatus,
+  useStatusData,
+  useStatusMeta,
   menusDefault,
   menusReducer,
-  useMenus
+  useMenus,
 };
 
 //----------------------------------------------------------------------

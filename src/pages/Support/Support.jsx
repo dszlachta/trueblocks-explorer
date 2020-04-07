@@ -12,6 +12,7 @@ export const SupportKeys = () => {
     <pre>
       <div style={{ fontWeight: '600' }}>Accessing Screens</div>
       <div> </div>
+      {/* page-related - for searching do not remove */}
       {'alt+0\t/dashboard\t\tOpen Dashboard screen\n'}
       {'alt+1\t/projects\t\tOpen Projects screen\n'}
       {'alt+2\t/monitors\t\tOpen Monitors screen\n'}
@@ -113,11 +114,7 @@ export const SupportDocumentation = () => {
 
 //-----------------------------------------------------------
 export const SupportLicensing = () => {
-/*
-*/
-//  import React, { Fragment } from 'react';
-
-const licensesText = () => {
+  const licensesText = () => {
     const explain1 = `All files in the folder ./src/apps and in all files in subfolders of that folder are:`;
     const lic1 = `\
  /*-------------------------------------------------------------------------\n\
@@ -196,8 +193,6 @@ const licensesText = () => {
     );
   };
   return licensesText();
-
-//  return <div className="okay">Actual Support Licensing Page</div>;
 };
 
 //-----------------------------------------------------------

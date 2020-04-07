@@ -1,7 +1,9 @@
 import { useContext } from 'react';
+
 import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
+// page-related - for searching do not remove
 export const menusDefault = {
   items: [
     { label: 'Dashboard', path: '/', exact: true },
@@ -59,15 +61,12 @@ export const menusDefault = {
         { label: 'Your Blocks' },
         { label: 'Known Blocks' },
         { label: 'Dated Blocks' },
-      ]
+      ],
     },
     {
       label: 'Signatures',
       exact: true,
-      items: [
-        { label: 'Known' },
-        { label: 'Monitored' }
-      ],
+      items: [{ label: 'Known' }, { label: 'Monitored' }],
     },
     {
       label: 'Digests',

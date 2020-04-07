@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useDashboard, dashboardSchema } from 'store/dashboard';
+import { useDashboard, dashboardSchema } from 'pages/Dashboard/store';
 import { Card, ObjectTable } from 'components/';
 import './Dashboard.css';
 
@@ -14,10 +14,10 @@ export const Dashboard = () => {
       {dashboards.map((board) => {
         return (
           <Card key={board.id} title={board.name} headerLink={board.route} headerClass="card-center">
-            <ObjectTable data={board} fields={dashboardSchema}/>
+            <ObjectTable data={board} fields={dashboardSchema} />
           </Card>
         );
       })}
-    </div >
+    </div>
   );
-}
+};

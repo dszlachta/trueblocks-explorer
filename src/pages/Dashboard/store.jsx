@@ -5,13 +5,13 @@ import GlobalContext, { isVerbose } from 'store';
 
 //----------------------------------------------------------------------
 export const dashboardReducer = (state, action) => {
-  return state;  // There are no actions that change the dashboard state
+  return state; // There are no actions that change the dashboard state
 };
 
 //----------------------------------------------------------------------
 export const useDashboard = () => {
   return useContext(GlobalContext).dashboard;
-}
+};
 
 //----------------------------------------------------------------------
 export const dashboardSchema = {
@@ -22,9 +22,10 @@ export const dashboardSchema = {
   sizeInBytes: { name: 'size', type: 'filesize' },
   custom: { name: 'shared' },
   date: { type: 'date' },
-  timestamp: {}
+  timestamp: {},
 };
 
+// page-related - for searching do not remove
 export const dashboardDefault = [
   {
     id: '0x13..01',

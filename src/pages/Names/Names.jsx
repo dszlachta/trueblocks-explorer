@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { namesSchema, groupsSchema, useNames } from 'store/names';
+import { namesSchema, groupsSchema, useNames } from './store';
 import { DataTable } from 'components/DataTable';
 import { currentPage, titleFromPage, getServerData } from 'components/utils';
 import './Names.css';
@@ -40,7 +40,6 @@ export function Names() {
   else if (query.includes('other') && query.includes('names')) query = 'other';
   useEffect(() => {
     getServerData('http://localhost:8080/names', query).then((theData) => {
-      console.log('theData: ', theData);
       dispatch({ type: 'update', payload: theData });
     });
   }, [query]);

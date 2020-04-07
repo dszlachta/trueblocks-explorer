@@ -11,31 +11,43 @@ import GlobalContext, {
   menusDefault,
   menusReducer,
 } from 'store';
-import { dashboardDefault, dashboardReducer } from 'store/dashboard';
-import { projectsDefault, projectsReducer } from 'store/projects';
-import { namesDefault, namesReducer } from 'store/names';
-import { signaturesDefault, signaturesReducer } from 'store/signatures';
+
+// page-related - for searching do not remove
+import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/store';
+import { projectsDefault, projectsReducer } from 'pages/Projects/store';
+import { namesDefault, namesReducer } from 'pages/Names/store';
+import { signaturesDefault, signaturesReducer } from 'pages/Signatures/store';
+import { digestsDefault, digestsReducer } from 'pages/Digests/store';
+import { cachesDefault, cachesReducer } from 'pages/Caches/store';
 import { stateFromStorage } from 'components/utils';
 
 import 'App.css';
 
 //-----------------------------------------------------
 function App() {
-
   const [panelState, panelDispatch] = useReducer(panelReducer, stateFromStorage('panelState', panelDefault));
+  // page-related - for searching do not remove
   const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, dashboardDefault);
-  const [projectsState, projectsDispatch] = useReducer(projectsReducer, stateFromStorage('projectsState', projectsDefault));
+  const [projectsState, projectsDispatch] = useReducer(
+    projectsReducer,
+    stateFromStorage('projectsState', projectsDefault)
+  );
   const [namesState, namesDispatch] = useReducer(namesReducer, namesDefault);
   const [signaturesState, signaturesDispatch] = useReducer(signaturesReducer, signaturesDefault);
+  const [digestsState, digestsDispatch] = useReducer(digestsReducer, digestsDefault);
+  const [cachesState, cachesDispatch] = useReducer(cachesReducer, cachesDefault);
   const [statusState, statusDispatch] = useReducer(statusReducer, statusDefault);
   const [menusState, menusDispatch] = useReducer(menusReducer, menusDefault);
 
+  // page-related - for searching do not remove
   const theGlobalState = {
     panels: { state: panelState, dispatch: panelDispatch },
     dashboard: { state: dashboardState, dispatch: dashboardDispatch },
     projects: { state: projectsState, dispatch: projectsDispatch },
     names: { state: namesState, dispatch: namesDispatch },
     signatures: { state: signaturesState, dispatch: signaturesDispatch },
+    digests: { state: digestsState, dispatch: digestsDispatch },
+    caches: { state: cachesState, dispatch: cachesDispatch },
     status: { state: statusState, dispatch: statusDispatch },
     menus: { state: menusState, dispatch: menusDispatch },
   };
@@ -104,7 +116,7 @@ const mapHotKeys = (panelDispatch) => {
   Mousetrap.bind(['q s'], function () {
     panelDispatch({ type: 'status' });
   });
-}
+};
 
 // https://bashooka.com/coding/react-i con-co mponents/
 // https://datatables.net/

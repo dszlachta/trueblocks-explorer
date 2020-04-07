@@ -1,6 +1,6 @@
 //-----------------------------------------------------
 export const titleFromPage = () => {
-  return currentPage().subpage === '' ? currentPage().page : currentPage().subpage;
+  return ''; //currentPage().subpage === '' ? currentPage().page : currentPage().subpage;
 };
 
 //-----------------------------------------------------
@@ -41,6 +41,14 @@ export async function getServerData(route, query) {
   const response = await fetch(url);
   const data = await response.json();
   return data.data;
+}
+
+//----------------------------------------------------------------------------
+export async function getServerData1(route, query) {
+  const url = route + '?' + query;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
 }
 
 //----------------------------------------------------------------------------
