@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 // auto-generate: pages-index-1
 import { Signatures } from './Signatures/Signatures';
+import { Names } from './Names/Names';
 // auto-generate: pages-index-1
 
 import { Dashboard } from './Dashboard';
 import { currentPage } from 'components/utils';
 import { Projects, ProjectsView, ProjectsEdit, ProjectsSave, ProjectsExport } from './Projects';
-import { Names } from './Names';
 import {
   Settings,
   SettingsApi,
@@ -16,8 +16,8 @@ import {
   SettingsScraper,
   SettingsSharing,
   SettingsSkins,
-  SettingsSchemas
-} from "./Settings";
+  SettingsSchemas,
+} from './Settings';
 import {
   Support,
   SupportKeys,
@@ -47,16 +47,16 @@ export const thePages = {
   'names/tokens': { component: <Names /> },
   'names/prefunds': { component: <Names /> },
   'names/other%20names': { component: <Names /> },
+  // auto-generate: pages-index-2
   'names/groups': { component: <Names /> },
   'names/your_blocks': { component: <Names /> },
   'names/known_blocks': { component: <Names /> },
   'names/dated_blocks': { component: <Names /> },
-  // auto-generate: pages-index-2
   'signatures/': { component: <Signatures /> },
   'signatures/known': { component: <Signatures /> },
   'signatures/monitored': { component: <Signatures /> },
-  // auto-generate: pages-index-2
   'digests/': { component: <Generic page="Digests" /> },
+  // auto-generate: pages-index-2
   'caches/': { component: <Generic page="Caches" /> },
   'settings/': { component: <Settings /> },
   'settings/api': { component: <SettingsApi /> },
@@ -79,5 +79,5 @@ export const thePages = {
 export const InnerPage = () => {
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];
-  return (ret ? ret.component : <div className="warning">Missing Inner Page</div>);
-}
+  return ret ? ret.component : <div className="warning">Missing Inner Page</div>;
+};
