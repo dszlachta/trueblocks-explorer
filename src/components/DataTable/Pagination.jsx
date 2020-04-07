@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { handleClick } from 'components/utils';
 
-import './DT.css';
+import './DataTable.css';
 
 import ChevronsLeft from 'assets/icons/ChevronsLeft';
 import ChevronLeft from 'assets/icons/ChevronLeft';
@@ -54,7 +54,7 @@ const Selector = ({ handler, pagingCtx }) => {
   };
   return (
     <>
-      Rows per page{' '}
+      Per page{' '}
       {expanded ? (
         <select
           style={{ display: 'hidden' }}

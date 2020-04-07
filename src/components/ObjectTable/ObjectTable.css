@@ -27,3 +27,11 @@
   border-bottom: 1px solid #eeeeee;
   padding-top: var(--object-table-padding);
 }
+
+.table-column {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background-color: var(--bgcolor2-panel);
+  color: var(--color2-panel);
+}

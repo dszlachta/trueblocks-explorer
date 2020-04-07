@@ -1,21 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { Pagination } from './Pagination';
+import { Search } from './Search';
 import { ObjectTable2 } from 'components';
 import { stateFromStorage, handleClick } from 'components/utils';
 
-import './DT.css';
+import './DataTable.css';
 
 const StyledTable = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.wids};
 `;
 
-export const DT = ({ columns, data, noHeader, title, search, pagination, searchField }) => {
-  const [filterText, setFilterText] = useState('');
-  const filteredData = data.filter((item) => item[searchField] && item[searchField].includes(filterText));
+const hasField = (columns, field) => {
+  return (
+    columns.filter((item) => {
+      return item.selector === field;
+    }).length > 0
+  );
+};
 
+const hasFields = (columns, fields) => {
+  return (
+    fields.reduce((sum, field) => {
+      return sum + hasField(columns, field);
+    }, 0) === fields.length
+  );
+};
+
+const matches = (record, fields, filterText) => {
+  return (
+    fields.reduce((sum, field) => {
+      console.log();
+      return sum + record[field].toLowerCase().includes(filterText.toLowerCase());
+    }, 0) > 0
+  );
+};
+
+export const DataTable = ({
+  columns,
+  data,
+  title,
+  search = true,
+  searchFields,
+  pagination = true,
+  noHeader = false,
+}) => {
   const [pagingCtx, setPaging] = useState(stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0 }));
   let total = columns.reduce((sum, item) => sum + item.width, 0);
   const wids = columns.map((item) => {
@@ -24,9 +55,23 @@ export const DT = ({ columns, data, noHeader, title, search, pagination, searchF
   });
   if (Number.isNaN(total)) total = columns.length;
 
+  const [filterText, setFilterText] = useState('');
+  let filteredData = data;
+  if (filterText !== '' && hasFields(columns, searchFields)) {
+    filteredData = data.filter((record) => {
+      return matches(record, searchFields, filterText);
+    });
+  }
+
   const pageHandler = (action) => {
     const { perPage, curPage } = pagingCtx;
     switch (action.type) {
+      case 'update_filter':
+        setFilterText(action.payload);
+        break;
+      case 'clear_filter':
+        setFilterText('');
+        break;
       case 'first':
         setPaging({ perPage: perPage, curPage: 0, total: filteredData.length });
         break;
@@ -51,7 +96,7 @@ export const DT = ({ columns, data, noHeader, title, search, pagination, searchF
 
   useEffect(() => {
     setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: filteredData.length });
-  }, [filteredData]);
+  }, [data, filterText]);
 
   const showTools = title !== '' || search || pagination;
   const showHeader = !noHeader;
@@ -63,8 +108,8 @@ export const DT = ({ columns, data, noHeader, title, search, pagination, searchF
         <Toolbar
           title={title}
           search={search}
-          searchField={searchField}
-          curSearch={filterText}
+          searchFields={searchFields}
+          filterText={filterText}
           pagination={pagination}
           handler={pageHandler}
           pagingCtx={pagingCtx}
@@ -90,16 +135,27 @@ export const DT = ({ columns, data, noHeader, title, search, pagination, searchF
           );
         })}
       </StyledTable>
+      <div>
+        Searching fields:{' '}
+        <div style={{ display: 'inline', fontStyle: 'italic' }}>
+          {searchFields
+            .map((field) => {
+              return field;
+            })
+            .join(', ')}
+        </div>
+      </div>
+      <div>Todo: Expandable Rows, Sorting</div>
     </> //
   );
 };
 
-const Toolbar = ({ title, search, searchField, curSearch, pagination, handler, pagingCtx }) => {
+const Toolbar = ({ title, search, searchFields, filterText, pagination, handler, pagingCtx }) => {
   return (
     <div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr' }}>
-        <Searchbox enabled={search} searchField={searchField} curSearch={curSearch} />
-        {<div style={{ alignSelf: 'end', justifySelf: 'center', fontSize: '20pt', height: '27pt' }}>{title}</div>}
+        <Search enabled={search} searchFields={searchFields} filterText={filterText} handler={handler} />
+        {<div className="dt-title">{title.replace('%20', ' ')}</div>}
         {pagination && <Pagination pagingCtx={pagingCtx} handler={handler} />}
       </div>
     </div>
@@ -120,21 +176,6 @@ const Header = ({ columns }) => {
         return <div>{column.name}</div>;
       })}
     </StyledHeader>
-  );
-};
-
-const Searchbox = ({ enabled, searchField, curSearch }) => {
-  return (
-    <div style={{ alignSelf: 'end', justifySelf: 'start' }}>
-      {enabled ? (
-        <div className="dt-search-container">
-          <input className="dt-search" placeholder={'Search ' + searchField + '...'} value={curSearch}></input>
-          <button className="dt-search-clear-button">x</button>
-        </div>
-      ) : (
-        ''
-      )}
-    </div>
   );
 };
 

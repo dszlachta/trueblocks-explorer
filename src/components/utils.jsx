@@ -1,4 +1,9 @@
 //-----------------------------------------------------
+export const titleFromPage = () => {
+  return currentPage().subpage === '' ? currentPage().page : currentPage().subpage;
+};
+
+//-----------------------------------------------------
 export const stateFromStorage = (key, defaultState) => {
   const storage = localStorage.getItem(key);
   if (storage === null) return defaultState;
@@ -19,21 +24,20 @@ export const getHelpMarkdown = (url, onSuccess, onFail) => {
       return r.text();
     })
     .then((t) => {
-      if (onSuccess)
-        onSuccess(t);
+      if (onSuccess) onSuccess(t);
     })
     .catch((err) => {
       if (onFail) {
-        onFail(err.name + ": " + err.message);
+        onFail(err.name + ': ' + err.message);
       } else if (onSuccess) {
-        onSuccess(err.name + ": " + err.message);
+        onSuccess(err.name + ': ' + err.message);
       }
     });
 };
 
 //----------------------------------------------------------------------------
 export async function getServerData(route, query) {
-  const url = route + "?" + query;
+  const url = route + '?' + query;
   const response = await fetch(url);
   const data = await response.json();
   return data.data;

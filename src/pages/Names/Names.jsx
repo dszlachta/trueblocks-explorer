@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { namesSchema, groupsSchema, useNames } from 'store/names';
-import { DT } from 'components/DT';
-import { currentPage, getServerData } from 'components/utils';
+import { DataTable } from 'components/DataTable';
+import { currentPage, titleFromPage, getServerData } from 'components/utils';
 import './Names.css';
 
 //---------------------------------------------------------------------------
@@ -33,34 +33,29 @@ export function Names() {
   //   { label: 'Dated Blocks' },
   // http://localhost:3000/names/dated_blocks/when+generate&verbose
   let query = currentPage().subpage;
-  if (query === 'prefunds')
-    query = 'prefund';
-  else if (query === 'tokens')
-    query = 'named';
-  else if (query === 'wallets')
-    query = 'owned';
-  else if (query.includes('your') && query.includes('names'))
-    query = 'custom';
-  else if (query.includes('other') && query.includes('names'))
-    query = 'other'
+  if (query === 'prefunds') query = 'prefund';
+  else if (query === 'tokens') query = 'named';
+  else if (query === 'wallets') query = 'owned';
+  else if (query.includes('your') && query.includes('names')) query = 'custom';
+  else if (query.includes('other') && query.includes('names')) query = 'other';
   useEffect(() => {
-    getServerData('http://localhost:8080/names', query)
-      .then((theData) => {
-        console.log('theData: ', theData);
-        dispatch({ type: 'update', payload: theData })
-      })
+    getServerData('http://localhost:8080/names', query).then((theData) => {
+      console.log('theData: ', theData);
+      dispatch({ type: 'update', payload: theData });
+    });
   }, [query]);
 
-  const schema = currentPage().subpage === 'groups' ? groupsSchema : namesSchema;
+  const [schema, setSchema] = useState(namesSchema);
+  const [searchFields, setSearchFields] = useState(['address', 'name', 'group', 'symbol']);
+  const subpage = currentPage().subpage;
+  useEffect(() => {
+    setSchema(subpage === 'groups' ? groupsSchema : namesSchema);
+    setSearchFields(subpage === 'groups' ? ['group'] : ['address', 'name', 'group', 'symbol']);
+  }, [subpage]);
+
   return (
     <div>
-      <DT
-        columns={schema}
-        data={names}
-        title={'Names'}
-        pagination
-        search
-      />
+      <DataTable columns={schema} data={names} title={titleFromPage()} searchFields={searchFields} />
     </div>
   );
 }

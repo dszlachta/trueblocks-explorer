@@ -13,13 +13,21 @@ export const ContentPanel = () => {
   const title = page + (subpage ? ' : ' + subpage : '');
   const expanded = usePanels().state.content;
   return (
-    <Panel title={title} options={{ topIcon: <></>, type: 'content', expanded: usePanels().state.content }}>
-      {expanded
-        ?
-          <div style={{ margin: '2px 30px 2px 10px', padding: '5px' }}><InnerPage /></div>
-        :
-          <></>
-      }
+    <Panel
+      title={title.replace('%20', ' ')}
+      options={{
+        topIcon: <></>, //
+        type: 'content',
+        expanded: usePanels().state.content,
+      }}
+    >
+      {expanded ? (
+        <div style={{ margin: '2px 30px 2px 10px', padding: '5px' }}>
+          <InnerPage />
+        </div>
+      ) : (
+        <></>
+      )}
     </Panel>
   );
 };
