@@ -222,7 +222,7 @@ const MainRow = ({ columns, record, wids }) => {
         switch (type) {
           case 'number':
             cn += 'right';
-            value = value === 0 ? 0 : fmtNum(value);
+            value = value === '0' ? (column.hideZero ? '-' : 0) : fmtNum(value);
             break;
           case 'timestamp':
             cn += 'right';

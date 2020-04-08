@@ -74,6 +74,7 @@ export const namesSchema = [
     selector: 'decimals',
     type: 'number',
     align: 'center',
+    hideZero: true,
   },
   {
     width: 4,
