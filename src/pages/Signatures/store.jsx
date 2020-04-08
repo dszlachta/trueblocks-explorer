@@ -30,35 +30,40 @@ export const useSignatures = () => {
 //----------------------------------------------------------------------------
 export const signaturesSchema = [
   {
-    width: 2,
+    width: 1,
     name: 'Encoding',
     selector: 'encoding',
+    type: 'hash',
   },
   {
     width: 1,
     name: 'Type',
     selector: 'type',
+    type: 'string',
+    pill: true,
   },
   {
     width: 2,
     name: 'Name',
-    // cn: 'special',
     selector: 'name',
+    type: 'string',
   },
   {
     width: 1,
     name: 'Signature',
     selector: 'signature',
+    type: 'string',
   },
   {
-    width: 1,
+    width: 2,
     name: 'Input Names',
     selector: 'input_names',
+    type: 'string',
   },
   {
-    width: 1,
-    // cn: 'special',
+    width: 2,
     name: 'Output Names',
     selector: 'output_names',
+    type: 'string',
   },
 ];

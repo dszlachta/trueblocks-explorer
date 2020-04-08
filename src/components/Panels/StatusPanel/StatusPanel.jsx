@@ -44,14 +44,7 @@ export const StatusPanel = () => {
 };
 
 const StatusError = ({ error }) => {
-  const err = JSON.stringify(error, null, 2);
-  if (error === '' || error === '{}') return <></>; //
-  return (
-    <div className="warning">
-      Error: Is the API running?
-      <pre>{err}</pre>
-    </div>
-  );
+  return error ? <div className="warning">Error: Is the API running?</div> : <></>; //
 };
 
 const StatusTable = () => {

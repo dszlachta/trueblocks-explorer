@@ -17,20 +17,18 @@ export const handleClick = (e, dispatch, action = {}) => {
 };
 
 //----------------------------------------------------------------------
-export const getHelpMarkdown = (url, onSuccess, onFail) => {
+export const fetchFromServer = (url, onSuccess, onFail) => {
   fetch(url)
-    .then((r) => {
-      if (r.status !== 200) throw new Error('fetch to ' + url + ' failed.');
-      return r.text();
+    .then((res) => {
+      if (res.status !== 200) throw new Error('fetch to ' + url + ' failed.');
+      return res.text();
     })
-    .then((t) => {
-      if (onSuccess) onSuccess(t);
+    .then((txt) => {
+      if (onSuccess) onSuccess(txt);
     })
     .catch((err) => {
       if (onFail) {
         onFail(err.name + ': ' + err.message);
-      } else if (onSuccess) {
-        onSuccess(err.name + ': ' + err.message);
       }
     });
 };

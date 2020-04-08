@@ -1,17 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Pagination } from './Pagination';
 import { Search } from './Search';
 import { ObjectTable2 } from 'components';
-import { stateFromStorage, handleClick } from 'components/utils';
+import { stateFromStorage, handleClick, fmtNum } from 'components/utils';
 
 import './DataTable.css';
-
-const StyledTable = styled.div`
-  display: grid;
-  grid-template-columns: ${(props) => props.wids};
-`;
 
 const hasField = (columns, field) => {
   return (
@@ -48,12 +43,17 @@ export const DataTable = ({
   noHeader = false,
 }) => {
   const [pagingCtx, setPaging] = useState(stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0 }));
-  let total = columns.reduce((sum, item) => sum + item.width, 0);
+  let total = columns.reduce((sum, item) => sum + (item.hidden ? 0 : item.width), 0);
+  let nHidden = 0;
   const wids = columns.map((item) => {
+    if (item.hidden) {
+      nHidden++;
+      return '';
+    }
     if (Number.isNaN(total)) return '1fr ';
     return Math.floor((item.width / total) * 64) + 'fr ';
   });
-  if (Number.isNaN(total)) total = columns.length;
+  if (Number.isNaN(total)) total = columns.length - nHidden;
 
   const [filterText, setFilterText] = useState('');
   let filteredData = data;
@@ -105,7 +105,7 @@ export const DataTable = ({
   const showTools = title !== '' || search || pagination;
   const showHeader = !noHeader;
   return (
-    <>
+    <Fragment>
       {showTools && (
         <Toolbar
           title={title}
@@ -118,29 +118,20 @@ export const DataTable = ({
         />
       )}
       {showHeader && <Header columns={columns} />}
-      <StyledTable wids={wids} className="dt-body">
+      <div className="dt-body">
         {hasData ? (
           filteredData.map((record, index) => {
-            if (index < firstInPage || index >= lastInPage) return <></>; //
+            if (index < firstInPage || index >= lastInPage) return <Fragment></Fragment>;
             return (
-              <>
-                <MainRow key={index} columns={columns} record={record} />
-                {/* <div style={{ gridColumn: '1 / span 7' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr'}}>
-                  <div style={{ height: '100%' }}></div>
-                  <div style={{ height: '100%' }}>
-                  <ObjectTable2 fieldList={columns} data={record} />
-                  </div>
-                  <div style={{ height: '100%' }}></div>
-                </div>
-              </div> */}
-              </> //
+              <Fragment>
+                <MainRow wids={wids} key={index} columns={columns} record={record} />
+              </Fragment>
             );
           })
         ) : (
           <div>Loading...</div>
         )}
-      </StyledTable>
+      </div>
       {search ? (
         <div>
           Searching fields:{' '}
@@ -153,12 +144,26 @@ export const DataTable = ({
           </div>
         </div>
       ) : (
-        <div>Searching disabled</div>
+        <div>Searching is disabled</div>
       )}
       <div>Todo: Expandable Rows, Sorting</div>
-    </> //
+    </Fragment>
   );
 };
+
+//const ExpandedRow = ({ columns, record }) => {
+//  return (
+//    <div style={{ gridColumn: '1 / span 7' }}>
+//      <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr' }}>
+//        <div style={{ height: '100%' }}></div>
+//        <div style={{ height: '100%' }}>
+//          <ObjectTable2 fieldList={columns} data={record} />
+//        </div>
+//        <div style={{ height: '100%' }}></div>
+//      </div>
+//    </div>
+//  );
+//};
 
 const Toolbar = ({ title, search, searchFields, filterText, pagination, handler, pagingCtx }) => {
   return (
@@ -172,36 +177,68 @@ const Toolbar = ({ title, search, searchFields, filterText, pagination, handler,
   );
 };
 
+const StyledHeader = styled.div`
+  display: grid;
+  grid-template-columns: ${(props) => props.wids};
+`;
 const Header = ({ columns }) => {
-  let total = columns.reduce((sum, item) => sum + item.width, 0);
+  let total = columns.reduce((sum, item) => sum + (item.hidden ? 0 : item.width), 0);
+  let nHidden = 0;
   const wids = columns.map((item) => {
+    if (item.hidden) {
+      nHidden++;
+      return '';
+    }
     if (Number.isNaN(total)) return '1fr ';
     return Math.floor((item.width / total) * 64) + 'fr ';
   });
-  if (Number.isNaN(total)) total = columns.length;
+  if (Number.isNaN(total)) total = columns.length - nHidden;
 
   return (
     <StyledHeader wids={wids} columns={columns} className="dt-header">
       {columns.map((column) => {
+        if (column.hidden) return <Fragment></Fragment>;
         return <div>{column.name}</div>;
       })}
     </StyledHeader>
   );
 };
 
-const StyledHeader = styled.div`
+const StyledRow = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.wids};
 `;
 
-const MainRow = ({ columns, record }) => {
+const MainRow = ({ columns, record, wids }) => {
   return (
-    <>
+    <StyledRow className="dt-row" wids={wids}>
       {columns.map((column) => {
-        const key = column.selector;
-        const value = record[key];
-        return <div className={column.cn ? column.cn : 'dt-cell'}>{value}</div>;
+        if (column.hidden) return <Fragment></Fragment>;
+
+        const type = column.type ? column.type : 'string';
+        let value = record[column.selector];
+
+        let cn = (column.cn ? column.cn : 'dt-cell') + ' ';
+        switch (type) {
+          case 'number':
+            cn += 'right';
+            value = value === 0 ? 0 : fmtNum(value);
+            break;
+          case 'timestamp':
+            cn += 'right';
+            break;
+          case 'bool':
+            cn += 'center';
+            value = value ? 'true' : 'false';
+            break;
+          default:
+            break;
+        }
+        if (column.pill) {
+          cn += record[column.selector] + ' dt-pill';
+        }
+        return <div className={cn + ' ' + column.align}>{value}</div>;
       })}
-    </> //
+    </StyledRow>
   );
 };

@@ -46,7 +46,7 @@ const Display = ({ pagingCtx }) => {
 //-------------------------------------------------------
 const Selector = ({ handler, pagingCtx }) => {
   const [expanded, setExpanded] = useState(false);
-  const perPageOptions = [10, 20, 25, 50, 100];
+  const perPageOptions = [10, 15, 20, 30, 50, 75, 100];
   const { perPage } = pagingCtx;
   const onClick = (e) => {
     if (e.target.toggle) e.target.toggle();

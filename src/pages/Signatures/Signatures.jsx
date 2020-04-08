@@ -13,7 +13,7 @@ export function Signatures() {
   const signatures = useSignatures().state;
 
   const source = currentPage().subpage;
-  const query = source === '' ? 'monitored&known' : source;
+  const query = (source === '' ? 'monitored&known' : source) + '&verbose=10';
   useEffect(() => {
     getServerData('http://localhost:8080/abi', query).then((theData) => {
       dispatch({ type: 'update', payload: theData });

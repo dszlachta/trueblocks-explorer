@@ -41,6 +41,8 @@
   color: var(--grey-color);
   background-color: none !important;
   opacity: 0.75;
+  font-size: 0.6em;
+  height: 1.3em;
 }
 
 /*------------------------------------------*/

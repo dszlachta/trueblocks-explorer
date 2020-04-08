@@ -1,4 +1,5 @@
 import { Card } from './Card';
+import { Caddie } from './Caddie';
 import { Group } from './Group';
 import { Menu, MenuItem } from './Menu';
 import { Editable } from './Editable';
@@ -12,6 +13,7 @@ import { Debug } from './Debug';
 
 export {
   Card,
+  Caddie,
   Group,
   Debug,
   Menu,

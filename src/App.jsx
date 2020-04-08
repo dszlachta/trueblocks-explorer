@@ -13,7 +13,7 @@ import GlobalContext, {
 } from 'store';
 
 // page-related - for searching do not remove
-import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/store';
+import { dashboardDefault, dashboardReducer } from 'pages/Dashboard';
 import { projectsDefault, projectsReducer } from 'pages/Projects/store';
 import { namesDefault, namesReducer } from 'pages/Names/store';
 import { signaturesDefault, signaturesReducer } from 'pages/Signatures/store';
@@ -42,12 +42,12 @@ function App() {
   // page-related - for searching do not remove
   const theGlobalState = {
     panels: { state: panelState, dispatch: panelDispatch },
-    dashboard: { state: dashboardState, dispatch: dashboardDispatch },
+    dashboard: { dashboards: dashboardState, dispatch: dashboardDispatch },
     projects: { state: projectsState, dispatch: projectsDispatch },
     names: { state: namesState, dispatch: namesDispatch },
     signatures: { state: signaturesState, dispatch: signaturesDispatch },
     digests: { state: digestsState, dispatch: digestsDispatch },
-    caches: { state: cachesState, dispatch: cachesDispatch },
+    caches: { caches: cachesState, dispatch: cachesDispatch },
     status: { state: statusState, dispatch: statusDispatch },
     menus: { state: menusState, dispatch: menusDispatch },
   };

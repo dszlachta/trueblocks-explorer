@@ -30,27 +30,40 @@ export const useCaches = () => {
 //----------------------------------------------------------------------------
 export const cachesSchema = [
   {
-    name: 'Type',
+    width: 1,
+    name: 'Cache Type',
     selector: 'type',
+    type: 'string',
   },
   {
-    name: 'Path',
+    width: 2,
+    name: 'Location',
     selector: 'path',
+    type: 'string',
   },
   {
-    name: 'nFiles',
-    selector: 'nFiles',
-  },
-  {
-    name: 'nFolders',
+    width: 1,
+    name: '# Folders',
     selector: 'nFolders',
+    type: 'number',
   },
   {
-    name: 'sizeInBytes',
+    width: 1,
+    name: '# Files',
+    selector: 'nFiles',
+    type: 'number',
+  },
+  {
+    width: 1,
+    name: 'Total Size',
     selector: 'sizeInBytes',
+    type: 'number',
   },
   {
-    name: 'isValid',
+    width: 1,
+    name: 'Valid',
     selector: 'is_valid',
+    type: 'bool',
+    hidden: true,
   },
 ];

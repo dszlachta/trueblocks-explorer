@@ -9,7 +9,7 @@ import './Menu.css';
 export const Menu = ({ menu, parent = '' }) => {
   const indent = parent !== '';
   const style = indent ? { margin: '4px 10px' } : {};
-  const sep = indent ? '~ ~ ~ ~ ~ ~ ~ ~' : '- - - - - - - -';
+  const sep = indent ? '~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ' : '- - - - - - - - - - - - - - - - ';
   return (
     <>
       {menu.map((item) => {
@@ -39,9 +39,9 @@ export const Menu = ({ menu, parent = '' }) => {
 
 //----------------------------------------------------------------------
 export const MenuItem = ({ text, to, indent, exact, enabled, children }) => {
-  const style = indent ? { margin: '4px 10px' } : {};
+  const style = indent ? { margin: '3px 10px' } : {};
   const { page } = currentPage();
-  const expanded = page !== '/' && to.includes(page);
+  const active = page !== '/' && to.includes(page);
 
   if (!enabled) {
     return (
@@ -56,7 +56,7 @@ export const MenuItem = ({ text, to, indent, exact, enabled, children }) => {
       <NavLink style={style} className="menu-item" activeClassName="is-active" exact={exact} to={to}>
         {text}
       </NavLink>
-      {expanded ? children : <></>}
+      {active ? children : <></>}
     </>
   );
 };

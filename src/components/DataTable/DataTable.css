@@ -13,7 +13,7 @@
   text-overflow: ellipsis;
   justify-items: center;
   font-weight: 700;
-  border-bottom: 2px solid #073642;
+  border-bottom: 2px solid var(--dt-separator);
 }
 
 .dt-title {
@@ -24,11 +24,46 @@
   height: 27pt;
 }
 
+.dt-row {
+  border-bottom: 1px solid var(--dt-separator);
+}
+
 .dt-cell {
   padding: var(--data-table-padding);
-  border-bottom: 1px solid #073642;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.dt-cell.right {
+  text-align: right;
+}
+
+.dt-cell.center {
+  text-align: center;
+}
+
+.dt-cell:hover {
+  cursor: pointer;
+}
+
+.dt-pill {
+  padding: 0px !important;
+  text-decoration: none;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.9em;
+  height: 1.5em;
+  width: 80px;
+  justify-self: stretch;
+  align-self: center;
+  /* align-self: center;
+  justify-self: center;
+  margin: 5px 20px 0px 20px;
+  justify-self: stretch;
+  padding: 0px 0px;
+  margin: 5px 20% 5px 20%;
+  height: 10px;
+  margin: 10px; */
 }
 
 .dt-pagination-container {

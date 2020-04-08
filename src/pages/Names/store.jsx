@@ -38,31 +38,47 @@ export const groupsSchema = [
 //----------------------------------------------------------------------------
 export const namesSchema = [
   {
+    width: 3,
     name: 'Group',
     selector: 'group',
+    type: 'string',
   },
   {
+    width: 6,
     name: 'Address',
     selector: 'address',
+    type: 'address',
   },
   {
+    width: 4,
     name: 'Name',
     selector: 'name',
+    type: 'string',
   },
   {
+    width: 2,
     name: 'Symbol',
     selector: 'symbol',
+    type: 'string',
+    align: 'center',
   },
   {
+    width: 4,
     name: 'Source',
     selector: 'source',
+    type: 'string',
   },
   {
+    width: 2,
     name: 'Decimals',
     selector: 'decimals',
+    type: 'number',
+    align: 'center',
   },
   {
+    width: 4,
     name: 'Description',
     selector: 'description',
+    type: 'string',
   },
 ];

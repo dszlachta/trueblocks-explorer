@@ -30,51 +30,64 @@ export const useDigests = () => {
 //----------------------------------------------------------------------------
 export const digestsSchema = [
   {
-    name: 'type',
+    name: 'Cache Type',
     selector: 'type',
+    type: 'string',
   },
   {
-    name: 'nAddresses',
+    name: '# Addresses',
     selector: 'nAddresses',
+    type: 'number',
   },
   {
-    name: 'nAppearances',
+    name: '# Appearances',
     selector: 'nAppearances',
+    type: 'number',
   },
   {
-    name: 'firstAppearance',
+    name: 'Start Block',
     selector: 'firstAppearance',
+    type: 'number',
   },
   {
-    name: 'latestAppearance',
-    selector: 'latestAppearance',
-  },
-  {
-    name: 'firstTs',
+    name: 'Start Timestamp',
     selector: 'firstTs',
+    type: 'timestamp',
   },
   {
-    name: 'lastestTs',
+    name: 'End Block',
+    selector: 'latestAppearance',
+    type: 'number',
+  },
+  {
+    name: 'End Timestamp',
     selector: 'lastestTs',
+    type: 'timestamp',
   },
   {
-    name: 'filename',
+    name: 'Filename',
     selector: 'filename',
+    type: 'string',
+    hidden: true,
   },
   {
-    name: 'indexSizeBytes',
+    name: 'Index Size',
     selector: 'indexSizeBytes',
+    type: 'number',
   },
   {
-    name: 'index_hash',
+    name: 'Index Hash',
     selector: 'index_hash',
+    type: 'hash',
   },
   {
-    name: 'bloomSizeBytes',
+    name: 'Bloom Size',
     selector: 'bloomSizeBytes',
+    type: 'number',
   },
   {
-    name: 'bloom_hash',
+    name: 'Bloom Hash',
     selector: 'bloom_hash',
+    type: 'hash',
   },
 ];

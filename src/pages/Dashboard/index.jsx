@@ -1,2 +1,2 @@
-import { Dashboard } from './Dashboard';
-export { Dashboard }
+import { Dashboard, dashboardDefault, dashboardReducer } from './Dashboard';
+export { Dashboard, dashboardDefault, dashboardReducer };

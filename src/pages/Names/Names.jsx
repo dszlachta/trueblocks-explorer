@@ -11,21 +11,6 @@ export function Names() {
   const names = useNames().state;
   const dispatch = useNames().dispatch;
 
-  console.log('names: ', names);
-  console.log('schema: ', namesSchema);
-
-  // { label: 'Your Names' },
-  // http://localhost:3000/names/your_names/names+custom
-  //   { label: 'Wallets' },
-  // http://localhost:3000/names/wallets/names+owned
-  //   { label: 'Tokens' },
-  // http://localhost:3000/names/tokens/names+named
-  //   { label: 'Other Names' },
-  // http://localhost:3000/names/other_names/names+other
-  //   { label: 'Groups' },
-  // http://localhost:3000/names/groups/names+groups
-  //   { label: 'Separator' },
-  // { label: 'Separator' },
   // { label: 'Your Blocks' },
   // http://localhost:3000/names/your_blocks/when+list&verbose
   //   { label: 'Known Blocks' },
@@ -36,10 +21,11 @@ export function Names() {
   if (query === 'prefunds') query = 'prefund';
   else if (query === 'tokens') query = 'named';
   else if (query === 'wallets') query = 'owned';
-  else if (query.includes('your') && query.includes('names')) query = 'custom';
-  else if (query.includes('other') && query.includes('names')) query = 'other';
+  else if (query === 'yours') query = 'custom';
+  query += '&verbose=10';
+  const url = 'http://localhost:8080/names';
   useEffect(() => {
-    getServerData('http://localhost:8080/names', query).then((theData) => {
+    getServerData(url, query).then((theData) => {
       dispatch({ type: 'update', payload: theData });
     });
   }, [query]);
