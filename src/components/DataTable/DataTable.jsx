@@ -1,10 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { Pagination } from './Pagination';
-import { Search } from './Search';
-import { ObjectTable2 } from 'components';
-import { stateFromStorage, handleClick, fmtNum } from 'components/utils';
+import { ObjectTable2, TableToolbar } from 'components';
+import { stateFromStorage, handleClick, fmtNum, formatFieldByType } from 'components/utils';
 
 import './DataTable.css';
 
@@ -107,7 +105,7 @@ export const DataTable = ({
   return (
     <Fragment>
       {showTools && (
-        <Toolbar
+        <TableToolbar
           title={title}
           search={search}
           searchFields={searchFields}
@@ -146,7 +144,7 @@ export const DataTable = ({
       ) : (
         <div>Searching is disabled</div>
       )}
-      <div>Todo: Expandable Rows, Sorting</div>
+      <div>Todo: Expandable Rows, Sorting, Row Hover</div>
     </Fragment>
   );
 };
@@ -164,18 +162,6 @@ export const DataTable = ({
 //    </div>
 //  );
 //};
-
-const Toolbar = ({ title, search, searchFields, filterText, pagination, handler, pagingCtx }) => {
-  return (
-    <div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr 1fr' }}>
-        <Search enabled={search} searchFields={searchFields} filterText={filterText} handler={handler} />
-        {<div className="dt-title">{title.replace('%20', ' ')}</div>}
-        {pagination && <Pagination pagingCtx={pagingCtx} handler={handler} />}
-      </div>
-    </div>
-  );
-};
 
 const StyledHeader = styled.div`
   display: grid;
@@ -215,28 +201,36 @@ const MainRow = ({ columns, record, wids }) => {
       {columns.map((column) => {
         if (column.hidden) return <Fragment></Fragment>;
 
-        const type = column.type ? column.type : 'string';
+        let type = column.type ? column.type : 'string';
         let value = record[column.selector];
+        let decimals = 0;
+        if (type.includes('-calc')) {
+          if (column.selector.includes('/')) {
+            // divide
+            const sels = column.selector.split('/');
+            value = Math.floor(record[sels[0]] / record[sels[1]]);
+            decimals = 2;
+            type = type.replace('-calc', '');
+          }
+        }
+        value = formatFieldByType(type, value, false, column.hideZero, decimals);
 
-        let cn = (column.cn ? column.cn : 'dt-cell') + ' ';
+        let cn = 'dt-cell ' + column.cn + ' ';
         switch (type) {
+          case 'calc':
           case 'number':
-            cn += 'right';
-            value = value === '0' ? (column.hideZero ? '-' : 0) : fmtNum(value);
-            break;
           case 'timestamp':
+          case 'filesize':
             cn += 'right';
             break;
           case 'bool':
             cn += 'center';
-            value = value ? 'true' : 'false';
             break;
+          case 'string':
           default:
             break;
         }
-        if (column.pill) {
-          cn += record[column.selector] + ' dt-pill';
-        }
+        if (column.pill) cn += record[column.selector] + ' dt-pill';
         return <div className={cn + ' ' + column.align}>{value}</div>;
       })}
     </StyledRow>

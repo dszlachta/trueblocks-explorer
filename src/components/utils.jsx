@@ -98,8 +98,7 @@ export const currentPage = () => {
 };
 
 //---------------------------------------------------------------
-export const formatFieldByType = (type, value, countArrays) => {
-  //console.log('formatFieldByType: ', type, value);
+export const formatFieldByType = (type, value, countArrays, hideZero = false, decimals = 0) => {
   switch (type) {
     case 'object':
       if (typeof value === 'object') value = JSON.stringify(value, null, 2);
@@ -118,8 +117,10 @@ export const formatFieldByType = (type, value, countArrays) => {
       value = humanFileSize(value, true);
       break;
     case 'number':
-      value = fmtNum(value);
+      const isZero = value === '0' || value === 0;
+      value = isZero && hideZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
       break;
+    case 'timestamp':
     case 'string':
     default:
       break;
@@ -169,10 +170,10 @@ export const humanFileSize = (numInBytes) => {
   const si = true;
   var thresh = si ? 1000 : 1024;
   if (Math.abs(numInBytes) < thresh) {
-    return numInBytes + ' B';
+    return numInBytes + ' bytes';
   }
   var units = si
-    ? ['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+    ? ['kb', 'mb', 'gb', 'tb', 'pb', 'eb', 'zb', 'yb']
     : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
   var u = -1;
   do {

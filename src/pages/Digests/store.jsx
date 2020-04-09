@@ -43,6 +43,7 @@ export const digestsSchema = [
     name: '# Appearances',
     selector: 'nAppearances',
     type: 'number',
+    cn: 'apps',
   },
   {
     name: 'Start Block',
@@ -79,6 +80,7 @@ export const digestsSchema = [
     name: 'Index Hash',
     selector: 'index_hash',
     type: 'hash',
+    cn: 'hashes',
   },
   {
     name: 'Bloom Size',
@@ -89,5 +91,6 @@ export const digestsSchema = [
     name: 'Bloom Hash',
     selector: 'bloom_hash',
     type: 'hash',
+    cn: 'hashes',
   },
 ];

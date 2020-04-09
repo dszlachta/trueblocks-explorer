@@ -16,7 +16,7 @@ import GlobalContext, {
 import { dashboardDefault, dashboardReducer } from 'pages/Dashboard';
 import { projectsDefault, projectsReducer } from 'pages/Projects/store';
 import { namesDefault, namesReducer } from 'pages/Names/store';
-import { signaturesDefault, signaturesReducer } from 'pages/Signatures/store';
+import { signaturesDefault, signaturesReducer } from 'pages/Signatures';
 import { digestsDefault, digestsReducer } from 'pages/Digests/store';
 import { cachesDefault, cachesReducer } from 'pages/Caches/store';
 import { stateFromStorage } from 'components/utils';

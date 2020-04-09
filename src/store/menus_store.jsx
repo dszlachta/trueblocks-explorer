@@ -72,7 +72,7 @@ export const menusDefault = {
       label: 'Caches',
       items: [
         { label: 'Blocks' },
-        { label: 'Txs' },
+        { label: 'Transactions' },
         { label: 'Traces' },
         { label: 'Separator' },
         { label: 'Abis' },
@@ -109,14 +109,12 @@ export const menusDefault = {
     {
       label: 'Support',
       items: [
-        { label: 'Free Support', path: 'free' },
-        { label: 'Per Incident', path: 'incident' },
+        { label: 'Contact Us', path: 'contact' },
         { label: 'Separator' },
         { label: 'Hot Keys', path: 'keys' },
         { label: 'Documentation' },
-        { label: 'Licensing' },
         { label: 'Separator' },
-        { label: 'Contact Us', path: 'contact' },
+        { label: 'Licensing' },
         { label: 'About Us', path: 'about' },
       ],
     },

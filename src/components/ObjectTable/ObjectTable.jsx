@@ -13,6 +13,7 @@ export const ObjectTable = ({
   fields = defaultObjFields,
   options = defObjTableOptions,
   updateFunc = null,
+  displayFunc = null,
   fieldList,
 }) => {
   return (
@@ -23,7 +24,8 @@ export const ObjectTable = ({
         if (field.hidden) return true;
 
         const type = field.type || 'string';
-        const value = formatFieldByType(type, data[fieldName], options.countArrays);
+        const val = displayFunc && displayFunc(data, field);
+        let value = val ? val : formatFieldByType(type, data[fieldName], options.countArrays);
         const editable = field.editable;
         const displayName = field.name || fieldName;
         const record_id = data[options.idField]; // may be empty

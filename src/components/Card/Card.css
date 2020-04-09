@@ -1,7 +1,7 @@
 .card {
   margin: 0px 0px 25px 25px;
   padding: 2px;
-  width: var(--card-width);
+  width: 325px;
   border-style: outset;
   background-color: var(--bgcolor-card);
   color: var(--color-card);

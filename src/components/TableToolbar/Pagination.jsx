@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { handleClick } from 'components/utils';
 
-import './DataTable.css';
+import '../DataTable/DataTable.css';
 
 import ChevronsLeft from 'assets/icons/ChevronsLeft';
 import ChevronLeft from 'assets/icons/ChevronLeft';

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import { DataTable } from 'components/DataTable';
 import { currentPage, titleFromPage, getServerData } from 'components/utils';
-import { signaturesSchema, useSignatures } from './store';
+import { signaturesDefault, signaturesReducer, signaturesSchema, useSignatures } from './store';
 
 import './Signatures.css';
 
@@ -31,3 +31,5 @@ export function Signatures() {
     </div>
   );
 }
+
+export { signaturesDefault, signaturesReducer };

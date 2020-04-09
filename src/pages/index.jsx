@@ -22,11 +22,9 @@ import {
 import {
   Support,
   SupportKeys,
-  SupportFree,
-  SupportIncident,
+  SupportContact,
   SupportDocumentation,
   SupportLicensing,
-  SupportContact,
   SupportAbout,
 } from './Support/Support';
 
@@ -78,7 +76,7 @@ export const thePages = {
   'digests/columns': { component: <Digests /> },
   'caches/': { component: <Caches /> },
   'caches/blocks': { component: <Caches /> },
-  'caches/txs': { component: <Caches /> },
+  'caches/transactions': { component: <Caches /> },
   'caches/traces': { component: <Caches /> },
   'caches/slurps': { component: <Caches /> },
   'caches/prices': { component: <Caches /> },
@@ -92,11 +90,9 @@ export const thePages = {
   'settings/schemas': { component: <SettingsSchemas /> },
   'support/': { component: <Support /> },
   'support/keys': { component: <SupportKeys /> },
-  'support/free': { component: <SupportFree /> },
-  'support/incident': { component: <SupportIncident /> },
+  'support/contact': { component: <SupportContact /> },
   'support/documentation': { component: <SupportDocumentation /> },
   'support/licensing': { component: <SupportLicensing /> },
-  'support/contact': { component: <SupportContact /> },
   'support/about': { component: <SupportAbout /> },
 };
 

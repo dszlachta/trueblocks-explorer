@@ -13,7 +13,7 @@
   text-overflow: ellipsis;
   justify-items: center;
   font-weight: 700;
-  border-bottom: 2px solid var(--dt-separator);
+  border-bottom: 2px solid var(--separator);
 }
 
 .dt-title {
@@ -25,7 +25,7 @@
 }
 
 .dt-row {
-  border-bottom: 1px solid var(--dt-separator);
+  border-bottom: 1px solid var(--separator);
 }
 
 .dt-cell {
@@ -56,14 +56,6 @@
   width: 80px;
   justify-self: stretch;
   align-self: center;
-  /* align-self: center;
-  justify-self: center;
-  margin: 5px 20px 0px 20px;
-  justify-self: stretch;
-  padding: 0px 0px;
-  margin: 5px 20% 5px 20%;
-  height: 10px;
-  margin: 10px; */
 }
 
 .dt-pagination-container {

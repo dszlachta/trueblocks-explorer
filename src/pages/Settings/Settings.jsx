@@ -1,5 +1,8 @@
 import React from 'react';
 
+import { SettingsSkins } from './SettingsSkins';
+export { SettingsSkins };
+
 export const Settings = () => {
   return <div className="okay">Actual Settings Page</div>;
 };
@@ -20,11 +23,6 @@ export const SettingsSharing = () => {
   return <div className="okay">Actual Settings Sharing Page</div>;
 };
 
-export const SettingsSkins = () => {
-  return <div className="okay">Actual Settings Skins Page</div>;
-};
-
 export const SettingsSchemas = () => {
   return <div className="okay">Actual Settings Schemas Page</div>;
 };
-

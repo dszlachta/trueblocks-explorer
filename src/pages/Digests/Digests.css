@@ -1,0 +1,13 @@
+.hashes {
+  color: turquoise;
+  font-weight: 500;
+}
+
+.apps {
+  color: red;
+  font-weight: 500;
+}
+
+.x {
+  grid-auto-flow: row;
+}

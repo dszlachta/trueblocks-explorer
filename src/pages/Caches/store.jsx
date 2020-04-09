@@ -57,7 +57,13 @@ export const cachesSchema = [
     width: 1,
     name: 'Total Size',
     selector: 'sizeInBytes',
-    type: 'number',
+    type: 'filesize',
+  },
+  {
+    width: 1,
+    name: 'Average Size',
+    selector: 'sizeInBytes/nFiles',
+    type: 'filesize-calc',
   },
   {
     width: 1,
