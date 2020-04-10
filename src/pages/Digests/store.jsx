@@ -51,7 +51,7 @@ export const digestsSchema = [
     type: 'number',
   },
   {
-    name: 'Start Timestamp',
+    name: 'Start TS',
     selector: 'firstTs',
     type: 'timestamp',
   },
@@ -61,7 +61,7 @@ export const digestsSchema = [
     type: 'number',
   },
   {
-    name: 'End Timestamp',
+    name: 'End TS',
     selector: 'lastestTs',
     type: 'timestamp',
   },
@@ -74,23 +74,25 @@ export const digestsSchema = [
   {
     name: 'Index Size',
     selector: 'indexSizeBytes',
-    type: 'number',
+    type: 'filesize',
   },
   {
     name: 'Index Hash',
     selector: 'index_hash',
     type: 'hash',
     cn: 'hashes',
+    align: 'center',
   },
   {
     name: 'Bloom Size',
     selector: 'bloomSizeBytes',
-    type: 'number',
+    type: 'filesize',
   },
   {
     name: 'Bloom Hash',
     selector: 'bloom_hash',
     type: 'hash',
     cn: 'hashes',
+    align: 'center',
   },
 ];

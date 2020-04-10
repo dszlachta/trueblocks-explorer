@@ -10,16 +10,15 @@ import './ObjectTable.css';
 //---------------------------------------------------------------
 export const ObjectTable = ({
   data,
-  fields = defaultObjFields,
+  columns = defaultObjFields,
   options = defObjTableOptions,
   updateFunc = null,
   displayFunc = null,
-  fieldList,
 }) => {
   return (
-    <div className="object-table">
-      {Object.keys(fields).map((fieldName) => {
-        const field = fields[fieldName];
+    <div className="old-ot-body">
+      {Object.keys(columns).map((fieldName) => {
+        const field = columns[fieldName];
 
         if (field.hidden) return true;
 
@@ -34,10 +33,11 @@ export const ObjectTable = ({
             <ObjectTableSider>
               {displayName}:{editable}
             </ObjectTableSider>
+            <div></div>
             <TableColumn editable={editable} options={options}>
               {editable ? (
                 <Editable
-                  className="object-table-cell-inner"
+                  className="ot-cell-inner"
                   record_id={record_id}
                   fieldValue={value}
                   fieldName={fieldName}
@@ -46,7 +46,7 @@ export const ObjectTable = ({
                   onValidate={field.onValidate}
                 />
               ) : (
-                <>{value}</>
+                <Fragment>{value}</Fragment>
               )}
             </TableColumn>
           </Fragment>
@@ -56,11 +56,13 @@ export const ObjectTable = ({
   );
 };
 
-//---------------------------------------------------------------
-export const ObjectTable2 = ({ data, fieldList }) => {
+/*
+ */
+//-----------------------------------------------------------------
+export const ObjectTable2 = ({ data, columns }) => {
   return (
-    <div className="object-table">
-      {fieldList.map((field) => {
+    <div className="at-body ">
+      {columns.map((field) => {
         const fieldName = field.selector;
         if (field.hidden) return true;
 
@@ -71,80 +73,61 @@ export const ObjectTable2 = ({ data, fieldList }) => {
         const record_id = 0; //data[options.idField]; // may be empty
 
         return (
-          <Fragment key={fieldName}>
+          <div key={fieldName} className="at-row ot-row">
             <ObjectTableSider>
               {displayName}:{editable}
             </ObjectTableSider>
+            <div></div>
             <TableColumn editable={editable}>
-              {' '}
-              {/*options={options}>*/}
               {editable ? (
                 <Editable
-                  className="object-table-cell-inner"
                   record_id={record_id}
                   fieldValue={value}
                   fieldName={fieldName}
                   placeholder={fieldName}
-                  // onAccept={updateFunc}
                   onValidate={field.onValidate}
                 />
               ) : (
-                <>{value}</>
+                <Fragment>{value}</Fragment>
               )}
             </TableColumn>
-          </Fragment>
+          </div>
         );
       })}
     </div>
   );
 };
 
-//---------------------------------------------------------------
+//-----------------------------------------------------------------
 const ObjectTableSider = ({ children }) => {
   return (
-    <>
-      <div className="object-table-sider"></div>
-      <div className="object-table-sider" align="right">
-        {children}
-      </div>
-      <div className="object-table-sider"></div>
-    </> //
+    <Fragment>
+      <div className="base-header at-sider">{children}</div>
+    </Fragment>
   );
 };
 
-//---------------------------------------------------------------
+//-----------------------------------------------------------------
 export const defaultObjFields = {
   id: { hidden: !isVerbose() },
   deleted: { type: 'bool', hidden: !isVerbose() },
   route: { hidden: !isVerbose() },
 };
-//sizeInBytes: { type: 'filesize', name: 'size' },
 
-//----------------------------------------------------
-export const TableColumn = ({ editable = false, options = defColumnOptions, children }) => {
-  let cn = 'table-column ' + options.innerClassName + (editable ? ' object-table-cell-editable' : '');
+//-----------------------------------------------------------------
+export const TableColumn = ({ editable = false, children }) => {
+  let cn = 'ot-column' + (editable ? ' ot-cell-editable' : '');
   return (
-    <>
-      {options.padCols ? <div className="table-column"></div> : <></>}
-      <div className={cn} align="left">
-        {children}
-      </div>
-      {options.padCols ? <div className="table-column"></div> : <></>}
-    </> //
+    <div className={cn} align="left">
+      {children}
+    </div>
   );
 };
 
-//---------------------------------------------------------------
-export const defColumnOptions = {
-  innerClassName: 'object-table-cell-inner',
-  padCols: true,
-};
-
-//---------------------------------------------------------------
+//-----------------------------------------------------------------
 export const defaultTableOptions = {
   countArrays: true,
   idField: 'id',
-  padCols: true,
 };
 
 export const defObjTableOptions = defaultTableOptions;

@@ -1,11 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { ObjectTable2, TableToolbar } from 'components';
+import { ObjectTable2, Toolbar } from 'components';
 import { stateFromStorage, handleClick, fmtNum, formatFieldByType } from 'components/utils';
 
 import './DataTable.css';
 
+//-----------------------------------------------------------------
 const hasField = (columns, field) => {
   return (
     columns.filter((item) => {
@@ -14,7 +15,9 @@ const hasField = (columns, field) => {
   );
 };
 
+//-----------------------------------------------------------------
 const hasFields = (columns, fields) => {
+  if (!fields) return false;
   return (
     fields.reduce((sum, field) => {
       return sum + hasField(columns, field);
@@ -22,6 +25,7 @@ const hasFields = (columns, fields) => {
   );
 };
 
+//-----------------------------------------------------------------
 const matches = (record, fields, filterText) => {
   return (
     fields.reduce((sum, field) => {
@@ -31,10 +35,11 @@ const matches = (record, fields, filterText) => {
   );
 };
 
+//-----------------------------------------------------------------
 export const DataTable = ({
   columns,
   data,
-  title,
+  title = 'Data Table (dt-)',
   search = true,
   searchFields,
   pagination = true,
@@ -105,18 +110,18 @@ export const DataTable = ({
   return (
     <Fragment>
       {showTools && (
-        <TableToolbar
+        <Toolbar
           title={title}
-          search={search}
-          searchFields={searchFields}
-          filterText={filterText}
-          pagination={pagination}
           handler={pageHandler}
+          search={search}
+          filterText={filterText}
+          searchFields={searchFields}
+          pagination={pagination}
           pagingCtx={pagingCtx}
         />
       )}
       {showHeader && <Header columns={columns} />}
-      <div className="dt-body">
+      <div className="at-body dt-body">
         {hasData ? (
           filteredData.map((record, index) => {
             if (index < firstInPage || index >= lastInPage) return <Fragment></Fragment>;
@@ -134,28 +139,33 @@ export const DataTable = ({
         <div>
           Searching fields:{' '}
           <div style={{ display: 'inline', fontStyle: 'italic' }}>
-            {searchFields
-              .map((field) => {
-                return field;
-              })
-              .join(', ')}
+            {searchFields ? (
+              searchFields
+                .map((field) => {
+                  return field;
+                })
+                .join(', ')
+            ) : (
+              <Fragment></Fragment>
+            )}
           </div>
         </div>
       ) : (
         <div>Searching is disabled</div>
       )}
-      <div>Todo: Expandable Rows, Sorting, Row Hover</div>
+      <div>Todo: Expandable Rows, Sorting, Row and Icon Hover</div>
     </Fragment>
   );
 };
 
+//-----------------------------------------------------------------
 //const ExpandedRow = ({ columns, record }) => {
 //  return (
 //    <div style={{ gridColumn: '1 / span 7' }}>
 //      <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr' }}>
 //        <div style={{ height: '100%' }}></div>
 //        <div style={{ height: '100%' }}>
-//          <ObjectTable2 fieldList={columns} data={record} />
+//          <ObjectTable2 columns={columns} data={record} />
 //        </div>
 //        <div style={{ height: '100%' }}></div>
 //      </div>
@@ -163,10 +173,13 @@ export const DataTable = ({
 //  );
 //};
 
+//-----------------------------------------------------------------
 const StyledHeader = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.wids};
 `;
+
+//-----------------------------------------------------------------
 const Header = ({ columns }) => {
   let total = columns.reduce((sum, item) => sum + (item.hidden ? 0 : item.width), 0);
   let nHidden = 0;
@@ -181,7 +194,7 @@ const Header = ({ columns }) => {
   if (Number.isNaN(total)) total = columns.length - nHidden;
 
   return (
-    <StyledHeader wids={wids} columns={columns} className="dt-header">
+    <StyledHeader wids={wids} columns={columns} className="base-header at-header dt-header">
       {columns.map((column) => {
         if (column.hidden) return <Fragment></Fragment>;
         return <div>{column.name}</div>;
@@ -190,14 +203,16 @@ const Header = ({ columns }) => {
   );
 };
 
+//-----------------------------------------------------------------
 const StyledRow = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.wids};
 `;
 
+//-----------------------------------------------------------------
 const MainRow = ({ columns, record, wids }) => {
   return (
-    <StyledRow className="dt-row" wids={wids}>
+    <StyledRow className="at-row" wids={wids}>
       {columns.map((column) => {
         if (column.hidden) return <Fragment></Fragment>;
 
@@ -213,6 +228,7 @@ const MainRow = ({ columns, record, wids }) => {
             type = type.replace('-calc', '');
           }
         }
+
         value = formatFieldByType(type, value, false, column.hideZero, decimals);
 
         let cn = 'dt-cell ' + column.cn + ' ';
@@ -221,17 +237,22 @@ const MainRow = ({ columns, record, wids }) => {
           case 'number':
           case 'timestamp':
           case 'filesize':
-            cn += 'right';
+            cn += 'right ';
             break;
           case 'bool':
-            cn += 'center';
+            cn += 'center ';
             break;
           case 'string':
           default:
             break;
         }
-        if (column.pill) cn += record[column.selector] + ' dt-pill';
-        return <div className={cn + ' ' + column.align}>{value}</div>;
+        cn += column.pill ? ' at-pill center ' + record[column.selector] : '';
+        const style = column.align ? { justifySelf: column.align } : {};
+        return (
+          <div style={style} className={cn}>
+            {value}
+          </div>
+        );
       })}
     </StyledRow>
   );

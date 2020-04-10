@@ -9,7 +9,7 @@ import './Dashboard.css';
 //----------------------------------------------------
 export const Dashboard = () => {
   const { dashboards } = useDashboard();
-  return <Caddie cn="dashboard" title="Modules" cards={dashboards} schema={dashboardSchema} />;
+  return <Caddie cn="dashboard" title="Modules" cards={dashboards} columns={dashboardSchema} />;
 };
 
 // page-related - for searching do not remove

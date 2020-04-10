@@ -75,7 +75,7 @@ const spinProjects = (projects, dispatch, updateFunc, active) => {
 
     return (
       <Card key={project.id} title={project.name} headerClass={cn} iconTray={tray} headerLink={route} topIcon={topIcon}>
-        <ObjectTable data={project} fields={projectsSchema} updateFunc={updateFunc} />
+        <ObjectTable data={project} columns={projectsSchema} updateFunc={updateFunc} />
       </Card>
     );
   });

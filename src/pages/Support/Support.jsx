@@ -11,7 +11,7 @@
 //       {dashboards.map((board) => {
 //         return (
 //           <Card key={board.id} title={board.name} headerLink={board.route} headerClass="card-center">
-//             <ObjectTable data={board} fields={dashboardSchema} />
+//             <ObjectTable data={board} columns={dashboardSchema} />
 //           </Card>
 //         );
 //       })}

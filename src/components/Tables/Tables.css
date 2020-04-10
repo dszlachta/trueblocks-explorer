@@ -1,0 +1,211 @@
+/*------------------------------------------*/
+:root {
+  --at-color: lightyellow;
+  --at-bgcolor: #265077;
+  --at-color2: #265077;
+  --at-bgcolor2: white;
+  --at-border: 1px solid #265077;
+  --at-border2: 1px solid #e5e5e5;
+  /**/
+  --at-padding: 2px 1px;
+  --at-radius: 5px;
+  --at-font-family: 'Courier New', Courier, monospace;
+}
+
+/*
+.onecolor {
+  --at-color: lightyellow;
+  --at-bgcolor: #265077;
+  --at-color2: lightyellow;
+  --at-bgcolor2: #265077;
+  --at-border: 1px solid #e5e5e5;
+  --at-border2: 1px solid #e5e5e5;
+}
+
+.normal {
+  --at-color: lightyellow;
+  --at-bgcolor: #265077;
+  --at-color2: #265077;
+  --at-bgcolor2: white;
+  --at-border: 1px solid #265077;
+  --at-border2: 1px solid #e5e5e5;
+}
+
+.testing {
+  --at-color: blue;
+  --at-bgcolor: orange;
+  --at-color2: blue;
+  --at-bgcolor2: antiquewhite;
+  --at-border: 1px solid red;
+  --at-border2: 1px solid red;
+}
+
+.solarize {
+  --at-color: #2aa198;
+  --at-bgcolor: #002b36;
+  --at-color2: #2aa198;
+  --at-bgcolor2: #002b36;
+  --at-border: 1px solid #2aa198;
+  --at-border2: 1px solid #103f4f;
+} */
+
+/*-----------------------------------*/
+.base-header {
+  font-size: 1em;
+  font-weight: 500;
+  font-family: var(--at-font-family);
+  color: var(--at-color);
+  background-color: var(--at-bgcolor);
+}
+
+.at-header {
+  text-align: center;
+  padding: var(--at-padding);
+  border: var(--at-border);
+  border-bottom-width: 0px;
+  border-radius: 0px var(--at-radius) 0px 0px;
+}
+
+/*-----------------------------------*/
+.at-body {
+  font-weight: 300;
+  font-family: var(--at-font-family);
+  border: var(--at-border);
+  border-radius: 0px 0px var(--at-radius) var(--at-radius);
+  color: var(--at-color2);
+  background-color: var(--at-bgcolor2);
+}
+
+/*-----------------------------------*/
+.ct-header {
+  display: block; /* do nothing */
+}
+
+.ct-body {
+  display: block; /* do nothing */
+}
+
+/*-----------------------------------*/
+.dt-header {
+  display: block; /* do nothing */
+}
+
+.dt-body {
+  display: block; /* do nothing */
+}
+
+/*-----------------------------------*/
+.gt-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  justify-items: stretch;
+}
+.gt-body {
+  display: block; /* do nothing */
+}
+
+/*-----------------------------------*/
+.pt-header {
+  display: block; /* do nothing */
+}
+
+.pt-body {
+  width: 325px;
+  padding: 2px;
+  margin: 0px 0px 25px 25px;
+  border-style: outset;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+/*-----------------------------------*/
+.at-sider {
+  border: 0px !important;
+  padding: var(--at-padding);
+  text-align: right;
+  padding-right: 3px;
+}
+
+/*-----------------------------------*/
+.at-row {
+  border-bottom: var(--at-border2);
+}
+.at-row:last-child {
+  border-bottom: 0px;
+}
+
+/*-----------------------------------*/
+.gt-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  text-align: center;
+}
+
+/*-----------------------------------*/
+.dt-cell {
+  padding: var(--at-padding);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*-----------------------------------*/
+.gt-cell {
+  display: block;
+  border-right: var(--at-border2);
+}
+
+.gt-cell:last-child {
+  border-right: 0px;
+}
+
+.gt-cell:hover {
+  cursor: pointer;
+  background-color: var(--at-color2);
+  color: var(--at-bgcolor2);
+  opacity: 75%;
+}
+
+/*-----------------------------------*/
+.at-pill {
+  font-size: 0.9em;
+  height: 1.5em;
+  width: 80px;
+  align-self: center;
+  border: 1px dashed black;
+  border-radius: 4px;
+  padding: 2px;
+  text-align: center;
+}
+
+.ot-cell-editable {
+  display: block;
+}
+
+.ot-column {
+  padding: var(--at-padding);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.at-title {
+  align-self: end;
+  justify-self: center;
+  font-size: 20pt;
+  height: 27pt;
+}
+
+.selected {
+  background-color: red;
+  /* var(--at-bgcolor); */
+  color: white;
+}
+
+.inactive {
+  background-color: var(--grey-color);
+}
+
+.in-progress {
+  background: repeating-linear-gradient(-45deg, #daeeda, #daeeda 5px, white 5px, white 10px);
+  background-repeat: repeat;
+  border-radius: 0px 0px var(--at-radius) var(--at-radius);
+}

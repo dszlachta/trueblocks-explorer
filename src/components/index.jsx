@@ -4,11 +4,7 @@ import { Group } from './Group';
 import { Menu, MenuItem } from './Menu';
 import { Editable } from './Editable';
 import { Panel } from './Panels/Panel';
-import { TableToolbar } from './TableToolbar/TableToolbar';
-import { ObjectTable2, ObjectTable, defObjTableOptions } from './ObjectTable/ObjectTable';
-import { DataTable } from './DataTable/DataTable';
-import { GridTable } from './GridTable/GridTable';
-import { ChartTable } from './ChartTable/ChartTable';
+import { Toolbar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable, ObjectTable2 } from './Tables';
 import { MenuPanel } from './Panels/MenuPanel';
 import { ContentPanel } from './Panels/ContentPanel';
 import { StatusPanel } from './Panels/StatusPanel';
@@ -24,13 +20,13 @@ export {
   MenuItem,
   Editable,
   Panel,
-  TableToolbar,
+  Toolbar,
   DataTable,
   ObjectTable2,
   ObjectTable,
-  defObjTableOptions,
   GridTable,
   ChartTable,
+  PanelTable,
   MenuPanel,
   ContentPanel,
   StatusPanel,

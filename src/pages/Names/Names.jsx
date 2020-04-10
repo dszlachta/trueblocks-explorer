@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { namesSchema, groupsSchema, useNames } from './store';
-import { DataTable } from 'components/DataTable';
+import { DataTable } from 'components';
 import { currentPage, titleFromPage, getServerData } from 'components/utils';
 import './Names.css';
 

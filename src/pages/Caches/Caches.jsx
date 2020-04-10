@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 //import PropTypes from 'prop-types';
 
-import { DataTable } from 'components/DataTable';
+import { DataTable } from 'components';
 import { currentPage, titleFromPage, getServerData1 } from 'components/utils';
 import { cachesSchema, useCaches } from './store';
 

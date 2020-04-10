@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 //import PropTypes from 'prop-types';
 
-import { DataTable } from 'components/DataTable';
+import { DataTable } from 'components';
 import { currentPage, titleFromPage, getServerData } from 'components/utils';
 import { signaturesDefault, signaturesReducer, signaturesSchema, useSignatures } from './store';
 
@@ -21,14 +21,12 @@ export function Signatures() {
   }, [source]);
 
   return (
-    <div>
-      <DataTable
-        columns={signaturesSchema}
-        data={signatures}
-        title={titleFromPage()}
-        searchFields={['encoding', 'type', 'name']}
-      />
-    </div>
+    <DataTable
+      title={titleFromPage()}
+      columns={signaturesSchema}
+      data={signatures}
+      searchFields={['encoding', 'type', 'name']}
+    />
   );
 }
 

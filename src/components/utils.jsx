@@ -13,7 +13,7 @@ export const stateFromStorage = (key, defaultState) => {
 //----------------------------------------------------------------------
 export const handleClick = (e, dispatch, action = {}) => {
   e.preventDefault();
-  dispatch(action);
+  if (dispatch) dispatch(action);
 };
 
 //----------------------------------------------------------------------
@@ -185,6 +185,7 @@ export const humanFileSize = (numInBytes) => {
 
 //----------------------------------------------------------------------------
 export const fmtNum = (n, dd = 0, type = '', delim = ',', dec = '.') => {
+  if (n === 0) return '0';
   if (!n) return '';
   const number = type === '' ? n.toString() : n.toFixed(dd);
   const prefix = type === '' ? '' : type === '$' ? type + ' ' : '';
@@ -211,6 +212,7 @@ TESTING
   }
 
   <div style={{ margin: '200px', fontSize: '1em' }}>
+    {check(fmtNum(0), "0")}
     {check(fmtNum(2665), "2,665")}
     {check(fmtNum(-102665), "-102,665")}
     {check(fmtNum(111102665), "111,102,665")}
