@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "axios": "^0.19.2",
+    "d3": "^5.15.1",
+    "d3-array": "^2.4.0",
+    "d3-scale": "^3.2.1",
     "deepmerge": "^4.2.2",
     "husky": "^4.2.3",
     "jquery": "^3.4.1",
