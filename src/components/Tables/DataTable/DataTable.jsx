@@ -1,39 +1,10 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { ObjectTable2, Toolbar } from 'components';
+import { ObjectTable2, Toolbar, Editable } from 'components';
 import { stateFromStorage, handleClick, fmtNum, formatFieldByType } from 'components/utils';
 
 import './DataTable.css';
-
-//-----------------------------------------------------------------
-const hasField = (columns, field) => {
-  return (
-    columns.filter((item) => {
-      return item.selector === field;
-    }).length > 0
-  );
-};
-
-//-----------------------------------------------------------------
-const hasFields = (columns, fields) => {
-  if (!fields) return false;
-  return (
-    fields.reduce((sum, field) => {
-      return sum + hasField(columns, field);
-    }, 0) === fields.length
-  );
-};
-
-//-----------------------------------------------------------------
-const matches = (record, fields, filterText) => {
-  return (
-    fields.reduce((sum, field) => {
-      console.log();
-      return sum + record[field].toLowerCase().includes(filterText.toLowerCase());
-    }, 0) > 0
-  );
-};
 
 //-----------------------------------------------------------------
 export const DataTable = ({
@@ -211,49 +182,79 @@ const StyledRow = styled.div`
 
 //-----------------------------------------------------------------
 const MainRow = ({ columns, record, wids }) => {
+  console.log(
+    '----------------------------------------------------------------------------------------------------------------'
+  );
   return (
-    <StyledRow className="at-row" wids={wids}>
-      {columns.map((column) => {
-        if (column.hidden) return <Fragment></Fragment>;
+    <Fragment>
+      <StyledRow className="at-row" wids={wids}>
+        {columns.map((column) => {
+          if (column.hidden) return <Fragment></Fragment>;
 
-        let type = column.type ? column.type : 'string';
-        let value = record[column.selector];
-        let decimals = 0;
-        if (type.includes('-calc')) {
-          if (column.selector.includes('/')) {
-            // divide
-            const sels = column.selector.split('/');
-            value = Math.floor(record[sels[0]] / record[sels[1]]);
-            decimals = 2;
-            type = type.replace('-calc', '');
+          let decimals = column.decimals || 0;
+          let type = column.type ? column.type : 'string';
+          let value = calcValue(record, columns, column);
+          value = formatFieldByType(type, value, false, column.hideZero, decimals);
+
+          let cn = 'at-cell ' + column.cn + ' ';
+          switch (type) {
+            case 'calc':
+            case 'number':
+            case 'timestamp':
+            case 'filesize':
+              cn += 'right ';
+              break;
+            case 'bool':
+            case 'hash':
+            case 'short_hash':
+            case 'string':
+            default:
+              break;
           }
-        }
+          cn += column.pill ? ' at-pill center ' + record[column.selector] : '';
+          const style = column.align ? { justifySelf: column.align } : {};
+          return (
+            <div style={style} className={cn}>
+              <Editable editable={column.editable} fieldValue={value} />
+            </div>
+          );
+        })}
+      </StyledRow>
+    </Fragment>
+  );
+};
 
-        value = formatFieldByType(type, value, false, column.hideZero, decimals);
+//-----------------------------------------------------------------
+function calcValue(record, columns, column) {
+  if (!column.function) return record[column.selector];
+  return column.function(record);
+}
 
-        let cn = 'dt-cell ' + column.cn + ' ';
-        switch (type) {
-          case 'calc':
-          case 'number':
-          case 'timestamp':
-          case 'filesize':
-            cn += 'right ';
-            break;
-          case 'bool':
-            cn += 'center ';
-            break;
-          case 'string':
-          default:
-            break;
-        }
-        cn += column.pill ? ' at-pill center ' + record[column.selector] : '';
-        const style = column.align ? { justifySelf: column.align } : {};
-        return (
-          <div style={style} className={cn}>
-            {value}
-          </div>
-        );
-      })}
-    </StyledRow>
+//-----------------------------------------------------------------
+const hasField = (columns, field) => {
+  return (
+    columns.filter((item) => {
+      return item.selector === field;
+    }).length > 0
+  );
+};
+
+//-----------------------------------------------------------------
+const hasFields = (columns, fields) => {
+  if (!fields) return false;
+  return (
+    fields.reduce((sum, field) => {
+      return sum + hasField(columns, field);
+    }, 0) === fields.length
+  );
+};
+
+//-----------------------------------------------------------------
+const matches = (record, fields, filterText) => {
+  return (
+    fields.reduce((sum, field) => {
+      console.log();
+      return sum + record[field].toLowerCase().includes(filterText.toLowerCase());
+    }, 0) > 0
   );
 };

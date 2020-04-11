@@ -12,7 +12,7 @@ export const stateFromStorage = (key, defaultState) => {
 
 //----------------------------------------------------------------------
 export const handleClick = (e, dispatch, action = {}) => {
-  e.preventDefault();
+  if (e) e.preventDefault();
   if (dispatch) dispatch(action);
 };
 
@@ -120,6 +120,10 @@ export const formatFieldByType = (type, value, countArrays, hideZero = false, de
       const isZero = value === '0' || value === 0;
       value = isZero && hideZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
       break;
+    case 'shorthash':
+      value = value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1);
+      break;
+    case 'hash':
     case 'timestamp':
     case 'string':
     default:

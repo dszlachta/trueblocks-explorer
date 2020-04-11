@@ -3,14 +3,8 @@ import PropTypes from 'prop-types';
 import Mousetrap from 'mousetrap';
 
 import { PageHeader, PageFooter, PageContent } from 'page-parts';
-import GlobalContext, {
-  panelDefault,
-  panelReducer,
-  statusDefault,
-  statusReducer,
-  menusDefault,
-  menusReducer,
-} from 'store';
+import GlobalContext, { panelDefault, panelReducer, statusDefault, statusReducer } from 'store';
+import { theMenu, menusReducer } from 'pages';
 
 // page-related - for searching do not remove
 import { dashboardDefault, dashboardReducer } from 'pages/Dashboard';
@@ -37,7 +31,7 @@ function App() {
   const [digestsState, digestsDispatch] = useReducer(digestsReducer, digestsDefault);
   const [cachesState, cachesDispatch] = useReducer(cachesReducer, cachesDefault);
   const [statusState, statusDispatch] = useReducer(statusReducer, statusDefault);
-  const [menusState, menusDispatch] = useReducer(menusReducer, menusDefault);
+  const [menusState, menusDispatch] = useReducer(menusReducer, theMenu);
 
   // page-related - for searching do not remove
   const theGlobalState = {

@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from 'react';
+import Mousetrap from 'mousetrap';
 
 import { handleClick } from 'components/utils';
 
@@ -18,6 +19,13 @@ import './Pagination.css';
 //-----------------------------------------------------------------
 export const Pagination = ({ handler, pagingCtx }) => {
   if (isNaN(pagingCtx.curPage)) return <Fragment></Fragment>;
+
+  Mousetrap.bind(['meta+shift+home'], getHandler(pagingCtx, 'first', handler));
+  Mousetrap.bind(['meta+shift+end'], getHandler(pagingCtx, 'last', handler));
+  Mousetrap.bind(['up'], getHandler(pagingCtx, 'previous', handler));
+  Mousetrap.bind(['left'], getHandler(pagingCtx, 'previous', handler));
+  Mousetrap.bind(['down'], getHandler(pagingCtx, 'next', handler));
+  Mousetrap.bind(['right'], getHandler(pagingCtx, 'next', handler));
   return (
     <div className="pagination-container">
       <Selector handler={handler} pagingCtx={pagingCtx} />
@@ -42,7 +50,7 @@ const Display = ({ pagingCtx }) => {
 
   return (
     <Fragment>
-      {start}-{end} of {total}
+      {curPage}: {start}-{end} of {total}
     </Fragment>
   );
 };
@@ -88,40 +96,50 @@ const Selector = ({ handler, pagingCtx }) => {
 };
 
 //-----------------------------------------------------------------
-const PagingIcon = ({ name, handler, pagingCtx }) => {
+function isDisabled(pagingCtx, which) {
   const { perPage, curPage, total } = pagingCtx;
+  if (which === 'first' || which === 'previous') return curPage === 0;
+  return curPage === Math.floor(total / perPage);
+}
 
-  const disFrst = curPage === 0;
-  const disLast = curPage === Math.floor(total / perPage);
+//-----------------------------------------------------------------
+function getHandler(pagingCtx, which, handler) {
+  if (isDisabled(pagingCtx, which)) {
+    console.log(which, ' disabled ', JSON.stringify(pagingCtx));
+    return () => {}; // noop
+  }
+  console.log(which, ' enabled ', JSON.stringify(pagingCtx));
+  return (e) => handleClick(e, handler, { type: which });
+}
 
-  const frstCn = 'pagination-icons ' + (disFrst ? 'disabled' : '');
-  const lastCn = 'pagination-icons ' + (disLast ? 'disabled' : '');
-
-  const clickFrst = disFrst ? () => {} : (e) => handleClick(e, handler, { type: name });
-  const clickLast = disLast ? () => {} : (e) => handleClick(e, handler, { type: name });
+//-----------------------------------------------------------------
+const PagingIcon = ({ name, handler, pagingCtx }) => {
+  const frstCn = 'pagination-icons ' + (isDisabled(pagingCtx, 'previous') ? 'disabled' : '');
+  const lastCn = 'pagination-icons ' + (isDisabled(pagingCtx, 'next') ? 'disabled' : '');
 
   const size = 18;
   const filled = false;
+  const func = getHandler(pagingCtx, name, handler);
 
   switch (name) {
     case 'first':
-      return <ChevronsLeft onClick={clickFrst} className={frstCn} size={size} filled={filled} />;
+      return <ChevronsLeft onClick={func} className={frstCn} size={size} filled={filled} />;
     case 'previous':
-      return <ChevronLeft onClick={clickFrst} className={frstCn} size={size} filled={filled} />;
+      return <ChevronLeft onClick={func} className={frstCn} size={size} filled={filled} />;
     case 'top':
-      return <ChevronsUp onClick={clickFrst} className={frstCn} size={size} filled={filled} />;
+      return <ChevronsUp onClick={func} className={frstCn} size={size} filled={filled} />;
     case 'up':
-      return <ChevronUp onClick={clickFrst} className={frstCn} size={size} filled={filled} />;
+      return <ChevronUp onClick={func} className={frstCn} size={size} filled={filled} />;
 
     case 'last':
-      return <ChevronsRight onClick={clickLast} className={lastCn} size={size} filled={filled} />;
+      return <ChevronsRight onClick={func} className={lastCn} size={size} filled={filled} />;
     case 'next':
-      return <ChevronRight onClick={clickLast} className={lastCn} size={size} filled={filled} />;
+      return <ChevronRight onClick={func} className={lastCn} size={size} filled={filled} />;
     case 'bottom':
-      return <ChevronsDown onClick={clickLast} className={lastCn} size={size} filled={filled} />;
+      return <ChevronsDown onClick={func} className={lastCn} size={size} filled={filled} />;
     case 'down':
-      return <ChevronDown onClick={clickLast} className={lastCn} size={size} filled={filled} />;
+      return <ChevronDown onClick={func} className={lastCn} size={size} filled={filled} />;
     default:
-      return <>{name} </>; //
+      return <Fragment>{name} </Fragment>;
   }
 };

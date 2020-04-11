@@ -1,24 +1,3 @@
-// import { useDashboard, dashboardSchema } from 'pages/Dashboard/store';
-// import { Card, ObjectTable } from 'components/';
-// import './Dashboard.css';
-
-//----------------------------------------------------
-// export const Dashboard = () => {
-//   const dashboards = useDashboard().state;
-//   return (
-//     <div key="dash" className="dashboard">
-//       <h4>Modules</h4>
-//       {dashboards.map((board) => {
-//         return (
-//           <Card key={board.id} title={board.name} headerLink={board.route} headerClass="card-center">
-//             <ObjectTable data={board} columns={dashboardSchema} />
-//           </Card>
-//         );
-//       })}
-//     </div>
-//   );
-// };
-
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
@@ -34,25 +13,32 @@ export const SupportKeys = () => {
       <div style={{ fontWeight: '600' }}>Accessing Screens</div>
       <div> </div>
       {/* page-related - for searching do not remove */}
-      {'alt+0\t/dashboard\t\tOpen Dashboard screen\n'}
-      {'alt+1\t/projects\t\tOpen Projects screen\n'}
-      {'alt+2\t/monitors\t\tOpen Monitors screen\n'}
-      {'alt+3\t/explorer\t\tOpen Explorers screen\n'}
-      {'alt+4\t/names\t\t\tOpen Names screen\n'}
-      {'alt+5\t/signatures\t\tOpen Signatures screen\n'}
-      {'alt+6\t/digests\t\tOpen Digests screen\n'}
-      {'alt+7\t/caches\t\t\tOpen Caches screen\n'}
-      {'alt+8\t/settings\t\tOpen Settings screen\n'}
-      {'alt+9\t/support/keys\t\tView hot keys\n'}
+      {'alt+0\t\t\t/dashboard\t\tOpen Dashboard screen\n'}
+      {'alt+1\t\t\t/projects\t\tOpen Projects screen\n'}
+      {'alt+2\t\t\t/monitors\t\tOpen Monitors screen\n'}
+      {'alt+3\t\t\t/explorer\t\tOpen Explorers screen\n'}
+      {'alt+4\t\t\t/names\t\t\tOpen Names screen\n'}
+      {'alt+5\t\t\t/signatures\t\tOpen Signatures screen\n'}
+      {'alt+6\t\t\t/digests\t\tOpen Digests screen\n'}
+      {'alt+7\t\t\t/caches\t\t\tOpen Caches screen\n'}
+      {'alt+8\t\t\t/settings\t\tOpen Settings screen\n'}
+      {'alt+9\t\t\t/support/keys\t\tView hot keys\n'}
       <div> </div>
       <div style={{ fontWeight: '600' }}>Showing / Hiding Panels</div>
       <div> </div>
-      {'q l\t\tcollapse\t\tHide help, status, and men panels\n'}
-      {'q a\t\texpand\t\t\tExpand all panels\n'}
-      {'q h\t\thelp\t\t\tShow / hide help panel\n'}
-      {'q m\t\tmenu\t\t\tShow / hide menu panel\n'}
-      {'q c\t\tcontent\t\t\tShow / hide content panel\n'}
-      {'q s\t\tstatus\t\t\tShow / hide status panel\n'}
+      {'q l\t\t\tcollapse\t\tHide help, status, and men panels\n'}
+      {'q a\t\t\texpand\t\t\tExpand all panels\n'}
+      {'q h\t\t\thelp\t\t\tShow / hide help panel\n'}
+      {'q m\t\t\tmenu\t\t\tShow / hide menu panel\n'}
+      {'q c\t\t\tcontent\t\t\tShow / hide content panel\n'}
+      {'q s\t\t\tstatus\t\t\tShow / hide status panel\n'}
+      <div> </div>
+      <div style={{ fontWeight: '600' }}>When Viewing Tables...</div>
+      <div> </div>
+      {'Meta+Shift+Home\t\thome\t\t\tReturn to the first page of the table\n'}
+      {'Meta+Shift+End\t\thome\t\t\tGo to the last page of data\n'}
+      {'Up or Left Arrow\tprevious\t\tGo to the previous page\n'}
+      {'Down or Right Arrow\tnext\t\t\tGo to the next page\n'}
     </pre>
   );
 };

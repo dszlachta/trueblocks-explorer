@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { usePanels, useMenus } from 'store';
+import { usePanels } from 'store';
+import { useMenus } from 'pages';
 import { Panel, Menu } from 'components/';
 import './MenuPanel.css';
 

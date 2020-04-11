@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { useProjects, projectsSchema } from './store';
-import { useMenus } from 'store';
+import { useMenus } from 'pages';
 import { Card, ObjectTable, Debug } from 'components/';
 import { sortArray, currentPage, handleClick } from 'components/utils';
 import ToggleLeft from 'assets/icons/toggle-left';

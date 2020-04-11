@@ -39,7 +39,6 @@ export const GridTable = ({
 
   return (
     <Fragment>
-      <div>selected: {selected}</div>
       <Toolbar title={title} search={search} pagination={pagination} />
       <GridHeader cols={cols} cellSize={cellSize} />
       <div className="at-body gt-body">
@@ -74,7 +73,7 @@ const GridRow = ({ row, cols, meta, cellSize, selected, setSelected }) => {
         else if (meta.completed >= cellStart) cn = 'in-progress';
         if (selected === cellStart) cn += ' selected';
         return (
-          <div className={'dt-cell gt-cell ' + cn} onClick={(e) => handleClick(e, setSelected, row * 1e6 + col * 1e5)}>
+          <div className={'at-cell gt-cell ' + cn} onClick={(e) => handleClick(e, setSelected, row * 1e6 + col * 1e5)}>
             {cn.includes('completed') && '✔'}
           </div>
         );
@@ -97,13 +96,57 @@ const GridHeader = ({ cols, cellSize }) => {
 
 //-----------------------------------------------------------------
 const DetailTable = ({ data, columns, start, cellSize }) => {
-  if (start === undefined) return <div>Click a box to see details</div>;
+  if (start === undefined) {
+    return (
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 50fr 1fr',
+          justifyItems: 'space between',
+        }}
+      >
+        <div></div>
+        <div
+          className="at-body"
+          style={{
+            borderTop: '0px',
+            paddingLeft: '10px',
+          }}
+        >
+          <h4>Click a box to see details</h4>
+        </div>
+        <div></div>
+      </div>
+    );
+  }
 
   const range = { start: start, end: start + cellSize };
   const filteredData = data.filter(
     (item) => (item.firstAppearance >= range.start) & (item.firstAppearance < range.end)
   );
-  if (filteredData.length > 200 || cellSize > 100000) return 'Click on a box to load its details...';
+  if (filteredData.length > 200 || cellSize > 100000) {
+    return (
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 50fr 1fr',
+          justifyItems: 'space between',
+        }}
+      >
+        <div></div>
+        <div
+          className="at-body"
+          style={{
+            borderTop: '0px',
+            paddingLeft: '10px',
+          }}
+        >
+          <h4>Click a box to see details</h4>
+        </div>
+        <div></div>
+      </div>
+    );
+  }
 
   const subtit =
     'Details: ' +
@@ -126,6 +169,7 @@ const DetailTable = ({ data, columns, start, cellSize }) => {
         className="at-body"
         style={{
           borderTop: '0px',
+          paddingLeft: '10px',
         }}
       >
         <h4>{subtit}</h4>
@@ -134,24 +178,13 @@ const DetailTable = ({ data, columns, start, cellSize }) => {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr 1fr',
+              gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
               justifyItems: 'space between',
               gridGap: '4px',
             }}
           >
             {filteredData.map((item) => {
-              return (
-                <Card
-                  key={item.index_hash}
-                  title={item.firstAppearance + '-' + item.latestAppearance + '.bin'}
-                  headerClass={''}
-                  iconTray={null}
-                  headerLink={''}
-                  topIcon={null}
-                >
-                  <ObjectTable data={item} columns={columns} />
-                </Card>
-              );
+              return <PanelTable data={item} columns={columns} title={item.filename} />;
             })}
           </div>
           <div></div>
@@ -162,6 +195,28 @@ const DetailTable = ({ data, columns, start, cellSize }) => {
   );
 };
 
+function pad9(n) {
+  const str = JSON.stringify(n);
+  const fix = Array(9 - str.length)
+    .fill()
+    .map((_, idx) => idx);
+  return fix.reduce((s, i) => {
+    console.log(s);
+    return '0' + s;
+  }, str);
+}
+
 // <div style={{border: '1px dashed brown', justifySelf: 'stretch'}}>
 // X
 // </div>
+
+// <Card
+//   key={item.index_hash}
+//   title={item.firstAppearance + '-' + item.latestAppearance + '.bin'}
+//   headerClass={''}
+//   iconTray={null}
+//   headerLink={''}
+//   topIcon={null}
+// >
+//   <ObjectTable data={item} columns={columns} />
+// </Card>

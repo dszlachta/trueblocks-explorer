@@ -33,37 +33,88 @@ export const digestsSchema = [
     name: 'Cache Type',
     selector: 'type',
     type: 'string',
+    hidden: true,
   },
   {
-    name: '# Addresses',
-    selector: 'nAddresses',
-    type: 'number',
+    name: 'Block Range',
+    selector: 'blockRange',
+    type: 'string',
+    function: (rec) => {
+      return rec.filename.replace('.bin', '');
+    },
+    align: 'center',
   },
   {
-    name: '# Appearances',
-    selector: 'nAppearances',
+    name: 'Block Span',
+    selector: 'blockSpan',
     type: 'number',
-    cn: 'apps',
+    function: (rec) => {
+      return rec.latestAppearance - rec.firstAppearance + 1;
+    },
+    decimals: 0,
+  },
+  {
+    name: 'Seconds',
+    selector: 'seconds',
+    type: 'number',
+    function: (rec) => {
+      return rec.latestTs - rec.firstTs + 1;
+    },
+    decimals: 0,
   },
   {
     name: 'Start Block',
     selector: 'firstAppearance',
     type: 'number',
-  },
-  {
-    name: 'Start TS',
-    selector: 'firstTs',
-    type: 'timestamp',
+    hidden: true,
   },
   {
     name: 'End Block',
     selector: 'latestAppearance',
     type: 'number',
+    hidden: true,
+  },
+  {
+    name: 'Addresses',
+    selector: 'nAddresses',
+    type: 'number',
+  },
+  {
+    name: 'Appearances',
+    selector: 'nAppearances',
+    type: 'number',
+    cn: 'apps',
+  },
+  {
+    name: 'Apps/Address',
+    selector: 'function',
+    type: 'number',
+    function: (record) => {
+      return record.nAddresses === 0 ? '-' : record.nAppearances / record.nAddresses;
+    },
+    decimals: 5,
+  },
+  {
+    name: 'Apps/Block',
+    selector: 'function',
+    type: 'number',
+    function: (record) => {
+      const n = record.latestAppearance - record.firstAppearance + 1;
+      return n === 0 ? '-' : record.nAppearances / n;
+    },
+    decimals: 5,
+  },
+  {
+    name: 'Start TS',
+    selector: 'firstTs',
+    type: 'timestamp',
+    hidden: true,
   },
   {
     name: 'End TS',
-    selector: 'lastestTs',
+    selector: 'latestTs',
     type: 'timestamp',
+    hidden: true,
   },
   {
     name: 'Filename',
@@ -72,16 +123,9 @@ export const digestsSchema = [
     hidden: true,
   },
   {
-    name: 'Index Size',
+    name: 'Chunk Size',
     selector: 'indexSizeBytes',
     type: 'filesize',
-  },
-  {
-    name: 'Index Hash',
-    selector: 'index_hash',
-    type: 'hash',
-    cn: 'hashes',
-    align: 'center',
   },
   {
     name: 'Bloom Size',
@@ -89,9 +133,16 @@ export const digestsSchema = [
     type: 'filesize',
   },
   {
+    name: 'Chunk Hash',
+    selector: 'index_hash',
+    type: 'shorthash',
+    cn: 'hashes',
+    align: 'center',
+  },
+  {
     name: 'Bloom Hash',
     selector: 'bloom_hash',
-    type: 'hash',
+    type: 'shorthash',
     cn: 'hashes',
     align: 'center',
   },

@@ -12,12 +12,12 @@ export const ChartTable = ({ columns, data, title = 'Chart Table (ct-)', search 
       <ChartHeader />
       <div className="at-body ct-body">
         <div className="at-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-          <div className="dt-cell">Some shit</div>
-          <div className="dt-cell">Some shit</div>
+          <div className="at-cell">Some shit</div>
+          <div className="at-cell">Some shit</div>
         </div>
         <div className="at-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-          <div className="dt-cell">Some shit</div>
-          <div className="dt-cell">Some shit</div>
+          <div className="at-cell">Some shit</div>
+          <div className="at-cell">Some shit</div>
         </div>
       </div>
     </Fragment>

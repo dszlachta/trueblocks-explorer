@@ -134,6 +134,33 @@
 }
 
 /*-----------------------------------*/
+.at-cell {
+  padding: var(--at-padding);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/*-----------------------------------*/
+.at-title {
+  align-self: end;
+  justify-self: center;
+  font-size: 20pt;
+  height: 27pt;
+}
+
+/*-----------------------------------*/
+.at-pill {
+  font-size: 0.9em;
+  height: 1.2em;
+  width: 80px;
+  align-self: center;
+  border: 1px dashed black;
+  border-radius: 4px;
+  padding: 2px;
+  text-align: center;
+}
+
+/*-----------------------------------*/
 .gt-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -141,18 +168,10 @@
 }
 
 /*-----------------------------------*/
-.dt-cell {
-  padding: var(--at-padding);
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/*-----------------------------------*/
 .gt-cell {
   display: block;
   border-right: var(--at-border2);
 }
-
 .gt-cell:last-child {
   border-right: 0px;
 }
@@ -164,36 +183,6 @@
   opacity: 75%;
 }
 
-/*-----------------------------------*/
-.at-pill {
-  font-size: 0.9em;
-  height: 1.5em;
-  width: 80px;
-  align-self: center;
-  border: 1px dashed black;
-  border-radius: 4px;
-  padding: 2px;
-  text-align: center;
-}
-
-.ot-cell-editable {
-  display: block;
-}
-
-.ot-column {
-  padding: var(--at-padding);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.at-title {
-  align-self: end;
-  justify-self: center;
-  font-size: 20pt;
-  height: 27pt;
-}
-
 .selected {
   background-color: red;
   /* var(--at-bgcolor); */
@@ -201,11 +190,25 @@
 }
 
 .inactive {
-  background-color: var(--grey-color);
+  background-color: #daeeda;
+  /* var(--grey-color); */
 }
 
 .in-progress {
   background: repeating-linear-gradient(-45deg, #daeeda, #daeeda 5px, white 5px, white 10px);
   background-repeat: repeat;
   border-radius: 0px 0px var(--at-radius) var(--at-radius);
+}
+
+/*-----------------------------------*/
+.ot-cell {
+  padding: var(--at-padding);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ot-cell.editable {
+  display: block;
+  font-style: italic;
 }

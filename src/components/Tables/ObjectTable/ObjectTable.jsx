@@ -11,7 +11,10 @@ import './ObjectTable.css';
 export const ObjectTable = ({
   data,
   columns = defaultObjFields,
-  options = defObjTableOptions,
+  options = {
+    countArrays: true,
+    idField: 'id',
+  },
   updateFunc = null,
   displayFunc = null,
 }) => {
@@ -35,19 +38,14 @@ export const ObjectTable = ({
             </ObjectTableSider>
             <div></div>
             <TableColumn editable={editable} options={options}>
-              {editable ? (
-                <Editable
-                  className="ot-cell-inner"
-                  record_id={record_id}
-                  fieldValue={value}
-                  fieldName={fieldName}
-                  placeholder={fieldName}
-                  onAccept={updateFunc}
-                  onValidate={field.onValidate}
-                />
-              ) : (
-                <Fragment>{value}</Fragment>
-              )}
+              <Editable
+                editable={editable}
+                record_id={record_id}
+                fieldValue={value}
+                fieldName={fieldName}
+                placeholder={fieldName}
+                onValidate={field.onValidate}
+              />
             </TableColumn>
           </Fragment>
         );
@@ -69,7 +67,7 @@ export const ObjectTable2 = ({ data, columns }) => {
         const type = field.type || 'string';
         const value = formatFieldByType(type, data[fieldName], false); //options.countArrays);
         const editable = field.editable;
-        const displayName = field.name || fieldName;
+        const displayName = (field.name || fieldName).substr(0, 5);
         const record_id = 0; //data[options.idField]; // may be empty
 
         return (
@@ -79,17 +77,14 @@ export const ObjectTable2 = ({ data, columns }) => {
             </ObjectTableSider>
             <div></div>
             <TableColumn editable={editable}>
-              {editable ? (
-                <Editable
-                  record_id={record_id}
-                  fieldValue={value}
-                  fieldName={fieldName}
-                  placeholder={fieldName}
-                  onValidate={field.onValidate}
-                />
-              ) : (
-                <Fragment>{value}</Fragment>
-              )}
+              <Editable
+                editable={editable}
+                record_id={record_id}
+                fieldValue={value}
+                fieldName={fieldName}
+                placeholder={fieldName}
+                onValidate={field.onValidate}
+              />
             </TableColumn>
           </div>
         );
@@ -116,18 +111,10 @@ export const defaultObjFields = {
 
 //-----------------------------------------------------------------
 export const TableColumn = ({ editable = false, children }) => {
-  let cn = 'ot-column' + (editable ? ' ot-cell-editable' : '');
+  let cn = 'ot-cell' + (editable ? ' editable' : '');
   return (
     <div className={cn} align="left">
       {children}
     </div>
   );
 };
-
-//-----------------------------------------------------------------
-export const defaultTableOptions = {
-  countArrays: true,
-  idField: 'id',
-};
-
-export const defObjTableOptions = defaultTableOptions;
