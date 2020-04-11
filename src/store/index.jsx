@@ -15,3 +15,9 @@ export function isVerbose() {
   return false;
 }
 export const debug = true;
+
+//-----------------------------------------------------------------
+export function calcValue(record, column) {
+  if (!column.function) return record[column.selector];
+  return column.function(record);
+}

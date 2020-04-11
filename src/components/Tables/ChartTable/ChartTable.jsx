@@ -8,42 +8,43 @@ import './ChartTable.css';
 
 //-----------------------------------------------------------------
 export const ChartTable = ({ columns, data, title = 'Chart Table (ct-)', search = true, pagination = true }) => {
-  const [type, setType] = useState('scatter');
+  const [range, setRange] = useState('firstTs');
+  const [domain, setDomain] = useState('nAddresses');
+
+  const chartCtx = {
+    range: range,
+    setRange: setRange,
+    domain: domain,
+    setDomain: setDomain,
+    rangeCol: columns.filter((column) => {
+      return column.selector === range;
+    })[0],
+    domainCol: columns.filter((column) => {
+      return column.selector === domain;
+    })[0],
+  };
+
+  const theTitle = (title === '' ? '' : title + ': ') + chartCtx.domainCol.name + ' X ' + chartCtx.rangeCol.name;
   return (
-    <Fragment>
-      {' '}
-      |<button onClick={() => setType('nAddresses')}>nAddresses</button>
-      <button onClick={() => setType('nAppearances')}>nAppearances</button>
-      <button onClick={() => setType('indexSizeBytes')}>indexSizeBytes</button>
-      <button onClick={() => setType('bloomSizeBytes')}>bloomSizeBytes</button>
-      <Toolbar title={title + ': ' + type} search={search} pagination={pagination} />
-      <ChartHeader />
-      <ChartBody data={data} column={type} />
-    </Fragment>
+    <div style={{ display: 'inline' }}>
+      <Toolbar title={theTitle} search={search} pagination={pagination} />
+      <ChartHeader title={domain + ' / ' + range} />
+      <ChartBody data={data} columns={columns} chartCtx={chartCtx} />
+    </div>
   );
 };
 
 //-----------------------------------------------------------------
-const ChartHeader = ({ cols }) => {
-  return <div className="base-header at-header ct-header">Chart Title</div>;
+const ChartHeader = ({ title }) => {
+  return <Fragment></Fragment>;
+  //<div className="base-header at-header ct-header">{title}</div>;
+};
+
+const ChartBody = ({ data, columns, chartCtx }) => {
+  return <Scatter data={data} columns={columns} chartCtx={chartCtx} />;
 };
 
 //-----------------------------------------------------------------
-const ChartBody = ({ data, column }) => {
-  return <Scatter data={data} column={column} />;
-};
-
-// function RandomData() {
-//   const data = [...Array(100)].map((e, i) => {
-//     return {
-//       x: Math.random() * 40,
-//       y: Math.random() * 40,
-//       temparature: Math.random() * 500,
-//     };
-//   });
-//   return data;
-// }
-
 function AxisLeft({ yScale, width }) {
   const textPadding = -20;
   const axis = yScale.ticks(5).map((d, i) => (
@@ -57,6 +58,7 @@ function AxisLeft({ yScale, width }) {
   return <Fragment>{axis}</Fragment>;
 }
 
+//-----------------------------------------------------------------
 function AxisBottom({ xScale, height }) {
   const textPadding = 10;
   const axis = xScale.ticks(10).map((d, i) => (
@@ -70,35 +72,65 @@ function AxisBottom({ xScale, height }) {
   return <Fragment>{axis}</Fragment>;
 }
 
-function Scatter({ data, column }) {
-  // const data1 = data,
-  const w = 800,
-    h = 800,
-    margin = {
-      top: 40,
-      bottom: 40,
-      left: 40,
-      right: 40,
-    };
+//-----------------------------------------------------------------
+function Scatter({ data, columns, chartCtx }) {
+  const w = 800;
+  const h = 800;
+  const margin = {
+    top: 40,
+    bottom: 40,
+    left: 40,
+    right: 40,
+  };
 
-  const width = w - margin.right - margin.left,
-    height = h - margin.top - margin.bottom;
+  const width = w - margin.right - margin.left;
+  const height = h - margin.top - margin.bottom;
 
   const xScale = scaleLinear()
-    .domain(extent(data, (d) => d.firstTs))
+    .domain(extent(data, (d) => d[chartCtx.rangeCol.selector]))
     .range([0, width]);
 
   const yScale = scaleLinear()
     .domain(
       extent(data, (d) => {
-        return column === 'nAppearances' ? d[column] * 2 : d[column];
+        return chartCtx.domain === 'nAppearances' ? d[chartCtx.domainCol.selector] * 2 : d[chartCtx.domainCol.selector];
       })
     )
     .range([height, 0]);
 
   const circles = data.map((d, i) => (
-    <circle key={i} r={2} cx={xScale(d.firstTs)} cy={yScale(d[column])} style={{ fill: 'lightblue' }} />
+    <circle
+      key={i}
+      r={3}
+      cx={xScale(d[chartCtx.range])}
+      cy={yScale(d[chartCtx.domain])}
+      style={{ fill: 'lightblue' }}
+    />
   ));
+
+  const selected = { backgroundColor: 'blue', color: 'white', fontSize: '.9em', margin: '2px' };
+  const notSelected = { fontSize: '.9em', margin: '2px' };
+  const getStyle = (axis, field) => {
+    return axis === 'range'
+      ? field === chartCtx.range
+        ? selected
+        : notSelected
+      : field === chartCtx.domain
+      ? selected
+      : notSelected;
+  };
+  const getButton = (axis, column) => {
+    const key = axis + '_' + column.selector;
+    return axis === 'range' ? (
+      <button key={key} style={getStyle(axis, column.selector)} onClick={() => chartCtx.setRange(column.selector)}>
+        {column.name + (column.function ? '*' : '')}
+      </button>
+    ) : (
+      <button key={key} style={getStyle(axis, column.selector)} onClick={() => chartCtx.setDomain(column.selector)}>
+        {column.name + (column.function ? '*' : '')}
+      </button>
+    );
+  };
 
   return (
     <div
@@ -108,9 +140,25 @@ function Scatter({ data, column }) {
         gridTemplateColumns: '1fr 4fr 1fr',
         justifyItems: 'center',
       }}
+      className="at-body"
     >
-      <div></div>
       <div>
+        <h4>Range: </h4>
+        {columns.map((column) => {
+          if (!column.range) return '';
+          return getButton('range', column);
+        })}
+        <br />
+        <br />
+        <h4>Domain: </h4>
+        {columns.map((column) => {
+          if (!column.domain) return '';
+          return getButton('domain', column);
+        })}
+        <hr />
+        {'* - functional fields'}
+      </div>
+      <div className="at-row" style={{ backgroundColor: 'white', margin: '8px' }}>
         <svg width={w} height={h}>
           <g transform={`translate(${margin.left},${margin.top})`}>
             <AxisLeft yScale={yScale} width={width} />

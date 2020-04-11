@@ -36,7 +36,7 @@ export const Digests = () => {
   if (tableType === 'data-view') {
     view = <DataTable columns={digestsSchema} data={digests} title="Table View" search={false} />; //{titleFromPage()} />
   } else if (tableType === 'graph-view') {
-    view = <ChartTable columns={digestsSchema} data={digests} title="Chart View" search={false} />; //{titleFromPage()} />
+    view = <ChartTable columns={digestsSchema} data={digests} title="" search={false} />; //{titleFromPage()} />
   } else {
     view = <GridTable columns={digestsSchema} data={digests} title="Grid View" search={false} meta={status} />;
   }

@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import useSWR from 'swr';
 
+import { calcValue } from 'store';
 import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
@@ -49,21 +50,60 @@ export const signaturesSchema = [
     type: 'string',
   },
   {
-    width: 1,
+    width: 2,
     name: 'Signature',
     selector: 'signature',
     type: 'string',
+    hidden: true,
   },
   {
     width: 2,
     name: 'Input Names',
-    selector: 'input_names',
+    selector: 'inputs',
     type: 'string',
+    function: (record) => {
+      const value = record['inputs'];
+      if (!value || !value.length) return '';
+      return value
+        .map((item) => {
+          return item.name;
+        })
+        .join(',');
+    },
+    hidden: true,
   },
   {
     width: 2,
     name: 'Output Names',
-    selector: 'output_names',
+    selector: 'outputs',
     type: 'string',
+    function: (record) => {
+      const value = record['outputs'];
+      if (!value || !value.length) return '';
+      return value
+        .map((item) => {
+          return item.name;
+        })
+        .join(',');
+    },
+    hidden: true,
+  },
+  {
+    width: 6,
+    name: 'Signature',
+    selector: 'function',
+    type: 'string',
+    function: (record) => {
+      const value = record['inputs'];
+      if (!value || !value.length) return '';
+      // return record['signature'];
+      const types = record['signature'].split('(')[1].split(',');
+      const str = value
+        .map((item, index) => {
+          return types[index] + ' ' + item.name;
+        })
+        .join(', ');
+      return record.name + '(' + str + ')';
+    },
   },
 ];

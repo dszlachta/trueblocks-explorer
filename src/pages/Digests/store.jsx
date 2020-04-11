@@ -32,17 +32,21 @@ export const digestsSchema = [
   {
     name: 'ID',
     selector: 'id',
-    hidden: true,
     type: 'string',
     function: (rec) => {
       return rec.filename.replace('.bin', '');
     },
+    hidden: true,
+    range: false,
+    domain: false,
   },
   {
     name: 'Cache Type',
     selector: 'type',
     type: 'string',
     hidden: true,
+    range: false,
+    domain: false,
   },
   {
     name: 'Block Range',
@@ -52,6 +56,8 @@ export const digestsSchema = [
       return rec.filename.replace('.bin', '');
     },
     align: 'center',
+    range: false,
+    domain: false,
   },
   {
     name: 'Block Span',
@@ -61,10 +67,12 @@ export const digestsSchema = [
       return rec.latestAppearance - rec.firstAppearance + 1;
     },
     decimals: 0,
+    range: true,
+    domain: true,
   },
   {
     name: 'Duration',
-    selector: 'seconds',
+    selector: 'duration',
     type: 'number',
     function: (rec) => {
       let s = rec.latestTs - rec.firstTs + 1;
@@ -84,90 +92,130 @@ export const digestsSchema = [
       );
     },
     decimals: 0,
+    range: false,
+    domain: false,
   },
   {
-    name: 'Start Block',
+    name: 'Seconds',
+    selector: 'seconds',
+    type: 'number',
+    function: (rec) => {
+      return rec.latestTs - rec.firstTs + 1;
+    },
+    decimals: 0,
+    hidden: true,
+    range: true,
+    domain: true,
+  },
+  {
+    name: 'First Block',
     selector: 'firstAppearance',
     type: 'number',
     hidden: true,
+    range: true,
+    domain: true,
   },
   {
-    name: 'End Block',
+    name: 'Latest Block',
     selector: 'latestAppearance',
     type: 'number',
     hidden: true,
+    range: false,
+    domain: false,
   },
   {
-    name: 'Addresses',
+    name: 'Address Count',
     selector: 'nAddresses',
     type: 'number',
+    range: true,
+    domain: true,
   },
   {
-    name: 'Appearances',
+    name: 'Appearance Count',
     selector: 'nAppearances',
     type: 'number',
     cn: 'apps',
+    range: true,
+    domain: true,
   },
   {
     name: 'Apps/Address',
-    selector: 'function',
+    selector: 'appsPerAddr',
     type: 'number',
     function: (record) => {
       return record.nAddresses === 0 ? '-' : record.nAppearances / record.nAddresses;
     },
     decimals: 5,
+    range: true,
+    domain: true,
   },
   {
     name: 'Apps/Block',
-    selector: 'function',
+    selector: 'appsPerBlock',
     type: 'number',
     function: (record) => {
       const n = record.latestAppearance - record.firstAppearance + 1;
       return n === 0 ? '-' : record.nAppearances / n;
     },
     decimals: 5,
+    range: true,
+    domain: true,
   },
   {
-    name: 'Start TS',
+    name: 'First TS',
     selector: 'firstTs',
     type: 'timestamp',
     hidden: true,
+    range: true,
+    domain: true,
   },
   {
-    name: 'End TS',
+    name: 'Latest TS',
     selector: 'latestTs',
     type: 'timestamp',
     hidden: true,
+    range: false,
+    domain: false,
   },
   {
     name: 'Filename',
     selector: 'filename',
     type: 'string',
     hidden: true,
+    range: false,
+    domain: false,
   },
   {
     name: 'Chunk Size',
     selector: 'indexSizeBytes',
     type: 'filesize',
+    range: true,
+    domain: true,
   },
   {
     name: 'Bloom Size',
     selector: 'bloomSizeBytes',
     type: 'filesize',
+    range: true,
+    domain: true,
   },
   {
     name: 'Chunk Hash',
     selector: 'index_hash',
     type: 'shorthash',
-    cn: 'hashes',
     align: 'center',
+    cn: 'hashes',
+    range: false,
+    domain: false,
   },
   {
     name: 'Bloom Hash',
     selector: 'bloom_hash',
     type: 'shorthash',
-    cn: 'hashes',
     align: 'center',
+    cn: 'hashes',
+    range: false,
+    domain: false,
   },
 ];
 

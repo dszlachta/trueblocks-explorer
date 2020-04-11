@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { ObjectTable2, Toolbar, Editable } from 'components';
+import { calcValue } from 'store';
 import { stateFromStorage, handleClick, fmtNum, formatFieldByType } from 'components/utils';
 
 import './DataTable.css';
@@ -193,7 +194,7 @@ const MainRow = ({ columns, record, wids }) => {
 
           let decimals = column.decimals || 0;
           let type = column.type ? column.type : 'string';
-          let value = calcValue(record, columns, column);
+          let value = calcValue(record, column);
           value = formatFieldByType(type, value, false, column.hideZero, decimals);
 
           let cn = 'at-cell ' + column.cn + ' ';
@@ -223,12 +224,6 @@ const MainRow = ({ columns, record, wids }) => {
     </Fragment>
   );
 };
-
-//-----------------------------------------------------------------
-function calcValue(record, columns, column) {
-  if (!column.function) return record[column.selector];
-  return column.function(record);
-}
 
 //-----------------------------------------------------------------
 const hasField = (columns, field) => {
