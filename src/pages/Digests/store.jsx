@@ -30,6 +30,15 @@ export const useDigests = () => {
 //----------------------------------------------------------------------------
 export const digestsSchema = [
   {
+    name: 'ID',
+    selector: 'id',
+    hidden: true,
+    type: 'string',
+    function: (rec) => {
+      return rec.filename.replace('.bin', '');
+    },
+  },
+  {
     name: 'Cache Type',
     selector: 'type',
     type: 'string',
@@ -54,11 +63,25 @@ export const digestsSchema = [
     decimals: 0,
   },
   {
-    name: 'Seconds',
+    name: 'Duration',
     selector: 'seconds',
     type: 'number',
     function: (rec) => {
-      return rec.latestTs - rec.firstTs + 1;
+      let s = rec.latestTs - rec.firstTs + 1;
+      let m = Math.floor(s / 60);
+      let h = Math.floor(m / 60);
+      const d = Math.floor(h / 24);
+      h = h % 24;
+      m = m % 60;
+      s = s % 60;
+      return (
+        (d === 0 ? '' : d + 'd ') +
+        (d === 0 && h === 0 ? '' : (d === 0 ? h : pad2(h)) + 'h ') +
+        pad2(m) +
+        'm ' +
+        pad2(s) +
+        's'
+      );
     },
     decimals: 0,
   },
@@ -147,3 +170,14 @@ export const digestsSchema = [
     align: 'center',
   },
 ];
+
+function pad2(n) {
+  const str = JSON.stringify(n);
+  const fix = Array(2 - str.length)
+    .fill()
+    .map((_, idx) => idx);
+  return fix.reduce((s, i) => {
+    console.log(s);
+    return '0' + s;
+  }, str);
+}

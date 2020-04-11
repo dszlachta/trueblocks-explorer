@@ -70,8 +70,10 @@ export const ObjectTable2 = ({ data, columns }) => {
         const displayName = (field.name || fieldName).substr(0, 5);
         const record_id = 0; //data[options.idField]; // may be empty
 
+        const found = columns.filter((item) => item.selector === 'id');
+        const id = found && found.function ? found.function(data) : '';
         return (
-          <div key={fieldName} className="at-row ot-row">
+          <div key={fieldName + id + Math.random()} className="at-row ot-row">
             <ObjectTableSider>
               {displayName}:{editable}
             </ObjectTableSider>

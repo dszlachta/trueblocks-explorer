@@ -45,6 +45,7 @@ export const GridTable = ({
         {rows.map((row) => {
           return (
             <GridRow
+              key={row}
               row={row}
               cols={cols}
               meta={meta}
@@ -73,7 +74,11 @@ const GridRow = ({ row, cols, meta, cellSize, selected, setSelected }) => {
         else if (meta.completed >= cellStart) cn = 'in-progress';
         if (selected === cellStart) cn += ' selected';
         return (
-          <div className={'at-cell gt-cell ' + cn} onClick={(e) => handleClick(e, setSelected, row * 1e6 + col * 1e5)}>
+          <div
+            key={col}
+            className={'at-cell gt-cell ' + cn}
+            onClick={(e) => handleClick(e, setSelected, row * 1e6 + col * 1e5)}
+          >
             {cn.includes('completed') && '✔'}
           </div>
         );
@@ -87,8 +92,8 @@ const GridHeader = ({ cols, cellSize }) => {
   return (
     <div className="base-header at-header gt-header">
       <div> </div>
-      {cols.map((n) => {
-        return <div>{fmtNum(n * (cellSize / 10))}</div>;
+      {cols.map((n, idx) => {
+        return <div key={n * idx}>{fmtNum(n * (cellSize / 10))}</div>;
       })}
     </div>
   );
@@ -184,7 +189,7 @@ const DetailTable = ({ data, columns, start, cellSize }) => {
             }}
           >
             {filteredData.map((item) => {
-              return <PanelTable data={item} columns={columns} title={item.filename} />;
+              return <PanelTable key={item.start} data={item} columns={columns} title={item.filename} />;
             })}
           </div>
           <div></div>
