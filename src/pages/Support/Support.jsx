@@ -1,8 +1,25 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
+import { currentPage } from 'components/utils';
+
 //-----------------------------------------------------------
 export const Support = () => {
+  const subpage = currentPage().subpage;
+  switch (subpage) {
+    case 'keys':
+      return <SupportKeys />;
+    case 'documentation':
+      return <SupportDocumentation />;
+    case 'licensing':
+      return <SupportLicensing />;
+    case 'contact':
+      return <SupportContact />;
+    case 'about':
+      return <SupportAbout />;
+    default:
+      break;
+  }
   return <div className="okay">Actual Support Page</div>;
 };
 
@@ -10,35 +27,35 @@ export const Support = () => {
 export const SupportKeys = () => {
   return (
     <pre>
-      <div style={{ fontWeight: '600' }}>Accessing Screens</div>
+      <h4>Accessing Screens</h4>
       <div> </div>
       {/* page-related - for searching do not remove */}
-      {'alt+0\t\t\t/dashboard\t\tOpen Dashboard screen\n'}
-      {'alt+1\t\t\t/projects\t\tOpen Projects screen\n'}
-      {'alt+2\t\t\t/monitors\t\tOpen Monitors screen\n'}
-      {'alt+3\t\t\t/explorer\t\tOpen Explorers screen\n'}
-      {'alt+4\t\t\t/names\t\t\tOpen Names screen\n'}
-      {'alt+5\t\t\t/signatures\t\tOpen Signatures screen\n'}
-      {'alt+6\t\t\t/digests\t\tOpen Digests screen\n'}
-      {'alt+7\t\t\t/caches\t\t\tOpen Caches screen\n'}
-      {'alt+8\t\t\t/settings\t\tOpen Settings screen\n'}
-      {'alt+9\t\t\t/support/keys\t\tView hot keys\n'}
+      {'\talt+0\t\t\t/dashboard\t\tOpen Dashboard screen\n'}
+      {'\talt+1\t\t\t/projects\t\tOpen Projects screen\n'}
+      {'\talt+2\t\t\t/monitors\t\tOpen Monitors screen\n'}
+      {'\talt+3\t\t\t/explorer\t\tOpen Explorers screen\n'}
+      {'\talt+4\t\t\t/names\t\t\tOpen Names screen\n'}
+      {'\talt+5\t\t\t/signatures\t\tOpen Signatures screen\n'}
+      {'\talt+6\t\t\t/digests\t\tOpen Digests screen\n'}
+      {'\talt+7\t\t\t/caches\t\t\tOpen Caches screen\n'}
+      {'\talt+8\t\t\t/settings\t\tOpen Settings screen\n'}
+      {'\talt+9\t\t\t/support/keys\t\tView hot keys\n'}
       <div> </div>
-      <div style={{ fontWeight: '600' }}>Showing / Hiding Panels</div>
+      <h4>Showing / Hiding Panels</h4>
       <div> </div>
-      {'q l\t\t\tcollapse\t\tHide help, status, and men panels\n'}
-      {'q a\t\t\texpand\t\t\tExpand all panels\n'}
-      {'q h\t\t\thelp\t\t\tShow / hide help panel\n'}
-      {'q m\t\t\tmenu\t\t\tShow / hide menu panel\n'}
-      {'q c\t\t\tcontent\t\t\tShow / hide content panel\n'}
-      {'q s\t\t\tstatus\t\t\tShow / hide status panel\n'}
+      {'\tq l\t\t\tcollapse\t\tHide help, status, and men panels\n'}
+      {'\tq a\t\t\texpand\t\t\tExpand all panels\n'}
+      {'\tq h\t\t\thelp\t\t\tShow / hide help panel\n'}
+      {'\tq m\t\t\tmenu\t\t\tShow / hide menu panel\n'}
+      {'\tq c\t\t\tcontent\t\t\tShow / hide content panel\n'}
+      {'\tq s\t\t\tstatus\t\t\tShow / hide status panel\n'}
       <div> </div>
-      <div style={{ fontWeight: '600' }}>When Viewing Tables...</div>
+      <h4>When Viewing Tables...</h4>
       <div> </div>
-      {'Meta+Shift+Home\t\thome\t\t\tReturn to the first page of the table\n'}
-      {'Meta+Shift+End\t\thome\t\t\tGo to the last page of data\n'}
-      {'Up or Left Arrow\tprevious\t\tGo to the previous page\n'}
-      {'Down or Right Arrow\tnext\t\t\tGo to the next page\n'}
+      {'\tHome\t\t\thome\t\t\tReturn to the first page of the table\n'}
+      {'\tEnd\t\t\thome\t\t\tGo to the last page of data\n'}
+      {'\tLeft Arrow\t\tprevious\t\tGo to the previous page\n'}
+      {'\tRight Arrow\t\tnext\t\t\tGo to the next page\n'}
     </pre>
   );
 };

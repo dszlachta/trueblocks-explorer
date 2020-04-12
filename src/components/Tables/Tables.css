@@ -75,8 +75,8 @@
   color: var(--at-color2);
   background-color: var(--at-bgcolor2);
 }
-.at-row.h4 {
-  color: blue;
+h4 {
+  background-color: var(--at-color2);
 }
 
 /*-----------------------------------*/

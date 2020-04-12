@@ -13,8 +13,8 @@ export const DataTable = ({
   data,
   title = 'Data Table (dt-)',
   search = true,
-  searchFields,
   pagination = true,
+  searchFields,
   noHeader = false,
 }) => {
   const [pagingCtx, setPaging] = useState(stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0 }));

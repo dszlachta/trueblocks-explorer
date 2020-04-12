@@ -17,19 +17,23 @@ import ChevronsDown from 'assets/icons/ChevronsDown';
 import './Pagination.css';
 
 //-----------------------------------------------------------------
-export const Pagination = ({ handler, pagingCtx }) => {
+export const Pagination = ({ enabled, handler, pagingCtx }) => {
   if (isNaN(pagingCtx.curPage)) return <Fragment></Fragment>;
+  if (!enabled) return <div></div>;
 
   Mousetrap.bind(['meta+shift+home'], getHandler(pagingCtx, 'first', handler));
   Mousetrap.bind(['meta+shift+end'], getHandler(pagingCtx, 'last', handler));
+  Mousetrap.bind(['home'], getHandler(pagingCtx, 'first', handler));
+  Mousetrap.bind(['end'], getHandler(pagingCtx, 'last', handler));
   Mousetrap.bind(['up'], getHandler(pagingCtx, 'previous', handler));
   Mousetrap.bind(['left'], getHandler(pagingCtx, 'previous', handler));
   Mousetrap.bind(['down'], getHandler(pagingCtx, 'next', handler));
   Mousetrap.bind(['right'], getHandler(pagingCtx, 'next', handler));
   return (
     <div className="pagination-container">
-      <Selector handler={handler} pagingCtx={pagingCtx} />
-      <Display pagingCtx={pagingCtx} />
+      {JSON.stringify(pagingCtx, null, 2)}
+      {!pagingCtx.arrowOnly && <Selector handler={handler} pagingCtx={pagingCtx} />}
+      {!pagingCtx.arrowOnly && <Display pagingCtx={pagingCtx} />}
       {
         <Fragment>
           <PagingIcon name="first" handler={handler} pagingCtx={pagingCtx} />

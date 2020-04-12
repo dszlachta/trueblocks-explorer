@@ -2,20 +2,47 @@ import React, { Fragment, useState } from 'react';
 import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3-array';
 
-import { Toolbar } from 'components';
+import { Toolbar, DataTable } from 'components';
+import { calcValue } from 'store';
 
 import './ChartTable.css';
 
 //-----------------------------------------------------------------
-export const ChartTable = ({ columns, data, title = 'Chart Table (ct-)', search = true, pagination = true }) => {
-  const [range, setRange] = useState('firstTs');
-  const [domain, setDomain] = useState('nAddresses');
+export const ChartTable = ({
+  columns,
+  data,
+  title = 'Chart Table (ct-)',
+  chartCtx = { defPair: ['none', 'none'] },
+}) => {
+  const [range, setRange] = useState(localStorage.getItem('chart-range') || chartCtx.defPair[0]);
+  const [domain, setDomain] = useState(localStorage.getItem('chart-domain') || chartCtx.defPair[1]);
+  const [radius, setRadius] = useState(localStorage.getItem('chart-radius') || chartCtx.radius || 2);
 
-  const chartCtx = {
+  const chartHandler = (which, value) => {
+    switch (which) {
+      case 'setRange':
+        setRange(value);
+        localStorage.setItem('chart-range', value);
+        break;
+      case 'setDomain':
+        setDomain(value);
+        localStorage.setItem('chart-domain', value);
+        break;
+      case 'setRadius':
+        setRadius(value);
+        localStorage.setItem('chart-radius', value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const chartCtx2 = {
+    ...chartCtx,
     range: range,
-    setRange: setRange,
     domain: domain,
-    setDomain: setDomain,
+    radius: radius,
+    handler: chartHandler,
     rangeCol: columns.filter((column) => {
       return column.selector === range;
     })[0],
@@ -23,21 +50,21 @@ export const ChartTable = ({ columns, data, title = 'Chart Table (ct-)', search 
       return column.selector === domain;
     })[0],
   };
+  if (!(chartCtx2.domainCol && chartCtx2.rangeCol)) return <div>Chart not properly initialized</div>;
 
-  const theTitle = (title === '' ? '' : title + ': ') + chartCtx.domainCol.name + ' X ' + chartCtx.rangeCol.name;
+  const theTitle = title !== '' ? title : chartCtx2.domainCol.name + ' as a function of ' + chartCtx2.rangeCol.name;
   return (
     <div style={{ display: 'inline' }}>
-      <Toolbar title={theTitle} search={search} pagination={pagination} />
-      <ChartHeader title={domain + ' / ' + range} />
-      <ChartBody data={data} columns={columns} chartCtx={chartCtx} />
+      <Toolbar title={theTitle} search={false} pagination={false} pagingCtx={{ arrowsOnly: true }} />
+      <ChartHeader />
+      <ChartBody data={data} columns={columns} chartCtx={chartCtx2} />
     </div>
   );
 };
 
 //-----------------------------------------------------------------
 const ChartHeader = ({ title }) => {
-  return <Fragment></Fragment>;
-  //<div className="base-header at-header ct-header">{title}</div>;
+  return <div className="base-header at-header ct-header">{title}</div>;
 };
 
 const ChartBody = ({ data, columns, chartCtx }) => {
@@ -87,13 +114,13 @@ function Scatter({ data, columns, chartCtx }) {
   const height = h - margin.top - margin.bottom;
 
   const xScale = scaleLinear()
-    .domain(extent(data, (d) => d[chartCtx.rangeCol.selector]))
+    .domain(extent(data, (d) => calcValue(d, chartCtx.rangeCol)))
     .range([0, width]);
 
   const yScale = scaleLinear()
     .domain(
       extent(data, (d) => {
-        return chartCtx.domain === 'nAppearances' ? d[chartCtx.domainCol.selector] * 2 : d[chartCtx.domainCol.selector];
+        return calcValue(d, chartCtx.domainCol);
       })
     )
     .range([height, 0]);
@@ -101,64 +128,29 @@ function Scatter({ data, columns, chartCtx }) {
   const circles = data.map((d, i) => (
     <circle
       key={i}
-      r={3}
-      cx={xScale(d[chartCtx.range])}
-      cy={yScale(d[chartCtx.domain])}
-      style={{ fill: 'lightblue' }}
+      r={chartCtx.radius || 2}
+      cx={xScale(calcValue(d, chartCtx.rangeCol))}
+      cy={yScale(calcValue(d, chartCtx.domainCol))}
+      style={{ fill: 'steelblue' }}
     />
   ));
 
-  const selected = { backgroundColor: 'blue', color: 'white', fontSize: '.9em', margin: '2px' };
-  const notSelected = { fontSize: '.9em', margin: '2px' };
-  const getStyle = (axis, field) => {
-    return axis === 'range'
-      ? field === chartCtx.range
-        ? selected
-        : notSelected
-      : field === chartCtx.domain
-      ? selected
-      : notSelected;
-  };
-  const getButton = (axis, column) => {
-    const key = axis + '_' + column.selector;
-    return axis === 'range' ? (
-      <button key={key} style={getStyle(axis, column.selector)} onClick={() => chartCtx.setRange(column.selector)}>
-        {column.name + (column.function ? '*' : '')}
-      </button>
-    ) : (
-      <button key={key} style={getStyle(axis, column.selector)} onClick={() => chartCtx.setDomain(column.selector)}>
-        {column.name + (column.function ? '*' : '')}
-      </button>
-    );
-  };
+  let dtCols = [chartCtx.rangeCol, chartCtx.domainCol];
+  dtCols[0].hidden = false;
+  dtCols[1].hidden = false;
 
   return (
     <div
       style={{
-        border: '1px dashed brown',
         display: 'grid',
-        gridTemplateColumns: '1fr 4fr 1fr',
-        justifyItems: 'center',
+        gridTemplateColumns: '2fr 2fr minmax(auto, ' + w + 'px) 2fr 2fr',
+        paddingTop: '8px',
       }}
       className="at-body"
     >
-      <div>
-        <h4>Range: </h4>
-        {columns.map((column) => {
-          if (!column.range) return '';
-          return getButton('range', column);
-        })}
-        <br />
-        <br />
-        <h4>Domain: </h4>
-        {columns.map((column) => {
-          if (!column.domain) return '';
-          return getButton('domain', column);
-        })}
-        <hr />
-        {'* - functional fields'}
-      </div>
-      <div className="at-row" style={{ backgroundColor: 'white', margin: '8px' }}>
+      <div></div>
+      <Selectors columns={columns} chartCtx={chartCtx} />
+      <div className="at-row chart">
         <svg width={w} height={h}>
           <g transform={`translate(${margin.left},${margin.top})`}>
             <AxisLeft yScale={yScale} width={width} />
@@ -167,7 +159,85 @@ function Scatter({ data, columns, chartCtx }) {
           </g>
         </svg>
       </div>
+      <div>
+        <DataTable
+          style={{ justifySelf: 'center' }}
+          data={data}
+          columns={dtCols}
+          title=""
+          search={false}
+          paginationArrowsOnly={true}
+        />
+      </div>
       <div></div>
     </div>
   );
 }
+
+const Selectors = ({ columns, chartCtx }) => {
+  const selected = { backgroundColor: 'blue', color: 'white', fontSize: '.9em', margin: '2px' };
+  const notSelected = { fontSize: '.9em', margin: '2px' };
+  const getStyle = (which, field) => {
+    return which === 'range'
+      ? field === chartCtx.range
+        ? selected
+        : notSelected
+      : field === chartCtx.domain
+      ? selected
+      : notSelected;
+  };
+  const getButton = (which, column) => {
+    const key = which + '_' + (column && column.selector);
+    if (which === 'range') {
+      return (
+        <button
+          key={key}
+          style={getStyle(which, column.selector)}
+          onClick={() => chartCtx.handler('setRange', column.selector)}
+        >
+          {column.name + (column.function ? '*' : '')}
+        </button>
+      );
+    } else if (which === 'domain') {
+      return (
+        <button
+          key={key}
+          style={getStyle(which, column.selector)}
+          onClick={() => chartCtx.handler('setDomain', column.selector)}
+        >
+          {column.name + (column.function ? '*' : '')}
+        </button>
+      );
+    } else if (which === 'radius') {
+      return (
+        <button key={key} onClick={() => chartCtx.handler('setRadius', (chartCtx.radius + 1) % 8)}>
+          radius: {chartCtx.radius}
+        </button>
+      );
+    } else {
+      return <div>Unknown type</div>;
+    }
+  };
+
+  return (
+    <div>
+      <h4>Range: </h4>
+      {columns.map((column) => {
+        if (!column.range) return '';
+        return getButton('range', column);
+      })}
+      <br />
+      <br />
+      <h4>Domain: </h4>
+      {columns.map((column) => {
+        if (!column.domain) return '';
+        return getButton('domain', column);
+      })}
+      {'* - functional fields'}
+      <br />
+      <br />
+      <h4>Settings: </h4>
+      <div>{getButton('radius')}</div>
+    </div>
+  );
+};

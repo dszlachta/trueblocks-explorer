@@ -1,9 +1,18 @@
 import React from 'react';
 
+import { currentPage } from 'components/utils';
+
 import { SettingsSkins } from './SettingsSkins';
 export { SettingsSkins };
 
 export const Settings = () => {
+  const subpage = currentPage().subpage;
+  switch (subpage) {
+    case 'skins':
+      return <SettingsSkins />;
+    default:
+      break;
+  }
   return <div className="okay">Actual Settings Page</div>;
 };
 

@@ -9,27 +9,27 @@ export const SettingsSkins = () => {
     {
       name: 'operatorBurn operatorBurn operatorBurn operatorBurn operatorBurn operatorBurn',
       type: 'function',
-      is_ready: 'warning',
+      isReady: 'warning',
     },
     {
       name: 'row2',
       type: 'row2',
-      is_ready: 'value',
+      isReady: 'value',
     },
     {
       name: 'row3',
       type: 'row3',
-      is_ready: 'okay',
+      isReady: 'okay',
     },
     {
       name: 'row4',
       type: 'row4',
-      is_ready: 'warning',
+      isReady: 'warning',
     },
     {
       name: 'row5',
       type: 'row5',
-      is_ready: 'okay',
+      isReady: 'okay',
     },
   ];
   const shit = shits[0];
@@ -39,19 +39,25 @@ export const SettingsSkins = () => {
       type: 'number',
       selector: 'name',
       editable: true,
+      range: true,
+      domain: true,
     },
     {
       name: 'Type',
       selector: 'type',
       type: 'string',
       align: 'center',
+      range: true,
+      domain: true,
     },
     {
       name: 'Ready',
-      selector: 'is_ready',
+      selector: 'isReady',
       type: 'string',
       pill: true,
       align: 'center',
+      range: true,
+      domain: true,
     },
   ];
 
@@ -76,10 +82,10 @@ export const SettingsSkins = () => {
         <DataTable data={shits} columns={fields} />
       </Present>
       <Present>
-        <GridTable data={shits} columns={fields} cellSize={1e5} />
+        <GridTable data={shits} columns={fields} cellSize={1e5} search={true} />
       </Present>
       <Present>
-        <ChartTable data={shits} columns={fields} />
+        <ChartTable data={shits} columns={fields} pagination={true} chartCtx={{ defPair: ['type', 'isReady'] }} />
       </Present>
     </div>
   );

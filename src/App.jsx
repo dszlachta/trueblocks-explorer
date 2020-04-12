@@ -7,12 +7,12 @@ import GlobalContext, { panelDefault, panelReducer, statusDefault, statusReducer
 import { theMenu, menusReducer } from 'pages';
 
 // page-related - for searching do not remove
-import { dashboardDefault, dashboardReducer } from 'pages/Dashboard';
-import { projectsDefault, projectsReducer } from 'pages/Projects/store';
-import { namesDefault, namesReducer } from 'pages/Names/store';
-import { signaturesDefault, signaturesReducer } from 'pages/Signatures';
-import { digestsDefault, digestsReducer } from 'pages/Digests/store';
-import { cachesDefault, cachesReducer } from 'pages/Caches/store';
+import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/Dashboard';
+import { projectsDefault, projectsReducer } from 'pages/Projects/Projects';
+import { namesDefault, namesReducer } from 'pages/Names/Names';
+import { signaturesDefault, signaturesReducer } from 'pages/Signatures/Signatures';
+import { digestsDefault, digestsReducer } from 'pages/Digests/Digests';
+import { cachesDefault, cachesReducer } from 'pages/Caches/Caches';
 import { stateFromStorage } from 'components/utils';
 
 import 'App.css';

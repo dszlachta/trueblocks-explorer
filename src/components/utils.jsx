@@ -1,4 +1,16 @@
 //-----------------------------------------------------
+export function pad2(n) {
+  const str = JSON.stringify(n);
+  const fix = Array(2 - str.length)
+    .fill()
+    .map((_, idx) => idx);
+  return fix.reduce((s, i) => {
+    console.log(s);
+    return '0' + s;
+  }, str);
+}
+
+//-----------------------------------------------------
 export const titleFromPage = () => {
   return ''; //currentPage().subpage === '' ? currentPage().page : currentPage().subpage;
 };

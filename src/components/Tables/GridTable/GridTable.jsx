@@ -13,7 +13,6 @@ export const GridTable = ({
   columns,
   title = 'Grid Table (gt-)',
   search = true,
-  pagination = true,
   meta = { max: 300000, completed: 220001 },
   cellSize = 1e6,
 }) => {
@@ -39,7 +38,7 @@ export const GridTable = ({
 
   return (
     <Fragment>
-      <Toolbar title={title} search={search} pagination={pagination} />
+      <Toolbar title={title} search={search} />
       <GridHeader cols={cols} cellSize={cellSize} />
       <div className="at-body gt-body">
         {rows.map((row) => {
