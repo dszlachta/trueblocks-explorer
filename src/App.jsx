@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react';
-import PropTypes from 'prop-types';
 import Mousetrap from 'mousetrap';
 
 import { PageHeader, PageFooter, PageContent } from 'page-parts';
@@ -35,13 +34,13 @@ function App() {
 
   // page-related - for searching do not remove
   const theGlobalState = {
-    panels: { state: panelState, dispatch: panelDispatch },
     dashboard: { dashboards: dashboardState, dispatch: dashboardDispatch },
-    projects: { state: projectsState, dispatch: projectsDispatch },
+    projects: { projects: projectsState, dispatch: projectsDispatch },
     names: { state: namesState, dispatch: namesDispatch },
     signatures: { state: signaturesState, dispatch: signaturesDispatch },
     digests: { digests: digestsState, dispatch: digestsDispatch },
     caches: { caches: cachesState, dispatch: cachesDispatch },
+    panels: { state: panelState, dispatch: panelDispatch },
     status: { state: statusState, dispatch: statusDispatch },
     menus: { menu: menusState, dispatch: menusDispatch },
   };

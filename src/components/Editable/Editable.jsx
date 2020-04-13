@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react';
+import React, { Fragment, useState, useEffect, useRef, useCallback } from 'react';
 
 import './Editable.css';
 
@@ -27,20 +27,20 @@ export const Editable = (props) => {
   const enter = useKeypress('Enter');
   const esc = useKeypress('Escape');
 
-  const validateInput = () => {
+  const validateInput = useCallback(() => {
     if (!props.onValidate) return true;
     const res = props.onValidate(props.fieldName, cleanHTML(inputValue));
     if (res === '') return true;
     setError(res);
     return false;
-  };
+  }, [inputValue, props]);
 
-  const closeEditor = () => {
+  const closeEditor = useCallback(() => {
     if (isActive) {
       setActive(false);
       if (validateInput() && props.onAccept) props.onAccept(props.record_id, props.fieldName, cleanHTML(inputValue));
     }
-  };
+  }, [isActive, inputValue, props, validateInput]);
 
   useEffect(() => {
     if (isActive) {
@@ -58,7 +58,7 @@ export const Editable = (props) => {
         setInput(props.fieldValue);
       }
     }
-  }, [enter, esc]); // watch the Enter and Escape key presses
+  }, [enter, esc, closeEditor, isActive, props.fieldValue]); // watch the Enter and Escape key presses
 
   let visibleText = errorStr;
   if (visibleText === '') visibleText = props.fieldValue;

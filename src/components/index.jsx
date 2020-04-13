@@ -1,10 +1,9 @@
 import { Card } from './Card';
 import { Caddie } from './Caddie';
-import { Group } from './Group';
 import { Menu, MenuItem } from './Menu';
 import { Editable } from './Editable';
 import { Panel } from './Panels/Panel';
-import { Toolbar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable, ObjectTable2 } from './Tables';
+import { Toolbar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable } from './Tables';
 import { MenuPanel } from './Panels/MenuPanel';
 import { ContentPanel } from './Panels/ContentPanel';
 import { StatusPanel } from './Panels/StatusPanel';
@@ -14,7 +13,6 @@ import { Debug } from './Debug';
 export {
   Card,
   Caddie,
-  Group,
   Debug,
   Menu,
   MenuItem,
@@ -22,7 +20,6 @@ export {
   Panel,
   Toolbar,
   DataTable,
-  ObjectTable2,
   ObjectTable,
   GridTable,
   ChartTable,

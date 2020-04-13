@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import PropTypes from 'prop-types';
 
 import { DataTable, GridTable, ChartTable } from 'components';
 import { currentPage, getServerData1, pad2 } from 'components/utils';
@@ -48,15 +47,7 @@ export const Digests = () => {
     );
     //
   } else {
-    view = (
-      <GridTable
-        columns={digestsSchema}
-        data={digests}
-        title="Grid View"
-        meta={status}
-        search={false}
-      />
-    );
+    view = <GridTable columns={digestsSchema} data={digests} title="Grid View" meta={status} search={false} />;
     //
   }
 
@@ -99,8 +90,8 @@ const digestsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    function: (rec) => {
-      return rec.filename.replace('.bin', '');
+    function: (record) => {
+      return record.filename.replace('.bin', '');
     },
     hidden: true,
     range: false,
@@ -118,8 +109,8 @@ const digestsSchema = [
     name: 'Block Range',
     selector: 'blockRange',
     type: 'string',
-    function: (rec) => {
-      return rec.filename.replace('.bin', '');
+    function: (record) => {
+      return record.filename.replace('.bin', '');
     },
     align: 'center',
     range: false,
@@ -130,8 +121,8 @@ const digestsSchema = [
     name: 'Block Span',
     selector: 'blockSpan',
     type: 'number',
-    function: (rec) => {
-      return rec.latestAppearance - rec.firstAppearance + 1;
+    function: (record) => {
+      return record.latestAppearance - record.firstAppearance + 1;
     },
     decimals: 0,
     range: true,
@@ -141,8 +132,8 @@ const digestsSchema = [
     name: 'Duration',
     selector: 'duration',
     type: 'number',
-    function: (rec) => {
-      let s = rec.latestTs - rec.firstTs + 1;
+    function: (record) => {
+      let s = record.latestTs - record.firstTs + 1;
       let m = Math.floor(s / 60);
       let h = Math.floor(m / 60);
       const d = Math.floor(h / 24);
@@ -166,8 +157,8 @@ const digestsSchema = [
     name: 'Seconds',
     selector: 'seconds',
     type: 'number',
-    function: (rec) => {
-      return rec.latestTs - rec.firstTs + 1;
+    function: (record) => {
+      return record.latestTs - record.firstTs + 1;
     },
     decimals: 0,
     hidden: true,

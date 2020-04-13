@@ -4,6 +4,7 @@ import { Toolbar, PanelTable } from 'components';
 import { fmtNum, handleClick } from 'components/utils';
 
 import './GridTable.css';
+import { calcValue } from 'store';
 
 //-----------------------------------------------------------------
 export const GridTable = ({
@@ -34,6 +35,13 @@ export const GridTable = ({
     setSelected(localStorage.getItem('grid-select'));
   }, [meta]);
 
+  function idColumn(columns) {
+    const ret = columns.filter((c) => c.selector === 'id');
+    return ret ? ret[0] : ret;
+  }
+  const idCol = idColumn(columns);
+  if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
+
   return (
     <Fragment>
       <Toolbar title={title} search={search} />
@@ -53,7 +61,7 @@ export const GridTable = ({
           );
         })}
       </div>
-      <DetailTable data={data} columns={columns} start={selected} cellSize={cellSize / 10} />{' '}
+      <DetailTable idCol={idCol} data={data} columns={columns} start={selected} cellSize={cellSize / 10} />{' '}
     </Fragment>
   );
 };
@@ -97,7 +105,7 @@ const GridHeader = ({ cols, cellSize }) => {
 };
 
 //-----------------------------------------------------------------
-const DetailTable = ({ data, columns, start, cellSize }) => {
+const DetailTable = ({ data, columns, idCol, start, cellSize }) => {
   if (start === undefined) {
     return (
       <div
@@ -185,8 +193,15 @@ const DetailTable = ({ data, columns, start, cellSize }) => {
               gridGap: '4px',
             }}
           >
-            {filteredData.map((item) => {
-              return <PanelTable key={item.start} data={item} columns={columns} title={item.filename} />;
+            {filteredData.map((record) => {
+              return (
+                <PanelTable
+                  key={calcValue(record, idCol) + record.start}
+                  data={record}
+                  columns={columns}
+                  title={record.filename}
+                />
+              );
             })}
           </div>
           <div></div>

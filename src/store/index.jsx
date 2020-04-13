@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { panelDefault, panelReducer, usePanels } from './panel_store';
 import { statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta } from './status_store';

@@ -12,32 +12,33 @@ export const ChartTable = ({
   data,
   columns,
   title = 'Chart Table (ct-)',
+  chartName = '',
   chartCtx = { defPair: ['none', 'none'] },
 }) => {
-  const [range, setRange] = useState(localStorage.getItem('chart-range') || chartCtx.defPair[0]);
-  const [domain, setDomain] = useState(localStorage.getItem('chart-domain') || chartCtx.defPair[1]);
-  const [radius, setRadius] = useState(localStorage.getItem('chart-radius') || chartCtx.radius || 2);
+  const [range, setRange] = useState(localStorage.getItem(chartName + '-range') || chartCtx.defPair[0]);
+  const [domain, setDomain] = useState(localStorage.getItem(chartName + '-domain') || chartCtx.defPair[1]);
+  const [radius, setRadius] = useState(localStorage.getItem(chartName + '-radius') || chartCtx.radius || 2);
 
   const chartHandler = (which, value) => {
     switch (which) {
       case 'setRange':
         setRange(value);
-        localStorage.setItem('chart-range', value);
+        localStorage.setItem(chartName + '-range', value);
         break;
       case 'setDomain':
         setDomain(value);
-        localStorage.setItem('chart-domain', value);
+        localStorage.setItem(chartName + '-domain', value);
         break;
       case 'setRadius':
         setRadius(value);
-        localStorage.setItem('chart-radius', value);
+        localStorage.setItem(chartName + '-radius', value);
         break;
       case 'flip':
         const r = range;
         const d = domain;
-        localStorage.setItem('chart-range', d);
+        localStorage.setItem(chartName + '-range', d);
         setRange(domain);
-        localStorage.setItem('chart-domain', r);
+        localStorage.setItem(chartName + '-domain', r);
         setDomain(r);
         break;
       default:

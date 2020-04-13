@@ -1,241 +1,107 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment, useContext } from 'react';
 
-import { useContext } from 'react';
-import GlobalContext, { isVerbose } from 'store';
-import { notEmpty } from 'components/utils';
+import GlobalContext from 'store';
 
 import { Card, ObjectTable } from 'components/';
-import { sortArray, currentPage, handleClick } from 'components/utils';
-import ToggleLeft from 'assets/icons/toggle-left';
-import ToggleRight from 'assets/icons/toggle-right';
-import Edit from 'assets/icons/edit';
-import Delete from 'assets/icons/delete';
-import Undelete from 'assets/icons/undelete';
-import Remove from 'assets/icons/remove';
+import { sortArray, handleClick, notEmpty } from 'components/utils';
+import { ToggleLeft, ToggleRight, Edit, Delete, Undelete, Remove } from 'assets/icons/edit_set';
+
 import './Projects.css';
 
 //----------------------------------------------------------------------------
 export const Projects = () => {
-  const { state, dispatch } = useProjects();
-  let projects = state;
+  const { projects } = useProjects();
 
   sortArray(projects, ['deleted', 'group', 'name'], [true, true, true]);
 
+  const activeProjects = projects.filter((project) => {
+    return !project.deleted;
+  });
+  const inactiveProjects = projects.filter((project) => {
+    return project.deleted;
+  });
+
   return (
     <div key="projects" className="projects">
-      <h4>Active Projects</h4>
-      {spinProjects(projects, dispatch, true)}
-      <h4>Paused Projects</h4>
-      {spinProjects(projects, dispatch, false)}
+      <ProjectList projects={activeProjects} title="Active Projects" />
+      <ProjectList projects={inactiveProjects} title="Inactive Projects" />
     </div>
   );
 };
 
-const spinProjects = (projects, dispatch, active) => {
-  let count = 0;
-  const ret = projects.map((project, idx) => {
-    if ((active && project.deleted) || (!active && !project.deleted)) return <Fragment key={idx}></Fragment>;
+//----------------------------------------------------------------------------
+const Icon = ({ action, id, dispatch, deleted, color = '' }) => {
+  const fill = deleted ? 'grey' : 'lightyellow';
+  const col = deleted ? 'lightgrey' : color;
+  const callBack = deleted ? null : (e) => handleClick(e, dispatch, { type: action, id: id });
+  const callBack2 = (e) => handleClick(e, dispatch, { type: action, id: id });
+  const noIcon = <div style={{ width: '22px' }}></div>;
 
-    count++;
-    const noIcon = <div style={{ width: '22px', color: 'grey' }}>xx</div>;
-
-    let monitorCallback = (e) => handleClick(e, dispatch, { type: 'toggle_monitor', id: project.id });
-    const on = <ToggleRight key={'ic' + project.id} fill="lightyellow" color="green" onClick={monitorCallback} />;
-    const off = <ToggleLeft key={'ic' + project.id} fill="lightyellow" color="red" onClick={monitorCallback} />;
-
-    let noopCallback = (e) => {
-      e.preventDefault(); /* do nothing */
-    };
-    const on_dis = <ToggleRight key={'ic' + project.id} fill="grey" color="lightgrey" onClick={noopCallback} />;
-    const off_dis = <ToggleLeft key={'ic' + project.id} fill="grey" color="lightgrey" onClick={noopCallback} />;
-
-    let topIcon = project.deleted ? (project.monitored ? on_dis : off_dis) : project.monitored ? on : off;
-
-    const removeCallback = (e) => handleClick(e, dispatch, { type: 'remove_project', id: project.id });
-    const remove = project.deleted ? <Remove size="18" onClick={removeCallback} /> : noIcon;
-
-    const deleteCallback = (e) => handleClick(e, dispatch, { type: 'toggle_deleted', id: project.id });
-    const del = project.deleted ? (
-      <Undelete size="18" onClick={deleteCallback} />
-    ) : (
-      <Delete size="18" onClick={deleteCallback} />
-    );
-
-    const editCallback = (e) => handleClick(e, dispatch, { type: 'edit_project', id: project.id });
-    const edit = project.deleted ? noIcon : <Edit size="15" onClick={editCallback} />;
-
-    const tray = [edit, del, remove];
-
-    const route = project.deleted ? '' : '/projects/view?id=' + project.id;
-    const cn = 'card-header ' + (project.deleted ? 'deleted-project' : '');
-
-    return (
-      <Card key={project.id} title={project.name} headerClass={cn} iconTray={tray} headerLink={route} topIcon={topIcon}>
-        <ObjectTable data={project} columns={projectsSchema} />
-      </Card>
-    );
-  });
-
-  if (count === 0) return <div style={{ marginLeft: '2%', marginBottom: '2%' }}>[None]</div>;
-
-  return ret;
+  switch (action) {
+    case 'toggle_on':
+      return <ToggleLeft key={'i_' + id} fill={fill} color={col} onClick={callBack} />;
+    case 'toggle_off':
+      return <ToggleRight key={'i_' + id} fill={fill} color={col} onClick={callBack} />;
+    case 'remove':
+      return deleted ? <Remove size="18" onClick={callBack2} /> : noIcon;
+    case 'edit':
+      return deleted ? noIcon : <Edit size="18" onClick={callBack} />;
+    case 'delete':
+      return deleted ? <Undelete size="18" onClick={callBack2} /> : <Delete size="18" onClick={callBack2} />;
+    default:
+      break;
+  }
+  return <></>; //
 };
 
 //----------------------------------------------------------------------------
-export const ProjectsEdit = () => {
-  const { page, subpage, params } = currentPage();
-  return <div>Projects Edit: {page + '-' + subpage + ': ' + params + '.'}</div>;
-};
+const ProjectList = ({ projects, title }) => {
+  const { dispatch } = useProjects();
 
-//----------------------------------------------------------------------------
-export const ProjectsSave = () => {
-  return <div>Projects Save</div>;
-};
-
-//----------------------------------------------------------------------------
-export const ProjectsExport = () => {
-  return <div>Projects Export</div>;
-};
-
-//----------------------------------------------------------------------------
-export const ProjectsView = () => {
-  const projects = useProjects().state;
-  const { page, subpage, params } = currentPage();
-
-  const project = projects.find((project) => project.id === params[0].value);
   return (
-    <>
-      <div>Projects View: {page + '-' + subpage + ': ' + params + '.'}</div>
-      <div>
-        <pre>{JSON.stringify(params, null, 2)}</pre>
-      </div>
-      <div>
-        <pre>{JSON.stringify(project, null, 2)}</pre>
-      </div>
-    </> //
+    <Fragment>
+      {<h4>{title}</h4>}
+      {projects.length === 0 ? (
+        <Fragment>
+          <div style={{ marginLeft: '2%', marginBottom: '2%' }}>[None]</div>
+        </Fragment>
+      ) : (
+        projects.map((project, idx) => {
+          const route = project.deleted ? '' : '/projects/view?id=' + project.id;
+          const cn = 'card-header ' + (project.deleted ? 'deleted-project' : '');
+
+          const topIcon = (
+            <Icon
+              action={project.monitored ? 'toggle_off' : 'toggle_on'}
+              color={project.monitored ? 'green' : 'red'}
+              id={project.id}
+              dispatch={dispatch}
+              deleted={project.deleted}
+            />
+          );
+
+          const removeIcon = <Icon action="remove" id={project.id} dispatch={dispatch} deleted={project.deleted} />;
+          const editIcon = <Icon action="edit" id={project.id} dispatch={dispatch} deleted={project.deleted} />;
+          const deleteIcon = <Icon action="delete" id={project.id} dispatch={dispatch} deleted={project.deleted} />;
+          const iconTray = [editIcon, deleteIcon, removeIcon];
+
+          return (
+            <Card
+              key={project.id}
+              title={project.name}
+              headerClass={cn}
+              iconTray={iconTray}
+              headerLink={route}
+              topIcon={topIcon}
+            >
+              <ObjectTable data={project} columns={projectsSchema} />
+            </Card>
+          );
+        })
+      )}
+    </Fragment>
   );
 };
-
-//----------------------------------------------------------------------
-export const projectsDefault = [
-  {
-    group: 'Group 1',
-    name: 'Project 1',
-    client: { name: 'Anderson, Andy', phone: '215-257-9759' },
-    addresses: [
-      '0x5555533333555553333355555333335555533333',
-      '0x654e7f49b474e2f5ac29cc5f2f0d41c8a93d6d0a',
-      '0x807640a13483f8ac783c557fcdf27be11ea4ac7a',
-      '0x9876543210987654321098765432109876543210',
-      '0xb97073b754660bb356dfe12f78ae366d77dbc80f',
-      '0xf503017d7baf7fbc0fff7492b751025c6a78179b',
-      '0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359',
-      '0xfdecc82ddfc56192e26f563c3d68cb544a96bfed',
-    ],
-    txs: 2291,
-    traces: 100,
-    sizeInBytes: '1,201,019',
-    deltas: 8,
-    monitored: false,
-    deleted: true,
-  },
-  {
-    group: 'Group 1',
-    name: 'Project 2',
-    client: { name: "John's Bookstore" },
-    addresses: ['0x001d14804b399c6ef80e64576f657660804fec0b'],
-    txs: 1000,
-    traces: 100,
-    sizeInBytes: '899,100',
-    deltas: 8,
-    monitored: false,
-    deleted: false,
-  },
-  {
-    group: '',
-    name: 'Carson Flowers',
-    client: '',
-    addresses: [
-      '0x001d14804b399c6ef80e64576f657660804fec0b',
-      '0x005a9c03f69d17d66cbb8ad721008a9ebbb836fb',
-      '0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359',
-      '0xfdecc82ddfc56192e26f563c3d68cb544a96bfed',
-    ],
-    txs: 1000,
-    traces: 100,
-    sizeInBytes: 12010010,
-    deltas: 8,
-    monitored: true,
-    deleted: true,
-  },
-  {
-    group: 'Group 1',
-    name: 'May Construction',
-    client: 'May John',
-    addresses: [
-      '0x001d14804b399c6ef80e64576f657660804fec0b',
-      '0x005a9c03f69d17d66cbb8ad721008a9ebbb836fb',
-      '0x1111111111111111111111111111111111111111',
-      '0x1111122222111112222211111222221111122222',
-      '0x1234567812345678123456781234567812345678',
-    ],
-    txs: 1000,
-    traces: 100,
-    sizeInBytes: 110,
-    deltas: 8,
-    monitored: true,
-    deleted: false,
-  },
-  {
-    group: 'Group 2',
-    name: 'The Poetry Shop',
-    client: 'Tudhope, Andy',
-    addresses: ['0xfdecc82ddfc56192e26f563c3d68cb544a96bfed'],
-    txs: 1000,
-    traces: 100,
-    sizeInBytes: 100009102910291,
-    deltas: 8,
-    monitored: false,
-    deleted: true,
-  },
-  {
-    group: 'Group 2',
-    name: 'Maker DAO',
-    client: 'Maker',
-    addresses: ['0x001d14804b399c6ef80e64576f657660804fec0b', '0xfdecc82ddfc56192e26f563c3d68cb544a96bfed'],
-    txs: 1000,
-    traces: 100,
-    sizeInBytes: 1,
-    deltas: 8,
-    monitored: true,
-    deleted: false,
-  },
-  {
-    group: 'Group 2',
-    name: 'Whale Jim',
-    client: 'Buter, in',
-    addresses: ['0x001d14804b399c6ef80e64576f657660804fec0b', '0x005a9c03f69d17d66cbb8ad721008a9ebbb836fb'],
-    txs: 1000,
-    traces: 100,
-    sizeInBytes: 0,
-    deltas: 8,
-    monitored: true,
-    deleted: true,
-  },
-  {
-    group: 'Group 3',
-    name: 'Whale No. 2',
-    client: 'Lub, in',
-    addresses: ['0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359', '0xfdecc82ddfc56192e26f563c3d68cb544a96bfed'],
-    txs: 1000,
-    traces: 100,
-    sizeInBytes: 1212101010,
-    deltas: 8,
-    monitored: false,
-    deleted: false,
-  },
-];
 
 //----------------------------------------------------------------------
 export const projectsReducer = (state, action) => {
@@ -249,21 +115,24 @@ export const projectsReducer = (state, action) => {
       project.monitored = !project.monitored;
       ret = replaceRecord(ret, project, action.id);
       break;
-    case 'toggle_deleted':
+    case 'toggle_on':
+      project.monitored = true;
+      ret = replaceRecord(ret, project, action.id);
+      break;
+    case 'toggle_off':
+      project.monitored = false;
+      ret = replaceRecord(ret, project, action.id);
+      break;
+    case 'delete':
+      console.log(project.deleted);
       project.deleted = !project.deleted;
       ret = replaceRecord(ret, project, action.id);
       break;
-    case 'edit_project':
+    case 'edit':
       window.location = '/projects/edit?id=' + project.id;
       break;
-    case 'remove_project':
+    case 'remove':
       ret = ret.filter((project) => project.id !== action.id);
-      break;
-      //    case 'update':
-      //      project[action.fieldName] = action.value;
-      //      console.log('project: ', project);
-      //      ret = replaceRecord(ret, project, action.id);
-      //      console.log('ret: ', ret.find((p) => p.id === action.id));
       break;
     case 'reset':
       ret = projectsDefault;
@@ -292,17 +161,145 @@ export const useProjects = () => {
   return useContext(GlobalContext).projects;
 };
 
+//----------------------------------------------------------------------
+export const projectsDefault = [
+  {
+    id: '0x12..01',
+    group: 'Group 1',
+    name: 'Project 1',
+    client: { name: 'Anderson, Andy', phone: '215-257-9759' },
+    addresses: [
+      '0x5555533333555553333355555333335555533333',
+      '0x654e7f49b474e2f5ac29cc5f2f0d41c8a93d6d0a',
+      '0x807640a13483f8ac783c557fcdf27be11ea4ac7a',
+      '0x9876543210987654321098765432109876543210',
+      '0xb97073b754660bb356dfe12f78ae366d77dbc80f',
+      '0xf503017d7baf7fbc0fff7492b751025c6a78179b',
+      '0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359',
+      '0xfdecc82ddfc56192e26f563c3d68cb544a96bfed',
+    ],
+    txs: 2291,
+    traces: 100,
+    sizeInBytes: '1,201,019',
+    deltas: 8,
+    monitored: false,
+    deleted: true,
+  },
+  {
+    id: '0x12..02',
+    group: 'Group 1',
+    name: 'Project 2',
+    client: { name: "John's Bookstore" },
+    addresses: ['0x001d14804b399c6ef80e64576f657660804fec0b'],
+    txs: 1000,
+    traces: 100,
+    sizeInBytes: '899,100',
+    deltas: 8,
+    monitored: false,
+    deleted: false,
+  },
+  {
+    id: '0x12..03',
+    group: '',
+    name: 'Carson Flowers',
+    client: '',
+    addresses: [
+      '0x001d14804b399c6ef80e64576f657660804fec0b',
+      '0x005a9c03f69d17d66cbb8ad721008a9ebbb836fb',
+      '0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359',
+      '0xfdecc82ddfc56192e26f563c3d68cb544a96bfed',
+    ],
+    txs: 1000,
+    traces: 100,
+    sizeInBytes: 12010010,
+    deltas: 8,
+    monitored: true,
+    deleted: true,
+  },
+  {
+    id: '0x12..04',
+    group: 'Group 1',
+    name: 'May Construction',
+    client: 'May John',
+    addresses: [
+      '0x001d14804b399c6ef80e64576f657660804fec0b',
+      '0x005a9c03f69d17d66cbb8ad721008a9ebbb836fb',
+      '0x1111111111111111111111111111111111111111',
+      '0x1111122222111112222211111222221111122222',
+      '0x1234567812345678123456781234567812345678',
+    ],
+    txs: 1000,
+    traces: 100,
+    sizeInBytes: 110,
+    deltas: 8,
+    monitored: true,
+    deleted: false,
+  },
+  {
+    id: '0x12..05',
+    group: 'Group 2',
+    name: 'The Poetry Shop',
+    client: 'Tudhope, Andy',
+    addresses: ['0xfdecc82ddfc56192e26f563c3d68cb544a96bfed'],
+    txs: 1000,
+    traces: 100,
+    sizeInBytes: 100009102910291,
+    deltas: 8,
+    monitored: false,
+    deleted: true,
+  },
+  {
+    id: '0x12..06',
+    group: 'Group 2',
+    name: 'Maker DAO',
+    client: 'Maker',
+    addresses: ['0x001d14804b399c6ef80e64576f657660804fec0b', '0xfdecc82ddfc56192e26f563c3d68cb544a96bfed'],
+    txs: 1000,
+    traces: 100,
+    sizeInBytes: 1,
+    deltas: 8,
+    monitored: true,
+    deleted: false,
+  },
+  {
+    id: '0x12..07',
+    group: 'Group 2',
+    name: 'Whale Jim',
+    client: 'Buter, in',
+    addresses: ['0x001d14804b399c6ef80e64576f657660804fec0b', '0x005a9c03f69d17d66cbb8ad721008a9ebbb836fb'],
+    txs: 1000,
+    traces: 100,
+    sizeInBytes: 0,
+    deltas: 8,
+    monitored: true,
+    deleted: true,
+  },
+  {
+    id: '0x12..08',
+    group: 'Group 3',
+    name: 'Whale No. 2',
+    client: 'Lub, in',
+    addresses: ['0xfb6916095ca1df60bb79ce92ce3ea74c37c5d359', '0xfdecc82ddfc56192e26f563c3d68cb544a96bfed'],
+    txs: 1000,
+    traces: 100,
+    sizeInBytes: 1212101010,
+    deltas: 8,
+    monitored: false,
+    deleted: false,
+  },
+];
+
 //----------------------------------------------------------------------------
-export const projectsSchema = {
-  id: { hidden: !isVerbose() },
-  group: { editable: true, onValidate: notEmpty, onAccept: null },
-  name: { editable: true, onValidate: null, onAccept: null },
-  client: { type: 'object', editable: true, onValidate: null, onAccept: null },
-  addresses: { type: 'array' },
-  txs: { name: 'trans cnt', type: 'number' },
-  traces: { name: 'trace cnt', type: 'number' },
-  sizeInBytes: { name: 'size', type: 'filesize' },
-  deltas: { type: 'number' },
-  monitored: { hidden: !isVerbose(), type: 'bool' },
-  deleted: { hidden: !isVerbose(), type: 'bool' },
-};
+export const projectsSchema = [
+  { selector: 'id', name: '', hidden: true },
+  { selector: 'group', name: '', editable: true, onValidate: notEmpty, onAccept: null },
+  { selector: 'name', name: '', editable: true, onValidate: null, onAccept: null },
+  { selector: 'client', name: '', type: 'object', editable: true, onValidate: null, onAccept: null },
+  { selector: 'addresses', name: '', type: 'array' },
+  { selector: 'txs', name: 'trans cnt', type: 'number' },
+  { selector: 'traces', name: 'trace cnt', type: 'number' },
+  { selector: 'sizeInBytes', name: 'size', type: 'filesize' },
+  { selector: 'deltas', name: '', type: 'number' },
+  { selector: 'monitored', name: '', type: 'bool', hidden: true },
+  { selector: 'deleted', name: '', type: 'bool', hidden: true },
+];

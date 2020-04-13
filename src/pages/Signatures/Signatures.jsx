@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useContext } from 'react';
-import PropTypes from 'prop-types';
-import useSWR from 'swr';
 
-import { calcValue } from 'store';
 import GlobalContext from 'store';
 
 import { DataTable } from 'components';
@@ -22,7 +19,7 @@ export function Signatures() {
     getServerData('http://localhost:8080/abi', query).then((theData) => {
       dispatch({ type: 'update', payload: theData });
     });
-  }, [source]);
+  }, [source, dispatch, query]);
 
   return (
     <DataTable title="" columns={signaturesSchema} data={signatures} searchFields={['encoding', 'type', 'name']} />
@@ -37,7 +34,15 @@ export const signaturesReducer = (state, action) => {
   let ret = state;
   switch (action.type) {
     case 'update':
-      ret = action.payload;
+      let unique = {};
+      let newArray = [];
+      action.payload.forEach((i) => {
+        if (!unique[i]) {
+          unique[i.encoding] = true;
+          newArray.push(i);
+        }
+      });
+      ret = newArray.slice();
       break;
     default:
     // do nothing
@@ -54,6 +59,14 @@ export const useSignatures = () => {
 
 //----------------------------------------------------------------------------
 export const signaturesSchema = [
+  {
+    selector: 'id',
+    name: 'ID',
+    hidden: true,
+    function: (record) => {
+      return record.encoding;
+    },
+  },
   {
     width: 1,
     name: 'Encoding',

@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-
-import useSWR from 'swr';
 import ReactMarkdown from 'react-markdown';
 
 import { usePanels } from 'store';
@@ -27,7 +24,7 @@ export const HelpPanel = () => {
   const action = { type: 'help' };
   const helpIcon = <HelpCircle fill="forestgreen" color="#333" onClick={(e) => handleClick(e, dispatch, action)} />;
   return (
-    <Panel title="Help" options={{ type: 'help', expanded: expanded, topIcon: helpIcon }}>
+    <Panel title="Help" topIcon={helpIcon} type="help" expanded={expanded}>
       {expanded ? (
         <>
           <ReactMarkdown source={help} />

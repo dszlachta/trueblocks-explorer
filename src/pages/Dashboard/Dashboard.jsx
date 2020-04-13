@@ -9,7 +9,7 @@ import './Dashboard.css';
 //----------------------------------------------------
 export const Dashboard = () => {
   const { dashboards } = useDashboard();
-  return <Caddie key="caddie" cn="dashboard" title="Modules" cards={dashboards} columns={dashboardSchema2} />;
+  return <Caddie key="caddie" cn="dashboard" title="Modules" cards={dashboards} columns={dashboardSchema} />;
 };
 
 // page-related - for searching do not remove
@@ -81,13 +81,13 @@ export const dashboardDefault = [
 ];
 
 //----------------------------------------------------------------------
-export const dashboardSchema2 = [
+export const dashboardSchema = [
   {
     name: 'ID',
     selector: 'id',
     type: 'string',
-    function: (rec) => {
-      return rec.filename.replace('.bin', '');
+    function: (record) => {
+      return record.route + 'x';
     },
     hidden: true,
   },

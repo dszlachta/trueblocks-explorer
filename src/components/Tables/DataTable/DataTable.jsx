@@ -1,9 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { ObjectTable2, Toolbar, Editable } from 'components';
+import { Toolbar, Editable } from 'components';
 import { calcValue } from 'store';
-import { stateFromStorage, handleClick, fmtNum, formatFieldByType } from 'components/utils';
+import { stateFromStorage, formatFieldByType } from 'components/utils';
 
 import './DataTable.css';
 
@@ -75,12 +75,19 @@ export const DataTable = ({
 
   useEffect(() => {
     setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: hasData ? filteredData.length : 0 });
-  }, [data, filterText]);
+  }, [data, filterText, hasData, filteredData.length, pagingCtx.perPage]);
+
+  function idColumn(columns) {
+    const ret = columns.filter((c) => c.selector === 'id');
+    return ret ? ret[0] : ret;
+  }
+  const idCol = idColumn(columns);
+  if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
   const showTools = title !== '' || search || pagination;
   const showHeader = !noHeader;
   return (
-    <Fragment>
+    <Fragment key="dt">
       {showTools && (
         <Toolbar
           title={title}
@@ -96,12 +103,9 @@ export const DataTable = ({
       <div className="at-body dt-body">
         {hasData ? (
           filteredData.map((record, index) => {
-            if (index < firstInPage || index >= lastInPage) return <Fragment></Fragment>;
-            return (
-              <Fragment>
-                <MainRow wids={wids} key={index} columns={columns} record={record} />
-              </Fragment>
-            );
+            const key = calcValue(record, idCol);
+            if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
+            return <DataTableRow key={key} id={key} wids={wids} columns={columns} record={record} />;
           })
         ) : (
           <div>Loading...</div>
@@ -137,7 +141,7 @@ export const DataTable = ({
 //      <div style={{ display: 'grid', gridTemplateColumns: '1fr 4fr 1fr' }}>
 //        <div style={{ height: '100%' }}></div>
 //        <div style={{ height: '100%' }}>
-//          <ObjectTable2 columns={columns} data={record} />
+//          <ObjectTable columns={columns} data={record} />
 //        </div>
 //        <div style={{ height: '100%' }}></div>
 //      </div>
@@ -166,10 +170,11 @@ const Header = ({ columns }) => {
   if (Number.isNaN(total)) total = columns.length - nHidden;
 
   return (
-    <StyledHeader wids={wids} columns={columns} className="base-header at-header dt-header">
+    <StyledHeader key="dt-header" wids={wids} columns={columns} className="base-header at-header dt-header">
       {columns.map((column) => {
-        if (column.hidden) return <Fragment></Fragment>;
-        return <div>{column.name}</div>;
+        const key = 'dt-' + column.name;
+        if (column.hidden) return <Fragment key={key}></Fragment>;
+        return <div key={key}>{column.name}</div>;
       })}
     </StyledHeader>
   );
@@ -182,12 +187,13 @@ const StyledRow = styled.div`
 `;
 
 //-----------------------------------------------------------------
-const MainRow = ({ columns, record, wids }) => {
+const DataTableRow = ({ columns, id, record, wids }) => {
   return (
     <Fragment>
-      <StyledRow className="at-row" wids={wids}>
+      <StyledRow key={'dt-row-' + id} className="at-row" wids={wids}>
         {columns.map((column) => {
-          if (column.hidden) return <Fragment></Fragment>;
+          const key = id + column.name;
+          if (column.hidden) return <Fragment key={key}></Fragment>;
 
           let decimals = column.decimals || 0;
           let type = column.type ? column.type : 'string';
@@ -212,7 +218,7 @@ const MainRow = ({ columns, record, wids }) => {
           cn += column.pill ? ' at-pill center ' + record[column.selector] : '';
           const style = column.align ? { justifySelf: column.align } : {};
           return (
-            <div style={style} className={cn}>
+            <div key={key} style={style} className={cn}>
               <Editable editable={column.editable} fieldValue={value} />
             </div>
           );

@@ -111,7 +111,7 @@ export const currentPage = () => {
 };
 
 //---------------------------------------------------------------
-export const formatFieldByType = (type, value, countArrays, hideZero = false, decimals = 0) => {
+export const formatFieldByType = (type, value, countArrays = true, hideZero = false, decimals = 0) => {
   switch (type) {
     case 'object':
       if (typeof value === 'object') value = JSON.stringify(value, null, 2);

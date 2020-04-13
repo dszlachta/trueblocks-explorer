@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import { usePanels } from 'store';
 import { handleClick } from 'components/utils';
@@ -9,69 +8,66 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import './Panel.css';
 
 //----------------------------------------------------------------------
-export const Panel = ({ title, options, children }) => {
-  let { headerLink = '', headerClass = '' } = options;
+export const Panel = ({
+  title,
+  iconTray,
+  headerClass = '',
+  headerLink = '',
+  topIcon,
+  type,
+  dir,
+  expanded,
+  children,
+}) => {
+  const pHeader = (
+    <PanelHeader title={title} headerClass={headerClass} topIcon={topIcon} type={type} dir={dir} expanded={expanded} />
+  );
 
-  let header = <PanelHeader title={title} headerClass={headerClass} options={options} />;
-  if (headerLink !== '') {
-    header = (
-      <Link to={headerLink}>
-        <PanelHeader title={title} headerClass={headerClass} options={options} />
-      </Link>
-    );
-  }
-
-  let iconTray = <Fragment></Fragment>;
-
-  if (options.iconTray) {
-    iconTray = options.iconTray.map((icon, idx) => {
-      return <div key={idx}>{icon}</div>;
-    });
-    iconTray = <div className="icon-tray">{iconTray}</div>;
-  }
+  const header = headerLink && headerLink !== '' ? <Link to={headerLink}>{pHeader}</Link> : pHeader;
+  const bottomIcons = iconTray ? (
+    <div className="icon-tray">
+      {iconTray.map((icon, idx) => {
+        return <div key={idx}>{icon}</div>;
+      })}
+    </div>
+  ) : (
+    <Fragment></Fragment>
+  );
 
   return (
-    <div key={options.type} className={options.type}>
+    <div key={type} className={type}>
       {header}
       {children}
-      {iconTray}
+      {bottomIcons}
     </div>
   );
 };
 
 //----------------------------------------------------------------------
-const PanelHeader = ({ title, headerClass, options }) => {
-  const showIcon = !options.headerClass || !options.headerClass.includes('center');
+const PanelHeader = ({ title, headerClass, topIcon, type, dir, expanded, options }) => {
+  const showIcon = !headerClass || !headerClass.includes('center');
   const icon = showIcon ? (
-    <div className="panel-icon">{options.topIcon ? options.topIcon : <ExpandIcon options={options} />}</div>
+    <div className="panel-icon">
+      {topIcon ? topIcon : <ExpandIcon type={type} direction={dir} expanded={expanded} />}
+    </div>
   ) : (
     <Fragment></Fragment>
   );
   return (
     <div className={headerClass !== '' ? headerClass : 'panel-header'}>
-      <div>{options.expanded ? title : ''}</div>
+      <div>{expanded ? title : ''}</div>
       {icon}
     </div>
   );
 };
-PanelHeader.propTypes = {
-  title: PropTypes.string.isRequired,
-  headerClass: PropTypes.string,
-  options: PropTypes.object,
-};
-PanelHeader.defaultProps = {
-  title: '',
-  headerClass: '',
-  options: {},
-};
 
 //----------------------------------------------------------------------
-const ExpandIcon = ({ options }) => {
+const ExpandIcon = ({ type, direction, expanded }) => {
   const panels = usePanels();
-  const action = { type: options.type };
+  const action = { type: type };
   const leftIcon = <ChevronLeft onClick={(e) => handleClick(e, panels.dispatch, action)} />;
   const rightIcon = <ChevronRight onClick={(e) => handleClick(e, panels.dispatch, action)} />;
 
-  if (options.dir === 'left') return options.expanded ? leftIcon : rightIcon;
-  return options.expanded ? rightIcon : leftIcon;
+  if (direction === 'left') return expanded ? leftIcon : rightIcon;
+  return expanded ? rightIcon : leftIcon;
 };

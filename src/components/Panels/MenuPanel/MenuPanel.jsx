@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { usePanels } from 'store';
 import { useMenus } from 'pages';
@@ -9,7 +8,7 @@ import './MenuPanel.css';
 //----------------------------------------------------------------------
 export const MenuPanel = () => {
   return (
-    <Panel title="Menu" options={{ type: 'menu', dir: 'left', expanded: usePanels().state.menu }}>
+    <Panel title="Menu" type="menu" dir="left" expanded={usePanels().state.menu}>
       {<Menu menu={useMenus().menu.items} />}
     </Panel>
   );

@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { fmtNum, dataFetcher } from 'components/utils';
@@ -13,24 +12,24 @@ import './StatusPanel.css';
 export const StatusPanel = () => {
   const dispatch = useStatus().dispatch;
   const { data, error } = useSWR('http://localhost:8080/status', dataFetcher);
+  const [status, setStatus] = useState('');
 
-  let status = '';
   useEffect(() => {
     if (error) {
-      status = statusDefault;
+      setStatus(statusDefault);
     } else {
-      if (!data) status = 'loading...';
+      if (!data) setStatus('loading...');
       else {
         delete data['types'];
-        status = data;
+        setStatus(data);
         dispatch({ type: 'success', payload: status });
       }
     }
-  }, [data]);
+  }, [error, data, status, dispatch]);
 
   const expanded = usePanels().state.status;
   return (
-    <Panel title="Status" options={{ type: 'status', expanded: expanded }}>
+    <Panel title="Status" type="status" expanded={expanded}>
       {expanded ? (
         <>
           <StatusTable status={status} />

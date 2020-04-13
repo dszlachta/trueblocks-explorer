@@ -1,22 +1,23 @@
 import { useContext } from 'react';
-import PropTypes from 'prop-types';
 
 import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
 export const statusDefault = {
-  data: [{
-    trueblocks_version: '',
-    client_version: '',
-    scraper_version: ''
-  }],
+  data: [
+    {
+      trueblocks_version: '',
+      client_version: '',
+      scraper_version: '',
+    },
+  ],
   meta: {
     ripe: 0,
     unripe: 0,
     staging: 0,
     finalized: 0,
-    client: 0
-  }
+    client: 0,
+  },
 };
 
 //----------------------------------------------------------------------
@@ -43,7 +44,7 @@ export const statusReducer = (state, action) => {
 //----------------------------------------------------------------------
 export const useStatus = () => {
   return useContext(GlobalContext).status;
-}
+};
 export const useStatusData = () => {
   const { state } = useStatus();
   if (!state) {
@@ -59,10 +60,9 @@ export const useStatusData = () => {
     return statusDefault.data[0];
   }
   return state.data[0];
-}
+};
 export const useStatusMeta = () => {
   const { state } = useStatus();
-  if (!state || !state.data || !state.data[0] || state.error)
-    return statusDefault.meta;
+  if (!state || !state.data || !state.data[0] || state.error) return statusDefault.meta;
   return state.meta;
-}
+};

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { usePanels } from 'store';
 import { MenuPanel, ContentPanel, StatusPanel, HelpPanel } from 'components/';

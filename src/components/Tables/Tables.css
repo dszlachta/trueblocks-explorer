@@ -1,11 +1,11 @@
 /*------------------------------------------*/
 :root {
-  --at-color: #2aa198;
-  --at-bgcolor: #002b36;
-  --at-color2: #2aa198;
-  --at-bgcolor2: #002b36;
-  --at-border: 1px solid #2aa198;
-  --at-border2: 1px solid #103f4f;
+  --at-color: lightyellow;
+  --at-bgcolor: #265077;
+  --at-color2: #265077;
+  --at-bgcolor2: white;
+  --at-border: 1px solid #265077;
+  --at-border2: 1px solid #e5e5e5;
   /**/
   --at-padding: 2px 1px;
   --at-radius: 5px;
@@ -75,9 +75,9 @@
   color: var(--at-color2);
   background-color: var(--at-bgcolor2);
 }
-h4 {
+/* h4 {
   background-color: var(--at-color2);
-}
+} */
 
 /*-----------------------------------*/
 .ct-header {

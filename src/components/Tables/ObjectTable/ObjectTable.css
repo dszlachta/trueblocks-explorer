@@ -1,10 +1,5 @@
 @import url('../Tables.css');
 
-.old-ot-body {
-  display: grid;
-  grid-template-columns: 10fr 1fr 20fr;
-}
-
 .ot-row {
   display: grid;
   grid-template-columns: 6fr 1fr 14fr;

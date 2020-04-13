@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useContext } from 'react';
-import PropTypes from 'prop-types';
 
-import GlobalContext, { isVerbose } from 'store';
-import { notEmpty } from 'components/utils';
+import GlobalContext from 'store';
 
 import { DataTable } from 'components';
 import { currentPage, getServerData } from 'components/utils';
@@ -31,7 +29,7 @@ export function Names() {
     getServerData(url, query).then((theData) => {
       dispatch({ type: 'update', payload: theData });
     });
-  }, [query]);
+  }, [query, dispatch]);
 
   const [schema, setSchema] = useState(namesSchema);
   const [searchFields, setSearchFields] = useState(['address', 'name', 'group', 'symbol']);
@@ -74,6 +72,14 @@ export const useNames = () => {
 //----------------------------------------------------------------------------
 export const groupsSchema = [
   {
+    name: 'ID',
+    selector: 'id',
+    function: (record) => {
+      return record.group;
+    },
+    hidden: true,
+  },
+  {
     name: 'Group',
     selector: 'group',
   },
@@ -81,6 +87,14 @@ export const groupsSchema = [
 
 //----------------------------------------------------------------------------
 export const namesSchema = [
+  {
+    selector: 'id',
+    name: 'ID',
+    hidden: true,
+    function: (record) => {
+      return record.address;
+    },
+  },
   {
     width: 3,
     name: 'Group',
