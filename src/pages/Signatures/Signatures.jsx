@@ -34,15 +34,7 @@ export const signaturesReducer = (state, action) => {
   let ret = state;
   switch (action.type) {
     case 'update':
-      let unique = {};
-      let newArray = [];
-      action.payload.forEach((i) => {
-        if (!unique[i]) {
-          unique[i.encoding] = true;
-          newArray.push(i);
-        }
-      });
-      ret = newArray.slice();
+      ret = action.payload;
       break;
     default:
     // do nothing

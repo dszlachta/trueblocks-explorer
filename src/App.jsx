@@ -13,6 +13,7 @@ import { signaturesDefault, signaturesReducer } from 'pages/Signatures/Signature
 import { digestsDefault, digestsReducer } from 'pages/Digests/Digests';
 import { cachesDefault, cachesReducer } from 'pages/Caches/Caches';
 import { stateFromStorage } from 'components/utils';
+import { otherDefault, otherReducer } from 'pages/Other/Other';
 
 import 'App.css';
 
@@ -31,6 +32,7 @@ function App() {
   const [cachesState, cachesDispatch] = useReducer(cachesReducer, cachesDefault);
   const [statusState, statusDispatch] = useReducer(statusReducer, statusDefault);
   const [menusState, menusDispatch] = useReducer(menusReducer, theMenu);
+  const [otherState, otherDispatch] = useReducer(otherReducer, otherDefault);
 
   // page-related - for searching do not remove
   const theGlobalState = {
@@ -40,6 +42,7 @@ function App() {
     signatures: { state: signaturesState, dispatch: signaturesDispatch },
     digests: { digests: digestsState, dispatch: digestsDispatch },
     caches: { caches: cachesState, dispatch: cachesDispatch },
+    other: { other: otherState, dispatch: otherDispatch },
     panels: { state: panelState, dispatch: panelDispatch },
     status: { state: statusState, dispatch: statusDispatch },
     menus: { menu: menusState, dispatch: menusDispatch },

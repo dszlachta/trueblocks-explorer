@@ -75,7 +75,8 @@ export const DataTable = ({
 
   useEffect(() => {
     setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: hasData ? filteredData.length : 0 });
-  }, [data, filterText, hasData, filteredData.length, pagingCtx.perPage]);
+  }, [data, filterText]);
+  //  }, [data, filterText, hasData, filteredData.length, pagingCtx.perPage]);
 
   function idColumn(columns) {
     const ret = columns.filter((c) => c.selector === 'id');
@@ -103,7 +104,7 @@ export const DataTable = ({
       <div className="at-body dt-body">
         {hasData ? (
           filteredData.map((record, index) => {
-            const key = calcValue(record, idCol);
+            const key = calcValue(record, idCol) + '_' + index;
             if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
             return <DataTableRow key={key} id={key} wids={wids} columns={columns} record={record} />;
           })
@@ -171,8 +172,8 @@ const Header = ({ columns }) => {
 
   return (
     <StyledHeader key="dt-header" wids={wids} columns={columns} className="base-header at-header dt-header">
-      {columns.map((column) => {
-        const key = 'dt-' + column.name;
+      {columns.map((column, index) => {
+        const key = 'dt-' + column.name + '-' + index;
         if (column.hidden) return <Fragment key={key}></Fragment>;
         return <div key={key}>{column.name}</div>;
       })}
@@ -188,11 +189,13 @@ const StyledRow = styled.div`
 
 //-----------------------------------------------------------------
 const DataTableRow = ({ columns, id, record, wids }) => {
+  const fKey = 'dt-frag-' + id;
+  const rKey = 'dt-row-' + id;
   return (
-    <Fragment>
-      <StyledRow key={'dt-row-' + id} className="at-row" wids={wids}>
-        {columns.map((column) => {
-          const key = id + column.name;
+    <Fragment key={fKey}>
+      <StyledRow key={rKey} className="at-row" wids={wids}>
+        {columns.map((column, index) => {
+          const key = id + column.name + '-' + index;
           if (column.hidden) return <Fragment key={key}></Fragment>;
 
           let decimals = column.decimals || 0;
@@ -249,8 +252,11 @@ const hasFields = (columns, fields) => {
 
 //-----------------------------------------------------------------
 const matches = (record, fields, filterText) => {
+  console.log('record: ', record);
+  console.log('fields: ', fields);
   return (
     fields.reduce((sum, field) => {
+      console.log('field: ', field);
       return sum + record[field].toLowerCase().includes(filterText.toLowerCase());
     }, 0) > 0
   );

@@ -23,6 +23,7 @@ export function Names() {
   else if (query === 'tokens') query = 'named';
   else if (query === 'wallets') query = 'owned';
   else if (query === 'yours') query = 'custom';
+  if (query === '') query = 'custom';
   query += '&verbose=10';
   const url = 'http://localhost:8080/names';
   useEffect(() => {

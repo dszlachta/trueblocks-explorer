@@ -75,9 +75,9 @@ export const thePages = {
   'other/': { component: <Other /> },
   'other/downloaded': { component: <Other /> },
   'other/common': { component: <Other /> },
-  'other/your%20blocks': { component: <Other /> },
-  'other/known%20blocks': { component: <Other /> },
-  'other/dated%20blocks': { component: <Other /> },
+  'other/yours': { component: <Other /> },
+  'other/known': { component: <Other /> },
+  'other/dated': { component: <Other /> },
   //
   'settings/': { component: <Settings /> },
   'settings/api': { component: <Settings /> },
@@ -190,7 +190,7 @@ export const theMenu = {
     {
       label: 'Other',
       exact: true,
-      items: [{ label: 'Your Blocks' }, { label: 'Known Blocks' }, { label: 'Dated Blocks' }],
+      items: [{ label: 'Downloaded' }, { label: 'Common' }, { label: 'Yours' }, { label: 'Known' }, { label: 'Dated' }],
     },
     { label: 'Separator' },
     {
