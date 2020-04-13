@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Mousetrap from 'mousetrap';
 import { useContext } from 'react';
 
 import GlobalContext from 'store';
@@ -88,8 +87,8 @@ export const thePages = {
   'settings/schemas': { component: <Settings /> },
   //
   'support/': { component: <Support /> },
-  'support/keys': { component: <Support /> },
   'support/contact': { component: <Support /> },
+  'support/keys': { component: <Support /> },
   'support/documentation': { component: <Support /> },
   'support/licensing': { component: <Support /> },
   'support/about': { component: <Support /> },
@@ -99,36 +98,38 @@ export const thePages = {
 
 //----------------------------------------------------------------------
 export const theMenu = {
-  // auto-generate: pages-menus
+  // auto-generate: menu
   items: [
-    { label: 'Dashboard', exact: true, path: '/' },
+    {
+      label: 'Dashboard',
+      exact: true,
+      path: '/',
+    },
     { label: 'Separator' },
     {
       label: 'Projects',
       exact: true,
+      path: '/',
       items: [
-        {
-          label: 'View...',
-          enableFunc: (page) => {
-            return page === 'view';
-          },
-        },
-        { label: 'Edit...' },
+        { label: 'View...', path: 'view' },
+        { label: 'Edit...', path: 'edit' },
         { label: 'Save' },
         { label: 'Export' },
-      ],
+      ]
     },
     {
       label: 'Monitors',
       exact: true,
+      path: '/',
       items: [
         { label: 'Your Monitors', path: 'yours' },
         { label: 'Shared Monitors', path: 'shared' },
-      ],
+      ]
     },
     {
       label: 'Explorer',
       exact: true,
+      path: '/',
       items: [
         { label: 'Accounts' },
         { label: 'Blocks' },
@@ -136,12 +137,13 @@ export const theMenu = {
         { label: 'Receipts' },
         { label: 'Logs' },
         { label: 'Traces' },
-      ],
+      ]
     },
     { label: 'Separator' },
     {
       label: 'Names',
       exact: true,
+      path: '/',
       items: [
         { label: 'Your Names', path: 'yours' },
         { label: 'Wallets' },
@@ -149,11 +151,12 @@ export const theMenu = {
         { label: 'Prefunds' },
         { label: 'Other Names', path: 'other' },
         { label: 'Groups' },
-      ],
+      ]
     },
     {
       label: 'Signatures',
       exact: true,
+      path: '/',
       items: [
         { label: 'Known' },
         { label: 'Monitored' },
@@ -161,41 +164,51 @@ export const theMenu = {
         { label: 'Names' },
         { label: 'Params' },
         { label: 'Cross' },
-      ],
+      ]
     },
     {
       label: 'Digests',
       exact: true,
+      path: '/',
       items: [
         { label: 'Finalized' },
         { label: 'Staged' },
         { label: 'Unripe' },
         { label: 'Separator' },
         { label: 'Columns' },
-      ],
+      ]
     },
     {
       label: 'Caches',
       exact: true,
+      path: '/',
       items: [
         { label: 'Blocks' },
         { label: 'Transactions' },
         { label: 'Traces' },
         { label: 'Separator' },
-        { label: 'Abis' },
         { label: 'Slurps' },
         { label: 'Prices' },
-      ],
+        { label: 'Abis' },
+      ]
     },
     {
       label: 'Other',
       exact: true,
-      items: [{ label: 'Downloaded' }, { label: 'Common' }, { label: 'Yours' }, { label: 'Known' }, { label: 'Dated' }],
+      path: '/',
+      items: [
+        { label: 'Downloaded' },
+        { label: 'Common' },
+        { label: 'Your Blocks', path: 'yours' },
+        { label: 'Known Blocks', path: 'known' },
+        { label: 'Dated Blocks', path: 'dated' },
+      ]
     },
     { label: 'Separator' },
     {
       label: 'Settings',
       exact: true,
+      path: '/',
       items: [
         { label: 'API Config', path: 'api' },
         { label: 'Node Config', path: 'node' },
@@ -204,11 +217,12 @@ export const theMenu = {
         { label: 'Separator' },
         { label: 'Skins' },
         { label: 'Schemas' },
-      ],
+      ]
     },
     {
       label: 'Support',
       exact: true,
+      path: '/',
       items: [
         { label: 'Contact Us', path: 'contact' },
         { label: 'Separator' },
@@ -217,15 +231,14 @@ export const theMenu = {
         { label: 'Separator' },
         { label: 'Licensing' },
         { label: 'About Us', path: 'about' },
-      ],
+      ]
     },
-  ],
-  // auto-generate: pages-menus
+  ]
+  // auto-generate: menus
 };
 
 //----------------------------------------------------------------------
 export const menusReducer = (state, action) => {
-  // users cannot change the menus
   return state;
 };
 
@@ -236,14 +249,6 @@ export const useMenus = () => {
 
 //----------------------------------------------------------------------
 export const InnerPage = () => {
-  Mousetrap.unbind(['meta+shift+home']);
-  Mousetrap.unbind(['meta+shift+end']);
-  Mousetrap.unbind(['home']);
-  Mousetrap.unbind(['end']);
-  Mousetrap.unbind(['up']);
-  Mousetrap.unbind(['left']);
-  Mousetrap.unbind(['down']);
-  Mousetrap.unbind(['right']);
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];
   return ret ? ret.component : <div className="warning">Missing Inner Page</div>;

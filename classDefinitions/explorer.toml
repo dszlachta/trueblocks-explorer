@@ -4,11 +4,11 @@ dest_folder = "./src/pages/"
 
 [[subpages]]
 list = [
-    { page = "explorer", subpage = "", route = "/" },
-    { page = "explorer", subpage = "accounts", route = "/export", options = "addrs_EQ_ADDRS" },
-    { page = "explorer", subpage = "blocks", route = "/blocks", options = "blocks_EQ_latest&hashes_only" },
-    { page = "explorer", subpage = "transactions", route = "/transactions", options = "transactions_EQ_8001001.0" },
-    { page = "explorer", subpage = "receipts", route = "/receipts", options = "transactions_EQ_8001001.0" },
-    { page = "explorer", subpage = "logs", route = "/logs", options = "transactions_EQ_46147.0" },
-    { page = "explorer", subpage = "traces", route = "/traces", options = "transactions_EQ_8001001.1" },
+    { page = "explorer", subpage = "", route = "" },
+    { page = "explorer", subpage = "Accounts", options = "addrs_EQ_ADDRS" },
+    { page = "explorer", subpage = "Blocks", options = "blocks_EQ_latest&hashes_only" },
+    { page = "explorer", subpage = "Transactions", options = "transactions_EQ_8001001.0" },
+    { page = "explorer", subpage = "Receipts", options = "transactions_EQ_8001001.0" },
+    { page = "explorer", subpage = "Logs", options = "transactions_EQ_46147.0" },
+    { page = "explorer", subpage = "Traces", options = "transactions_EQ_8001001.1" },
 ]
