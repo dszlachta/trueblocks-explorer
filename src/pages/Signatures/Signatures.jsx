@@ -7,7 +7,7 @@ import { calcValue } from 'store';
 import GlobalContext from 'store';
 
 import { DataTable } from 'components';
-import { currentPage, titleFromPage, getServerData } from 'components/utils';
+import { currentPage, getServerData } from 'components/utils';
 
 import './Signatures.css';
 
@@ -25,12 +25,7 @@ export function Signatures() {
   }, [source]);
 
   return (
-    <DataTable
-      title={titleFromPage()}
-      columns={signaturesSchema}
-      data={signatures}
-      searchFields={['encoding', 'type', 'name']}
-    />
+    <DataTable title="" columns={signaturesSchema} data={signatures} searchFields={['encoding', 'type', 'name']} />
   );
 }
 

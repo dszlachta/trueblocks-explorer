@@ -1,0 +1,14 @@
+[settings]
+class = "CNames"
+dest_folder = "./src/pages/"
+
+[[subpages]]
+list = [
+    { page = "names", subpage = "" },
+    { page = "names", subpage = "yours" },
+    { page = "names", subpage = "wallets" },
+    { page = "names", subpage = "tokens" },
+    { page = "names", subpage = "prefunds" },
+    { page = "names", subpage = "other" },
+    { page = "names", subpage = "groups" },
+]

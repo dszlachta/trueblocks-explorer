@@ -95,8 +95,8 @@ const Present = ({ children }) => {
   return <div style={{ border: '1px dashed black', padding: '30px', marginTop: '10px' }}>{children}</div>;
 };
 
-// const displayFunc = (record, field) => {
-//   console.log('displayFunc: ', record, ' field: ', field);
+// const displayFun c = (record, field) => {
+//   console.log('displayFun c: ', record, ' field: ', field);
 //   //  if (field.name !== 'body') return null;
 //   const datum = record[field.name];
 //   if (!datum) return null;
@@ -108,7 +108,7 @@ const Present = ({ children }) => {
 // };
 
 // export const SettingsSkins = () => {
-//   return <Caddie cn="skins" title="Skins" cards={skins} columns={skinsSchema} displayFunc={displayFunc} />;
+//   return <Caddie cn="skins" title="Skins" cards={skins} columns={skinsSchema} displayFun c={displayFun c} />;
 // };
 
 // const skin1 = {

@@ -10,7 +10,7 @@ import './MenuPanel.css';
 export const MenuPanel = () => {
   return (
     <Panel title="Menu" options={{ type: 'menu', dir: 'left', expanded: usePanels().state.menu }}>
-      {<Menu menu={useMenus().state.items} />}
+      {<Menu menu={useMenus().menu.items} />}
     </Panel>
   );
 };

@@ -31,9 +31,8 @@ export const Pagination = ({ enabled, handler, pagingCtx }) => {
   Mousetrap.bind(['right'], getHandler(pagingCtx, 'next', handler));
   return (
     <div className="pagination-container">
-      {JSON.stringify(pagingCtx, null, 2)}
-      {!pagingCtx.arrowOnly && <Selector handler={handler} pagingCtx={pagingCtx} />}
-      {!pagingCtx.arrowOnly && <Display pagingCtx={pagingCtx} />}
+      {<Selector handler={handler} pagingCtx={pagingCtx} />}
+      {<Display pagingCtx={pagingCtx} />}
       {
         <Fragment>
           <PagingIcon name="first" handler={handler} pagingCtx={pagingCtx} />
@@ -54,7 +53,7 @@ const Display = ({ pagingCtx }) => {
 
   return (
     <Fragment>
-      {curPage}: {start}-{end} of {total}
+      {start}-{end} of {total}
     </Fragment>
   );
 };
@@ -109,10 +108,8 @@ function isDisabled(pagingCtx, which) {
 //-----------------------------------------------------------------
 function getHandler(pagingCtx, which, handler) {
   if (isDisabled(pagingCtx, which)) {
-    console.log(which, ' disabled ', JSON.stringify(pagingCtx));
     return () => {}; // noop
   }
-  console.log(which, ' enabled ', JSON.stringify(pagingCtx));
   return (e) => handleClick(e, handler, { type: which });
 }
 

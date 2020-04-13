@@ -8,22 +8,22 @@ import GlobalContext from 'store';
 
 import { currentPage } from 'components/utils';
 
-// page-related - for searching do not remove
+// auto-generate: imports
 import { Dashboard } from './Dashboard/Dashboard';
 import { Projects } from './Projects/Projects';
+import { Monitors } from './Monitors/Monitors';
+import { Explorer } from './Explorer/Explorer';
 import { Names } from './Names/Names';
 import { Signatures } from './Signatures/Signatures';
 import { Digests } from './Digests/Digests';
 import { Caches } from './Caches/Caches';
+import { Other } from './Other/Other';
 import { Settings } from './Settings/Settings';
 import { Support } from './Support/Support';
-
-const Generic = ({ page }) => {
-  return <h4>Undefined Generic Page: {page}</h4>;
-};
+// auto-generate: imports
 
 export const thePages = {
-  // page-related - for searching do not remove
+  // auto-generate: pages
   'dashboard/': { component: <Dashboard /> },
   //
   'projects/': { component: <Projects /> },
@@ -32,17 +32,17 @@ export const thePages = {
   'projects/save': { component: <Projects /> },
   'projects/export': { component: <Projects /> },
   //
-  'monitors/': { component: <Generic page="Monitors" /> },
-  'monitors/yours': { component: <Generic page="Monitors" /> },
-  'monitors/shared': { component: <Generic page="Monitors" /> },
+  'monitors/': { component: <Monitors /> },
+  'monitors/yours': { component: <Monitors /> },
+  'monitors/shared': { component: <Monitors /> },
   //
-  'explorer/': { component: <Generic page="Explorer" /> },
-  'explorer/accounts': { component: <Generic page="Explorer" /> },
-  'explorer/blocks': { component: <Generic page="Explorer" /> },
-  'explorer/transactions': { component: <Generic page="Explorer" /> },
-  'explorer/receipts': { component: <Generic page="Explorer" /> },
-  'explorer/logs': { component: <Generic page="Explorer" /> },
-  'explorer/traces': { component: <Generic page="Explorer" /> },
+  'explorer/': { component: <Explorer /> },
+  'explorer/accounts': { component: <Explorer /> },
+  'explorer/blocks': { component: <Explorer /> },
+  'explorer/transactions': { component: <Explorer /> },
+  'explorer/receipts': { component: <Explorer /> },
+  'explorer/logs': { component: <Explorer /> },
+  'explorer/traces': { component: <Explorer /> },
   //
   'names/': { component: <Names /> },
   'names/yours': { component: <Names /> },
@@ -55,9 +55,9 @@ export const thePages = {
   'signatures/': { component: <Signatures /> },
   'signatures/known': { component: <Signatures /> },
   'signatures/monitored': { component: <Signatures /> },
-  'signatures/names': { component: <Generic page="Other" /> },
-  'signatures/params': { component: <Generic page="Other" /> },
-  'signatures/cross': { component: <Generic page="Other" /> },
+  'signatures/names': { component: <Signatures /> },
+  'signatures/params': { component: <Signatures /> },
+  'signatures/cross': { component: <Signatures /> },
   //
   'digests/': { component: <Digests /> },
   'digests/finalized': { component: <Digests /> },
@@ -73,12 +73,12 @@ export const thePages = {
   'caches/prices': { component: <Caches /> },
   'caches/abis': { component: <Caches /> },
   //
-  'other/': { component: <Generic page="Other" /> },
-  'other/downloaded': { component: <Generic page="Other" /> },
-  'other/common': { component: <Generic page="Other" /> },
-  'other/your%20blocks': { component: <Generic page="Other" /> },
-  'other/known%20blocks': { component: <Generic page="Other" /> },
-  'other/dated%20blocks': { component: <Generic page="Other" /> },
+  'other/': { component: <Other /> },
+  'other/downloaded': { component: <Other /> },
+  'other/common': { component: <Other /> },
+  'other/your%20blocks': { component: <Other /> },
+  'other/known%20blocks': { component: <Other /> },
+  'other/dated%20blocks': { component: <Other /> },
   //
   'settings/': { component: <Settings /> },
   'settings/api': { component: <Settings /> },
@@ -94,11 +94,13 @@ export const thePages = {
   'support/documentation': { component: <Support /> },
   'support/licensing': { component: <Support /> },
   'support/about': { component: <Support /> },
+  //
+  // auto-generate: pages
 };
 
 //----------------------------------------------------------------------
-// page-related - for searching do not remove
 export const theMenu = {
+  // auto-generate: pages-menus
   items: [
     { label: 'Dashboard', exact: true, path: '/' },
     { label: 'Separator' },
@@ -219,6 +221,7 @@ export const theMenu = {
       ],
     },
   ],
+  // auto-generate: pages-menus
 };
 
 //----------------------------------------------------------------------
@@ -234,12 +237,15 @@ export const useMenus = () => {
 
 //----------------------------------------------------------------------
 export const InnerPage = () => {
-  Mousetrap.unbind(['left']);
+  Mousetrap.unbind(['meta+shift+home']);
+  Mousetrap.unbind(['meta+shift+end']);
+  Mousetrap.unbind(['home']);
+  Mousetrap.unbind(['end']);
   Mousetrap.unbind(['up']);
-  Mousetrap.unbind(['right']);
+  Mousetrap.unbind(['left']);
   Mousetrap.unbind(['down']);
+  Mousetrap.unbind(['right']);
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];
-  console.log('p: ', page, ' s:', subpage, ' ret: ', ret);
   return ret ? ret.component : <div className="warning">Missing Inner Page</div>;
 };

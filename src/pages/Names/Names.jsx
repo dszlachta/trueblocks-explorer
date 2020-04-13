@@ -6,7 +6,7 @@ import GlobalContext, { isVerbose } from 'store';
 import { notEmpty } from 'components/utils';
 
 import { DataTable } from 'components';
-import { currentPage, titleFromPage, getServerData } from 'components/utils';
+import { currentPage, getServerData } from 'components/utils';
 import './Names.css';
 
 //---------------------------------------------------------------------------
@@ -43,7 +43,7 @@ export function Names() {
 
   return (
     <div>
-      <DataTable columns={schema} data={names} title={titleFromPage()} searchFields={searchFields} />
+      <DataTable columns={schema} data={names} title="" searchFields={searchFields} />
     </div>
   );
 }

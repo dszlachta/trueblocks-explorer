@@ -5,17 +5,18 @@ export function pad2(n) {
     .fill()
     .map((_, idx) => idx);
   return fix.reduce((s, i) => {
-    console.log(s);
     return '0' + s;
   }, str);
 }
 
-//-----------------------------------------------------
-export const titleFromPage = () => {
-  return ''; //currentPage().subpage === '' ? currentPage().page : currentPage().subpage;
-};
-
-//-----------------------------------------------------
+/**
+ *
+ * stateFromStorage
+ * retreive from local storage with a default
+ *
+ * @param {key} the key to retreive from local storage
+ * @param {defaultState} the value to return if key is not in local storage
+ */
 export const stateFromStorage = (key, defaultState) => {
   const storage = localStorage.getItem(key);
   if (storage === null) return defaultState;
@@ -105,7 +106,7 @@ export const currentPage = () => {
     return { name: p[0], value: p[1] };
   });
   if (parts.length < 2 || parts[1] === '') parts[1] = 'dashboard';
-  if (parts.length < 3 || parts[2] === '') parts[2] = '';
+  if (parts.length < 3) parts[2] = '';
   return { page: parts[1], subpage: parts[2], params: params };
 };
 

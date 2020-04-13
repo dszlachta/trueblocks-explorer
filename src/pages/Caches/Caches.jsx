@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import GlobalContext from 'store';
 
 import { DataTable } from 'components';
-import { currentPage, titleFromPage, getServerData1 } from 'components/utils';
+import { currentPage, getServerData1 } from 'components/utils';
 
 import './Caches.css';
 
@@ -53,7 +53,7 @@ export function Caches() {
         <option>{3}</option>
         <option>{10}</option>
       </select>
-      <DataTable columns={cachesSchema} data={caches} title={titleFromPage()} search={false} />
+      <DataTable columns={cachesSchema} data={caches} title="" search={false} />
     </div>
   );
 }

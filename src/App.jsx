@@ -40,10 +40,10 @@ function App() {
     projects: { state: projectsState, dispatch: projectsDispatch },
     names: { state: namesState, dispatch: namesDispatch },
     signatures: { state: signaturesState, dispatch: signaturesDispatch },
-    digests: { state: digestsState, dispatch: digestsDispatch },
+    digests: { digests: digestsState, dispatch: digestsDispatch },
     caches: { caches: cachesState, dispatch: cachesDispatch },
     status: { state: statusState, dispatch: statusDispatch },
-    menus: { state: menusState, dispatch: menusDispatch },
+    menus: { menu: menusState, dispatch: menusDispatch },
   };
 
   mapHotKeys(panelDispatch);

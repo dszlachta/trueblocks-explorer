@@ -12,10 +12,10 @@ export const Menu = ({ menu, parent = '' }) => {
   const sep = indent ? '~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ' : '- - - - - - - - - - - - - - - - ';
   return (
     <>
-      {menu.map((item) => {
+      {menu.map((item, index) => {
         if (item.label.toLowerCase() === 'separator') {
           return (
-            <div style={style} className="menu-separator">
+            <div key={'sep_' + index} style={style} className="menu-separator">
               {sep}
             </div>
           );

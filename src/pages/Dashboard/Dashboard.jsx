@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 //import PropTypes from 'prop-types';
 
-import GlobalContext, { isVerbose } from 'store';
+import GlobalContext from 'store';
 import { Caddie } from 'components/';
 
 import './Dashboard.css';
@@ -9,13 +9,12 @@ import './Dashboard.css';
 //----------------------------------------------------
 export const Dashboard = () => {
   const { dashboards } = useDashboard();
-  return <Caddie cn="dashboard" title="Modules" cards={dashboards} columns={dashboardSchema} />;
+  return <Caddie key="caddie" cn="dashboard" title="Modules" cards={dashboards} columns={dashboardSchema2} />;
 };
 
 // page-related - for searching do not remove
 export const dashboardDefault = [
   {
-    id: '0x13..01',
     name: 'Projects',
     route: '/projects',
     count: 200,
@@ -25,7 +24,6 @@ export const dashboardDefault = [
     timestamp: 1585312970,
   },
   {
-    id: '0x13..02',
     name: 'Monitors',
     route: '/monitors',
     count: 200,
@@ -35,7 +33,6 @@ export const dashboardDefault = [
     timestamp: 1577953849,
   },
   {
-    id: '0x13..01',
     name: 'Explorer',
     route: '/explorer',
     count: 200,
@@ -45,7 +42,6 @@ export const dashboardDefault = [
     timestamp: 1585312970,
   },
   {
-    id: '0x13..04',
     name: 'Names',
     route: '/names',
     count: 200,
@@ -55,7 +51,6 @@ export const dashboardDefault = [
     timestamp: 1577953849,
   },
   {
-    id: '0x13..14',
     name: 'Signatures',
     route: '/signatures',
     count: 200,
@@ -63,7 +58,6 @@ export const dashboardDefault = [
     timestamp: 1577953849,
   },
   {
-    id: '0x13..12',
     name: 'Digests',
     route: '/digests',
     count: 10101,
@@ -71,7 +65,6 @@ export const dashboardDefault = [
     timestamp: 1577953849,
   },
   {
-    id: '0x13..12',
     name: 'Caches',
     route: '/caches',
     count: 10101,
@@ -79,7 +72,6 @@ export const dashboardDefault = [
     timestamp: 1577953849,
   },
   {
-    id: '0x13..05',
     name: 'Skins',
     route: '/settings/skins',
     count: 4903,
@@ -89,16 +81,52 @@ export const dashboardDefault = [
 ];
 
 //----------------------------------------------------------------------
-export const dashboardSchema = {
-  id: { hidden: !isVerbose() },
-  name: { hidden: !isVerbose() },
-  route: { hidden: !isVerbose() },
-  count: { type: 'number' },
-  sizeInBytes: { name: 'size', type: 'filesize' },
-  custom: { name: 'shared' },
-  date: { type: 'date' },
-  timestamp: {},
-};
+export const dashboardSchema2 = [
+  {
+    name: 'ID',
+    selector: 'id',
+    type: 'string',
+    function: (rec) => {
+      return rec.filename.replace('.bin', '');
+    },
+    hidden: true,
+  },
+  {
+    name: 'Name',
+    selector: 'name',
+    type: 'string',
+  },
+  {
+    name: 'Route',
+    selector: 'route',
+    type: 'string',
+  },
+  {
+    name: 'Count',
+    selector: 'count',
+    type: 'number',
+  },
+  {
+    name: 'Size',
+    selector: 'sizeInBytes',
+    type: 'filesize',
+  },
+  {
+    name: 'Custom',
+    selector: 'custom',
+    type: 'string',
+  },
+  {
+    name: 'Date',
+    selector: 'date',
+    type: 'string',
+  },
+  {
+    name: 'TS',
+    selector: 'timestamp',
+    type: 'timestamp',
+  },
+];
 
 //----------------------------------------------------------------------
 export const dashboardReducer = (state, action) => {

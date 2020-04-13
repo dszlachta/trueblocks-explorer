@@ -9,8 +9,8 @@ import './ChartTable.css';
 
 //-----------------------------------------------------------------
 export const ChartTable = ({
-  columns,
   data,
+  columns,
   title = 'Chart Table (ct-)',
   chartCtx = { defPair: ['none', 'none'] },
 }) => {
@@ -31,6 +31,14 @@ export const ChartTable = ({
       case 'setRadius':
         setRadius(value);
         localStorage.setItem('chart-radius', value);
+        break;
+      case 'flip':
+        const r = range;
+        const d = domain;
+        localStorage.setItem('chart-range', d);
+        setRange(domain);
+        localStorage.setItem('chart-domain', r);
+        setDomain(r);
         break;
       default:
         break;
@@ -55,7 +63,7 @@ export const ChartTable = ({
   const theTitle = title !== '' ? title : chartCtx2.domainCol.name + ' as a function of ' + chartCtx2.rangeCol.name;
   return (
     <div style={{ display: 'inline' }}>
-      <Toolbar title={theTitle} search={false} pagination={false} pagingCtx={{ arrowsOnly: true }} />
+      <Toolbar title={theTitle} search={false} pagination={false} />
       <ChartHeader />
       <ChartBody data={data} columns={columns} chartCtx={chartCtx2} />
     </div>
@@ -178,6 +186,7 @@ const Selectors = ({ columns, chartCtx }) => {
   const selected = { backgroundColor: 'blue', color: 'white', fontSize: '.9em', margin: '2px' };
   const notSelected = { fontSize: '.9em', margin: '2px' };
   const getStyle = (which, field) => {
+    if (which !== 'range' && which !== 'domain') return notSelected;
     return which === 'range'
       ? field === chartCtx.range
         ? selected
@@ -210,8 +219,18 @@ const Selectors = ({ columns, chartCtx }) => {
       );
     } else if (which === 'radius') {
       return (
-        <button key={key} onClick={() => chartCtx.handler('setRadius', (chartCtx.radius + 1) % 8)}>
+        <button
+          key={key}
+          style={getStyle(which, '')}
+          onClick={() => chartCtx.handler('setRadius', (chartCtx.radius + 1) % 8)}
+        >
           radius: {chartCtx.radius}
+        </button>
+      );
+    } else if (which === 'flip') {
+      return (
+        <button key={key} style={getStyle(which, '')} onClick={() => chartCtx.handler('flip', 0)}>
+          flip
         </button>
       );
     } else {
@@ -238,6 +257,7 @@ const Selectors = ({ columns, chartCtx }) => {
       <br />
       <h4>Settings: </h4>
       <div>{getButton('radius')}</div>
+      <div>{getButton('flip')}</div>
     </div>
   );
 };

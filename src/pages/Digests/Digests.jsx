@@ -1,43 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import useSWR from 'swr';
 
-import { Card, ObjectTable2, DataTable, GridTable, ChartTable } from 'components';
-import { currentPage, titleFromPage, getServerData1 } from 'components/utils';
-import { useStatusMeta } from 'store';
-import { useContext } from 'react';
-import { pad2 } from 'components/utils';
-import GlobalContext from 'store';
+import { DataTable, GridTable, ChartTable } from 'components';
+import { currentPage, getServerData1, pad2 } from 'components/utils';
+import GlobalContext, { useStatusMeta } from 'store';
 
 import './Digests.css';
 
 //---------------------------------------------------------------------------
 export const Digests = () => {
-  const digests = useDigests().state;
-  const dispatch = useDigests().dispatch;
-
   const [tableType, setTableType] = useState(localStorage.getItem('digest-table-type'));
+  const [source] = useState(currentPage().subpage);
+  const [query] = useState('modes=index&details&verbose=10');
+  const { digests, dispatch } = useDigests();
 
   const changeTableType = (newType) => {
     localStorage.setItem('digest-table-type', newType);
     setTableType(newType);
   };
-  const [source, setSource] = useState(currentPage().subpage);
-  const [query, setQuery] = useState('modes=index&details&verbose=10');
+
   useEffect(() => {
     dispatch({ type: 'loading', payload: true });
     getServerData1('http://localhost:8080/status', query).then((theData) => {
       dispatch({ type: 'update', payload: theData.data[0].caches[0].items });
     });
     dispatch({ type: 'loading', payload: true });
-  }, [source, query]);
+  }, [source, query, dispatch]);
 
   const meta = useStatusMeta();
   const largest = meta.client === 'n/a' ? meta.unripe : meta.client;
   const status = { max: largest, completed: meta.finalized };
+
   let view = undefined;
   if (tableType === 'data-view') {
-    view = <DataTable columns={digestsSchema} data={digests} title="Table View" search={false} />; //{titleFromPage()} />
+    view = <DataTable columns={digestsSchema} data={digests} title="Table View" search={false} />;
+    //
   } else if (tableType === 'graph-view') {
     view = (
       <ChartTable
@@ -48,9 +45,19 @@ export const Digests = () => {
         chartCtx={{ defPair: ['firstTs', 'nAddresses'] }}
         pagination={true}
       />
-    ); //{titleFromPage()} />
+    );
+    //
   } else {
-    view = <GridTable columns={digestsSchema} data={digests} title="Grid View" meta={status} search={false} />;
+    view = (
+      <GridTable
+        columns={digestsSchema}
+        data={digests}
+        title="Grid View"
+        meta={status}
+        search={false}
+      />
+    );
+    //
   }
 
   return (
@@ -87,7 +94,7 @@ export const useDigests = () => {
 };
 
 //----------------------------------------------------------------------------
-export const digestsSchema = [
+const digestsSchema = [
   {
     name: 'ID',
     selector: 'id',

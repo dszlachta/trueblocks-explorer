@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { isVerbose } from 'store';
 import { Editable } from 'components';
 import { formatFieldByType } from 'components/utils';
+import { calcValue } from 'store';
 
 import './ObjectTable.css';
 
@@ -15,8 +16,6 @@ export const ObjectTable = ({
     countArrays: true,
     idField: 'id',
   },
-  updateFunc = null,
-  displayFunc = null,
 }) => {
   return (
     <div className="old-ot-body">
@@ -26,8 +25,7 @@ export const ObjectTable = ({
         if (field.hidden) return true;
 
         const type = field.type || 'string';
-        const val = displayFunc && displayFunc(data, field);
-        let value = val ? val : formatFieldByType(type, data[fieldName], options.countArrays);
+        let value = formatFieldByType(type, data[fieldName], options.countArrays);
         const editable = field.editable;
         const displayName = field.name || fieldName;
         const record_id = data[options.idField]; // may be empty
@@ -60,15 +58,16 @@ export const ObjectTable = ({
 export const ObjectTable2 = ({ data, columns }) => {
   return (
     <div className="at-body ">
-      {columns.map((field) => {
-        const fieldName = field.selector;
-        if (field.hidden) return true;
+      {columns.map((column) => {
+        const fieldName = column.selector;
+        if (column.hidden) return true;
 
-        const type = field.type || 'string';
-        const value = formatFieldByType(type, data[fieldName], false); //options.countArrays);
-        const editable = field.editable;
-        const displayName = (field.name || fieldName).substr(0, 5);
-        const record_id = 0; //data[options.idField]; // may be empty
+        const type = column.type || 'string';
+        const vally = calcValue(data, column);
+        const value = formatFieldByType(type, vally, false);
+        const editable = column.editable;
+        const displayName = (column.name || fieldName).substr(0, 5);
+        const record_id = 0;
 
         const found = columns.filter((item) => item.selector === 'id');
         const id = found && found.function ? found.function(data) : '';
@@ -85,7 +84,7 @@ export const ObjectTable2 = ({ data, columns }) => {
                 fieldValue={value}
                 fieldName={fieldName}
                 placeholder={fieldName}
-                onValidate={field.onValidate}
+                onValidate={column.onValidate}
               />
             </TableColumn>
           </div>

@@ -5,8 +5,7 @@ import { useContext } from 'react';
 import GlobalContext, { isVerbose } from 'store';
 import { notEmpty } from 'components/utils';
 
-import { useMenus } from 'pages';
-import { Card, ObjectTable, Debug } from 'components/';
+import { Card, ObjectTable } from 'components/';
 import { sortArray, currentPage, handleClick } from 'components/utils';
 import ToggleLeft from 'assets/icons/toggle-left';
 import ToggleRight from 'assets/icons/toggle-right';
@@ -23,22 +22,17 @@ export const Projects = () => {
 
   sortArray(projects, ['deleted', 'group', 'name'], [true, true, true]);
 
-  const updateFunc = (id, fieldName, value) => {
-    // console.log('id: ', id, ' fn: ', fieldName, ' value: ', value)
-    dispatch({ type: 'update', id: id, fieldName: fieldName, value: value });
-  };
-
   return (
     <div key="projects" className="projects">
       <h4>Active Projects</h4>
-      {spinProjects(projects, dispatch, updateFunc, true)}
+      {spinProjects(projects, dispatch, true)}
       <h4>Paused Projects</h4>
-      {spinProjects(projects, dispatch, updateFunc, false)}
+      {spinProjects(projects, dispatch, false)}
     </div>
   );
 };
 
-const spinProjects = (projects, dispatch, updateFunc, active) => {
+const spinProjects = (projects, dispatch, active) => {
   let count = 0;
   const ret = projects.map((project, idx) => {
     if ((active && project.deleted) || (!active && !project.deleted)) return <Fragment key={idx}></Fragment>;
@@ -78,7 +72,7 @@ const spinProjects = (projects, dispatch, updateFunc, active) => {
 
     return (
       <Card key={project.id} title={project.name} headerClass={cn} iconTray={tray} headerLink={route} topIcon={topIcon}>
-        <ObjectTable data={project} columns={projectsSchema} updateFunc={updateFunc} />
+        <ObjectTable data={project} columns={projectsSchema} />
       </Card>
     );
   });
@@ -106,7 +100,6 @@ export const ProjectsExport = () => {
 
 //----------------------------------------------------------------------------
 export const ProjectsView = () => {
-  const { dispatch } = useMenus();
   const projects = useProjects().state;
   const { page, subpage, params } = currentPage();
 
@@ -127,7 +120,6 @@ export const ProjectsView = () => {
 //----------------------------------------------------------------------
 export const projectsDefault = [
   {
-    id: '0x12..01',
     group: 'Group 1',
     name: 'Project 1',
     client: { name: 'Anderson, Andy', phone: '215-257-9759' },
@@ -149,7 +141,6 @@ export const projectsDefault = [
     deleted: true,
   },
   {
-    id: '0x12..02',
     group: 'Group 1',
     name: 'Project 2',
     client: { name: "John's Bookstore" },
@@ -162,7 +153,6 @@ export const projectsDefault = [
     deleted: false,
   },
   {
-    id: '0x12..03',
     group: '',
     name: 'Carson Flowers',
     client: '',
@@ -180,7 +170,6 @@ export const projectsDefault = [
     deleted: true,
   },
   {
-    id: '0x12..04',
     group: 'Group 1',
     name: 'May Construction',
     client: 'May John',
@@ -199,7 +188,6 @@ export const projectsDefault = [
     deleted: false,
   },
   {
-    id: '0x12..05',
     group: 'Group 2',
     name: 'The Poetry Shop',
     client: 'Tudhope, Andy',
@@ -212,7 +200,6 @@ export const projectsDefault = [
     deleted: true,
   },
   {
-    id: '0x12..06',
     group: 'Group 2',
     name: 'Maker DAO',
     client: 'Maker',
@@ -225,7 +212,6 @@ export const projectsDefault = [
     deleted: false,
   },
   {
-    id: '0x12..07',
     group: 'Group 2',
     name: 'Whale Jim',
     client: 'Buter, in',
@@ -238,7 +224,6 @@ export const projectsDefault = [
     deleted: true,
   },
   {
-    id: '0x12..08',
     group: 'Group 3',
     name: 'Whale No. 2',
     client: 'Lub, in',
@@ -256,8 +241,6 @@ export const projectsDefault = [
 export const projectsReducer = (state, action) => {
   let ret = state;
   let project = ret.find((p) => p.id === action.id);
-  console.log('project: ', project);
-  console.log('action: ', action);
   switch (action.type) {
     case 'success':
       ret = action.payload;

@@ -9,8 +9,8 @@ import './DataTable.css';
 
 //-----------------------------------------------------------------
 export const DataTable = ({
-  columns,
   data,
+  columns,
   title = 'Data Table (dt-)',
   search = true,
   pagination = true,
@@ -183,9 +183,6 @@ const StyledRow = styled.div`
 
 //-----------------------------------------------------------------
 const MainRow = ({ columns, record, wids }) => {
-  console.log(
-    '----------------------------------------------------------------------------------------------------------------'
-  );
   return (
     <Fragment>
       <StyledRow className="at-row" wids={wids}>
@@ -248,7 +245,6 @@ const hasFields = (columns, fields) => {
 const matches = (record, fields, filterText) => {
   return (
     fields.reduce((sum, field) => {
-      console.log();
       return sum + record[field].toLowerCase().includes(filterText.toLowerCase());
     }, 0) > 0
   );

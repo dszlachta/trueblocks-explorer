@@ -1,10 +1,8 @@
 import React, { useState, Fragment, useEffect } from 'react';
-import styled from 'styled-components';
 
-import { Toolbar, Card, ObjectTable, ObjectTable2, PanelTable } from 'components';
+import { Toolbar, PanelTable } from 'components';
 import { fmtNum, handleClick } from 'components/utils';
 
-import 'components/Tables/DataTable/DataTable.css';
 import './GridTable.css';
 
 //-----------------------------------------------------------------
@@ -198,29 +196,3 @@ const DetailTable = ({ data, columns, start, cellSize }) => {
     </div>
   );
 };
-
-function pad9(n) {
-  const str = JSON.stringify(n);
-  const fix = Array(9 - str.length)
-    .fill()
-    .map((_, idx) => idx);
-  return fix.reduce((s, i) => {
-    console.log(s);
-    return '0' + s;
-  }, str);
-}
-
-// <div style={{border: '1px dashed brown', justifySelf: 'stretch'}}>
-// X
-// </div>
-
-// <Card
-//   key={item.index_hash}
-//   title={item.firstAppearance + '-' + item.latestAppearance + '.bin'}
-//   headerClass={''}
-//   iconTray={null}
-//   headerLink={''}
-//   topIcon={null}
-// >
-//   <ObjectTable data={item} columns={columns} />
-// </Card>
