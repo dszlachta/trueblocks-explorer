@@ -19,6 +19,7 @@ export const Wizard = () => {
       case 'next':
         localStorage.setItem('wizardStep', step + 1);
         setStep(step + 1);
+        if (step > 10) window.location = '/dashboard';
         break;
       case 'previous':
         localStorage.setItem('wizardStep', step - 1);
