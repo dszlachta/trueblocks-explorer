@@ -35,7 +35,6 @@ export const thePages = {
   'monitors/shared': { component: <Monitors /> },
   //
   'explorer/': { component: <Explorer /> },
-  'explorer/accounts': { component: <Explorer /> },
   'explorer/blocks': { component: <Explorer /> },
   'explorer/transactions': { component: <Explorer /> },
   'explorer/receipts': { component: <Explorer /> },
@@ -103,47 +102,41 @@ export const theMenu = {
     {
       label: 'Dashboard',
       exact: true,
-      route: '/',
     },
     { label: 'Separator' },
     {
       label: 'Projects',
       exact: true,
-      path: '/',
       items: [
         { label: 'View...', route: 'view' },
         { label: 'Edit...', route: 'edit' },
         { label: 'Save' },
         { label: 'Export' },
-      ],
+      ]
     },
     {
       label: 'Monitors',
       exact: true,
-      path: '/',
       items: [
         { label: 'Your Monitors', route: 'yours' },
         { label: 'Shared Monitors', route: 'shared' },
-      ],
+      ]
     },
     {
       label: 'Explorer',
       exact: true,
-      path: '/',
       items: [
-        { label: 'Accounts' },
         { label: 'Blocks' },
         { label: 'Transactions' },
         { label: 'Receipts' },
         { label: 'Logs' },
         { label: 'Traces' },
-      ],
+      ]
     },
     { label: 'Separator' },
     {
       label: 'Names',
       exact: true,
-      path: '/',
       items: [
         { label: 'Your Names', route: 'yours' },
         { label: 'Wallets' },
@@ -151,12 +144,11 @@ export const theMenu = {
         { label: 'Prefunds' },
         { label: 'Other Names', route: 'other' },
         { label: 'Groups' },
-      ],
+      ]
     },
     {
       label: 'Signatures',
       exact: true,
-      path: '/',
       items: [
         { label: 'Known' },
         { label: 'Monitored' },
@@ -164,24 +156,22 @@ export const theMenu = {
         { label: 'Names' },
         { label: 'Params' },
         { label: 'Cross' },
-      ],
+      ]
     },
     {
       label: 'Digests',
       exact: true,
-      path: '/',
       items: [
         { label: 'Finalized' },
         { label: 'Staged' },
         { label: 'Unripe' },
         { label: 'Separator' },
         { label: 'Columns' },
-      ],
+      ]
     },
     {
       label: 'Caches',
       exact: true,
-      path: '/',
       items: [
         { label: 'Blocks' },
         { label: 'Transactions' },
@@ -190,7 +180,7 @@ export const theMenu = {
         { label: 'Slurps' },
         { label: 'Prices' },
         { label: 'Abis' },
-      ],
+      ]
     },
     {
       label: 'Other',
@@ -201,13 +191,12 @@ export const theMenu = {
         { label: 'Your Blocks', route: 'yours' },
         { label: 'Known Blocks', route: 'known' },
         { label: 'Dated Blocks', route: 'dated' },
-      ],
+      ]
     },
     { label: 'Separator' },
     {
       label: 'Settings',
       exact: true,
-      path: '/',
       items: [
         { label: 'API Config', route: 'api' },
         { label: 'Node Config', route: 'node' },
@@ -216,27 +205,22 @@ export const theMenu = {
         { label: 'Separator' },
         { label: 'Skins' },
         { label: 'Schemas' },
-      ],
+      ]
     },
     {
       label: 'Support',
       exact: true,
-      path: '/',
       items: [
-        { label: 'Contact Us', route: 'contact', descr: 'Contact us for support options.' },
+        { label: 'Contact Us', route: 'contact' },
         { label: 'Separator' },
-        { label: 'Hot Keys', route: 'keys', descr: 'Show the hot keys for the program.' },
-        { label: 'Documentation', route: 'documentation', descr: 'Read the documentation.' },
+        { label: 'Hot Keys', route: 'keys' },
+        { label: 'Documentation' },
         { label: 'Separator' },
-        {
-          label: 'Licensing',
-          route: 'licensing',
-          descr: 'Learn about the various licensing options for the software.',
-        },
-        { label: 'About Us', route: 'about', descr: 'Learn about TrueBlocks, LLC.' },
-      ],
+        { label: 'Licensing' },
+        { label: 'About Us', route: 'about' },
+      ]
     },
-  ],
+  ]
   // auto-generate: menus
 };
 

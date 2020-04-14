@@ -7,15 +7,26 @@
 [![React](https://img.shields.io/badge/React-node.js-purple.svg)](https://reactjs.org/)
 [![Twitter](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Twitter)](https://twitter.com/quickblocks?lang=es)
 
-TrueBlocks creates an index of appearances of Ethereum addresses on commerial grade hardware providing fast access to **everything that ever happened** to your addresses(es). This enables a fully decentralized blockchain browsing experience -- and this translates directly into *privacy-preserving user-centric browsing*.
+TrueBlocks creates an index of Ethereum addresses on commerial-grade hardware providing fast access to **everything that ever happened** to your accounts on your own machine. This enables a fully decentralized blockchain browsing experience -- and this translates directly into _privacy-preserving user-centric_ browsing. We can't invade your privacy because we can't see what you're doing!
 
-----
+---
 
 ## Installation
 
 ### Installing TrueBlocks Core and Core Applications
 
-First, you must set up your build environment. Do that by following the instructions on this page: [Installation Instructions](https://github.com/Great-Hill-Corporation/trueblocks-core/blob/master/src/other/install/INSTALL.md). Assuming your build environment is set up, do this:
+First, let's test your build environment. From a command line, type:
+
+```
+cmake version
+go --version
+```
+
+If both commands return without error, skip to the next section. If either of the commands fails, please see these [installation instructions](https://github.com/Great-Hill-Corporation/trueblocks-core/blob/master/src/other/install/INSTALL.md) on preparing the build environment.
+
+### Building TrueBlocks Core and Chifra
+
+`Chifra` is the core application of TrueBlocks' back end. Similar to `git` it provides access to all of TrueBlocks' commands. Assuming you're build environment is properly configured, complete these commands from the root of your `Development` folder:
 
 ```
 git clone https://github.com/Great-Hill-Corporation/trueblocks-core
@@ -25,11 +36,22 @@ cmake ../src
 make
 ```
 
-If `cmake` doesn't run, your build environment is not set up properly. See above link. The build takes a while, but you only have to do it once.
+If `cmake` doesn't run and/or the build breaks when it tries to run the `go` command, see the above link. The build will take a while to complete, but you only have to do it once, so be patient.
 
-After building, add the TrueBlocks `./bin` folder to your **$PATH** (i.e `./trueblocks/core/bin`). The following instructions will not work if your **$PATH** is not set.
+After the build completes, you will be in the folder `./trueblocks-core/build`. Type these commands to test the installation:
 
-If everything is working, this command:
+```
+cd ../bin
+./chifra --version
+```
+
+You should get a valid version.
+
+**Important:** You must add the TrueBlocks `./bin` folder your `$PATH`. If you don't know how to do that, this software isn't for you. If you do know how to do that, do so now.
+
+### One Final Test
+
+If everything is working properly and you've added TrueBlocks to your \$PATH, try this command:
 
 ```
 > chifra --version
@@ -37,7 +59,7 @@ If everything is working, this command:
 
 should respond with the current version of the tools.
 
-----
+---
 
 ### Installing the User Interface, API, and Documentation
 
@@ -57,11 +79,11 @@ Your should see the **TrueBlocks Account Explorer** screen:
 
 ## Requirements
 
-- **Note:** In order for the TrueBlocks to work, you must have access to an Ethereum node with **--tracing** enabled. TrueBlocks defaults to using Parity at the RPC endpoint http://localhost:8545, but you may use any node supporting tracing and any endpoint (Infura, Quiknodes, for example). Performance will be *greatly reduced* if you use a remote server. A good solution to this problem is to run a node on the [dAppNode](https://dappnode.io/) or [Ava.do](https://ava.do/) platforms and use [http://gtihub.com/Great-Hill-Corporation/trueblocks-docker](the TrueBlocks docker image).
+- **Note:** In order for the TrueBlocks to work, you must have access to an Ethereum node with **--tracing** enabled. TrueBlocks defaults to using Parity at the RPC endpoint http://localhost:8545, but you may use any node supporting tracing and any endpoint (Infura, Quiknodes, for example). Performance will be _greatly reduced_ if you use a remote server. A good solution to this problem is to run a node on the [dAppNode](https://dappnode.io/) or [Ava.do](https://ava.do/) platforms and use [http://gtihub.com/Great-Hill-Corporation/trueblocks-docker](the TrueBlocks docker image).
 
 ## Getting Data on the Command Line
 
-Assuming TrueBlocks is installed correctly, and that you have a node endpoint, and that the tools are in your $PATH, you should be able to run the following command at a command prompt:
+Assuming TrueBlocks is installed correctly, and that you have a node endpoint, and that the tools are in your \$PATH, you should be able to run the following command at a command prompt:
 
 ```
 > chifra blocks 100
@@ -94,6 +116,7 @@ If that works, try this command:
 ```
 > chifra blocks 0-latest:10000
 ```
+
 Which exports every 10,000th block in the chain from first to last. Or, try this command:
 
 ```
@@ -117,6 +140,7 @@ For documentation on the API, you may do this:
 ```
 > open "http://localhost:8090"
 ```
+
 ## Scraping the Chain
 
 To begin the process of creating the address index, enter this command in a seperate window or `tmux` session. You will need to keep this process running continually to keep the index fresh.
@@ -124,35 +148,43 @@ To begin the process of creating the address index, enter this command in a sepe
 ```
 > chifra scrape
 ```
-- **Note:** This requires a *--tracing node* to produce a full list of appearances. It will work (with some configuration changes) on non-tracing nodes, but many of the appearances will not be included. Note also, this takes a loooong time. Depending on your setup at least 2-3 days (local node endpoint) or significantly longer (remote, rate-limited RPC endpoints).
+
+- **Note:** This requires a _--tracing node_ to produce a full list of appearances. It will work (with some configuration changes) on non-tracing nodes, but many of the appearances will not be included. Note also, this takes a loooong time. Depending on your setup at least 2-3 days (local node endpoint) or significantly longer (remote, rate-limited RPC endpoints).
 
 ## Examples:
 
 There are many, many options to use TrueBlocks. Here are a few:
 
 - Get a list of every **appearance** anywhere on the chain for a specific address:
+
   - `curl http://localhost/list?address=0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359`
 
 - Get full details of every **transaction** for specific address to CSV:
+
   - `curl http://localhost/export?address=0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359&fmt=csv`
 
 - Using the command line, get tab-seperated list of every **log** that an address appears in:
+
   - `> chifra export --logs 0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359 --fmt txt`
 
 - Get JSON details of every **trace** in which a specific address appears:
+
   - `curl http://localhost/export?trace&address=0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359`
 
 - Get the name of an address:
-  - `chifra names 0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359`                  // Ethereum Tip Jar
-  - `chifra names 0x6b175474e89094c44da98b954eedeac495271d0f`                  // DAI
-  - `curl http://localhost/names?0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359`   // TrueBlocks Tip Jar
-  
+
+  - `chifra names 0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359` // Ethereum Tip Jar
+  - `chifra names 0x6b175474e89094c44da98b954eedeac495271d0f` // DAI
+  - `curl http://localhost/names?0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359` // TrueBlocks Tip Jar
+
 - From the command line, get tab-seperated text of every **balance change in US dollars** for an addresses:
+
   - `> chifra export --balances --deltas 0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359 --dollars`
 
 - Get balance of DAI for an address at current block on command line:
+
   - `chifra tokens 0x6b175474e89094c44da98b954eedeac495271d0f (ethNames -ca true)`
-  
+
 There are literally hundreds of other options. Also, you may specify as many addresses as you wish on each command.
 
 ## FAQ
@@ -173,8 +205,8 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Authors
 
-* **Thomas Jay Rush** - [tjayrush](https://github.com/tjayrush)
-* **Ed Mazurek** - [wildmolasses](https://github.com/wildmolasses)
+- **Thomas Jay Rush** - [tjayrush](https://github.com/tjayrush)
+- **Ed Mazurek** - [wildmolasses](https://github.com/wildmolasses)
 
 See also the list of [contributors](https://github.com/Great-Hill-Corporation/trueblocks-docker/contributors) who participated in this project.
 
@@ -183,4 +215,3 @@ See also the list of [contributors](https://github.com/Great-Hill-Corporation/tr
 Licensing information pending...
 
 ## References
-

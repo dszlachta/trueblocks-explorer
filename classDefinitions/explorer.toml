@@ -5,7 +5,6 @@ dest_folder = "./src/pages/"
 [[subpages]]
 list = [
     { page = "explorer", subpage = "", route = "" },
-    { page = "explorer", subpage = "Accounts", options = "addrs_EQ_ADDRS" },
     { page = "explorer", subpage = "Blocks", options = "blocks_EQ_latest&hashes_only" },
     { page = "explorer", subpage = "Transactions", options = "transactions_EQ_8001001.0" },
     { page = "explorer", subpage = "Receipts", options = "transactions_EQ_8001001.0" },

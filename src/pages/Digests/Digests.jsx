@@ -8,10 +8,13 @@ import './Digests.css';
 
 //---------------------------------------------------------------------------
 export const Digests = () => {
+  const { digests, dispatch } = useDigests();
+
   const [tableType, setTableType] = useState(localStorage.getItem('digest-table-type'));
+  const [start, setStart] = useState(0);
+
   const [source] = useState(currentPage().subpage);
   const [query] = useState('modes=index&details&verbose=10');
-  const { digests, dispatch } = useDigests();
 
   const changeTableType = (newType) => {
     localStorage.setItem('digest-table-type', newType);
@@ -26,19 +29,24 @@ export const Digests = () => {
     dispatch({ type: 'loading', payload: true });
   }, [source, query, dispatch]);
 
+  useEffect(() => {}, [start]);
+
   const meta = useStatusMeta();
   const largest = meta.client === 'n/a' ? meta.unripe : meta.client;
   const status = { max: largest, completed: meta.finalized };
 
+  let filtered = digests;
+  if (tableType === 'graph-view') filtered = digests.filter((digest) => digest.firstAppearance >= start);
+
   let view = undefined;
   if (tableType === 'data-view') {
-    view = <DataTable columns={digestsSchema} data={digests} title="Table View" search={false} />;
+    view = <DataTable columns={digestsSchema} data={filtered} title="Table View" search={false} />;
     //
   } else if (tableType === 'graph-view') {
     view = (
       <ChartTable
         columns={digestsSchema}
-        data={digests}
+        data={filtered}
         title=""
         search={false}
         chartCtx={{ defPair: ['firstTs', 'nAddresses'] }}
@@ -47,15 +55,17 @@ export const Digests = () => {
     );
     //
   } else {
-    view = <GridTable columns={digestsSchema} data={digests} title="Grid View" meta={status} search={false} />;
+    view = <GridTable columns={digestsSchema} data={filtered} title="Grid View" meta={status} search={false} />;
     //
   }
 
+  const next = (start + 3000000) % 9000000;
   return (
     <div>
       <button onClick={() => changeTableType('grid-view')}>grid view</button>
       <button onClick={() => changeTableType('data-view')}>table view</button>
       <button onClick={() => changeTableType('graph-view')}>graph view</button>
+      <button onClick={() => setStart(next)}>ignore ddos</button>
       {view}
     </div>
   );
