@@ -109,6 +109,7 @@ export const theMenu = {
     {
       label: 'Projects',
       exact: true,
+      path: '/',
       items: [
         { label: 'View...', route: 'view' },
         { label: 'Edit...', route: 'edit' },
@@ -119,6 +120,7 @@ export const theMenu = {
     {
       label: 'Monitors',
       exact: true,
+      path: '/',
       items: [
         { label: 'Your Monitors', route: 'yours' },
         { label: 'Shared Monitors', route: 'shared' },
@@ -127,6 +129,7 @@ export const theMenu = {
     {
       label: 'Explorer',
       exact: true,
+      path: '/',
       items: [
         { label: 'Accounts' },
         { label: 'Blocks' },
@@ -140,6 +143,7 @@ export const theMenu = {
     {
       label: 'Names',
       exact: true,
+      path: '/',
       items: [
         { label: 'Your Names', route: 'yours' },
         { label: 'Wallets' },
@@ -152,6 +156,7 @@ export const theMenu = {
     {
       label: 'Signatures',
       exact: true,
+      path: '/',
       items: [
         { label: 'Known' },
         { label: 'Monitored' },
@@ -164,6 +169,7 @@ export const theMenu = {
     {
       label: 'Digests',
       exact: true,
+      path: '/',
       items: [
         { label: 'Finalized' },
         { label: 'Staged' },
@@ -175,6 +181,7 @@ export const theMenu = {
     {
       label: 'Caches',
       exact: true,
+      path: '/',
       items: [
         { label: 'Blocks' },
         { label: 'Transactions' },
@@ -200,6 +207,7 @@ export const theMenu = {
     {
       label: 'Settings',
       exact: true,
+      path: '/',
       items: [
         { label: 'API Config', route: 'api' },
         { label: 'Node Config', route: 'node' },
@@ -213,6 +221,7 @@ export const theMenu = {
     {
       label: 'Support',
       exact: true,
+      path: '/',
       items: [
         { label: 'Contact Us', route: 'contact', descr: 'Contact us for support options.' },
         { label: 'Separator' },
