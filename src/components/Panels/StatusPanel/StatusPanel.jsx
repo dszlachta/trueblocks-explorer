@@ -55,8 +55,8 @@ const StatusTable = () => {
   const unripe = meta.unripe;
 
   var status1 = (
-    <div className={`${Number.isInteger(client) ? 'connected' : 'disconnected'}`}>
-      {Number.isInteger(client) ? 'Connected' : 'Not Connected'}
+    <div className={`${status.client_version !== '' ? 'connected' : 'disconnected'}`}>
+      {status.client_version !== '' ? 'Connected' : 'Not connected'}
     </div>
   );
   var status2 = (

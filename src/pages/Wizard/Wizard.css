@@ -1,0 +1,15 @@
+.wizard-container {
+  display: grid;
+  grid-template-columns: 6fr 1fr;
+  grid-template-rows: 100vh;
+}
+
+.left-panel {
+  display: block;
+  padding-right: 40px;
+}
+
+.right-panel {
+  border-left: 1px solid lightgray;
+  padding-left: 10px;
+}

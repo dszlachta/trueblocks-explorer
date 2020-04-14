@@ -3,6 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useStatusData, useStatusMeta } from 'store';
 import { fmtNum } from 'components/utils';
+
 import logo from 'assets/img/logo.png';
 import './PageHeader.css';
 
@@ -29,18 +30,46 @@ const PageHeaderLeft = () => {
   );
 };
 
+const isOkay = (data, name) => {
+  let result = false;
+  let errMsg = '';
+  switch (name) {
+    case 'trueblocks':
+      result = !data.is_testing && data.trueblocks_version !== '';
+      errMsg = result ? 'X' : 'Y';
+      break;
+    case 'node':
+      result = data.client_version !== '';
+      errMsg = result ? 'Z' : 'Q';
+      break;
+    case 'scraper':
+      result = data.is_scraping;
+      errMsg = result ? 'A' : 'B';
+      break;
+    case 'sharing':
+      result = false;
+      errMsg = result ? 'PP' : 'DD';
+      break;
+    default:
+      break;
+  }
+  return [result, errMsg];
+};
+
 //-----------------------------------------------------
 const PageHeaderUpperRight = () => {
   const data = useStatusData();
-  const meta = useStatusMeta();
-  const apiStatus = data.trueblocks_version !== '' && !data.is_testing;
-  const apiErrMsg = apiStatus ? '' : data.is_testing ? 'testing' : 'unavailable';
+  const [api, apiMsg] = isOkay(data, 'trueblocks');
+  const [node, nodeMsg] = isOkay(data, 'node');
+  const [scraper, scraperMsg] = isOkay(data, 'scraper');
+  const [sharing, sharingMsg] = isOkay(data, 'sharing');
+
   return (
     <div className="right-top">
-      <Pill text="api" status={apiStatus} errMsg={apiErrMsg} decorate={true} route="/settings/api" />
-      <Pill text="node" status={Number.isInteger(meta.client)} decorate={true} route="/settings/node" />
-      <Pill text="scraper" status={data.is_scraping} decorate={false} route="/settings/scraper" />
-      <Pill text="sharing" status={false} decorate={false} route="/settings/sharing" />
+      <Pill text="api" status={api} errMsg={apiMsg} decorate={true} route="/settings/api" />
+      <Pill text="node" status={node} errMsg={nodeMsg} decorate={true} route="/settings/node" />
+      <Pill text="scraper" status={scraper} errMsg={scraperMsg} decorate={true} route="/settings/scraper" />
+      <Pill text="sharing" status={sharing} errMsg={sharingMsg} decorate={true} route="/settings/sharing" />
     </div>
   );
 };

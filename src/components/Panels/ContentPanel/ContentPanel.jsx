@@ -2,14 +2,15 @@ import React from 'react';
 
 import { usePanels } from 'store';
 import { Panel } from 'components/';
-import { currentPage } from 'components/utils';
+import { currentPage, stateFromStorage } from 'components/utils';
 import { InnerPage } from 'pages';
 import './ContentPanel.css';
 
 //----------------------------------------------------------------------
 export const ContentPanel = () => {
   const { page, subpage } = currentPage();
-  const title = page + (subpage ? ' : ' + subpage : '');
+  let title = page + (subpage ? ' : ' + subpage : '');
+  if (stateFromStorage('wizardStep', 'step0') !== 'done') title = 'Installation Wizard';
   const expanded = usePanels().state.content;
   return (
     <Panel title={title.replace('%20', ' ')} type="content" expanded={usePanels().state.content}>
