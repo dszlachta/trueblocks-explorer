@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Mousetrap from 'mousetrap';
 import { useContext } from 'react';
 
 import GlobalContext from 'store';
@@ -88,8 +87,8 @@ export const thePages = {
   'settings/schemas': { component: <Settings /> },
   //
   'support/': { component: <Support /> },
-  'support/keys': { component: <Support /> },
   'support/contact': { component: <Support /> },
+  'support/keys': { component: <Support /> },
   'support/documentation': { component: <Support /> },
   'support/licensing': { component: <Support /> },
   'support/about': { component: <Support /> },
@@ -99,21 +98,20 @@ export const thePages = {
 
 //----------------------------------------------------------------------
 export const theMenu = {
-  // auto-generate: pages-menus
+  // auto-generate: menus
   items: [
-    { label: 'Dashboard', exact: true, path: '/' },
+    {
+      label: 'Dashboard',
+      exact: true,
+      route: '/',
+    },
     { label: 'Separator' },
     {
       label: 'Projects',
       exact: true,
       items: [
-        {
-          label: 'View...',
-          enableFunc: (page) => {
-            return page === 'view';
-          },
-        },
-        { label: 'Edit...' },
+        { label: 'View...', route: 'view' },
+        { label: 'Edit...', route: 'edit' },
         { label: 'Save' },
         { label: 'Export' },
       ],
@@ -122,8 +120,8 @@ export const theMenu = {
       label: 'Monitors',
       exact: true,
       items: [
-        { label: 'Your Monitors', path: 'yours' },
-        { label: 'Shared Monitors', path: 'shared' },
+        { label: 'Your Monitors', route: 'yours' },
+        { label: 'Shared Monitors', route: 'shared' },
       ],
     },
     {
@@ -143,11 +141,11 @@ export const theMenu = {
       label: 'Names',
       exact: true,
       items: [
-        { label: 'Your Names', path: 'yours' },
+        { label: 'Your Names', route: 'yours' },
         { label: 'Wallets' },
         { label: 'Tokens' },
         { label: 'Prefunds' },
-        { label: 'Other Names', path: 'other' },
+        { label: 'Other Names', route: 'other' },
         { label: 'Groups' },
       ],
     },
@@ -182,25 +180,31 @@ export const theMenu = {
         { label: 'Transactions' },
         { label: 'Traces' },
         { label: 'Separator' },
-        { label: 'Abis' },
         { label: 'Slurps' },
         { label: 'Prices' },
+        { label: 'Abis' },
       ],
     },
     {
       label: 'Other',
       exact: true,
-      items: [{ label: 'Downloaded' }, { label: 'Common' }, { label: 'Yours' }, { label: 'Known' }, { label: 'Dated' }],
+      items: [
+        { label: 'Downloaded' },
+        { label: 'Common' },
+        { label: 'Your Blocks', route: 'yours' },
+        { label: 'Known Blocks', route: 'known' },
+        { label: 'Dated Blocks', route: 'dated' },
+      ],
     },
     { label: 'Separator' },
     {
       label: 'Settings',
       exact: true,
       items: [
-        { label: 'API Config', path: 'api' },
-        { label: 'Node Config', path: 'node' },
-        { label: 'Scraper Config', path: 'scraper' },
-        { label: 'Sharing Config', path: 'sharing' },
+        { label: 'API Config', route: 'api' },
+        { label: 'Node Config', route: 'node' },
+        { label: 'Scraper Config', route: 'scraper' },
+        { label: 'Sharing Config', route: 'sharing' },
         { label: 'Separator' },
         { label: 'Skins' },
         { label: 'Schemas' },
@@ -210,22 +214,56 @@ export const theMenu = {
       label: 'Support',
       exact: true,
       items: [
-        { label: 'Contact Us', path: 'contact' },
+        { label: 'Contact Us', route: 'contact', descr: 'Contact us for support options.' },
         { label: 'Separator' },
-        { label: 'Hot Keys', path: 'keys' },
-        { label: 'Documentation' },
+        { label: 'Hot Keys', route: 'keys', descr: 'Show the hot keys for the program.' },
+        { label: 'Documentation', route: 'documentation', descr: 'Read the documentation.' },
         { label: 'Separator' },
-        { label: 'Licensing' },
-        { label: 'About Us', path: 'about' },
+        {
+          label: 'Licensing',
+          route: 'licensing',
+          descr: 'Learn about the various licensing options for the software.',
+        },
+        { label: 'About Us', route: 'about', descr: 'Learn about TrueBlocks, LLC.' },
       ],
     },
   ],
-  // auto-generate: pages-menus
+  // auto-generate: menus
 };
+
+export const menuSchema = [
+  {
+    name: 'ID',
+    selector: 'id',
+    function: (record) => record.label,
+    hidden: true,
+  },
+  {
+    name: 'Label',
+    selector: 'label',
+    type: 'string',
+    hidden: true,
+  },
+  {
+    name: 'Name',
+    selector: 'name',
+    function: (record) => record.label,
+    hidden: true,
+  },
+  {
+    name: 'Route',
+    selector: 'route',
+    function: (record) => 'support/' + record.route,
+    hidden: true,
+  },
+  {
+    name: 'Description',
+    selector: 'descr',
+  },
+];
 
 //----------------------------------------------------------------------
 export const menusReducer = (state, action) => {
-  // users cannot change the menus
   return state;
 };
 
@@ -236,14 +274,6 @@ export const useMenus = () => {
 
 //----------------------------------------------------------------------
 export const InnerPage = () => {
-  Mousetrap.unbind(['meta+shift+home']);
-  Mousetrap.unbind(['meta+shift+end']);
-  Mousetrap.unbind(['home']);
-  Mousetrap.unbind(['end']);
-  Mousetrap.unbind(['up']);
-  Mousetrap.unbind(['left']);
-  Mousetrap.unbind(['down']);
-  Mousetrap.unbind(['right']);
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];
   return ret ? ret.component : <div className="warning">Missing Inner Page</div>;

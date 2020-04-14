@@ -135,6 +135,17 @@
 .at-row:last-child {
   border-bottom: 0px;
 }
+.expandable:hover {
+  cursor: pointer;
+  background-color: var(--at-color2);
+  color: var(--at-bgcolor2);
+  opacity: 70%;
+}
+.selected {
+  background-color: var(--at-bgcolor);
+  color: var(--at-bgcolor2);
+  opacity: 95%;
+}
 
 /*-----------------------------------*/
 .at-cell {
@@ -179,19 +190,6 @@
   border-right: 0px;
 }
 
-.gt-cell:hover {
-  cursor: pointer;
-  background-color: var(--at-color2);
-  color: var(--at-bgcolor2);
-  opacity: 75%;
-}
-
-.selected {
-  background-color: red;
-  /* var(--at-bgcolor); */
-  color: white;
-}
-
 .inactive {
   background-color: #daeeda;
   /* var(--grey-color); */
@@ -209,6 +207,11 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.ot-cell-nosider {
+  padding: var(--at-padding);
+  overflow: visible;
 }
 
 .ot-cell.editable {

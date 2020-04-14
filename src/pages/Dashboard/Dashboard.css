@@ -1,7 +1,1 @@
 /* add custom css code for the Dashboard compnent here. */
-
-.dashboard {
-  display: flex;
-  flex-wrap: wrap;
-  justify-items: center;
-}

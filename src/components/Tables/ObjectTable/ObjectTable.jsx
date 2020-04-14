@@ -7,7 +7,7 @@ import { calcValue } from 'store';
 import './ObjectTable.css';
 
 //-----------------------------------------------------------------
-export const ObjectTable = ({ data, columns }) => {
+export const ObjectTable = ({ data, columns, noSider = false }) => {
   return (
     <div className="at-body ">
       {columns.map((column) => {
@@ -23,13 +23,12 @@ export const ObjectTable = ({ data, columns }) => {
 
         const idCol = columns.filter((item) => item.selector === 'id');
         const id = idCol && idCol.function ? idCol.function(data) : '';
+        const cn = 'at-row ' + (noSider ? 'ot-row-nosider' : 'ot-row');
         return (
-          <div key={fieldName + id + Math.random()} className="at-row ot-row">
-            <ObjectTableSider>
-              {displayName}:{editable}
-            </ObjectTableSider>
-            <div></div>
-            <TableColumn editable={editable}>
+          <div key={fieldName + id + Math.random()} className={cn}>
+            {noSider ? <Fragment></Fragment> : <ObjectTableSider>{displayName}:</ObjectTableSider>}
+            {noSider ? <Fragment></Fragment> : <div></div>}
+            <TableColumn editable={editable} noSider={noSider}>
               <Editable
                 editable={editable}
                 record_id={record_id}
@@ -56,8 +55,8 @@ const ObjectTableSider = ({ children }) => {
 };
 
 //-----------------------------------------------------------------
-export const TableColumn = ({ editable = false, children }) => {
-  let cn = 'ot-cell' + (editable ? ' editable' : '');
+export const TableColumn = ({ editable = false, noSider = false, children }) => {
+  let cn = (noSider ? 'ot-cell-nosider' : 'ot-cell') + (editable ? ' editable' : '');
   return (
     <div className={cn} align="left">
       {children}

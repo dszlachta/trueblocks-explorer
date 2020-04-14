@@ -81,7 +81,7 @@ const GridRow = ({ row, cols, meta, cellSize, selected, setSelected }) => {
         return (
           <div
             key={col}
-            className={'at-cell gt-cell ' + cn}
+            className={'at-cell gt-cell ' + cn + ' expandable'}
             onClick={(e) => handleClick(e, setSelected, row * 1e6 + col * 1e5)}
           >
             {cn.includes('completed') && '✔'}

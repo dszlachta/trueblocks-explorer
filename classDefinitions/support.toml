@@ -5,9 +5,11 @@ dest_folder = "./src/pages/"
 [[subpages]]
 list = [
     { page = "support", subpage = "" },
-    { page = "support", subpage = "keys" },
-    { page = "support", subpage = "contact" },
-    { page = "support", subpage = "documentation" },
-    { page = "support", subpage = "licensing" },
-    { page = "support", subpage = "about" },
+    { page = "support", subpage = "Contact Us", route = "contact" },
+    { page = "support", subpage = "Separator" },
+    { page = "support", subpage = "Hot Keys", route = "keys" },
+    { page = "support", subpage = "Documentation" },
+    { page = "support", subpage = "Separator" },
+    { page = "support", subpage = "Licensing" },
+    { page = "support", subpage = "About Us", route = "about" },
 ]

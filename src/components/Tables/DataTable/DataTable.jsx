@@ -1,9 +1,9 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { Toolbar, Editable } from 'components';
+import { Toolbar, Editable, ObjectTable } from 'components';
 import { calcValue } from 'store';
-import { stateFromStorage, formatFieldByType } from 'components/utils';
+import { stateFromStorage, formatFieldByType, handleClick } from 'components/utils';
 
 import './DataTable.css';
 
@@ -16,8 +16,12 @@ export const DataTable = ({
   pagination = true,
   searchFields,
   noHeader = false,
+  expandable = true,
 }) => {
   const [pagingCtx, setPaging] = useState(stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0 }));
+  const [expandedRow, setExpandedRow] = useState('');
+  const [sortFields, setSortFields] = useState([]);
+
   let total = columns.reduce((sum, item) => sum + (item.hidden ? 0 : item.width), 0);
   let nHidden = 0;
   const wids = columns.map((item) => {
@@ -37,6 +41,8 @@ export const DataTable = ({
       return matches(record, searchFields, filterText);
     });
   }
+
+  const sortData = () => {};
 
   const pageHandler = (action) => {
     const { perPage, curPage } = pagingCtx;
@@ -64,6 +70,9 @@ export const DataTable = ({
         setPaging(newCtx);
         localStorage.setItem('paging', JSON.stringify(newCtx));
         break;
+      case 'expand_row':
+        if (expandable) setExpandedRow(expandedRow === action.payload ? '' : action.payload);
+        break;
       default:
         break;
     }
@@ -75,6 +84,7 @@ export const DataTable = ({
 
   useEffect(() => {
     setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: hasData ? filteredData.length : 0 });
+    setExpandedRow('');
   }, [data, filterText]);
   //  }, [data, filterText, hasData, filteredData.length, pagingCtx.perPage]);
 
@@ -84,6 +94,18 @@ export const DataTable = ({
   }
   const idCol = idColumn(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
+
+  const expandedStyle = {
+    display: 'grid',
+    gridTemplateColumns: '2fr 8fr 1fr 5fr',
+    borderBottom: '1px solid grey',
+    padding: '2px',
+  };
+  const buttonStyle = {
+    width: '120px',
+    margin: '4px',
+    padding: '4px',
+  };
 
   const showTools = title !== '' || search || pagination;
   const showHeader = !noHeader;
@@ -106,7 +128,33 @@ export const DataTable = ({
           filteredData.map((record, index) => {
             const key = calcValue(record, idCol) + '_' + index;
             if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
-            return <DataTableRow key={key} id={key} wids={wids} columns={columns} record={record} />;
+            return (
+              <Fragment>
+                <DataTableRow
+                  key={key}
+                  id={key}
+                  wids={wids}
+                  columns={columns}
+                  record={record}
+                  expandable={expandable}
+                  handler={pageHandler}
+                />
+                {key === expandedRow ? (
+                  <div style={expandedStyle}>
+                    <div></div>
+                    <ObjectTable data={record} columns={columns} />
+                    <div>
+                      <button style={buttonStyle}>save changes</button>
+                      <button style={buttonStyle}>add monitor</button>
+                      <button style={buttonStyle}>view history</button>
+                    </div>
+                    <div></div>
+                  </div>
+                ) : (
+                  <Fragment></Fragment>
+                )}
+              </Fragment>
+            );
           })
         ) : (
           <div>Loading...</div>
@@ -188,12 +236,12 @@ const StyledRow = styled.div`
 `;
 
 //-----------------------------------------------------------------
-const DataTableRow = ({ columns, id, record, wids }) => {
+const DataTableRow = ({ columns, id, record, wids, expandable, handler }) => {
   const fKey = 'dt-frag-' + id;
   const rKey = 'dt-row-' + id;
   return (
     <Fragment key={fKey}>
-      <StyledRow key={rKey} className="at-row" wids={wids}>
+      <StyledRow key={rKey} className={'at-row' + (expandable ? ' expandable' : '')} wids={wids}>
         {columns.map((column, index) => {
           const key = id + column.name + '-' + index;
           if (column.hidden) return <Fragment key={key}></Fragment>;
@@ -221,8 +269,13 @@ const DataTableRow = ({ columns, id, record, wids }) => {
           cn += column.pill ? ' at-pill center ' + record[column.selector] : '';
           const style = column.align ? { justifySelf: column.align } : {};
           return (
-            <div key={key} style={style} className={cn}>
-              <Editable editable={column.editable} fieldValue={value} />
+            <div
+              key={key}
+              style={style}
+              className={cn}
+              onClick={(e) => handleClick(e, handler, { type: 'expand_row', payload: id })}
+            >
+              {value}
             </div>
           );
         })}
@@ -230,6 +283,7 @@ const DataTableRow = ({ columns, id, record, wids }) => {
     </Fragment>
   );
 };
+/* <Editable editable={column.editable} fieldValue={value} /> */
 
 //-----------------------------------------------------------------
 const hasField = (columns, field) => {

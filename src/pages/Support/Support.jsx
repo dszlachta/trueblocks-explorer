@@ -1,9 +1,13 @@
 import React, { Fragment } from 'react';
 
+import { Caddie } from 'components';
 import { currentPage } from 'components/utils';
+import { useMenus, menuSchema } from 'pages';
 
 //-----------------------------------------------------------
 export const Support = () => {
+  const supportMenu = useMenus().menu.items.filter((item) => item.label === 'Support')[0];
+
   const subpage = currentPage().subpage;
   switch (subpage) {
     case 'keys':
@@ -19,7 +23,7 @@ export const Support = () => {
     default:
       break;
   }
-  return <div className="okay">Actual Support Page</div>;
+  return <Caddie key="caddie" cards={supportMenu.items} columns={menuSchema} noSider={true} />;
 };
 
 //-----------------------------------------------------------

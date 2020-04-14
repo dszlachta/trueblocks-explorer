@@ -101,6 +101,7 @@ export const namesSchema = [
     name: 'Group',
     selector: 'group',
     type: 'string',
+    editable: true,
   },
   {
     width: 6,
@@ -113,6 +114,7 @@ export const namesSchema = [
     name: 'Name',
     selector: 'name',
     type: 'string',
+    editable: true,
   },
   {
     width: 2,
@@ -120,12 +122,14 @@ export const namesSchema = [
     selector: 'symbol',
     type: 'string',
     align: 'center',
+    editable: true,
   },
   {
     width: 4,
     name: 'Source',
     selector: 'source',
     type: 'string',
+    editable: true,
   },
   {
     width: 2,
@@ -140,5 +144,6 @@ export const namesSchema = [
     name: 'Description',
     selector: 'description',
     type: 'string',
+    editable: true,
   },
 ];

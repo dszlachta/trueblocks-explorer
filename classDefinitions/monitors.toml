@@ -5,6 +5,6 @@ dest_folder = "./src/pages/"
 [[subpages]]
 list = [
     { page = "monitors", subpage = "" },
-    { page = "monitors", subpage = "yours", route = "/yours", options = "" },
-    { page = "monitors", subpage = "shared", route = "/shared", options = "" },
+    { page = "monitors", subpage = "Your Monitors", route = "yours", options = "" },
+    { page = "monitors", subpage = "Shared Monitors", route = "shared", options = "" },
 ]

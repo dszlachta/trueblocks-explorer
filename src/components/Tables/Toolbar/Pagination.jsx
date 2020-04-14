@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import Mousetrap from 'mousetrap';
 
 import { handleClick } from 'components/utils';
@@ -18,17 +18,30 @@ import './Pagination.css';
 
 //-----------------------------------------------------------------
 export const Pagination = ({ enabled, handler, pagingCtx }) => {
+  useEffect(() => {
+    Mousetrap.bind(['meta+shift+home'], getHandler(pagingCtx, 'first', handler));
+    Mousetrap.bind(['meta+shift+end'], getHandler(pagingCtx, 'last', handler));
+    Mousetrap.bind(['home'], getHandler(pagingCtx, 'first', handler));
+    Mousetrap.bind(['end'], getHandler(pagingCtx, 'last', handler));
+    Mousetrap.bind(['up'], getHandler(pagingCtx, 'previous', handler));
+    Mousetrap.bind(['left'], getHandler(pagingCtx, 'previous', handler));
+    Mousetrap.bind(['down'], getHandler(pagingCtx, 'next', handler));
+    Mousetrap.bind(['right'], getHandler(pagingCtx, 'next', handler));
+    return () => {
+      Mousetrap.unbind(['meta+shift+home'], getHandler(pagingCtx, 'first', handler));
+      Mousetrap.unbind(['meta+shift+end'], getHandler(pagingCtx, 'last', handler));
+      Mousetrap.unbind(['home'], getHandler(pagingCtx, 'first', handler));
+      Mousetrap.unbind(['end'], getHandler(pagingCtx, 'last', handler));
+      Mousetrap.unbind(['up'], getHandler(pagingCtx, 'previous', handler));
+      Mousetrap.unbind(['left'], getHandler(pagingCtx, 'previous', handler));
+      Mousetrap.unbind(['down'], getHandler(pagingCtx, 'next', handler));
+      Mousetrap.unbind(['right'], getHandler(pagingCtx, 'next', handler));
+    };
+  }, [handler]);
+
   if (isNaN(pagingCtx.curPage)) return <Fragment></Fragment>;
   if (!enabled) return <div></div>;
 
-  Mousetrap.bind(['meta+shift+home'], getHandler(pagingCtx, 'first', handler));
-  Mousetrap.bind(['meta+shift+end'], getHandler(pagingCtx, 'last', handler));
-  Mousetrap.bind(['home'], getHandler(pagingCtx, 'first', handler));
-  Mousetrap.bind(['end'], getHandler(pagingCtx, 'last', handler));
-  Mousetrap.bind(['up'], getHandler(pagingCtx, 'previous', handler));
-  Mousetrap.bind(['left'], getHandler(pagingCtx, 'previous', handler));
-  Mousetrap.bind(['down'], getHandler(pagingCtx, 'next', handler));
-  Mousetrap.bind(['right'], getHandler(pagingCtx, 'next', handler));
   return (
     <div className="pagination-container">
       {<Selector handler={handler} pagingCtx={pagingCtx} />}

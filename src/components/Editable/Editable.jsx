@@ -63,7 +63,7 @@ export const Editable = (props) => {
   let visibleText = errorStr;
   if (visibleText === '') visibleText = props.fieldValue;
   if (visibleText === '') visibleText = inputValue;
-  if (visibleText === '') visibleText = '<' + props.placeholder + '>';
+  if (visibleText === '') visibleText = props.placeholder !== '' ? '<' + props.placeholder + '>' : '';
   if (visibleText === '') visibleText = '<' + props.fieldName + '>';
 
   let textCn = props.className + ' editable_text ' + (!isActive ? '' : 'hidden');

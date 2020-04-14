@@ -23,15 +23,15 @@ export const Menu = ({ menu, parent = '' }) => {
 
         const enabled = true; //(item.enableFunc ? item.enableFunc(currentPage().page, currentPage().subpage) : true) && item.enabled;
         const { label, exact, items } = item;
-        const path = cleanPath(label, parent, item.path);
+        const route = cleanPath(label, parent, item.route);
         if (items) {
           return (
-            <MenuItem key={path} text={label} indent={parent !== ''} to={path}>
+            <MenuItem key={route} text={label} indent={parent !== ''} to={route}>
               <Menu menu={items} parent={label.toLowerCase()} exact={exact} />
             </MenuItem>
           );
         }
-        return <MenuItem key={path} text={label} indent={parent !== ''} to={path} exact={exact} enabled={enabled} />;
+        return <MenuItem key={route} text={label} indent={parent !== ''} to={route} exact={exact} enabled={enabled} />;
       })}
     </> //
   );

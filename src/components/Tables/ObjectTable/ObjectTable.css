@@ -5,3 +5,8 @@
   grid-template-columns: 6fr 1fr 14fr;
   justify-content: space-between;
 }
+
+.ot-row-nosider {
+  display: grid;
+  grid-template-columns: 1fr;
+}

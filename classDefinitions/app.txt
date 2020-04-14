@@ -1,2 +1,5 @@
 [settings]
-pages = dashboard|projects|monitors|explorer|names|signatures|digests|caches|other|settings|support
+pages = dashboard|separator|\
+    projects|monitors|explorer|separator|\
+    names|signatures|digests|caches|other|separator|\
+    settings|support
