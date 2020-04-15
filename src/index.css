@@ -50,6 +50,7 @@
   --separator: #073642;
   --h4-color: #03415d;
 
+  --lightyellow-color: lightyellow;
   --green-color: #6b902a; /* search for this green (#97cc3b) elsewhere */
   --red-color: #b40505;
   --yellow-color: yellow;
@@ -86,6 +87,12 @@ body {
 .okay {
   background-color: var(--green-color);
   color: var(--white-color);
+}
+
+.caution {
+  background-color: var(--lightyellow-color);
+  color: var(--black-color);
+  border: 1px solid black;
 }
 
 .right {

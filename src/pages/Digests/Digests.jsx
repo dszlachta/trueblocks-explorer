@@ -49,6 +49,7 @@ export const Digests = () => {
         data={filtered}
         title=""
         search={false}
+        chartName="digests"
         chartCtx={{ defPair: ['firstTs', 'nAddresses'] }}
         pagination={true}
       />

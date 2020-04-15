@@ -126,7 +126,7 @@ export const signaturesSchema = [
       const value = record['inputs'];
       if (!value || !value.length) return '';
       // return record['signature'];
-      const types = record['signature'].split('(')[1].split(',');
+      const types = record['signature'].replace(')', '').split('(')[1].split(',');
       const str = value
         .map((item, index) => {
           return types[index] + ' ' + item.name;

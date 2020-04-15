@@ -151,6 +151,7 @@
 .at-cell {
   padding: var(--at-padding);
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 

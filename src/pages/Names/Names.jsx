@@ -130,6 +130,7 @@ export const namesSchema = [
     selector: 'source',
     type: 'string',
     editable: true,
+    hidden: true,
   },
   {
     width: 2,

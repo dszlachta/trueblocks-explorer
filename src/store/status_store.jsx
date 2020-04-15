@@ -29,9 +29,6 @@ export const statusReducer = (state, action) => {
     case 'success':
       ret = action.payload;
       break;
-    case 'toggle_api':
-      ret.data[0].trueblocks_version = ret.data[0].trueblocks_version === '' ? 'x' : '';
-      break;
     case 'fail':
       break;
     default:

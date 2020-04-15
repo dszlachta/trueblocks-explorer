@@ -6,6 +6,16 @@
   justify-content: space-between;
 }
 
+.ot-row-compact {
+  display: grid;
+  grid-template-columns: 6fr 14fr;
+}
+
+.ot-cell-compact {
+  padding: 3px;
+  padding-left: 10px;
+}
+
 .ot-row-nosider {
   display: grid;
   grid-template-columns: 1fr;

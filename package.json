@@ -2,6 +2,15 @@
   "name": "trueblocks-explorer",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "PORT=3002 REACT_APP_API_URL=http://localhost:8080 react-scripts start",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "prettify": "node_modules/.bin/prettier '{src,test,mocks}/**/*.js' --write",
+    "lint": "eslint '{src,test,mocks}/**/*.js'",
+    "document": "documentation build src/components/**/[A-Zi]*.{js,jsx,ts,tsx} -f html -o docs/components ; open docs/components/index.html",
+    "generate": "makeClass -jarv"
+  },
   "dependencies": {
     "axios": "^0.19.2",
     "d3": "^5.15.1",
@@ -23,14 +32,6 @@
     "styled-components": ">= ^3.2.3 || >= ^4.0.0 || >= ^5.0.0",
     "swr": "^0.1.18",
     "yarn.lock": "^0.0.1-security"
-  },
-  "scripts": {
-    "start": "PORT=3002 REACT_APP_API_URL=http://localhost:8080 react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "prettify": "node_modules/.bin/prettier '{src,test,mocks}/**/*.js' --write",
-    "lint": "eslint '{src,test,mocks}/**/*.js'",
-    "document": "documentation build src/components/**/[A-Zi]*.{js,jsx,ts,tsx} -f html -o docs/components ; open docs/components/index.html"
   },
   "eslintConfig": {
     "extends": "react-app"

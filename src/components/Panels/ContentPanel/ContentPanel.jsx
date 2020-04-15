@@ -10,7 +10,6 @@ import './ContentPanel.css';
 export const ContentPanel = () => {
   const { page, subpage } = currentPage();
   let title = page + (subpage ? ' : ' + subpage : '');
-  if (stateFromStorage('wizardStep', 'step0') !== 'done') title = 'Installation Wizard';
   const expanded = usePanels().state.content;
   return (
     <Panel title={title.replace('%20', ' ')} type="content" expanded={usePanels().state.content}>

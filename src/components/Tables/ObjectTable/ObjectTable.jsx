@@ -7,7 +7,7 @@ import { calcValue } from 'store';
 import './ObjectTable.css';
 
 //-----------------------------------------------------------------
-export const ObjectTable = ({ data, columns, noSider = false }) => {
+export const ObjectTable = ({ data, columns, noSider = false, compact = false }) => {
   return (
     <div className="at-body ">
       {columns.map((column) => {
@@ -18,17 +18,18 @@ export const ObjectTable = ({ data, columns, noSider = false }) => {
         const vally = calcValue(data, column);
         const value = formatFieldByType(type, vally, false);
         const editable = column.editable;
-        const displayName = (column.name || fieldName).substr(0, 5);
+        let displayName = (column.name || fieldName).substr(0, 8);
+        if (compact) displayName = column.name || fieldName;
         const record_id = 0;
 
         const idCol = columns.filter((item) => item.selector === 'id');
         const id = idCol && idCol.function ? idCol.function(data) : '';
-        const cn = 'at-row ' + (noSider ? 'ot-row-nosider' : 'ot-row');
+        const cn = 'at-row ' + (noSider ? 'ot-row-nosider' : 'ot-row' + (compact ? '-compact' : ''));
         return (
           <div key={fieldName + id + Math.random()} className={cn}>
             {noSider ? <Fragment></Fragment> : <ObjectTableSider>{displayName}:</ObjectTableSider>}
-            {noSider ? <Fragment></Fragment> : <div></div>}
-            <TableColumn editable={editable} noSider={noSider}>
+            {noSider || compact ? <Fragment></Fragment> : <div></div>}
+            <TableColumn editable={editable} noSider={noSider} compact={compact}>
               <Editable
                 editable={editable}
                 record_id={record_id}
@@ -55,8 +56,8 @@ const ObjectTableSider = ({ children }) => {
 };
 
 //-----------------------------------------------------------------
-export const TableColumn = ({ editable = false, noSider = false, children }) => {
-  let cn = (noSider ? 'ot-cell-nosider' : 'ot-cell') + (editable ? ' editable' : '');
+export const TableColumn = ({ editable = false, noSider = false, compact, children }) => {
+  let cn = (noSider ? 'ot-cell-nosider' : 'ot-cell' + (compact ? '-compact' : '')) + (editable ? ' editable' : '');
   return (
     <div className={cn} align="left">
       {children}

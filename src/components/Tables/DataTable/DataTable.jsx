@@ -251,7 +251,7 @@ const DataTableRow = ({ columns, id, record, wids, expandable, handler }) => {
           let value = calcValue(record, column);
           value = formatFieldByType(type, value, false, column.hideZero, decimals);
 
-          let cn = 'at-cell ' + column.cn + ' ';
+          let cn = 'at-cell ' + (column.cn ? column.cn : '') + ' ';
           switch (type) {
             case 'calc':
             case 'number':

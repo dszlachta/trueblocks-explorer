@@ -1,10 +1,9 @@
 import React from 'react';
 
 import { useContext } from 'react';
-import { Wizard } from 'pages/Wizard/Wizard';
-import GlobalContext from 'store';
+import GlobalContext, { useStatusData } from 'store';
 
-import { currentPage } from 'components/utils';
+import { currentPage, systemCheck } from 'components/utils';
 
 // auto-generate: imports
 import { Dashboard } from './Dashboard/Dashboard';
@@ -18,7 +17,6 @@ import { Caches } from './Caches/Caches';
 import { Other } from './Other/Other';
 import { Settings } from './Settings/Settings';
 import { Support } from './Support/Support';
-import { stateFromStorage } from 'components/utils';
 // auto-generate: imports
 
 export const thePages = {
@@ -79,10 +77,8 @@ export const thePages = {
   'other/dated': { component: <Other /> },
   //
   'settings/': { component: <Settings /> },
-  'settings/api': { component: <Settings /> },
-  'settings/node': { component: <Settings /> },
-  'settings/scraper': { component: <Settings /> },
-  'settings/sharing': { component: <Settings /> },
+  'settings/status': { component: <Settings /> },
+  'settings/config': { component: <Settings /> },
   'settings/skins': { component: <Settings /> },
   'settings/schemas': { component: <Settings /> },
   //
@@ -113,7 +109,7 @@ export const theMenu = {
         { label: 'Edit...', route: 'edit' },
         { label: 'Save' },
         { label: 'Export' },
-      ],
+      ]
     },
     {
       label: 'Monitors',
@@ -121,7 +117,7 @@ export const theMenu = {
       items: [
         { label: 'Your Monitors', route: 'yours' },
         { label: 'Shared Monitors', route: 'shared' },
-      ],
+      ]
     },
     {
       label: 'Explorer',
@@ -132,7 +128,7 @@ export const theMenu = {
         { label: 'Receipts' },
         { label: 'Logs' },
         { label: 'Traces' },
-      ],
+      ]
     },
     { label: 'Separator' },
     {
@@ -145,7 +141,7 @@ export const theMenu = {
         { label: 'Prefunds' },
         { label: 'Other Names', route: 'other' },
         { label: 'Groups' },
-      ],
+      ]
     },
     {
       label: 'Signatures',
@@ -157,7 +153,7 @@ export const theMenu = {
         { label: 'Names' },
         { label: 'Params' },
         { label: 'Cross' },
-      ],
+      ]
     },
     {
       label: 'Digests',
@@ -168,7 +164,7 @@ export const theMenu = {
         { label: 'Unripe' },
         { label: 'Separator' },
         { label: 'Columns' },
-      ],
+      ]
     },
     {
       label: 'Caches',
@@ -181,7 +177,7 @@ export const theMenu = {
         { label: 'Slurps' },
         { label: 'Prices' },
         { label: 'Abis' },
-      ],
+      ]
     },
     {
       label: 'Other',
@@ -192,21 +188,19 @@ export const theMenu = {
         { label: 'Your Blocks', route: 'yours' },
         { label: 'Known Blocks', route: 'known' },
         { label: 'Dated Blocks', route: 'dated' },
-      ],
+      ]
     },
     { label: 'Separator' },
     {
       label: 'Settings',
       exact: true,
       items: [
-        { label: 'API Config', route: 'api' },
-        { label: 'Node Config', route: 'node' },
-        { label: 'Scraper Config', route: 'scraper' },
-        { label: 'Sharing Config', route: 'sharing' },
+        { label: 'System Status', route: 'status' },
+        { label: 'Configuration', route: 'config' },
         { label: 'Separator' },
         { label: 'Skins' },
         { label: 'Schemas' },
-      ],
+      ]
     },
     {
       label: 'Support',
@@ -219,9 +213,9 @@ export const theMenu = {
         { label: 'Separator' },
         { label: 'Licensing' },
         { label: 'About Us', route: 'about' },
-      ],
+      ]
     },
-  ],
+  ]
   // auto-generate: menus
 };
 
@@ -268,7 +262,9 @@ export const useMenus = () => {
 
 //----------------------------------------------------------------------
 export const InnerPage = () => {
-  if (stateFromStorage('wizardStep', 0) < 10) return <Wizard />;
+  const status = useStatusData();
+  if (!systemCheck(status, 'api') || !systemCheck(status, 'node')) return <Settings />;
+
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];
   return ret ? ret.component : <div className="warning">Missing Inner Page</div>;

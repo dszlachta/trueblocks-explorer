@@ -76,7 +76,7 @@ export const SettingsSkins = () => {
   };
 
   return (
-    <div style={{ width: '1500px' }}>
+    <div style={{ width: '1200px' }}>
       <div style={style}>
         <Present>
           <Card title="Card" headerLink={null} headerClass="card-center">
@@ -97,7 +97,13 @@ export const SettingsSkins = () => {
         <GridTable data={shits} columns={fields} cellSize={1e5} search={true} />
       </Present>
       <Present>
-        <ChartTable data={shits} columns={fields} pagination={true} chartCtx={{ defPair: ['type', 'isReady'] }} />
+        <ChartTable
+          data={shits}
+          chartName="skins"
+          columns={fields}
+          pagination={true}
+          chartCtx={{ defPair: ['type', 'isReady'] }}
+        />
       </Present>
     </div>
   );

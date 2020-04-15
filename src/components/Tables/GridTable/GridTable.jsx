@@ -15,7 +15,7 @@ export const GridTable = ({
   meta = { max: 300000, completed: 220001 },
   cellSize = 1e6,
 }) => {
-  const [selected, setSelected] = useState(localStorage.getItem('grid-select'));
+  const [selected, setSelected] = useState(100000); //localStorage.getItem('grid-select'));
   const largest = meta.max;
 
   const cols = Array(10)
@@ -31,9 +31,9 @@ export const GridTable = ({
     localStorage.setItem('grid-select', newSelected);
   };
 
-  useEffect(() => {
-    setSelected(localStorage.getItem('grid-select'));
-  }, [meta]);
+  // useEffect(() => {
+  //   setSelected(localStorage.getItem('grid-select'));
+  // }, [meta]);
 
   function idColumn(columns) {
     const ret = columns.filter((c) => c.selector === 'id');
@@ -188,7 +188,7 @@ const DetailTable = ({ data, columns, idCol, start, cellSize }) => {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+              gridTemplateColumns: '1fr 1fr 1fr 1fr',
               justifyItems: 'space between',
               gridGap: '4px',
             }}

@@ -1,3 +1,27 @@
+export const systemCheck = (data, name) => {
+  let result = false;
+  switch (name) {
+    case 'api':
+      result = !data.is_testing && data.trueblocks_version !== '';
+      break;
+    case 'node':
+      result = data.client_version !== '' && data.client_version !== 'Not running';
+      break;
+    case 'scraper':
+      result = data.is_scraping;
+      break;
+    case 'sharing':
+      result = false;
+      break;
+    case 'system':
+      result = systemCheck(data, 'api') && systemCheck(data, 'node');
+      break;
+    default:
+      break;
+  }
+  return result;
+};
+
 //-----------------------------------------------------
 export function pad2(n) {
   const str = JSON.stringify(n);

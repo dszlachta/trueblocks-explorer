@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
 
-import { fmtNum, dataFetcher } from 'components/utils';
 import { Panel } from 'components/';
+import { fmtNum, dataFetcher, systemCheck } from 'components/utils';
 import { useStatus, useStatusMeta, useStatusData, statusDefault } from 'store';
 import { usePanels } from 'store';
 import GridIcon from 'assets/icons/gridicon';
@@ -54,15 +54,19 @@ const StatusTable = () => {
   const staging = meta.staging;
   const unripe = meta.unripe;
 
+  const data = useStatusData();
+  const apiOkay = systemCheck(data, 'api');
+  const nodeOkay = systemCheck(data, 'node');
+  const scraperOkay = systemCheck(data, 'scraper');
+
   var status1 = (
-    <div className={`${status.client_version !== '' ? 'connected' : 'disconnected'}`}>
-      {status.client_version !== '' ? 'Connected' : 'Not connected'}
-    </div>
+    <div className={`${nodeOkay ? 'connected' : 'disconnected'}`}>{nodeOkay ? 'Connected' : 'Not connected'}</div>
   );
   var status2 = (
-    <div className={`${status.is_scraping ? 'connected' : 'disconnected'}`}>
-      {status.is_scraping ? 'Scraping' : 'Not scraping'}
-    </div>
+    <div className={`${apiOkay ? 'connected' : 'disconnected'}`}>{apiOkay ? 'Running' : 'Not running'}</div>
+  );
+  var status3 = (
+    <div className={`${scraperOkay ? 'connected' : 'disconnected'}`}>{scraperOkay ? 'Scraping' : 'Not scraping'}</div>
   );
 
   var final_behind = '';
@@ -145,7 +149,8 @@ const StatusTable = () => {
         </Section>
 
         <Section title="TrueBlocks">
-          <SectionItem name="Status" value={status2} />
+          <SectionItem name="API" value={status2} />
+          <SectionItem name="Scraper" value={status3} />
           <SectionItem name="Final" value={fmtNum(meta.finalized)} icon={greenlight} details={fDetails} />
           <SectionItem name="Staging" value={fmtNum(meta.staging)} icon={yellowlight} details={sDetails} />
           <SectionItem name="Unripe" value={fmtNum(meta.unripe)} icon={redlight} details={uDetails} />

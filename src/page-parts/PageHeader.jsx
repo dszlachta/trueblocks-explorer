@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import { useStatusData, useStatusMeta } from 'store';
-import { fmtNum } from 'components/utils';
+import { fmtNum, systemCheck } from 'components/utils';
 
 import logo from 'assets/img/logo.png';
 import './PageHeader.css';
@@ -30,46 +30,20 @@ const PageHeaderLeft = () => {
   );
 };
 
-const isOkay = (data, name) => {
-  let result = false;
-  let errMsg = '';
-  switch (name) {
-    case 'trueblocks':
-      result = !data.is_testing && data.trueblocks_version !== '';
-      errMsg = result ? 'X' : 'Y';
-      break;
-    case 'node':
-      result = data.client_version !== '';
-      errMsg = result ? 'Z' : 'Q';
-      break;
-    case 'scraper':
-      result = data.is_scraping;
-      errMsg = result ? 'A' : 'B';
-      break;
-    case 'sharing':
-      result = false;
-      errMsg = result ? 'PP' : 'DD';
-      break;
-    default:
-      break;
-  }
-  return [result, errMsg];
-};
-
 //-----------------------------------------------------
 const PageHeaderUpperRight = () => {
   const data = useStatusData();
-  const [api, apiMsg] = isOkay(data, 'trueblocks');
-  const [node, nodeMsg] = isOkay(data, 'node');
-  const [scraper, scraperMsg] = isOkay(data, 'scraper');
-  const [sharing, sharingMsg] = isOkay(data, 'sharing');
+  const apiOkay = systemCheck(data, 'api');
+  const nodeOkay = systemCheck(data, 'node');
+  const scraperOkay = systemCheck(data, 'scraper');
+  const sharingOkay = systemCheck(data, 'sharing');
 
   return (
     <div className="right-top">
-      <Pill text="api" status={api} errMsg={apiMsg} decorate={true} route="/settings/api" />
-      <Pill text="node" status={node} errMsg={nodeMsg} decorate={true} route="/settings/node" />
-      <Pill text="scraper" status={scraper} errMsg={scraperMsg} decorate={true} route="/settings/scraper" />
-      <Pill text="sharing" status={sharing} errMsg={sharingMsg} decorate={true} route="/settings/sharing" />
+      <Pill text="api" status={apiOkay} errMsg={'unavailable'} decorate={true} route="/settings/api" />
+      <Pill text="node" status={nodeOkay} errMsg={'unavailable'} decorate={true} route="/settings/node" />
+      <Pill text="scraper" status={scraperOkay} errMsg={'paused'} decorate={true} route="/settings/scraper" />
+      <Pill text="sharing" status={sharingOkay} errMsg={'paused'} decorate={true} route="/settings/sharing" />
     </div>
   );
 };
