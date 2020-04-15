@@ -96,7 +96,7 @@ export const useDigests = () => {
 };
 
 //----------------------------------------------------------------------------
-const digestsSchema = [
+export const digestsSchema = [
   {
     name: 'ID',
     selector: 'id',

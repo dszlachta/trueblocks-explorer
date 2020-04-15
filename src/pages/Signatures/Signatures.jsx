@@ -34,7 +34,7 @@ export const signaturesReducer = (state, action) => {
   let ret = state;
   switch (action.type) {
     case 'update':
-      ret = action.payload;
+      ret = action.payload.filter((item) => item.type !== 'constructor');
       break;
     default:
     // do nothing

@@ -5,7 +5,7 @@ import './SettingsSkins.css';
 import { Card, PanelTable, ChartTable, DataTable, GridTable, ObjectTable } from 'components';
 
 export const SettingsSkins = () => {
-  const shits = [
+  const testData = [
     {
       name: 'operatorBurn operatorBurn operatorBurn operatorBurn operatorBurn operatorBurn',
       type: 'function',
@@ -32,7 +32,7 @@ export const SettingsSkins = () => {
       isReady: 'okay',
     },
   ];
-  const shit = shits[0];
+  const oneTest = testData[0];
   const fields = [
     {
       name: 'ID',
@@ -80,25 +80,25 @@ export const SettingsSkins = () => {
       <div style={style}>
         <Present>
           <Card title="Card" headerLink={null} headerClass="card-center">
-            <ObjectTable data={shit} columns={fields} />
+            <ObjectTable data={oneTest} columns={fields} />
           </Card>
         </Present>
         <Present>
-          <PanelTable data={shit} columns={fields} />
+          <PanelTable data={oneTest} columns={fields} />
         </Present>
         <Present>
-          <ObjectTable data={shit} columns={fields} />
+          <ObjectTable data={oneTest} columns={fields} />
         </Present>
       </div>
       <Present>
-        <DataTable data={shits} columns={fields} />
+        <DataTable data={testData} columns={fields} />
       </Present>
       <Present>
-        <GridTable data={shits} columns={fields} cellSize={1e5} search={true} />
+        <GridTable data={testData} columns={fields} cellSize={1e5} search={true} />
       </Present>
       <Present>
         <ChartTable
-          data={shits}
+          data={testData}
           chartName="skins"
           columns={fields}
           pagination={true}

@@ -1,12 +1,9 @@
 [settings]
 class = "COther"
-dest_folder = "./src/pages/"
 
 [[subpages]]
 list = [
     { page = "other", subpage = "", },
-    { page = "other", subpage = "Downloaded", },
-    { page = "other", subpage = "Common", },
     { page = "other", subpage = "Your Blocks", route = "yours", },
     { page = "other", subpage = "Known Blocks", route = "known", },
     { page = "other", subpage = "Dated Blocks", route = "dated", },

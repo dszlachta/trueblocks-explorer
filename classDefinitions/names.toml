@@ -1,6 +1,5 @@
 [settings]
 class = "CNames"
-dest_folder = "./src/pages/"
 
 [[subpages]]
 list = [

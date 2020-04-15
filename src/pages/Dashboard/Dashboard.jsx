@@ -87,7 +87,7 @@ export const dashboardSchema = [
     selector: 'id',
     type: 'string',
     function: (record) => {
-      return record.route + 'x';
+      return record ? record.route + 'x' : 'x';
     },
     hidden: true,
   },

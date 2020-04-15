@@ -33,7 +33,8 @@ export const StatusPanel = () => {
       {expanded ? (
         <>
           <StatusTable status={status} />
-          <StatusError error={error} />
+          <StatusError error={error} errMsg={'Error: Is the API running?'} />
+          <StatusError error={!systemCheck(status, 'node')} errMsg={'Error: Is the Ethereum node running?'} />
         </> //
       ) : (
         <></> //
@@ -42,8 +43,8 @@ export const StatusPanel = () => {
   );
 };
 
-const StatusError = ({ error }) => {
-  return error ? <div className="warning">Error: Is the API running?</div> : <></>; //
+const StatusError = ({ error, errMsg }) => {
+  return error ? <div className="warning">{errMsg}</div> : <></>; //
 };
 
 const StatusTable = () => {

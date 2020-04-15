@@ -142,7 +142,7 @@ export const DataTable = ({
                 {key === expandedRow ? (
                   <div style={expandedStyle}>
                     <div></div>
-                    <ObjectTable data={record} columns={columns} />
+                    <ObjectTable data={record} columns={columns} compact={true} />
                     <div>
                       <button style={buttonStyle}>save changes</button>
                       <button style={buttonStyle}>add monitor</button>
@@ -250,6 +250,7 @@ const DataTableRow = ({ columns, id, record, wids, expandable, handler }) => {
           let type = column.type ? column.type : 'string';
           let value = calcValue(record, column);
           value = formatFieldByType(type, value, false, column.hideZero, decimals);
+          if (!value || value === undefined) value = '-';
 
           let cn = 'at-cell ' + (column.cn ? column.cn : '') + ' ';
           switch (type) {

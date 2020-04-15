@@ -27,9 +27,61 @@ export const SettingsStatus = () => {
       <SettingsRow which="node" status={status} />
       <SettingsRow which="scraper" status={status} />
       <SettingsRow which="sharing" status={status} />
+      <div style={{ fontStyle: 'italic' }}>Last updated: {status.date}</div>
     </Fragment>
   );
 };
+
+export const systemSchema = [
+  {
+    name: 'Status',
+    selector: 'status',
+  },
+  {
+    name: 'Subsystem',
+    selector: 'which',
+  },
+  {
+    name: 'Subsystem Name',
+    selector: 'descr',
+  },
+  {
+    name: 'API Provider',
+    selector: 'apiProvider',
+    editable: true,
+  },
+  {
+    name: 'Host',
+    selector: 'host',
+  },
+  {
+    name: 'RPC Provider',
+    selector: 'rpcProvider',
+    editable: true,
+  },
+  {
+    name: 'Trace Provider',
+    selector: 'rpcProvider',
+    editable: true,
+  },
+  {
+    name: 'Balance Provider',
+    selector: 'balanceProvider',
+    editable: true,
+  },
+  {
+    name: 'Cache Path',
+    selector: 'cachePath',
+  },
+  {
+    name: 'Index Path',
+    selector: 'indexPath',
+  },
+  {
+    name: 'Version',
+    selector: 'version',
+  },
+];
 
 const SettingsRow = ({ which, status }) => {
   const names = {
@@ -46,20 +98,6 @@ const SettingsRow = ({ which, status }) => {
     sharing: 'IPFS Node',
     help: 'TrueBlocks Help API',
   };
-  const schema = [
-    {
-      name: 'Status',
-      selector: 'status',
-    },
-    {
-      name: 'Subsystem',
-      selector: 'which',
-    },
-    {
-      name: 'Description',
-      selector: 'descr',
-    },
-  ];
 
   const isOptional = which === 'scraper' || which === 'sharing';
   const working = systemCheck(status, which);
@@ -70,6 +108,28 @@ const SettingsRow = ({ which, status }) => {
       {working ? 'Working' : isOptional ? 'Paused' : 'Not Working'}
     </span>
   );
+
+  const version =
+    which === 'api'
+      ? status.trueblocks_version.substr(0, 40) + '...'
+      : which === 'node'
+      ? status.client_version.substr(0, 40) + '...'
+      : '';
+
+  const data = {
+    status: statusStr,
+    which: which,
+    descr: descriptions[which],
+    apiProvider: which === 'api' ? status.api_provider : '',
+    host: which === 'api' ? status.host : '',
+    rpcProvider: which === 'node' ? status.rpc_provider : '',
+    traceProvider: which === 'node' ? status.rpc_provider : '',
+    balanceProvider: which === 'node' ? status.balance_provider : '',
+    cachePath: which === 'scraper' ? status.cache_path : '',
+    indexPath: which === 'scraper' ? status.index_path : '',
+    version: version,
+  };
+
   return (
     <Fragment>
       <div
@@ -88,11 +148,9 @@ const SettingsRow = ({ which, status }) => {
         }}
       >
         <div></div>
-        <ObjectTable
-          data={{ status: statusStr, which: which, descr: descriptions[which] }}
-          columns={schema}
-          compact={true}
-        />
+        <Fragment>
+          <ObjectTable data={data} columns={systemSchema} editable={true} compact={true} silentWhenEmpty={true} />
+        </Fragment>
         <div></div>
       </div>
       <div
@@ -108,3 +166,8 @@ const SettingsRow = ({ which, status }) => {
     </Fragment>
   );
 };
+
+/*
+  "api_provider": "http://localhost:8080",
+  "host": "desktop.local (jrush)",
+  */

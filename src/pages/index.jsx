@@ -70,15 +70,12 @@ export const thePages = {
   'caches/abis': { component: <Caches /> },
   //
   'other/': { component: <Other /> },
-  'other/downloaded': { component: <Other /> },
-  'other/common': { component: <Other /> },
   'other/yours': { component: <Other /> },
   'other/known': { component: <Other /> },
   'other/dated': { component: <Other /> },
   //
   'settings/': { component: <Settings /> },
   'settings/status': { component: <Settings /> },
-  'settings/config': { component: <Settings /> },
   'settings/skins': { component: <Settings /> },
   'settings/schemas': { component: <Settings /> },
   //
@@ -109,7 +106,7 @@ export const theMenu = {
         { label: 'Edit...', route: 'edit' },
         { label: 'Save' },
         { label: 'Export' },
-      ]
+      ],
     },
     {
       label: 'Monitors',
@@ -117,7 +114,7 @@ export const theMenu = {
       items: [
         { label: 'Your Monitors', route: 'yours' },
         { label: 'Shared Monitors', route: 'shared' },
-      ]
+      ],
     },
     {
       label: 'Explorer',
@@ -128,7 +125,7 @@ export const theMenu = {
         { label: 'Receipts' },
         { label: 'Logs' },
         { label: 'Traces' },
-      ]
+      ],
     },
     { label: 'Separator' },
     {
@@ -141,7 +138,7 @@ export const theMenu = {
         { label: 'Prefunds' },
         { label: 'Other Names', route: 'other' },
         { label: 'Groups' },
-      ]
+      ],
     },
     {
       label: 'Signatures',
@@ -153,7 +150,7 @@ export const theMenu = {
         { label: 'Names' },
         { label: 'Params' },
         { label: 'Cross' },
-      ]
+      ],
     },
     {
       label: 'Digests',
@@ -164,7 +161,7 @@ export const theMenu = {
         { label: 'Unripe' },
         { label: 'Separator' },
         { label: 'Columns' },
-      ]
+      ],
     },
     {
       label: 'Caches',
@@ -177,18 +174,16 @@ export const theMenu = {
         { label: 'Slurps' },
         { label: 'Prices' },
         { label: 'Abis' },
-      ]
+      ],
     },
     {
       label: 'Other',
       exact: true,
       items: [
-        { label: 'Downloaded' },
-        { label: 'Common' },
         { label: 'Your Blocks', route: 'yours' },
         { label: 'Known Blocks', route: 'known' },
         { label: 'Dated Blocks', route: 'dated' },
-      ]
+      ],
     },
     { label: 'Separator' },
     {
@@ -196,11 +191,10 @@ export const theMenu = {
       exact: true,
       items: [
         { label: 'System Status', route: 'status' },
-        { label: 'Configuration', route: 'config' },
         { label: 'Separator' },
         { label: 'Skins' },
         { label: 'Schemas' },
-      ]
+      ],
     },
     {
       label: 'Support',
@@ -213,9 +207,9 @@ export const theMenu = {
         { label: 'Separator' },
         { label: 'Licensing' },
         { label: 'About Us', route: 'about' },
-      ]
+      ],
     },
-  ]
+  ],
   // auto-generate: menus
 };
 
@@ -264,7 +258,6 @@ export const useMenus = () => {
 export const InnerPage = () => {
   const status = useStatusData();
   if (!systemCheck(status, 'api') || !systemCheck(status, 'node')) return <Settings />;
-
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];
   return ret ? ret.component : <div className="warning">Missing Inner Page</div>;

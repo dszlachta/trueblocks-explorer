@@ -3,21 +3,23 @@ import React from 'react';
 import { useStatusData } from 'store';
 import { currentPage, systemCheck } from 'components/utils';
 
-import { SettingsSkins } from './SettingsSkins';
 import { SettingsStatus } from './SettingsStatus';
+import { SettingsSkins } from './SettingsSkins';
+import { SettingsSchemas } from './SettingsSchemas';
 
 export const Settings = () => {
   const status = useStatusData();
   if (!systemCheck(status, 'api') || !systemCheck(status, 'node')) return <SettingsStatus />;
 
   const subpage = currentPage().subpage;
+  console.log(subpage);
   switch (subpage) {
+    case 'schemas':
+      return <SettingsSchemas />;
     case 'skins':
       return <SettingsSkins />;
     case 'status':
-      return <SettingsStatus />;
     default:
-      break;
+      return <SettingsStatus />;
   }
-  return <div className="okay">Actual Settings Page</div>;
 };
