@@ -91,13 +91,14 @@ export const signaturesSchema = [
     selector: 'inputs',
     type: 'string',
     function: (record) => {
-      const value = record['inputs'];
-      if (!value || !value.length) return '';
-      return value
-        .map((item) => {
-          return item.name;
-        })
-        .join(',');
+      return JSON.stringify(record);
+      // const value = record['inputs'];
+      // if (!value || !value.length) return '';
+      // return value
+      //   .map((item) => {
+      //     return item.name;
+      //   })
+      //   .join(',');
     },
     hidden: true,
   },
@@ -107,13 +108,14 @@ export const signaturesSchema = [
     selector: 'outputs',
     type: 'string',
     function: (record) => {
-      const value = record['outputs'];
-      if (!value || !value.length) return '';
-      return value
-        .map((item) => {
-          return item.name;
-        })
-        .join(',');
+      return JSON.stringify(record);
+      // const value = record['outputs'];
+      // if (!value || !value.length) return '';
+      // return value
+      //   .map((item) => {
+      //     return item.name;
+      //   })
+      //   .join(',');
     },
     hidden: true,
   },
@@ -123,16 +125,22 @@ export const signaturesSchema = [
     selector: 'function',
     type: 'string',
     function: (record) => {
-      const value = record['inputs'];
-      if (!value || !value.length) return '';
-      // return record['signature'];
-      const types = record['signature'].replace(')', '').split('(')[1].split(',');
-      const str = value
-        .map((item, index) => {
-          return types[index] + ' ' + item.name;
-        })
-        .join(', ');
-      return record.name + '(' + str + ')';
+      return JSON.stringify(record);
+      // const value = record['inputs'];
+      // if (!value || !value.length) return '';
+      // let str = '';
+      // const sig = record['signature'];
+      // if (sig && sig !== undefined && sig.contains && sig.contains(')')) {
+      //   const types = record['signature'].replace(')', '').split('(')[1].split(',');
+      //   str = value
+      //     .map((item, index) => {
+      //       return types[index] + ' ' + item.name;
+      //     })
+      //     .join(', ');
+      // } else {
+      //   str = sig;
+      // }
+      // return record.name + '(' + str + ')';
     },
   },
 ];

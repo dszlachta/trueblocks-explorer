@@ -10,10 +10,16 @@ export default GlobalContext;
 export { panelDefault, panelReducer, usePanels, statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta };
 
 //----------------------------------------------------------------------
-export function isVerbose() {
-  return false;
+//export function isVerbose() {
+//  return false;
+//}
+//export const debug = true;
+
+//-----------------------------------------------------------------
+export function getPrimaryKey(columns) {
+  const ret = columns.filter((c) => c.selector === 'id');
+  return ret ? ret[0] : ret;
 }
-export const debug = true;
 
 //-----------------------------------------------------------------
 export function calcValue(record, column) {

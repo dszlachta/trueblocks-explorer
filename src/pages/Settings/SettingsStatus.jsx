@@ -34,6 +34,13 @@ export const SettingsStatus = () => {
 
 export const systemSchema = [
   {
+    name: 'ID',
+    selector: 'id',
+    function: (record) => {
+      return record.which;
+    },
+  },
+  {
     name: 'Status',
     selector: 'status',
   },

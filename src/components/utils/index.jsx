@@ -25,6 +25,7 @@ export const systemCheck = (data, name) => {
 //-----------------------------------------------------
 export function pad2(n) {
   const str = JSON.stringify(n);
+  if (str.length >= 2) return str;
   const fix = Array(2 - str.length)
     .fill()
     .map((_, idx) => idx);
@@ -41,9 +42,10 @@ export function pad2(n) {
  * @param {key} the key to retreive from local storage
  * @param {defaultState} the value to return if key is not in local storage
  */
-export const stateFromStorage = (key, defaultState) => {
+export const stateFromStorage = (key, defaultState, asString = false) => {
   const storage = localStorage.getItem(key);
   if (storage === null) return defaultState;
+  if (asString) return storage;
   return JSON.parse(storage);
 };
 

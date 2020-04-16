@@ -1,6 +1,7 @@
-import React, { Fragment, useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 
-import { DataTable } from 'components';
+import { DataTable, ObjectTable } from 'components';
+import { handleClick, stateFromStorage } from 'components/utils';
 
 import { menuSchema } from 'pages/';
 import { cachesSchema } from 'pages/Caches/Caches';
@@ -11,46 +12,97 @@ import { otherSchema } from 'pages/Other/Other';
 import { projectsSchema } from 'pages/Projects/Projects';
 import { systemSchema } from 'pages/Settings/SettingsStatus';
 import { signaturesSchema } from 'pages/Signatures/Signatures';
-
-const schemas = [
-  // { name: 'menuSchema', schema: menuSchema },
-  { name: 'cachesSchema', schema: cachesSchema },
-  { name: 'dashboardSchema', schema: dashboardSchema },
-  { name: 'digestsSchema', schema: digestsSchema },
-  { name: 'groupsSchema', schema: groupsSchema },
-  { name: 'namesSchema', schema: namesSchema },
-  { name: 'otherSchema', schema: otherSchema },
-  { name: 'projectsSchema', schema: projectsSchema },
-  { name: 'systemSchema', schema: systemSchema },
-  { name: 'signaturesSchema', schema: signaturesSchema },
-];
+import { calcValue } from 'store';
 
 export const SettingsSchemas = () => {
-  const [current, setCurrent] = useState('digestsSchema');
+  const [current, setCurrent] = useState(stateFromStorage('current-schema', 'systemSchema', true));
+
+  const changeCurrent = (value) => {
+    localStorage.setItem('current-schema', value);
+    setCurrent(value);
+  };
+
+  const schemas = [
+    { name: 'menuSchema', schema: menuSchema },
+    { name: 'cachesSchema', schema: cachesSchema },
+    { name: 'dashboardSchema', schema: dashboardSchema },
+    { name: 'digestsSchema', schema: digestsSchema },
+    { name: 'groupsSchema', schema: groupsSchema },
+    { name: 'namesSchema', schema: namesSchema },
+    { name: 'otherSchema', schema: otherSchema },
+    { name: 'projectsSchema', schema: projectsSchema },
+    { name: 'systemSchema', schema: systemSchema },
+    { name: 'signaturesSchema', schema: signaturesSchema },
+  ];
 
   const matched = schemas.filter((item) => item.name === current)[0];
-  const details = (
-    <DataTable
-      key={matched.name + 'm'}
-      title={matched.name}
-      data={matched.schema}
-      columns={schemaSchema}
-      search={false}
-      pagination={false}
-      expandable={true}
-    />
-  );
-
+  const mocks = mockData(matched.schema);
   return (
     <div>
       {schemas.map((schema) => {
         return (
-          <Fragment key={schema.name + Math.random()}>
-            <button onClick={(e) => setCurrent(schema.name)}>{schema.name}</button>{' '}
-          </Fragment>
+          <button key={schema.name} onClick={(e) => handleClick(e, changeCurrent, schema.name)}>
+            {schema.name}
+          </button>
         );
       })}
-      <div style={{ backgrounColor: 'red' }}>{details}</div>
+      <div>
+        <DataTable
+          key={matched.name + 'm'}
+          title={matched.name}
+          data={matched.schema}
+          columns={schemaSchema}
+          search={false}
+          pagination={false}
+          expandable={true}
+        />
+      </div>
+      <h4
+        style={{
+          borderTop: '2px solid brown',
+          paddingTop: '5px',
+          marginTop: '5px',
+        }}
+      >
+        Examples:{' '}
+      </h4>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 15fr 1fr 15fr 1fr',
+        }}
+      >
+        <div></div>
+        <div>
+          <DataTable
+            key={matched.name + 'm'}
+            title={''}
+            data={mocks}
+            columns={matched.schema}
+            search={false}
+            pagination={false}
+            expandable={true}
+            showHidden={true}
+          />
+          <pre>{JSON.stringify(mocks, null, 2)}</pre>
+          {/*<pre>{JSON.stringify(matched.schema, null, 2)}</pre>*/}
+        </div>
+        <div></div>
+        <div>
+          <ObjectTable
+            key={matched.name + 'm'}
+            title={''}
+            data={mocks[0]}
+            columns={matched.schema}
+            search={false}
+            pagination={false}
+            expandable={true}
+            compact={true}
+            showHidden={true}
+          />
+        </div>
+        <div></div>
+      </div>
     </div>
   );
 };
@@ -74,7 +126,6 @@ export const schemaSchema = [
     name: 'Type',
     selector: 'type',
   },
-
   {
     name: 'Editable',
     selector: 'editable',
@@ -123,7 +174,6 @@ export const schemaSchema = [
     selector: 'cn',
     align: 'center',
   },
-
   {
     name: 'Domain',
     selector: 'domain',
@@ -136,10 +186,18 @@ export const schemaSchema = [
     type: 'bool',
     align: 'center',
   },
-
+  {
+    name: 'isAccessor',
+    selector: 'isAccessor',
+    function: (record) => {
+      return record.function ? true : false;
+    },
+    type: 'bool',
+  },
   {
     name: 'Function',
     selector: 'function',
+    hidden: true,
   },
   {
     name: 'onAccept',
@@ -150,3 +208,19 @@ export const schemaSchema = [
     selector: 'onValidate',
   },
 ];
+
+function mock(columns, tag) {
+  let record = {};
+  columns.map((column) => {
+    let value = column.name + '_' + tag;
+    if (column.type === 'number') value = 12 + Number(tag);
+    if (column.type === 'filesize') value = 1200100 + Number(tag);
+    if (column.type === 'timestamp') value = 1438270144 + Number(tag);
+    return (record[column.selector] = value);
+  });
+  return record;
+}
+
+function mockData(columns) {
+  return [mock(columns, '1'), mock(columns, '2')];
+}

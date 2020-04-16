@@ -4,7 +4,7 @@ import { Toolbar, PanelTable } from 'components';
 import { fmtNum, handleClick } from 'components/utils';
 
 import './GridTable.css';
-import { calcValue } from 'store';
+import { calcValue, getPrimaryKey } from 'store';
 
 //-----------------------------------------------------------------
 export const GridTable = ({
@@ -31,15 +31,7 @@ export const GridTable = ({
     localStorage.setItem('grid-select', newSelected);
   };
 
-  // useEffect(() => {
-  //   setSelected(localStorage.getItem('grid-select'));
-  // }, [meta]);
-
-  function idColumn(columns) {
-    const ret = columns.filter((c) => c.selector === 'id');
-    return ret ? ret[0] : ret;
-  }
-  const idCol = idColumn(columns);
+  const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
   return (
