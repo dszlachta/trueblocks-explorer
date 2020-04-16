@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect, useRef } from 'react';
 
 import { DataTable } from 'components';
 
@@ -26,7 +26,7 @@ const schemas = [
 ];
 
 export const SettingsSchemas = () => {
-  const [current, setCurrent] = useState('cachesSchema');
+  const [current, setCurrent] = useState('digestsSchema');
 
   const matched = schemas.filter((item) => item.name === current)[0];
   const details = (
@@ -45,12 +45,12 @@ export const SettingsSchemas = () => {
     <div>
       {schemas.map((schema) => {
         return (
-          <Fragment key={schema.name + 'b'}>
-            <button>{schema.name}</button>{' '}
+          <Fragment key={schema.name + Math.random()}>
+            <button onClick={(e) => setCurrent(schema.name)}>{schema.name}</button>{' '}
           </Fragment>
         );
       })}
-      {details}
+      <div style={{ backgrounColor: 'red' }}>{details}</div>
     </div>
   );
 };
@@ -60,7 +60,6 @@ export const schemaSchema = [
     name: 'ID',
     selector: 'id',
     function: (record) => record.selector,
-    hidden: true,
     type: 'string',
   },
   {
@@ -94,6 +93,7 @@ export const schemaSchema = [
     name: 'Decimals',
     selector: 'decimals',
     type: 'number',
+    align: 'center',
   },
   {
     name: 'isPill',

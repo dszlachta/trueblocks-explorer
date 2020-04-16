@@ -17,6 +17,7 @@ export const debug = true;
 
 //-----------------------------------------------------------------
 export function calcValue(record, column) {
+  if (!record || record === undefined) return '';
   if (!column.function) return record[column.selector];
   return column.function(record);
 }

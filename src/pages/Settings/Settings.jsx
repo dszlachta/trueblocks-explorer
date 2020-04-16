@@ -12,9 +12,9 @@ export const Settings = () => {
   if (!systemCheck(status, 'api') || !systemCheck(status, 'node')) return <SettingsStatus />;
 
   const subpage = currentPage().subpage;
-  console.log(subpage);
   switch (subpage) {
     case 'schemas':
+      console.log(subpage);
       return <SettingsSchemas />;
     case 'skins':
       return <SettingsSkins />;
