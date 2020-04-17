@@ -1,0 +1,6 @@
+name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
+ID,id,string,true,1,"(record) => {\n\treturn record.blockNumber;\n}",
+Name,name,string,false,1
+Block Number,blockNumber,number,false,2,,,,,,,center
+Timestamp,timestamp,timestamp,false,2,,,,,,,center
+Date,date,string,false,2,,,,,,,center

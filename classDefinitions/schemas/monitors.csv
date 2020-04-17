@@ -1,0 +1,14 @@
+name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
+Block Number,blocknumber,number
+Trans Idx,transactionindex,number
+Date,date,string
+TimeStamp,timestamp,timestamp
+From,from,string
+To,to,string
+Ether,ether,string
+EthGasPrice,ethergasprice,number
+GasUsed,gasused,number
+Hash,hash,string
+isError,iserror,bool
+Encoding,encoding,string
+CompressedTx,compressedtx,object

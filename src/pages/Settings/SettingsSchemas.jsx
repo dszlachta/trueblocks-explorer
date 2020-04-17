@@ -12,7 +12,6 @@ import { otherSchema } from 'pages/Other/Other';
 import { projectsSchema } from 'pages/Projects/Projects';
 import { systemSchema } from 'pages/Settings/SettingsStatus';
 import { signaturesSchema } from 'pages/Signatures/Signatures';
-import { calcValue } from 'store';
 
 export const SettingsSchemas = () => {
   const [current, setCurrent] = useState(stateFromStorage('current-schema', 'systemSchema', true));
@@ -47,9 +46,10 @@ export const SettingsSchemas = () => {
         );
       })}
       <div>
+        <br />
         <DataTable
           key={matched.name + 'm'}
-          title={matched.name}
+          title={'Schema for ' + matched.name.replace('Schema', '')}
           data={matched.schema}
           columns={schemaSchema}
           search={false}
@@ -216,6 +216,7 @@ function mock(columns, tag) {
     if (column.type === 'number') value = 12 + Number(tag);
     if (column.type === 'filesize') value = 1200100 + Number(tag);
     if (column.type === 'timestamp') value = 1438270144 + Number(tag);
+    if (column.function) value = 'function: ' + column.function + '\nvalue: ' + value;
     return (record[column.selector] = value);
   });
   return record;

@@ -76,6 +76,7 @@ export const thePages = {
   //
   'settings/': { component: <Settings /> },
   'settings/status': { component: <Settings /> },
+  'settings/config': { component: <Settings /> },
   'settings/skins': { component: <Settings /> },
   'settings/schemas': { component: <Settings /> },
   //
@@ -191,6 +192,7 @@ export const theMenu = {
       exact: true,
       items: [
         { label: 'System Status', route: 'status' },
+        { label: 'Configuration', route: 'config' },
         { label: 'Separator' },
         { label: 'Skins' },
         { label: 'Schemas' },

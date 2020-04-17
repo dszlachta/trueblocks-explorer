@@ -3,3 +3,10 @@ pages = dashboard|separator|\
     projects|monitors|explorer|separator|\
     names|signatures|digests|caches|other|separator|\
     settings|support
+schemas = caches|dashboard|digests|explorer|\
+    monitors|names|other|projects|signatures|\
+    names-groups
+
+#index.jsx->menuSchema
+#Settings/SettingsSchemas.jsx->schemaSchema
+#Settings/SettingsStatus.jsx->systemSchema

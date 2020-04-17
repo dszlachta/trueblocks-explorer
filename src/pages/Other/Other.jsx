@@ -51,40 +51,44 @@ export const useOther = () => {
 };
 
 //----------------------------------------------------------------------------
+// auto-generate: schema
 export const otherSchema = [
   {
     name: 'ID',
     selector: 'id',
+    type: 'string',
     hidden: true,
+    width: 1,
     function: (record) => {
       return record.blockNumber;
-    },
+    }
   },
   {
-    width: 1,
     name: 'Name',
     selector: 'name',
     type: 'string',
+    width: 1
   },
   {
-    width: 2,
     name: 'Block Number',
     selector: 'blockNumber',
     type: 'number',
-    align: 'center',
+    width: 2,
+    align: 'center'
   },
   {
-    width: 2,
     name: 'Timestamp',
     selector: 'timestamp',
     type: 'timestamp',
-    align: 'center',
+    width: 2,
+    align: 'center'
   },
   {
-    width: 2,
     name: 'Date',
     selector: 'date',
     type: 'string',
-    align: 'center',
-  },
+    width: 2,
+    align: 'center'
+  }
 ];
+// auto-generate: schema

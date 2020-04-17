@@ -1,0 +1,5 @@
+name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
+ID,id,,true,,"(record) => {\n\treturn record.group;\n}",
+Group,group,,false,,"(record) => {\n\tconst array = record.group.split(':');\n\treturn array[0];\n}"
+Subgroup 1,subgroup1,,false,,"(record) => {\n\tconst array = record.group.split(':');\n\treturn array.length > 1 ? array[1] : '';\n}"
+Subgroup 2,subgroup2,,false,,"(record) => {\n\tconst array = record.group.split(':');\n\treturn array.length > 2 ? array[2] : '';\n}"

@@ -1,0 +1,9 @@
+name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
+ID,id,string,true,0,"(record) => {\n\treturn record ? record.route : '';\n}",
+Name,name,string
+Route,route,string
+Count,count,number
+Size,sizeInBytes,filesize
+Custom,custom,string
+Date,date,string
+TS,timestamp,timestamp

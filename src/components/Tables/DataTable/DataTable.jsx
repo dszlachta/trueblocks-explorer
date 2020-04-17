@@ -136,7 +136,7 @@ export const DataTable = ({
                 {key === expandedRow ? (
                   <div style={expandedStyle}>
                     <div></div>
-                    <ObjectTable data={record} columns={columns} compact={true} />
+                    <ObjectTable data={record} columns={columns} compact={true} showHidden={showHidden} />
                     <div>
                       <button style={buttonStyle}>save changes</button>
                       <button style={buttonStyle}>add monitor</button>

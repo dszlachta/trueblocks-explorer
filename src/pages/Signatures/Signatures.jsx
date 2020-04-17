@@ -50,97 +50,106 @@ export const useSignatures = () => {
 };
 
 //----------------------------------------------------------------------------
+// auto-generate: schema
 export const signaturesSchema = [
   {
-    selector: 'id',
     name: 'ID',
+    selector: 'id',
+    type: 'string',
     hidden: true,
+    width: 1,
     function: (record) => {
       return record.encoding;
-    },
+    }
   },
   {
-    width: 1,
     name: 'Encoding',
     selector: 'encoding',
-    type: 'hash',
+    type: 'short_hash',
+    width: 1
   },
   {
-    width: 1,
     name: 'Type',
     selector: 'type',
     type: 'string',
-    pill: true,
+    width: 1,
+    pill: true
   },
   {
-    width: 2,
     name: 'Name',
     selector: 'name',
     type: 'string',
+    width: 2
   },
   {
-    width: 2,
     name: 'Signature',
     selector: 'signature',
     type: 'string',
     hidden: true,
+    width: 2
   },
   {
-    width: 2,
     name: 'Input Names',
     selector: 'inputs',
     type: 'string',
-    function: (record) => {
-      return JSON.stringify(record);
-      // const value = record['inputs'];
-      // if (!value || !value.length) return '';
-      // return value
-      //   .map((item) => {
-      //     return item.name;
-      //   })
-      //   .join(',');
-    },
     hidden: true,
+    width: 2,
+    function: (record) => {
+      return processRecord(record, 'inputs');
+    }
   },
   {
-    width: 2,
     name: 'Output Names',
     selector: 'outputs',
     type: 'string',
-    function: (record) => {
-      return JSON.stringify(record);
-      // const value = record['outputs'];
-      // if (!value || !value.length) return '';
-      // return value
-      //   .map((item) => {
-      //     return item.name;
-      //   })
-      //   .join(',');
-    },
     hidden: true,
+    width: 2,
+    function: (record) => {
+      return processRecord(record, 'outputs');
+    }
   },
   {
-    width: 6,
     name: 'Signature',
     selector: 'function',
     type: 'string',
+    width: 6,
     function: (record) => {
-      return JSON.stringify(record);
-      // const value = record['inputs'];
-      // if (!value || !value.length) return '';
-      // let str = '';
-      // const sig = record['signature'];
-      // if (sig && sig !== undefined && sig.contains && sig.contains(')')) {
-      //   const types = record['signature'].replace(')', '').split('(')[1].split(',');
-      //   str = value
-      //     .map((item, index) => {
-      //       return types[index] + ' ' + item.name;
-      //     })
-      //     .join(', ');
-      // } else {
-      //   str = sig;
-      // }
-      // return record.name + '(' + str + ')';
-    },
-  },
+      return processRecord(record, 'signature');
+    }
+  }
 ];
+// auto-generate: schema
+
+function processRecord(record, fieldName) {
+  switch (fieldName) {
+    case 'outputs':
+    case 'inputs': {
+      const value = record[fieldName];
+      if (!value || !value.length) return '';
+      return value
+        .map((item) => {
+          return item.name;
+        })
+        .join(',');
+    }
+    case 'signature': {
+      const value = record['inputs'];
+      if (!value || !value.length) return '';
+      let str = '';
+      const sig = record['signature'];
+      if (sig && sig !== undefined && sig.contains && sig.contains(')')) {
+        const types = record['signature'].replace(')', '').split('(')[1].split(',');
+        str = value
+          .map((item, index) => {
+            return types[index] + ' ' + item.name;
+          })
+          .join(', ');
+      } else {
+        str = sig;
+      }
+      return record.name + '(' + str + ')';
+    }
+    default:
+      break;
+  }
+}

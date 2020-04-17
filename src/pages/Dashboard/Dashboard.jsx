@@ -81,52 +81,54 @@ export const dashboardDefault = [
 ];
 
 //----------------------------------------------------------------------
+// auto-generate: schema
 export const dashboardSchema = [
   {
     name: 'ID',
     selector: 'id',
     type: 'string',
-    function: (record) => {
-      return record ? record.route + 'x' : 'x';
-    },
     hidden: true,
+    function: (record) => {
+      return record ? record.route : '';
+    }
   },
   {
     name: 'Name',
     selector: 'name',
-    type: 'string',
+    type: 'string'
   },
   {
     name: 'Route',
     selector: 'route',
-    type: 'string',
+    type: 'string'
   },
   {
     name: 'Count',
     selector: 'count',
-    type: 'number',
+    type: 'number'
   },
   {
     name: 'Size',
     selector: 'sizeInBytes',
-    type: 'filesize',
+    type: 'filesize'
   },
   {
     name: 'Custom',
     selector: 'custom',
-    type: 'string',
+    type: 'string'
   },
   {
     name: 'Date',
     selector: 'date',
-    type: 'string',
+    type: 'string'
   },
   {
     name: 'TS',
     selector: 'timestamp',
-    type: 'timestamp',
-  },
+    type: 'timestamp'
+  }
 ];
+// auto-generate: schema
 
 //----------------------------------------------------------------------
 export const dashboardReducer = (state, action) => {

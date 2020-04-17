@@ -68,7 +68,7 @@ export const systemSchema = [
   },
   {
     name: 'Trace Provider',
-    selector: 'rpcProvider',
+    selector: 'traceProvider',
     editable: true,
   },
   {

@@ -96,15 +96,35 @@ export const useDigests = () => {
 };
 
 //----------------------------------------------------------------------------
+function calcDuration(record) {
+  let s = record.latestTs - record.firstTs + 1;
+  let m = Math.floor(s / 60);
+  let h = Math.floor(m / 60);
+  const d = Math.floor(h / 24);
+  h = h % 24;
+  m = m % 60;
+  s = s % 60;
+  return (
+    (d === 0 ? '' : d + 'd ') +
+    (d === 0 && h === 0 ? '' : (d === 0 ? h : pad2(h)) + 'h ') +
+    pad2(m) +
+    'm ' +
+    pad2(s) +
+    's'
+  );
+}
+
+//----------------------------------------------------------------------------
+// auto-generate: schema
 export const digestsSchema = [
   {
     name: 'ID',
     selector: 'id',
     type: 'string',
+    hidden: true,
     function: (record) => {
       return record.filename.replace('.bin', '');
     },
-    hidden: true,
     range: false,
     domain: false,
   },
@@ -144,21 +164,7 @@ export const digestsSchema = [
     selector: 'duration',
     type: 'number',
     function: (record) => {
-      let s = record.latestTs - record.firstTs + 1;
-      let m = Math.floor(s / 60);
-      let h = Math.floor(m / 60);
-      const d = Math.floor(h / 24);
-      h = h % 24;
-      m = m % 60;
-      s = s % 60;
-      return (
-        (d === 0 ? '' : d + 'd ') +
-        (d === 0 && h === 0 ? '' : (d === 0 ? h : pad2(h)) + 'h ') +
-        pad2(m) +
-        'm ' +
-        pad2(s) +
-        's'
-      );
+      return calcDuration(record);
     },
     decimals: 0,
     range: false,
@@ -299,3 +305,4 @@ export const digestsSchema = [
     domain: false,
   },
 ];
+// auto-generate: schema

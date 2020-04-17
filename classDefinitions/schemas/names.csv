@@ -1,0 +1,9 @@
+name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
+ID,id,string,true,1,"(record) => {\n\treturn record.address;\n}",
+Group,group,string,false,3,,true
+Address,address,address,,6
+Name,name,string,,4,,true
+Symbol,symbol,string,,2,,true,,,,,center
+Source,source,string,true,4,,true
+Decimals,decimals,number,,2,,,,,,true,center
+Description,description,string,,4,,true

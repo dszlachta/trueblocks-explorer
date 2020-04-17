@@ -290,16 +290,73 @@ export const projectsDefault = [
 ];
 
 //----------------------------------------------------------------------------
+const validateUserInput = (fieldName, value) => {
+  if (fieldName === 'group') return notEmpty(fieldName, value);
+  return true;
+};
+
+//----------------------------------------------------------------------------
+// auto-generate: schema
 export const projectsSchema = [
-  { selector: 'id', name: '', hidden: true },
-  { selector: 'group', name: '', editable: true, onValidate: notEmpty, onAccept: null },
-  { selector: 'name', name: '', editable: true, onValidate: null, onAccept: null },
-  { selector: 'client', name: '', type: 'object', editable: true, onValidate: null, onAccept: null },
-  { selector: 'addresses', name: '', type: 'array' },
-  { selector: 'txs', name: 'trans cnt', type: 'number' },
-  { selector: 'traces', name: 'trace cnt', type: 'number' },
-  { selector: 'sizeInBytes', name: 'size', type: 'filesize' },
-  { selector: 'deltas', name: '', type: 'number' },
-  { selector: 'monitored', name: '', type: 'bool', hidden: true },
-  { selector: 'deleted', name: '', type: 'bool', hidden: true },
+  {
+    name: '',
+    selector: 'id',
+    type: 'string',
+    hidden: true
+  },
+  {
+    name: '',
+    selector: 'group',
+    editable: true,
+    onValidate: validateUserInput
+  },
+  {
+    name: '',
+    selector: 'name',
+    editable: true
+  },
+  {
+    name: '',
+    selector: 'client',
+    type: 'object',
+    editable: true
+  },
+  {
+    name: '',
+    selector: 'addresses',
+    type: 'array'
+  },
+  {
+    name: 'trans cnt',
+    selector: 'txs',
+    type: 'number'
+  },
+  {
+    name: 'trace cnt',
+    selector: 'traces',
+    type: 'number'
+  },
+  {
+    name: 'size',
+    selector: 'sizeInBytes',
+    type: 'filesize'
+  },
+  {
+    name: '',
+    selector: 'deltas',
+    type: 'number'
+  },
+  {
+    name: '',
+    selector: 'monitored',
+    type: 'bool',
+    hidden: true
+  },
+  {
+    name: '',
+    selector: 'deleted',
+    type: 'bool',
+    hidden: true
+  }
 ];
+// auto-generate: schema

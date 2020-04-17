@@ -12,4 +12,3 @@ list = [
     { page = "caches", subpage = "Prices" },
     { page = "caches", subpage = "Abis" },
 ]
-

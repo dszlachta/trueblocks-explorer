@@ -5,19 +5,15 @@ import GlobalContext from 'store';
 
 import { DataTable } from 'components';
 import { currentPage, getServerData } from 'components/utils';
+import { groupsSchema } from './NamesGroups';
 import './Names.css';
 
+export { groupsSchema };
 //---------------------------------------------------------------------------
 export function Names() {
   const names = useNames().state;
   const dispatch = useNames().dispatch;
 
-  // { label: 'Your Blocks' },
-  // http://localhost:3000/names/your_blocks/when+list&verbose
-  //   { label: 'Known Blocks' },
-  // http://localhost:3000/names/known_blocks/when+list&verbose
-  //   { label: 'Dated Blocks' },
-  // http://localhost:3000/names/dated_blocks/when+generate&verbose
   let query = currentPage().subpage;
   if (query === 'prefunds') query = 'prefund';
   else if (query === 'tokens') query = 'named';
@@ -71,80 +67,68 @@ export const useNames = () => {
 };
 
 //----------------------------------------------------------------------------
-export const groupsSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    function: (record) => {
-      return record.group;
-    },
-    hidden: true,
-  },
-  {
-    name: 'Group',
-    selector: 'group',
-  },
-];
-
-//----------------------------------------------------------------------------
+// auto-generate: schema
 export const namesSchema = [
   {
-    selector: 'id',
     name: 'ID',
+    selector: 'id',
+    type: 'string',
     hidden: true,
+    width: 1,
     function: (record) => {
       return record.address;
-    },
+    }
   },
   {
-    width: 3,
     name: 'Group',
     selector: 'group',
     type: 'string',
-    editable: true,
+    width: 3,
+    editable: true
   },
   {
-    width: 6,
     name: 'Address',
     selector: 'address',
     type: 'address',
+    width: 6
   },
   {
-    width: 4,
     name: 'Name',
     selector: 'name',
     type: 'string',
-    editable: true,
+    width: 4,
+    editable: true
   },
   {
-    width: 2,
     name: 'Symbol',
     selector: 'symbol',
     type: 'string',
-    align: 'center',
+    width: 2,
     editable: true,
+    align: 'center'
   },
   {
-    width: 4,
     name: 'Source',
     selector: 'source',
     type: 'string',
-    editable: true,
     hidden: true,
+    width: 4,
+    editable: true
   },
   {
-    width: 2,
     name: 'Decimals',
     selector: 'decimals',
     type: 'number',
-    align: 'center',
+    width: 2,
     hideZero: true,
+    align: 'center'
   },
   {
-    width: 4,
     name: 'Description',
     selector: 'description',
     type: 'string',
-    editable: true,
-  },
+    width: 4,
+    editable: true
+  }
 ];
+// auto-generate: schema

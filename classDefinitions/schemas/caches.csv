@@ -1,0 +1,9 @@
+name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
+ID,id,string,true,1,(record) => {\n\treturn record.path;\n}
+Cache Type,type,string,false,1,
+Location,path,string,false,2,
+# Folders,nFolders,number,false,1,
+# Files,nFiles,number,false,1,
+Total Size,sizeInBytes,filesize,false,1,
+Average Size,sizeInBytes/nFiles,filesize,false,1,
+Valid,is_valid,bool,true,1,

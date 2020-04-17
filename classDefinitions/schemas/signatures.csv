@@ -1,0 +1,9 @@
+name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
+ID,id,string,true,1,"(record) => {\n\treturn record.encoding;\n}"
+Encoding,encoding,short_hash,,1
+Type,type,string,,1,,,,,true
+Name,name,string,,2
+Signature,signature,string,true,2
+Input Names,inputs,string,true,2,"(record) => {\n\treturn processRecord(record_C_ 'inputs');\n}"
+Output Names,outputs,string,true,2,"(record) => {\n\treturn processRecord(record_C_ 'outputs');\n}"
+Signature,function,string,,6,"(record) => {\n\treturn processRecord(record_C_ 'signature');\n}"

@@ -60,56 +60,60 @@ export const useCaches = () => {
 };
 
 //----------------------------------------------------------------------------
+// auto-generate: schema
 export const cachesSchema = [
   {
     name: 'ID',
     selector: 'id',
+    type: 'string',
     hidden: true,
+    width: 1,
     function: (record) => {
       return record.path;
-    },
+    }
   },
   {
-    width: 1,
     name: 'Cache Type',
     selector: 'type',
     type: 'string',
+    width: 1
   },
   {
-    width: 2,
     name: 'Location',
     selector: 'path',
     type: 'string',
+    width: 2
   },
   {
-    width: 1,
     name: '# Folders',
     selector: 'nFolders',
     type: 'number',
+    width: 1
   },
   {
-    width: 1,
     name: '# Files',
     selector: 'nFiles',
     type: 'number',
+    width: 1
   },
   {
-    width: 1,
     name: 'Total Size',
     selector: 'sizeInBytes',
     type: 'filesize',
+    width: 1
   },
   {
-    width: 1,
     name: 'Average Size',
     selector: 'sizeInBytes/nFiles',
-    type: 'filesize-calc',
+    type: 'filesize',
+    width: 1
   },
   {
-    width: 1,
     name: 'Valid',
     selector: 'is_valid',
     type: 'bool',
     hidden: true,
-  },
+    width: 1
+  }
 ];
+// auto-generate: schema
