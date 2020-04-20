@@ -9,4 +9,5 @@ list = [
     { page = "settings", subpage = "Separator" },
     { page = "settings", subpage = "Skins" },
     { page = "settings", subpage = "Schemas" },
+    { page = "settings", subpage = "Icons" },
 ]

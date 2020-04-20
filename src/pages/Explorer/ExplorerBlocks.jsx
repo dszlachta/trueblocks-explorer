@@ -54,7 +54,7 @@ export const ExplorerBlocks = () => {
         title={'Block ' + explorer.blockNumber}
         search={false}
         compact={true}
-        paginate={true}
+        pagination={true}
       />
     </div>
   );
@@ -126,7 +126,7 @@ export const blocksSchema = [
     type: 'gas',
   },
   {
-    name: 'Finalzied',
+    name: 'Finalized',
     selector: 'finalized',
     type: 'bool',
   },

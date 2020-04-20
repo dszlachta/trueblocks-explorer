@@ -5,7 +5,7 @@ import { usePanels } from 'store';
 import { Panel } from 'components/';
 import { currentPage, fetchFromServer, handleClick } from 'components/utils';
 
-import HelpCircle from 'assets/icons/help-circle';
+import HelpCircle from 'assets/icons/HelpCircle';
 import './HelpPanel.css';
 
 //----------------------------------------------------------------------

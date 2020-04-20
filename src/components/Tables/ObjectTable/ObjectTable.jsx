@@ -19,15 +19,14 @@ export const ObjectTable = ({
   compact = false,
   silentWhenEmpty = false,
   showHidden = false,
-  paginate = false,
+  pagination = false,
   search = false,
 }) => {
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
   const id = calcValue(data, idCol);
-  if (!id || !idCol.onDisplay) return <div className="warning">The id column does not have an accessor function</div>;
 
-  const showTools = title !== '' || paginate;
+  const showTools = title !== '' || pagination;
   return (
     <Fragment>
       {showTools && (
@@ -37,7 +36,7 @@ export const ObjectTable = ({
           search={search}
           filterText={''}
           searchFields={null}
-          pagination={paginate}
+          pagination={pagination}
           pagingCtx={{}}
         />
       )}

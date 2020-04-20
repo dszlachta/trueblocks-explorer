@@ -144,9 +144,15 @@ function Scatter({ data, columns, chartCtx }) {
     />
   ));
 
-  let dtCols = [chartCtx.rangeCol, chartCtx.domainCol];
-  dtCols[0].hidden = false;
+  const idCol = {
+    name: 'ID',
+    selector: 'id',
+    hidden: true,
+    onDisplay: (record, fieldName) => '12',
+  };
+  let dtCols = [idCol, chartCtx.rangeCol, chartCtx.domainCol];
   dtCols[1].hidden = false;
+  dtCols[2].hidden = false;
 
   return (
     <div
@@ -175,7 +181,8 @@ function Scatter({ data, columns, chartCtx }) {
           columns={dtCols}
           title=""
           search={false}
-          paginationArrowsOnly={true}
+          pagination={true}
+          arrowsOnly={true}
         />
       </div>
       <div></div>

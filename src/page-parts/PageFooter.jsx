@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { usePanels } from 'store';
-import { Settings, Discord, GitHub, Medium, Twitter } from './PageFooterIcons';
+import { Settings, Discord, GitHub, Medium, Twitter } from 'assets/icons/SetSocial';
 import './PageFooter.css';
 
 //----------------------------------------------------------------------

@@ -81,6 +81,7 @@ export const thePages = {
   'settings/config': { component: <Settings /> },
   'settings/skins': { component: <Settings /> },
   'settings/schemas': { component: <Settings /> },
+  'settings/icons': { component: <Settings /> },
   //
   'support/': { component: <Support /> },
   'support/contact': { component: <Support /> },
@@ -198,6 +199,7 @@ export const theMenu = {
         { label: 'Separator' },
         { label: 'Skins' },
         { label: 'Schemas' },
+        { label: 'Icons' },
       ],
     },
     {

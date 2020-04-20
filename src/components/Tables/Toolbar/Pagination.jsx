@@ -39,13 +39,12 @@ export const Pagination = ({ enabled, handler, pagingCtx }) => {
     };
   }, [handler]);
 
-  if (isNaN(pagingCtx.curPage)) return <Fragment></Fragment>;
   if (!enabled) return <div></div>;
-
   return (
     <div className="pagination-container">
-      {<Selector handler={handler} pagingCtx={pagingCtx} />}
-      {<Display pagingCtx={pagingCtx} />}
+      <pre>{JSON.stringify(pagingCtx, null, 2)}</pre>
+      {!pagingCtx.arrowsOnly && <Selector handler={handler} pagingCtx={pagingCtx} />}
+      {!pagingCtx.arrowsOnly && <Display pagingCtx={pagingCtx} />}
       {
         <Fragment>
           <PagingIcon name="first" handler={handler} pagingCtx={pagingCtx} />

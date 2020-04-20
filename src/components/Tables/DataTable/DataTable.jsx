@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import { Toolbar, ObjectTable } from 'components';
 import { calcValue, getPrimaryKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
-
-import ChevronUp from 'assets/icons/ChevronUp';
-import ChevronDown from 'assets/icons/ChevronDown';
+import { SortIcon } from 'assets/icons/SortIcon';
 
 import './DataTable.css';
 
@@ -17,24 +15,27 @@ export const DataTable = ({
   title = 'Data Table (dt-)',
   search = true,
   pagination = true,
+  arrowsOnly = false,
   searchFields,
   noHeader = false,
   expandable = true,
   showHidden = false,
 }) => {
-  let total = columns.reduce((sum, item) => sum + (item.hidden && !showHidden ? 0 : item.width), 0);
+  let totalWidth = columns.reduce((sum, item) => sum + (item.hidden && !showHidden ? 0 : item.width), 0);
   let nHidden = 0;
   const wids = columns.map((item) => {
     if (item.hidden && !showHidden) {
       nHidden++;
       return '';
     }
-    if (Number.isNaN(total)) return '1fr ';
-    return Math.floor((item.width / total) * 64) + 'fr ';
+    if (Number.isNaN(totalWidth)) return '1fr ';
+    return Math.floor((item.width / totalWidth) * 64) + 'fr ';
   });
-  if (Number.isNaN(total)) total = columns.length - nHidden;
+  //if (Number.isNaN(totalWidth)) totalWidth = columns.length - nHidden;
 
-  const [pagingCtx, setPaging] = useState(stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0 }));
+  const [pagingCtx, setPaging] = useState(
+    stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0, arrowsOnly: arrowsOnly })
+  );
   const [expandedRow, setExpandedRow] = useState('');
   const [filterText, setFilterText] = useState('');
 
@@ -51,19 +52,19 @@ export const DataTable = ({
         setFilterText('');
         break;
       case 'first':
-        setPaging({ perPage: perPage, curPage: 0, total: filteredData.length });
+        setPaging({ ...pagingCtx, curPage: 0, total: filteredData.length });
         break;
       case 'next':
-        setPaging({ perPage: perPage, curPage: curPage + 1, total: filteredData.length });
+        setPaging({ ...pagingCtx, curPage: curPage + 1, total: filteredData.length });
         break;
       case 'previous':
-        setPaging({ perPage: perPage, curPage: curPage - 1, total: filteredData.length });
+        setPaging({ ...pagingCtx, curPage: curPage - 1, total: filteredData.length });
         break;
       case 'last':
-        setPaging({ perPage: perPage, curPage: Math.floor(filteredData.length / perPage), total: filteredData.length });
+        setPaging({ ...pagingCtx, curPage: Math.floor(filteredData.length / perPage), total: filteredData.length });
         break;
       case 'perPage':
-        const newCtx = { perPage: action.payload, curPage: 0, total: filteredData.length };
+        const newCtx = { perPage: action.payload, curPage: 0, total: filteredData.length, arrowsOnly: arrowsOnly };
         setPaging(newCtx);
         localStorage.setItem('paging', JSON.stringify(newCtx));
         break;
@@ -125,6 +126,8 @@ export const DataTable = ({
   const showHeader = !noHeader;
   return (
     <Fragment key="dt">
+      <pre>paging: {JSON.stringify(pagingCtx, null, 2)}</pre>
+      <pre>arrowsOnly: {arrowsOnly ? 'true' : 'false'}</pre>
       {showTools && (
         <Toolbar
           title={title}
@@ -220,17 +223,17 @@ const DataTableHeader = ({
   sortCtx2 = { sortBy: '', sortDir: '' },
   sortHandler,
 }) => {
-  let total = columns.reduce((sum, item) => sum + (item.hidden && !showHidden ? 0 : item.width), 0);
+  let totalWidth = columns.reduce((sum, item) => sum + (item.hidden && !showHidden ? 0 : item.width), 0);
   let nHidden = 0;
   const wids = columns.map((item) => {
     if (item.hidden && !showHidden) {
       nHidden++;
       return '';
     }
-    if (Number.isNaN(total)) return '1fr ';
-    return Math.floor((item.width / total) * 64) + 'fr ';
+    if (Number.isNaN(totalWidth)) return '1fr ';
+    return Math.floor((item.width / totalWidth) * 64) + 'fr ';
   });
-  if (Number.isNaN(total)) total = columns.length - nHidden;
+  //if (Number.isNaN(totalWidth)) totalWidth = columns.length - nHidden;
 
   const sortIcon1 = <SortIcon dir={sortCtx1.sortDir} n={1} />;
   const sortIcon2 = <SortIcon dir={sortCtx2.sortDir} n={2} />;
@@ -254,19 +257,6 @@ const DataTableHeader = ({
         );
       })}
     </StyledDiv>
-  );
-};
-
-//-----------------------------------------------------------------
-const SortIcon = ({ dir, n }) => {
-  if (dir === '') return <></>;
-  return (
-    <div style={{ display: 'inline' }}>
-      {dir === 'asc' ? <ChevronDown size="13px" /> : dir === 'desc' ? <ChevronUp size="13px" /> : <></>}
-      <small>
-        <small>{n}</small>
-      </small>
-    </div>
   );
 };
 

@@ -59,7 +59,7 @@ export const ExplorerTransactions = () => {
         title={'Transaction ' + explorer.blockNumber + '.' + explorer.transactionIndex}
         search={false}
         compact={true}
-        paginate={true}
+        pagination={true}
       />
     </div>
   );

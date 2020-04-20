@@ -138,7 +138,7 @@ export const currentPage = () => {
 
 //---------------------------------------------------------------
 export const formatFieldByType = (type, value, decimals = 0) => {
-  if (type[0] === 'C') return 'Unknown class: ' + type; //JSON.stringify(value, null, 2);
+  if (type[0] === 'C') return 'Unknown class: ' + JSON.stringify(value, null, 2);
   switch (type) {
     case 'function':
       if (typeof value === 'function') value = JSON.stringify(value, null, 2);
@@ -160,7 +160,7 @@ export const formatFieldByType = (type, value, decimals = 0) => {
       value = isZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
       break;
     case 'hash':
-      //value = value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1);
+      value = value ? value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1) : '';
       break;
     case 'timestamp':
     case 'string':

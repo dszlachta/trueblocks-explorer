@@ -5,7 +5,7 @@ import { Panel } from 'components/';
 import { fmtNum, dataFetcher, systemCheck } from 'components/utils';
 import { useStatus, useStatusMeta, useStatusData, statusDefault } from 'store';
 import { usePanels } from 'store';
-import GridIcon from 'assets/icons/gridicon';
+import GridIcon from 'assets/icons/GridIcon';
 import './StatusPanel.css';
 
 //----------------------------------------------------------------------

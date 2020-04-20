@@ -1,10 +1,10 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 
 import GlobalContext from 'store';
 
 import { Card, ObjectTable } from 'components/';
 import { sortArray, handleClick, notEmpty } from 'components/utils';
-import { ToggleLeft, ToggleRight, Edit, Delete, Undelete, Remove } from 'assets/icons/edit_set';
+import { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove } from 'assets/icons/SetEdit';
 
 import './Projects.css';
 
@@ -12,7 +12,9 @@ import './Projects.css';
 export const Projects = () => {
   const { projects } = useProjects();
 
-  sortArray(projects, ['deleted', 'group', 'name'], [true, true, true]);
+  useEffect(() => {
+    sortArray(projects, ['deleted', 'group', 'name'], [true, true, true]);
+  }, [projects]);
 
   const activeProjects = projects.filter((project) => {
     return !project.deleted;
