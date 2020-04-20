@@ -4,8 +4,8 @@
   display: grid;
   grid-area: page-header;
   grid-template-areas:
-    "left-header right-top"
-    "left-header right-bottom";
+    'left-header right-top'
+    'left-header right-bottom';
   grid-template-columns: minmax(390px, 7fr) auto;
   grid-template-rows: 50% 50%;
   align-content: space-around;
@@ -54,7 +54,7 @@
   filter: var(--color-img-filter);
 }
 
-.pill {
+.header-pill {
   text-align: center;
   text-decoration: underline;
   display: inline;

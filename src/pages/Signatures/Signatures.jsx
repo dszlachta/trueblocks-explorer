@@ -10,8 +10,7 @@ import './Signatures.css';
 
 //---------------------------------------------------------------------------
 export function Signatures() {
-  const dispatch = useSignatures().dispatch;
-  const signatures = useSignatures().state;
+  const { signatures, dispatch } = useSignatures();
 
   const source = currentPage().subpage;
   const query = (source === '' ? 'monitored&known' : source) + '&verbose=10';
@@ -50,89 +49,23 @@ export const useSignatures = () => {
 };
 
 //----------------------------------------------------------------------------
-// auto-generate: schema
-export const signaturesSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    function: (record) => {
-      return record.encoding;
-    }
-  },
-  {
-    name: 'Encoding',
-    selector: 'encoding',
-    type: 'short_hash',
-    width: 1
-  },
-  {
-    name: 'Type',
-    selector: 'type',
-    type: 'string',
-    width: 1,
-    pill: true
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    width: 2
-  },
-  {
-    name: 'Signature',
-    selector: 'signature',
-    type: 'string',
-    hidden: true,
-    width: 2
-  },
-  {
-    name: 'Input Names',
-    selector: 'inputs',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    function: (record) => {
-      return processRecord(record, 'inputs');
-    }
-  },
-  {
-    name: 'Output Names',
-    selector: 'outputs',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    function: (record) => {
-      return processRecord(record, 'outputs');
-    }
-  },
-  {
-    name: 'Signature',
-    selector: 'function',
-    type: 'string',
-    width: 6,
-    function: (record) => {
-      return processRecord(record, 'signature');
-    }
-  }
-];
-// auto-generate: schema
-
-function processRecord(record, fieldName) {
+function getFieldValue(record, fieldName) {
   switch (fieldName) {
+    case 'id':
+      return record.encoding;
     case 'outputs':
     case 'inputs': {
-      const value = record[fieldName];
-      if (!value || !value.length) return '';
-      return value
-        .map((item) => {
-          return item.name;
-        })
-        .join(',');
+      if (!record[fieldName]) return '';
+      return JSON.stringify(record[fieldName]);
+      // const value = record[fieldName];
+      // if (!value || !value.length || !value.map) return '';
+      // return value
+      //   .map((item) => {
+      //     return item.name;
+      //   })
+      //   .join(',');
     }
-    case 'signature': {
+    case 'function': {
       const value = record['inputs'];
       if (!value || !value.length) return '';
       let str = '';
@@ -153,3 +86,66 @@ function processRecord(record, fieldName) {
       break;
   }
 }
+
+//----------------------------------------------------------------------------
+// auto-generate: schema
+export const signaturesSchema = [
+  {
+    name: 'ID',
+    selector: 'id',
+    type: 'string',
+    hidden: true,
+    width: 1,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Encoding',
+    selector: 'encoding',
+    type: 'hash',
+    width: 1,
+  },
+  {
+    name: 'Type',
+    selector: 'type',
+    type: 'string',
+    width: 1,
+    isPill: true,
+  },
+  {
+    name: 'Name',
+    selector: 'name',
+    type: 'string',
+    width: 2,
+  },
+  {
+    name: 'Signature',
+    selector: 'signature',
+    type: 'string',
+    hidden: true,
+    width: 2,
+  },
+  {
+    name: 'Input Names',
+    selector: 'inputs',
+    type: 'string',
+    hidden: true,
+    width: 2,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Output Names',
+    selector: 'outputs',
+    type: 'string',
+    hidden: true,
+    width: 2,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Signature',
+    selector: 'function',
+    type: 'string',
+    width: 6,
+    onDisplay: getFieldValue,
+  },
+];
+// auto-generate: schema

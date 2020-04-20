@@ -96,22 +96,46 @@ export const useDigests = () => {
 };
 
 //----------------------------------------------------------------------------
-function calcDuration(record) {
-  let s = record.latestTs - record.firstTs + 1;
-  let m = Math.floor(s / 60);
-  let h = Math.floor(m / 60);
-  const d = Math.floor(h / 24);
-  h = h % 24;
-  m = m % 60;
-  s = s % 60;
-  return (
-    (d === 0 ? '' : d + 'd ') +
-    (d === 0 && h === 0 ? '' : (d === 0 ? h : pad2(h)) + 'h ') +
-    pad2(m) +
-    'm ' +
-    pad2(s) +
-    's'
-  );
+function getFieldValue(record, fieldName) {
+  switch (fieldName) {
+    case 'id':
+      return record.filename.replace('.bin', '');
+    case 'blockRange':
+      return record.filename.replace('.bin', '');
+    case 'blockSpan':
+      return record.latestAppearance - record.firstAppearance + 1;
+    case 'duration': {
+      let s = record.latestTs - record.firstTs + 1;
+      let m = Math.floor(s / 60);
+      let h = Math.floor(m / 60);
+      const d = Math.floor(h / 24);
+      h = h % 24;
+      m = m % 60;
+      s = s % 60;
+      return (
+        (d === 0 ? '' : d + 'd ') +
+        (d === 0 && h === 0 ? '' : (d === 0 ? h : pad2(h)) + 'h ') +
+        pad2(m) +
+        'm ' +
+        pad2(s) +
+        's'
+      );
+    }
+    case 'seconds':
+      return record.latestTs - record.firstTs + 1;
+    case 'addrsPerBlock': {
+      const n = record.latestAppearance - record.firstAppearance + 1;
+      return n === 0 ? 0 : record.nAddresses / n;
+    }
+    case 'appsPerBlock': {
+      const n = record.latestAppearance - record.firstAppearance + 1;
+      return n === 0 ? 0 : record.nAppearances / n;
+    }
+    case 'appsPerAddr':
+      return record.nAddresses === 0 ? 0 : record.nAppearances / record.nAddresses;
+    default:
+      break;
+  }
 }
 
 //----------------------------------------------------------------------------
@@ -122,187 +146,148 @@ export const digestsSchema = [
     selector: 'id',
     type: 'string',
     hidden: true,
-    function: (record) => {
-      return record.filename.replace('.bin', '');
-    },
-    range: false,
-    domain: false,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Cache Type',
     selector: 'type',
     type: 'string',
     hidden: true,
-    range: false,
-    domain: false,
   },
   {
     name: 'Block Range',
     selector: 'blockRange',
     type: 'string',
-    function: (record) => {
-      return record.filename.replace('.bin', '');
-    },
-    align: 'center',
-    range: false,
-    domain: false,
     hidden: true,
+    align: 'center',
+    onDisplay: getFieldValue,
   },
   {
     name: 'Block Span',
     selector: 'blockSpan',
-    type: 'number',
-    function: (record) => {
-      return record.latestAppearance - record.firstAppearance + 1;
-    },
-    decimals: 0,
-    range: true,
+    type: 'uint64',
     domain: true,
+    range: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Duration',
     selector: 'duration',
-    type: 'number',
-    function: (record) => {
-      return calcDuration(record);
-    },
-    decimals: 0,
-    range: false,
-    domain: false,
+    type: 'uint64',
+    onDisplay: getFieldValue,
   },
   {
     name: 'Seconds',
     selector: 'seconds',
-    type: 'number',
-    function: (record) => {
-      return record.latestTs - record.firstTs + 1;
-    },
-    decimals: 0,
+    type: 'uint64',
     hidden: true,
-    range: true,
     domain: true,
+    range: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'First Block',
     selector: 'firstAppearance',
-    type: 'number',
+    type: 'blknum',
     hidden: true,
-    range: true,
     domain: true,
+    range: true,
   },
   {
     name: 'Latest Block',
     selector: 'latestAppearance',
-    type: 'number',
+    type: 'blknum',
     hidden: true,
-    range: false,
-    domain: false,
   },
   {
     name: 'nAddrs',
     selector: 'nAddresses',
-    type: 'number',
-    range: true,
+    type: 'uint64',
     domain: true,
+    range: true,
   },
   {
     name: 'nApps',
     selector: 'nAppearances',
-    type: 'number',
+    type: 'uint64',
     cn: 'apps',
-    range: true,
     domain: true,
+    range: true,
   },
   {
     name: 'nAddrs/nBlock',
     selector: 'addrsPerBlock',
-    type: 'number',
-    function: (record) => {
-      const n = record.latestAppearance - record.firstAppearance + 1;
-      return n === 0 ? '-' : record.nAddresses / n;
-    },
+    type: 'double',
     decimals: 5,
-    range: true,
     domain: true,
+    range: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'nApps/nBlock',
     selector: 'appsPerBlock',
-    type: 'number',
-    function: (record) => {
-      const n = record.latestAppearance - record.firstAppearance + 1;
-      return n === 0 ? '-' : record.nAppearances / n;
-    },
+    type: 'double',
     decimals: 5,
-    range: true,
     domain: true,
+    range: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'nApps/nAddress',
     selector: 'appsPerAddr',
-    type: 'number',
-    function: (record) => {
-      return record.nAddresses === 0 ? '-' : record.nAppearances / record.nAddresses;
-    },
+    type: 'double',
     decimals: 5,
-    range: true,
     domain: true,
+    range: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'First TS',
     selector: 'firstTs',
     type: 'timestamp',
     hidden: true,
-    range: true,
     domain: true,
+    range: true,
   },
   {
     name: 'Latest TS',
     selector: 'latestTs',
     type: 'timestamp',
     hidden: true,
-    range: false,
-    domain: false,
   },
   {
     name: 'Filename',
     selector: 'filename',
     type: 'string',
     hidden: true,
-    range: false,
-    domain: false,
   },
   {
     name: 'Chunk Size',
     selector: 'indexSizeBytes',
     type: 'filesize',
-    range: true,
     domain: true,
+    range: true,
   },
   {
     name: 'Bloom Size',
     selector: 'bloomSizeBytes',
     type: 'filesize',
-    range: true,
     domain: true,
+    range: true,
   },
   {
     name: 'Chunk Hash',
     selector: 'index_hash',
-    type: 'shorthash',
+    type: 'hash',
     align: 'center',
     cn: 'hashes',
-    range: false,
-    domain: false,
   },
   {
     name: 'Bloom Hash',
     selector: 'bloom_hash',
-    type: 'shorthash',
+    type: 'hash',
     align: 'center',
     cn: 'hashes',
-    range: false,
-    domain: false,
   },
 ];
 // auto-generate: schema

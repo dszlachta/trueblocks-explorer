@@ -5,6 +5,7 @@ import GlobalContext from 'store';
 import { DataTable } from 'components';
 import { getServerData } from 'components/utils';
 
+//----------------------------------------------------------------------
 export const Other = () => {
   const { other, dispatch } = useOther();
 
@@ -51,6 +52,16 @@ export const useOther = () => {
 };
 
 //----------------------------------------------------------------------------
+function getFieldValue(record, fieldName) {
+  switch (fieldName) {
+    case 'id':
+      return record.blockNumber;
+    default:
+      break;
+  }
+}
+
+//----------------------------------------------------------------------------
 // auto-generate: schema
 export const otherSchema = [
   {
@@ -59,36 +70,34 @@ export const otherSchema = [
     type: 'string',
     hidden: true,
     width: 1,
-    function: (record) => {
-      return record.blockNumber;
-    }
+    onDisplay: getFieldValue,
   },
   {
     name: 'Name',
     selector: 'name',
     type: 'string',
-    width: 1
+    width: 1,
   },
   {
     name: 'Block Number',
     selector: 'blockNumber',
-    type: 'number',
+    type: 'blknum',
     width: 2,
-    align: 'center'
+    align: 'center',
   },
   {
     name: 'Timestamp',
     selector: 'timestamp',
     type: 'timestamp',
     width: 2,
-    align: 'center'
+    align: 'center',
   },
   {
     name: 'Date',
     selector: 'date',
     type: 'string',
     width: 2,
-    align: 'center'
-  }
+    align: 'center',
+  },
 ];
 // auto-generate: schema

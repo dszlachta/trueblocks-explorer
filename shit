@@ -1,3 +1,4 @@
-cd ~/Development/trueblocks-core/build/dev_tools/makeClass
+cd ~/Development/trueblocks-core/build
+#/dev_tools/makeClass
 make
 cd -

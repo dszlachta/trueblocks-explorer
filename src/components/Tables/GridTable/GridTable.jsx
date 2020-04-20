@@ -171,23 +171,29 @@ const DetailTable = ({ data, columns, idCol, start, cellSize }) => {
         className="at-body"
         style={{
           borderTop: '0px',
-          paddingLeft: '10px',
+          // paddingLeft: '10px',
         }}
       >
         <h4>{subtit}</h4>
-        <div style={{ display: 'grid', gridTemplateColumns: '4fr 92 4fr', justifyItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '4fr 92 4fr', justifyItems: 'stretch', gridGap: '20px' }}>
           <div></div>
           <div
             style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr 1fr',
-              justifyItems: 'space between',
+              display: 'flex',
+              flexFlow: 'row wrap',
+              // justifyContent: 'start',
+              // justifyItems: 'center',
+              //             display: 'grid',
+              // gridTemplateColumns: '1fr 1fr 1fr 1fr',
+              justifyItems: 'stretch',
               gridGap: '4px',
+              border: '1px solid brown',
             }}
           >
             {filteredData.map((record) => {
               return (
                 <PanelTable
+                  style={{ margin: '0px !important', padding: '0px !important' }}
                   key={calcValue(record, idCol) + record.start}
                   data={record}
                   columns={columns}

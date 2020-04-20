@@ -60,6 +60,18 @@ export const useCaches = () => {
 };
 
 //----------------------------------------------------------------------------
+function getFieldValue(record, fieldName) {
+  switch (fieldName) {
+    case 'id':
+      return record.path;
+    case 'bytesPerFile':
+      return record.nFiles ? record.sizeInBytes / record.nFiles : 0;
+    default:
+      break;
+  }
+}
+
+//----------------------------------------------------------------------------
 // auto-generate: schema
 export const cachesSchema = [
   {
@@ -68,52 +80,51 @@ export const cachesSchema = [
     type: 'string',
     hidden: true,
     width: 1,
-    function: (record) => {
-      return record.path;
-    }
+    onDisplay: getFieldValue,
   },
   {
     name: 'Cache Type',
     selector: 'type',
     type: 'string',
-    width: 1
+    width: 1,
   },
   {
     name: 'Location',
     selector: 'path',
     type: 'string',
-    width: 2
+    width: 2,
   },
   {
     name: '# Folders',
     selector: 'nFolders',
-    type: 'number',
-    width: 1
+    type: 'uint64',
+    width: 1,
   },
   {
     name: '# Files',
     selector: 'nFiles',
-    type: 'number',
-    width: 1
+    type: 'uint64',
+    width: 1,
   },
   {
     name: 'Total Size',
     selector: 'sizeInBytes',
     type: 'filesize',
-    width: 1
+    width: 1,
   },
   {
     name: 'Average Size',
-    selector: 'sizeInBytes/nFiles',
+    selector: 'bytesPerFile',
     type: 'filesize',
-    width: 1
+    width: 1,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Valid',
     selector: 'is_valid',
     type: 'bool',
     hidden: true,
-    width: 1
-  }
+    width: 1,
+  },
 ];
 // auto-generate: schema

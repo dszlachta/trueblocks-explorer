@@ -1,13 +1,9 @@
 import React, { Fragment } from 'react';
 
-//import { Caddie } from 'components';
 import { currentPage } from 'components/utils';
-//import { useMenus, menuSchema } from 'pages';
 
 //-----------------------------------------------------------
 export const Support = () => {
-  //const supportMenu = useMenus().menu.items.filter((item) => item.label === 'Support')[0];
-
   const subpage = currentPage().subpage;
   switch (subpage) {
     case 'keys':
@@ -22,7 +18,24 @@ export const Support = () => {
     default:
       return <SupportContact />;
   }
-  //  return <Caddie key="caddie" cards={supportMenu.items} columns={menuSchema} noSider={true} />;
+};
+
+//----------------------------------------------------------------------
+export const supportDefault = [];
+
+//----------------------------------------------------------------------
+export const supportReducer = (state, action) => {
+  let ret = state;
+  switch (action.type) {
+    case 'update':
+      ret = action.payload;
+      break;
+    default:
+    // do nothing
+  }
+  // TODO(tjayrush): this data is on the backend -- we do not store it locally
+  // localStorage.setItem('otherState', JSON.stringify(ret));
+  return ret;
 };
 
 //-----------------------------------------------------------

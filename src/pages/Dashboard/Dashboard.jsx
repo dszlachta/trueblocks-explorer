@@ -8,10 +8,11 @@ import './Dashboard.css';
 
 //----------------------------------------------------
 export const Dashboard = () => {
-  const { dashboards } = useDashboard();
-  return <Caddie key="caddie" title="Modules" cards={dashboards} columns={dashboardSchema} />;
+  const { dashboard } = useDashboard();
+  return <Caddie key="caddie" title="Modules" cards={dashboard} columns={dashboardSchema} />;
 };
 
+//----------------------------------------------------
 // page-related - for searching do not remove
 export const dashboardDefault = [
   {
@@ -80,6 +81,16 @@ export const dashboardDefault = [
   },
 ];
 
+//----------------------------------------------------
+function getFieldValue(record, fieldName) {
+  switch (fieldName) {
+    case 'id':
+      return record.route;
+    default:
+      break;
+  }
+}
+
 //----------------------------------------------------------------------
 // auto-generate: schema
 export const dashboardSchema = [
@@ -88,45 +99,43 @@ export const dashboardSchema = [
     selector: 'id',
     type: 'string',
     hidden: true,
-    function: (record) => {
-      return record ? record.route : '';
-    }
+    onDisplay: getFieldValue,
   },
   {
     name: 'Name',
     selector: 'name',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'Route',
     selector: 'route',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'Count',
     selector: 'count',
-    type: 'number'
+    type: 'uint64',
   },
   {
     name: 'Size',
     selector: 'sizeInBytes',
-    type: 'filesize'
+    type: 'filesize',
   },
   {
     name: 'Custom',
     selector: 'custom',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'Date',
     selector: 'date',
-    type: 'string'
+    type: 'string',
   },
   {
-    name: 'TS',
+    name: 'Timestamp',
     selector: 'timestamp',
-    type: 'timestamp'
-  }
+    type: 'timestamp',
+  },
 ];
 // auto-generate: schema
 

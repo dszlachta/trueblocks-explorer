@@ -23,7 +23,7 @@ export function getPrimaryKey(columns) {
 
 //-----------------------------------------------------------------
 export function calcValue(record, column) {
+  if (column.onDisplay) return column.onDisplay(record, column.selector);
   if (!record || record === undefined) return '';
-  if (!column.function) return record[column.selector];
-  return column.function(record);
+  return record[column.selector];
 }

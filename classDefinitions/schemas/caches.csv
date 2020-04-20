@@ -1,9 +1,9 @@
-name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
-ID,id,string,true,1,(record) => {\n\treturn record.path;\n}
-Cache Type,type,string,false,1,
-Location,path,string,false,2,
-# Folders,nFolders,number,false,1,
-# Files,nFiles,number,false,1,
-Total Size,sizeInBytes,filesize,false,1,
-Average Size,sizeInBytes/nFiles,filesize,false,1,
-Valid,is_valid,bool,true,1,
+name         ,selector     ,type     ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,domain ,range ,sortable ,onDisplay     ,onAccept ,onValidate
+ID           ,id           ,string   ,true   ,1     ,         ,         ,       ,      ,   ,       ,      ,         ,getFieldValue ,         ,
+Cache Type   ,type         ,string   ,       ,1     ,         ,         ,       ,      ,   ,       ,      ,         ,              ,         ,
+Location     ,path         ,string   ,       ,2     ,         ,         ,       ,      ,   ,       ,      ,         ,              ,         ,
+# Folders    ,nFolders     ,uint64   ,       ,1     ,         ,         ,       ,      ,   ,       ,      ,         ,              ,         ,
+# Files      ,nFiles       ,uint64   ,       ,1     ,         ,         ,       ,      ,   ,       ,      ,         ,              ,         ,
+Total Size   ,sizeInBytes  ,filesize ,       ,1     ,         ,         ,       ,      ,   ,       ,      ,         ,              ,         ,
+Average Size ,bytesPerFile ,filesize ,       ,1     ,         ,         ,       ,      ,   ,       ,      ,         ,getFieldValue ,         ,
+Valid        ,is_valid     ,bool     ,true   ,1     ,         ,         ,       ,      ,   ,       ,      ,         ,              ,         ,

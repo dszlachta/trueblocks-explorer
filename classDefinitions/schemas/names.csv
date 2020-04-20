@@ -1,9 +1,17 @@
-name,selector,type,hidden,width,function,editable,id,decimals,pill,hideZero,align,cn,domain,range,onAccept,onValidate
-ID,id,string,true,1,"(record) => {\n\treturn record.address;\n}",
-Group,group,string,false,3,,true
-Address,address,address,,6
-Name,name,string,,4,,true
-Symbol,symbol,string,,2,,true,,,,,center
-Source,source,string,true,4,,true
-Decimals,decimals,number,,2,,,,,,true,center
-Description,description,string,,4,,true
+name              ,selector         ,type    ,hidden ,width ,editable ,decimals ,isPill ,align  ,cn ,domain ,range ,sortable ,onDisplay     ,onAccept ,onValidate
+ID                ,id               ,string  ,true   ,1     ,         ,         ,       ,       ,   ,       ,      ,         ,getFieldValue ,         ,
+Group             ,group            ,string  ,       ,3     ,true     ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+Address           ,address          ,address ,       ,6     ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+Name              ,name             ,string  ,       ,4     ,true     ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+Symbol            ,symbol           ,string  ,       ,2     ,true     ,         ,       ,center ,   ,       ,      ,         ,              ,         ,
+Source            ,source           ,string  ,true   ,4     ,true     ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+Decimals          ,decimals         ,uint64  ,       ,2     ,         ,         ,       ,center ,   ,       ,      ,         ,              ,         ,
+Description       ,description      ,string  ,       ,4     ,true     ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+isCustom          ,is_custom        ,bool    ,       ,      ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+isPrefund         ,is_prefund       ,bool    ,       ,      ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+nAppearances      ,nAppearances     ,blknum  ,       ,      ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+Last Export       ,lastExport       ,blknum  ,       ,      ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+First Appearance  ,firstAppearance  ,blknum  ,       ,      ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+Latest Appearance ,latestAppearance ,blknum  ,       ,      ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+Path              ,path             ,string  ,       ,      ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+size              ,sizeInBytes      ,uint64  ,       ,      ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,

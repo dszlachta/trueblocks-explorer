@@ -38,13 +38,13 @@ export const SettingsSkins = () => {
       name: 'ID',
       selector: 'id',
       hidden: true,
-      function: (record) => {
+      onDisplay: (record, fieldName) => {
         return record.name;
       },
     },
     {
       name: 'Name',
-      type: 'number',
+      type: 'uint64',
       selector: 'name',
       editable: true,
       range: true,
@@ -62,7 +62,7 @@ export const SettingsSkins = () => {
       name: 'Ready',
       selector: 'isReady',
       type: 'string',
-      pill: true,
+      isPill: true,
       align: 'center',
       range: true,
       domain: true,

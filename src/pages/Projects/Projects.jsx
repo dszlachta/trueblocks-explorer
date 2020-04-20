@@ -299,64 +299,66 @@ const validateUserInput = (fieldName, value) => {
 // auto-generate: schema
 export const projectsSchema = [
   {
-    name: '',
+    name: 'ID',
     selector: 'id',
     type: 'string',
-    hidden: true
+    hidden: true,
   },
   {
-    name: '',
+    name: 'Group',
     selector: 'group',
+    type: 'string',
     editable: true,
-    onValidate: validateUserInput
+    onValidate: validateUserInput,
   },
   {
-    name: '',
+    name: 'Name',
     selector: 'name',
-    editable: true
+    type: 'string',
+    editable: true,
   },
   {
-    name: '',
+    name: 'Client',
     selector: 'client',
-    type: 'object',
-    editable: true
+    type: 'CClient',
+    editable: true,
   },
   {
-    name: '',
+    name: 'Address',
     selector: 'addresses',
-    type: 'array'
+    type: 'CAddressArray',
   },
   {
-    name: 'trans cnt',
+    name: 'Tx Count',
     selector: 'txs',
-    type: 'number'
+    type: 'uint64',
   },
   {
-    name: 'trace cnt',
+    name: 'Trace Count',
     selector: 'traces',
-    type: 'number'
+    type: 'uint64',
   },
   {
-    name: 'size',
+    name: 'Size',
     selector: 'sizeInBytes',
-    type: 'filesize'
+    type: 'filesize',
   },
   {
-    name: '',
+    name: 'Delta Count',
     selector: 'deltas',
-    type: 'number'
+    type: 'uint64',
   },
   {
-    name: '',
+    name: 'Monitored',
     selector: 'monitored',
     type: 'bool',
-    hidden: true
+    hidden: true,
   },
   {
-    name: '',
+    name: 'Deleted',
     selector: 'deleted',
     type: 'bool',
-    hidden: true
-  }
+    hidden: true,
+  },
 ];
 // auto-generate: schema

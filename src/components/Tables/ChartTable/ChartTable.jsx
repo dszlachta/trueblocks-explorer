@@ -205,7 +205,7 @@ const Selectors = ({ columns, chartCtx }) => {
           style={getStyle(which, column.selector)}
           onClick={() => chartCtx.handler('setRange', column.selector)}
         >
-          {column.name + (column.function ? '*' : '')}
+          {column.name + (column.onDisplay ? '*' : '')}
         </button>
       );
     } else if (which === 'domain') {
@@ -215,7 +215,7 @@ const Selectors = ({ columns, chartCtx }) => {
           style={getStyle(which, column.selector)}
           onClick={() => chartCtx.handler('setDomain', column.selector)}
         >
-          {column.name + (column.function ? '*' : '')}
+          {column.name + (column.onDisplay ? '*' : '')}
         </button>
       );
     } else if (which === 'radius') {

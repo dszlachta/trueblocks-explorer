@@ -1,19 +1,13 @@
-import { Card } from './Card';
-import { Caddie } from './Caddie';
-import { Menu, MenuItem } from './Menu';
-import { Editable } from './Editable';
-import { Panel } from './Panels/Panel';
+import { Card } from './Card/Card';
+import { Caddie } from './Caddie/Caddie';
+import { Menu, MenuItem } from './Menu/Menu';
+import { Editable } from './Editable/Editable';
 import { Toolbar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable } from './Tables';
-import { MenuPanel } from './Panels/MenuPanel';
-import { ContentPanel } from './Panels/ContentPanel';
-import { StatusPanel } from './Panels/StatusPanel';
-import { HelpPanel } from './Panels/HelpPanel';
-import { Debug } from './Debug';
+import { MenuPanel, ContentPanel, StatusPanel, HelpPanel, Panel } from './Panels';
 
 export {
   Card,
   Caddie,
-  Debug,
   Menu,
   MenuItem,
   Editable,

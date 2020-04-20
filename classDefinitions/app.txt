@@ -3,10 +3,11 @@ pages = dashboard|separator|\
     projects|monitors|explorer|separator|\
     names|signatures|digests|caches|other|separator|\
     settings|support
-schemas = caches|dashboard|digests|explorer|\
-    monitors|names|other|projects|signatures|\
-    names-groups
-
-#index.jsx->menuSchema
-#Settings/SettingsSchemas.jsx->schemaSchema
-#Settings/SettingsStatus.jsx->systemSchema
+schemas = menu|dashboard|projects|monitors|\
+    explorer|\
+    explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|\
+    explorer-traces|explorer-traceActions|explorer-traceResults|\
+    explorer-functions|explorer-parameters|explorer-abis|\
+    explorer-appearances|explorer-pricequotes|explorer-pricesources|\
+    names|names-groups|signatures|digests|\
+    caches|other|settings-schemas|settings-systems\

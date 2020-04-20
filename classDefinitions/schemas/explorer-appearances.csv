@@ -1,0 +1,7 @@
+name   ,selector ,type    ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,domain ,range ,sortable ,onDisplay ,onAccept ,onValidate
+ID           ,id           ,string            ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,getFieldValue ,         ,
+bn     ,bn       ,blknum  ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,          ,         ,
+tx     ,tx       ,blknum  ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,          ,         ,
+tc     ,tc       ,blknum  ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,          ,         ,
+addr   ,addr     ,address ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,          ,         ,
+reason ,reason   ,string  ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,          ,         ,

@@ -5,6 +5,7 @@ import GlobalContext, { useStatusData } from 'store';
 
 import { currentPage, systemCheck } from 'components/utils';
 
+//----------------------------------------------------------------------
 // auto-generate: imports
 import { Dashboard } from './Dashboard/Dashboard';
 import { Projects } from './Projects/Projects';
@@ -19,6 +20,7 @@ import { Settings } from './Settings/Settings';
 import { Support } from './Support/Support';
 // auto-generate: imports
 
+//----------------------------------------------------------------------
 export const thePages = {
   // auto-generate: pages
   'dashboard/': { component: <Dashboard /> },
@@ -215,36 +217,57 @@ export const theMenu = {
   // auto-generate: menus
 };
 
+//----------------------------------------------------------------------
+function getFieldValue(record, fieldName) {
+  switch (fieldName) {
+    case 'id':
+      return record.label;
+    case 'name':
+      return record.label;
+    case 'route':
+      return 'support/' + record.route;
+    default:
+      break;
+  }
+}
+
+//----------------------------------------------------------------------
+// auto-generate: schema
 export const menuSchema = [
   {
     name: 'ID',
     selector: 'id',
-    function: (record) => record.label,
+    type: 'string',
     hidden: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Label',
     selector: 'label',
     type: 'string',
     hidden: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Name',
     selector: 'name',
-    function: (record) => record.label,
+    type: 'string',
     hidden: true,
   },
   {
     name: 'Route',
     selector: 'route',
-    function: (record) => 'support/' + record.route,
+    type: 'string',
     hidden: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Description',
     selector: 'descr',
+    type: 'string',
   },
 ];
+// auto-generate: schema
 
 //----------------------------------------------------------------------
 export const menusReducer = (state, action) => {

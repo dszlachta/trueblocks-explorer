@@ -1,13 +1,7 @@
-import { Panel } from './Panel';
-import { MenuPanel } from './MenuPanel';
-import { ContentPanel } from './ContentPanel';
-import { StatusPanel } from './StatusPanel';
-import { HelpPanel } from './HelpPanel';
+import { Panel } from './Panel/Panel';
+import { MenuPanel } from './MenuPanel/MenuPanel';
+import { ContentPanel } from './ContentPanel/ContentPanel';
+import { StatusPanel } from './StatusPanel/StatusPanel';
+import { HelpPanel } from './HelpPanel/HelpPanel';
 
-export {
-  Panel,
-  MenuPanel,
-  ContentPanel,
-  StatusPanel,
-  HelpPanel
-};
+export { Panel, MenuPanel, ContentPanel, StatusPanel, HelpPanel };

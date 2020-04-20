@@ -11,8 +11,7 @@ import './Names.css';
 export { groupsSchema };
 //---------------------------------------------------------------------------
 export function Names() {
-  const names = useNames().state;
-  const dispatch = useNames().dispatch;
+  const { names, dispatch } = useNames();
 
   let query = currentPage().subpage;
   if (query === 'prefunds') query = 'prefund';
@@ -67,6 +66,16 @@ export const useNames = () => {
 };
 
 //----------------------------------------------------------------------------
+function getFieldValue(record, fieldName) {
+  switch (fieldName) {
+    case 'id':
+      return record.address;
+    default:
+      break;
+  }
+}
+
+//----------------------------------------------------------------------------
 // auto-generate: schema
 export const namesSchema = [
   {
@@ -75,29 +84,27 @@ export const namesSchema = [
     type: 'string',
     hidden: true,
     width: 1,
-    function: (record) => {
-      return record.address;
-    }
+    onDisplay: getFieldValue,
   },
   {
     name: 'Group',
     selector: 'group',
     type: 'string',
     width: 3,
-    editable: true
+    editable: true,
   },
   {
     name: 'Address',
     selector: 'address',
     type: 'address',
-    width: 6
+    width: 6,
   },
   {
     name: 'Name',
     selector: 'name',
     type: 'string',
     width: 4,
-    editable: true
+    editable: true,
   },
   {
     name: 'Symbol',
@@ -105,7 +112,7 @@ export const namesSchema = [
     type: 'string',
     width: 2,
     editable: true,
-    align: 'center'
+    align: 'center',
   },
   {
     name: 'Source',
@@ -113,22 +120,61 @@ export const namesSchema = [
     type: 'string',
     hidden: true,
     width: 4,
-    editable: true
+    editable: true,
   },
   {
     name: 'Decimals',
     selector: 'decimals',
-    type: 'number',
+    type: 'uint64',
     width: 2,
-    hideZero: true,
-    align: 'center'
+    align: 'center',
   },
   {
     name: 'Description',
     selector: 'description',
     type: 'string',
     width: 4,
-    editable: true
-  }
+    editable: true,
+  },
+  {
+    name: 'isCustom',
+    selector: 'is_custom',
+    type: 'bool',
+  },
+  {
+    name: 'isPrefund',
+    selector: 'is_prefund',
+    type: 'bool',
+  },
+  {
+    name: 'nAppearances',
+    selector: 'nAppearances',
+    type: 'blknum',
+  },
+  {
+    name: 'Last Export',
+    selector: 'lastExport',
+    type: 'blknum',
+  },
+  {
+    name: 'First Appearance',
+    selector: 'firstAppearance',
+    type: 'blknum',
+  },
+  {
+    name: 'Latest Appearance',
+    selector: 'latestAppearance',
+    type: 'blknum',
+  },
+  {
+    name: 'Path',
+    selector: 'path',
+    type: 'string',
+  },
+  {
+    name: 'size',
+    selector: 'sizeInBytes',
+    type: 'uint64',
+  },
 ];
 // auto-generate: schema

@@ -3,7 +3,10 @@ import styled from 'styled-components';
 
 import { Toolbar, ObjectTable } from 'components';
 import { calcValue, getPrimaryKey } from 'store';
-import { stateFromStorage, formatFieldByType, handleClick } from 'components/utils';
+import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
+
+import ChevronUp from 'assets/icons/ChevronUp';
+import ChevronDown from 'assets/icons/ChevronDown';
 
 import './DataTable.css';
 
@@ -34,14 +37,11 @@ export const DataTable = ({
   const [pagingCtx, setPaging] = useState(stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0 }));
   const [expandedRow, setExpandedRow] = useState('');
   const [filterText, setFilterText] = useState('');
-  let filteredData = data;
-  if (filterText !== '' && hasFields(columns, searchFields)) {
-    filteredData = data.filter((record) => {
-      return matches(record, searchFields, filterText.toLowerCase());
-    });
-  }
 
-  const pageHandler = (action) => {
+  const [sortCtx1, setSortCtx1] = useState({ sortBy: '', sortDir: 'asc' });
+  const [sortCtx2, setSortCtx2] = useState({ sortBy: '', sortDir: '' });
+
+  const clickHandler = (action) => {
     const { perPage, curPage } = pagingCtx;
     switch (action.type) {
       case 'update_filter':
@@ -70,10 +70,36 @@ export const DataTable = ({
       case 'expand_row':
         if (expandable) setExpandedRow(expandedRow === action.payload ? '' : action.payload);
         break;
+      case 'sortBy':
+        if (sortCtx1.sortBy === action.payload) {
+          if (sortCtx1.sortDir === 'asc') {
+            setSortCtx1({ ...sortCtx1, sortDir: 'desc' });
+          } else if (sortCtx1.sortDir === 'desc') {
+            setSortCtx1(sortCtx2);
+            setSortCtx2({ sortBy: '', sortDir: 'asc' });
+          } else {
+            setSortCtx1({ ...sortCtx1, sortDir: 'asc' });
+          }
+        } else {
+          setSortCtx2(sortCtx1);
+          setSortCtx1({ sortBy: action.payload, sortDir: 'asc' });
+        }
+        break;
       default:
         break;
     }
   };
+
+  let filteredData =
+    sortCtx1.sortDir !== ''
+      ? sortArray(data, [sortCtx1.sortBy, sortCtx2.sortBy], [sortCtx1.sortDir === 'asc', sortCtx2.sortDir === 'asc'])
+      : data;
+
+  if (filterText !== '' && hasFields(columns, searchFields)) {
+    filteredData = data.filter((record) => {
+      return matches(record, searchFields, filterText.toLowerCase());
+    });
+  }
 
   const hasData = filteredData ? filteredData.length > 0 : false;
   const firstInPage = Number(pagingCtx.perPage) * Number(pagingCtx.curPage);
@@ -94,11 +120,6 @@ export const DataTable = ({
     borderBottom: '1px solid grey',
     padding: '2px',
   };
-  const buttonStyle = {
-    width: '120px',
-    margin: '4px',
-    padding: '4px',
-  };
 
   const showTools = title !== '' || search || pagination;
   const showHeader = !noHeader;
@@ -107,7 +128,7 @@ export const DataTable = ({
       {showTools && (
         <Toolbar
           title={title}
-          handler={pageHandler}
+          handler={clickHandler}
           search={search}
           filterText={filterText}
           searchFields={searchFields}
@@ -115,7 +136,15 @@ export const DataTable = ({
           pagingCtx={pagingCtx}
         />
       )}
-      {showHeader && <DataTableHeader columns={columns} showHidden={showHidden} />}
+      {showHeader && (
+        <DataTableHeader
+          columns={columns}
+          showHidden={showHidden}
+          sortCtx1={sortCtx1}
+          sortCtx2={sortCtx2}
+          sortHandler={clickHandler}
+        />
+      )}
       <div className="at-body dt-body">
         {hasData ? (
           filteredData.map((record, index) => {
@@ -130,17 +159,17 @@ export const DataTable = ({
                   columns={columns}
                   record={record}
                   expandable={expandable}
-                  handler={pageHandler}
+                  handler={clickHandler}
                   showHidden={showHidden}
                 />
                 {key === expandedRow ? (
                   <div style={expandedStyle}>
                     <div></div>
-                    <ObjectTable data={record} columns={columns} compact={true} showHidden={showHidden} />
+                    <ObjectTable data={record} columns={columns} compact={true} showHidden={true} />
                     <div>
-                      <button style={buttonStyle}>save changes</button>
-                      <button style={buttonStyle}>add monitor</button>
-                      <button style={buttonStyle}>view history</button>
+                      <button>save changes</button>
+                      <button>add monitor</button>
+                      <button>view history</button>
                     </div>
                     <div></div>
                   </div>
@@ -184,7 +213,13 @@ const StyledDiv = styled.div`
 `;
 
 //-----------------------------------------------------------------
-const DataTableHeader = ({ columns, showHidden = false }) => {
+const DataTableHeader = ({
+  columns,
+  showHidden = false,
+  sortCtx1 = { sortBy: '', sortDir: '' },
+  sortCtx2 = { sortBy: '', sortDir: '' },
+  sortHandler,
+}) => {
   let total = columns.reduce((sum, item) => sum + (item.hidden && !showHidden ? 0 : item.width), 0);
   let nHidden = 0;
   const wids = columns.map((item) => {
@@ -197,57 +232,84 @@ const DataTableHeader = ({ columns, showHidden = false }) => {
   });
   if (Number.isNaN(total)) total = columns.length - nHidden;
 
+  const sortIcon1 = <SortIcon dir={sortCtx1.sortDir} n={1} />;
+  const sortIcon2 = <SortIcon dir={sortCtx2.sortDir} n={2} />;
+
   return (
     <StyledDiv key="dt-header" wids={wids} columns={columns} className="base-header at-header dt-header">
       {columns.map((column, index) => {
         const key = 'dt-' + column.name + '-' + index;
         if (column.hidden && !showHidden) return <Fragment key={key}></Fragment>;
-        return <div key={key}>{column.name}</div>;
+        return (
+          <div
+            onClick={(e) => handleClick(e, sortHandler, { type: 'sortBy', payload: column.selector })}
+            style={{ display: 'flex', justifyItems: 'center' }}
+          >
+            <div style={{ textTransform: 'capitalize', paddingRight: '4px' }} key={key}>
+              {column.name.substr(0, 8)}
+            </div>
+            {column.selector === sortCtx1.sortBy ? sortIcon1 : <></>}
+            {column.selector === sortCtx2.sortBy ? sortIcon2 : <></>}
+          </div>
+        );
       })}
     </StyledDiv>
   );
 };
 
 //-----------------------------------------------------------------
+const SortIcon = ({ dir, n }) => {
+  if (dir === '') return <></>;
+  return (
+    <div style={{ display: 'inline' }}>
+      {dir === 'asc' ? <ChevronDown size="13px" /> : dir === 'desc' ? <ChevronUp size="13px" /> : <></>}
+      <small>
+        <small>{n}</small>
+      </small>
+    </div>
+  );
+};
+
+//-----------------------------------------------------------------
 const DataTableRow = ({ columns, id, record, wids, expandable, handler, showHidden }) => {
-  const fKey = 'dt-frag-' + id;
   const rKey = 'dt-row-' + id;
   return (
-    <StyledDiv key={rKey} className={'at-row' + (expandable ? ' expandable' : '')} wids={wids}>
+    <StyledDiv
+      onClick={(e) => handleClick(e, handler, { type: 'expand_row', payload: id })}
+      key={rKey}
+      className={'at-row' + (expandable ? ' expandable' : '')}
+      wids={wids}
+    >
       {columns.map((column, index) => {
         const key = id + column.name + '-' + index;
         if (column.hidden && !showHidden) return <Fragment key={key}></Fragment>;
 
-        let decimals = column.decimals || 0;
         let type = column.type ? column.type : 'string';
         let value = calcValue(record, column);
-        value = formatFieldByType(type, value, false, column.hideZero, decimals);
+        value = formatFieldByType(type, value, column.decimals || 0);
         if (!value || value === undefined) value = '-';
 
         let cn = 'at-cell ' + (column.cn ? column.cn : '') + ' ';
         switch (type) {
           case 'calc':
-          case 'number':
+          case 'uint64':
           case 'timestamp':
           case 'filesize':
             cn += 'right ';
             break;
           case 'bool':
           case 'hash':
-          case 'short_hash':
           case 'string':
           default:
             break;
         }
-        cn += column.pill ? ' at-pill center ' + record[column.selector] : '';
+        if (column.isPill) {
+          cn += ' at-pill center ';
+          cn += type === 'bool' ? (record[column.selector] ? 'true' : 'false') : record[column.selector];
+        }
         const style = column.align ? { justifySelf: column.align } : {};
         return (
-          <div
-            key={key}
-            style={style}
-            className={cn}
-            onClick={(e) => handleClick(e, handler, { type: 'expand_row', payload: id })}
-          >
+          <div key={key} style={style} className={cn}>
             {value}
           </div>
         );

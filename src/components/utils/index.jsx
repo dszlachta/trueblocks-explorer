@@ -137,7 +137,8 @@ export const currentPage = () => {
 };
 
 //---------------------------------------------------------------
-export const formatFieldByType = (type, value, countArrays = true, hideZero = false, decimals = 0) => {
+export const formatFieldByType = (type, value, decimals = 0) => {
+  if (type[0] === 'C') return 'Unknown class: ' + type; //JSON.stringify(value, null, 2);
   switch (type) {
     case 'function':
       if (typeof value === 'function') value = JSON.stringify(value, null, 2);
@@ -146,11 +147,7 @@ export const formatFieldByType = (type, value, countArrays = true, hideZero = fa
       if (typeof value === 'object') value = JSON.stringify(value, null, 2);
       break;
     case 'array':
-      if (countArrays) {
-        value = countArrayItems(value);
-      } else {
-        value = JSON.stringify(value);
-      }
+      value = JSON.stringify(value);
       break;
     case 'bool':
       value = value ? 'true' : 'false';
@@ -158,14 +155,13 @@ export const formatFieldByType = (type, value, countArrays = true, hideZero = fa
     case 'filesize':
       value = humanFileSize(value, true);
       break;
-    case 'number':
+    case 'uint64':
       const isZero = value === '0' || value === 0;
-      value = isZero && hideZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
-      break;
-    case 'shorthash':
-      value = value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1);
+      value = isZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
       break;
     case 'hash':
+      //value = value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1);
+      break;
     case 'timestamp':
     case 'string':
     default:

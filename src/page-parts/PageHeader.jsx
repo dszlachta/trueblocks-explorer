@@ -53,7 +53,7 @@ const Pill = ({ text, status, errMsg = 'unavailable', decorate, route }) => {
   if (route !== undefined && route !== '') {
     return (
       <Link to={route}>
-        <div className={'pill ' + (status ? 'okay' : 'warning') + (!status && !decorate ? ' strikeout' : '')}>
+        <div className={'header-pill ' + (status ? 'okay' : 'warning') + (!status && !decorate ? ' strikeout' : '')}>
           {text + ' ' + (decorate ? (status ? 'ok' : ' : ' + errMsg) : '')}
         </div>
       </Link>
@@ -61,7 +61,7 @@ const Pill = ({ text, status, errMsg = 'unavailable', decorate, route }) => {
   }
 
   return (
-    <div className={'pill ' + (status ? 'okay' : 'warning') + (!status && !decorate ? ' strikeout' : '')}>
+    <div className={'header-pill ' + (status ? 'okay' : 'warning') + (!status && !decorate ? ' strikeout' : '')}>
       {text + (decorate ? (status ? ' ok' : ' unavailable') : '')}
     </div>
   );

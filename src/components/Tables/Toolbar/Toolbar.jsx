@@ -4,15 +4,7 @@ import { Pagination } from './Pagination';
 import { Search } from './Search';
 
 //-----------------------------------------------------------------------
-export const Toolbar = ({
-  title,
-  search,
-  searchFields,
-  filterText,
-  pagination,
-  handler,
-  pagingCtx = {},
-}) => {
+export const Toolbar = ({ title, search, searchFields, filterText, pagination, handler, pagingCtx = {} }) => {
   return (
     <div>
       <div style={{ display: 'grid', gridTemplateColumns: '3fr 7fr 3fr' }}>

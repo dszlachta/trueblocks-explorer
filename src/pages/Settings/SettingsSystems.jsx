@@ -5,7 +5,7 @@ import { systemCheck } from 'components/utils';
 import { useStatusData } from 'store';
 
 //------------------------------------------------------------------------
-export const SettingsStatus = () => {
+export const SettingsSystems = () => {
   const status = useStatusData();
   const working = systemCheck(status, 'system');
   const msg = working
@@ -31,64 +31,6 @@ export const SettingsStatus = () => {
     </Fragment>
   );
 };
-
-export const systemSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    function: (record) => {
-      return record.which;
-    },
-  },
-  {
-    name: 'Status',
-    selector: 'status',
-  },
-  {
-    name: 'Subsystem',
-    selector: 'which',
-  },
-  {
-    name: 'Subsystem Name',
-    selector: 'descr',
-  },
-  {
-    name: 'API Provider',
-    selector: 'apiProvider',
-    editable: true,
-  },
-  {
-    name: 'Host',
-    selector: 'host',
-  },
-  {
-    name: 'RPC Provider',
-    selector: 'rpcProvider',
-    editable: true,
-  },
-  {
-    name: 'Trace Provider',
-    selector: 'traceProvider',
-    editable: true,
-  },
-  {
-    name: 'Balance Provider',
-    selector: 'balanceProvider',
-    editable: true,
-  },
-  {
-    name: 'Cache Path',
-    selector: 'cachePath',
-  },
-  {
-    name: 'Index Path',
-    selector: 'indexPath',
-  },
-  {
-    name: 'Version',
-    selector: 'version',
-  },
-];
 
 const SettingsRow = ({ which, status }) => {
   const names = {
@@ -156,7 +98,7 @@ const SettingsRow = ({ which, status }) => {
       >
         <div></div>
         <Fragment>
-          <ObjectTable data={data} columns={systemSchema} editable={true} compact={true} silentWhenEmpty={true} />
+          <ObjectTable data={data} columns={systemsSchema} editable={true} compact={true} silentWhenEmpty={true} />
         </Fragment>
         <div></div>
       </div>
@@ -174,7 +116,83 @@ const SettingsRow = ({ which, status }) => {
   );
 };
 
-/*
-  "api_provider": "http://localhost:8080",
-  "host": "desktop.local (jrush)",
-  */
+//------------------------------------------------------------------------
+function getFieldValue(record, fieldName) {
+  switch (fieldName) {
+    case 'id':
+      return record.which;
+    default:
+      break;
+  }
+}
+
+//------------------------------------------------------------------------
+// auto-generate: schema
+export const systemsSchema = [
+  {
+    name: 'ID',
+    selector: 'id',
+    type: 'string',
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Status',
+    selector: 'status',
+    type: 'string',
+  },
+  {
+    name: 'Subsystem',
+    selector: 'which',
+    type: 'string',
+  },
+  {
+    name: 'Subsystem Name',
+    selector: 'descr',
+    type: 'string',
+  },
+  {
+    name: 'API Provider',
+    selector: 'apiProvider',
+    type: 'string',
+    editable: true,
+  },
+  {
+    name: 'Host',
+    selector: 'host',
+    type: 'string',
+  },
+  {
+    name: 'RPC Provider',
+    selector: 'rpcProvider',
+    type: 'string',
+    editable: true,
+  },
+  {
+    name: 'Trace Provider',
+    selector: 'traceProvider',
+    type: 'string',
+    editable: true,
+  },
+  {
+    name: 'Balance Provider',
+    selector: 'balanceProvider',
+    type: 'string',
+    editable: true,
+  },
+  {
+    name: 'Cache Path',
+    selector: 'cachePath',
+    type: 'string',
+  },
+  {
+    name: 'Index Path',
+    selector: 'indexPath',
+    type: 'string',
+  },
+  {
+    name: 'Version',
+    selector: 'version',
+    type: 'string',
+  },
+];
+// auto-generate: schema

@@ -6,72 +6,90 @@ export const Monitors = () => {
   return <div>{'Actual Monitors Page: ' + currentPage().page + ' ' + currentPage().subpage}</div>;
 };
 
+//----------------------------------------------------------------------
+export const monitorsDefault = [];
+
+//----------------------------------------------------------------------
+export const monitorsReducer = (state, action) => {
+  let ret = state;
+  switch (action.type) {
+    case 'update':
+      ret = action.payload;
+      break;
+    default:
+    // do nothing
+  }
+  // TODO(tjayrush): this data is on the backend -- we do not store it locally
+  // localStorage.setItem('otherState', JSON.stringify(ret));
+  return ret;
+};
+
 // auto-generate: schema
 export const monitorsSchema = [
   {
     name: 'Block Number',
     selector: 'blocknumber',
-    type: 'number'
+    type: 'blknum',
   },
   {
     name: 'Trans Idx',
     selector: 'transactionindex',
-    type: 'number'
+    type: 'blknum',
   },
   {
     name: 'Date',
     selector: 'date',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'TimeStamp',
     selector: 'timestamp',
-    type: 'timestamp'
+    type: 'timestamp',
   },
   {
     name: 'From',
     selector: 'from',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'To',
     selector: 'to',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'Ether',
     selector: 'ether',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'EthGasPrice',
     selector: 'ethergasprice',
-    type: 'number'
+    type: 'gas',
   },
   {
     name: 'GasUsed',
     selector: 'gasused',
-    type: 'number'
+    type: 'gas',
   },
   {
     name: 'Hash',
     selector: 'hash',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'isError',
     selector: 'iserror',
-    type: 'bool'
+    type: 'bool',
   },
   {
     name: 'Encoding',
     selector: 'encoding',
-    type: 'string'
+    type: 'string',
   },
   {
     name: 'CompressedTx',
-    selector: 'compressedtx',
-    type: 'object'
-  }
+    selector: 'compressedTx',
+    type: 'string',
+  },
 ];
 // auto-generate: schema

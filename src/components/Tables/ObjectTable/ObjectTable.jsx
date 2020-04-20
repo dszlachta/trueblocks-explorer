@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { Editable } from 'components';
+import { Editable, Toolbar } from 'components';
 import { formatFieldByType } from 'components/utils';
 import { calcValue, getPrimaryKey } from 'store';
 
@@ -14,46 +14,63 @@ import './ObjectTable.css';
 export const ObjectTable = ({
   data,
   columns,
+  title = '',
   noSider = false,
   compact = false,
   silentWhenEmpty = false,
   showHidden = false,
+  paginate = false,
+  search = false,
 }) => {
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
   const id = calcValue(data, idCol);
-  if (!id && !idCol.function) return <div className="warning">The id column does not have an accessor function</div>;
+  if (!id || !idCol.onDisplay) return <div className="warning">The id column does not have an accessor function</div>;
 
+  const showTools = title !== '' || paginate;
   return (
-    <div className="at-body">
-      {columns.map((column, index) => {
-        const value = calcValue(data, column);
+    <Fragment>
+      {showTools && (
+        <Toolbar
+          title={title}
+          handler={null}
+          search={search}
+          filterText={''}
+          searchFields={null}
+          pagination={paginate}
+          pagingCtx={{}}
+        />
+      )}
+      <div className="at-body">
+        {columns.map((column, index) => {
+          const value = calcValue(data, column);
 
-        if (column.hidden && !showHidden) return null;
-        if (value === '' && silentWhenEmpty) return null;
+          if (column.hidden && !showHidden) return null;
+          if (value === '' && silentWhenEmpty) return null;
 
-        const cn = 'at-row ' + (noSider ? 'ot-row-nosider' : 'ot-row' + (compact ? '-compact' : ''));
-        const name = column.name || column.selector;
-        const type = column.type || 'string';
-        const displayName = compact ? name : name.substr(0, 8);
-        const fmtValue = formatFieldByType(type, value, false);
-        return (
-          <div key={id + '_' + column.selector} className={cn}>
-            {noSider ? null : <ObjectTableSider>{displayName}:</ObjectTableSider>}
-            {noSider || compact ? null : <div></div>}
-            <TableColumn editable={column.editable} noSider={noSider} compact={compact}>
-              <Editable
-                editable={column.editable}
-                fieldValue={fmtValue}
-                fieldName={column.selector}
-                placeholder={column.selector}
-                onValidate={column.onValidate}
-              />
-            </TableColumn>
-          </div>
-        );
-      })}
-    </div>
+          const cn = 'at-row ' + (noSider ? 'ot-row-nosider' : 'ot-row' + (compact ? '-compact' : ''));
+          const name = column.name || column.selector;
+          const type = column.type || 'string';
+          const displayName = compact ? name : name.substr(0, 8);
+          const fmtValue = formatFieldByType(type, value, column.decimals || 0);
+          return (
+            <div key={id + '_' + column.selector} className={cn}>
+              {noSider ? null : <ObjectTableSider>{displayName}:</ObjectTableSider>}
+              {noSider || compact ? null : <div></div>}
+              <TableColumn editable={column.editable} noSider={noSider} compact={compact}>
+                <Editable
+                  editable={column.editable}
+                  fieldValue={fmtValue}
+                  fieldName={column.selector}
+                  placeholder={column.selector}
+                  onValidate={column.onValidate}
+                />
+              </TableColumn>
+            </div>
+          );
+        })}
+      </div>
+    </Fragment>
   );
 };
 

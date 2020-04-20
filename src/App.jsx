@@ -4,48 +4,80 @@ import Mousetrap from 'mousetrap';
 import { PageHeader, PageFooter, PageContent } from 'page-parts';
 import GlobalContext, { panelDefault, panelReducer, statusDefault, statusReducer } from 'store';
 import { theMenu, menusReducer } from 'pages';
+import { stateFromStorage } from 'components/utils';
 
 // page-related - for searching do not remove
+// auto-generate: imports
 import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/Dashboard';
 import { projectsDefault, projectsReducer } from 'pages/Projects/Projects';
+import { monitorsDefault, monitorsReducer } from 'pages/Monitors/Monitors';
+import { explorerDefault, explorerReducer } from 'pages/Explorer/Explorer';
 import { namesDefault, namesReducer } from 'pages/Names/Names';
 import { signaturesDefault, signaturesReducer } from 'pages/Signatures/Signatures';
 import { digestsDefault, digestsReducer } from 'pages/Digests/Digests';
 import { cachesDefault, cachesReducer } from 'pages/Caches/Caches';
-import { stateFromStorage } from 'components/utils';
 import { otherDefault, otherReducer } from 'pages/Other/Other';
+import { settingsDefault, settingsReducer } from 'pages/Settings/Settings';
+import { supportDefault, supportReducer } from 'pages/Support/Support';
+// auto-generate: imports
 
 import 'App.css';
 
 //-----------------------------------------------------
-function App() {
-  const [panelState, panelDispatch] = useReducer(panelReducer, stateFromStorage('panelState', panelDefault));
-  // page-related - for searching do not remove
-  const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, dashboardDefault);
-  const [projectsState, projectsDispatch] = useReducer(
-    projectsReducer,
-    stateFromStorage('projectsState', projectsDefault)
-  );
-  const [namesState, namesDispatch] = useReducer(namesReducer, namesDefault);
-  const [signaturesState, signaturesDispatch] = useReducer(signaturesReducer, signaturesDefault);
-  const [digestsState, digestsDispatch] = useReducer(digestsReducer, digestsDefault);
-  const [cachesState, cachesDispatch] = useReducer(cachesReducer, cachesDefault);
-  const [statusState, statusDispatch] = useReducer(statusReducer, statusDefault);
-  const [menusState, menusDispatch] = useReducer(menusReducer, theMenu);
-  const [otherState, otherDispatch] = useReducer(otherReducer, otherDefault);
+// only here to make auto code generation easier
+const defaultData = {
+  panel: panelDefault,
+  status: statusDefault,
+  menu: theMenu,
+  dashboard: dashboardDefault,
+  projects: stateFromStorage('projectsState', projectsDefault),
+  monitors: monitorsDefault,
+  explorer: explorerDefault,
+  names: namesDefault,
+  signatures: signaturesDefault,
+  digests: digestsDefault,
+  caches: cachesDefault,
+  other: otherDefault,
+  settings: settingsDefault,
+  support: supportDefault,
+};
 
-  // page-related - for searching do not remove
+//-----------------------------------------------------
+function App() {
+  const [panelState, panelDispatch] = useReducer(panelReducer, stateFromStorage('panelState', defaultData['panel']));
+  const [statusState, statusDispatch] = useReducer(statusReducer, defaultData['status']);
+  const [menusState, menusDispatch] = useReducer(menusReducer, defaultData['menu']);
+  // auto-generate: reducers
+  const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, defaultData['dashboard']);
+  const [projectsState, projectsDispatch] = useReducer(projectsReducer, defaultData['projects']);
+  const [monitorsState, monitorsDispatch] = useReducer(monitorsReducer, defaultData['monitors']);
+  const [explorerState, explorerDispatch] = useReducer(explorerReducer, defaultData['explorer']);
+  const [namesState, namesDispatch] = useReducer(namesReducer, defaultData['names']);
+  const [signaturesState, signaturesDispatch] = useReducer(signaturesReducer, defaultData['signatures']);
+  const [digestsState, digestsDispatch] = useReducer(digestsReducer, defaultData['digests']);
+  const [cachesState, cachesDispatch] = useReducer(cachesReducer, defaultData['caches']);
+  const [otherState, otherDispatch] = useReducer(otherReducer, defaultData['other']);
+  const [settingsState, settingsDispatch] = useReducer(settingsReducer, defaultData['settings']);
+  const [supportState, supportDispatch] = useReducer(supportReducer, defaultData['support']);
+  // auto-generate: reducers
+
   const theGlobalState = {
-    dashboard: { dashboards: dashboardState, dispatch: dashboardDispatch },
-    projects: { projects: projectsState, dispatch: projectsDispatch },
-    names: { state: namesState, dispatch: namesDispatch },
-    signatures: { state: signaturesState, dispatch: signaturesDispatch },
-    digests: { digests: digestsState, dispatch: digestsDispatch },
-    caches: { caches: cachesState, dispatch: cachesDispatch },
-    other: { other: otherState, dispatch: otherDispatch },
     panels: { state: panelState, dispatch: panelDispatch },
     status: { state: statusState, dispatch: statusDispatch },
     menus: { menu: menusState, dispatch: menusDispatch },
+    // auto-generate: state
+    dashboard: { dashboard: dashboardState, dispatch: dashboardDispatch },
+    projects: { projects: projectsState, dispatch: projectsDispatch },
+    monitors: { monitors: monitorsState, dispatch: monitorsDispatch },
+    explorer: { explorer: explorerState, dispatch: explorerDispatch },
+    names: { names: namesState, dispatch: namesDispatch },
+    signatures: { signatures: signaturesState, dispatch: signaturesDispatch },
+    digests: { digests: digestsState, dispatch: digestsDispatch },
+    caches: { caches: cachesState, dispatch: cachesDispatch },
+    other: { other: otherState, dispatch: otherDispatch },
+    settings: { settings: settingsState, dispatch: settingsDispatch },
+    support: { support: supportState, dispatch: supportDispatch },
+    // auto-generate: state
   };
 
   mapHotKeys(panelDispatch);
@@ -93,6 +125,21 @@ const mapHotKeys = (panelDispatch) => {
   });
   Mousetrap.bind(['alt+9'], function () {
     window.location = '/support/keys';
+  });
+  Mousetrap.bind(['e b'], function () {
+    window.location = '/explorer/blocks';
+  });
+  Mousetrap.bind(['e t'], function () {
+    window.location = '/explorer/transactions';
+  });
+  Mousetrap.bind(['e r'], function () {
+    window.location = '/explorer/receipts';
+  });
+  Mousetrap.bind(['e l'], function () {
+    window.location = '/explorer/logs';
+  });
+  Mousetrap.bind(['e c'], function () {
+    window.location = '/explorer/traces';
   });
   Mousetrap.bind(['q l'], function () {
     panelDispatch({ type: 'collapse' });

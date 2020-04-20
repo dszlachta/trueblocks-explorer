@@ -29,11 +29,16 @@
   --border2-panel: 1px dotted #265077;
 
   /* styling for tables (at=all tables, ot=object, dt=data, gt=grid, ct=cart) */
-  /* --at-color: lightyellow; */
-  /* --at-bgcolor: #265077; */
-  /* --at-color2: #265077; */
-  /* --at-bgcolor2: white; */
-  /* --at-padding: 10px; */
+  --at-color: blue;
+  --at-bgcolor: orange;
+  --at-color2: blue;
+  --at-bgcolor2: antiquewhite;
+  --at-border: 1px solid red;
+  --at-border2: 1px solid red;
+  /**/
+  --at-padding: 2px 1px;
+  --at-radius: 5px;
+  --at-font-family: 'Courier New', Courier, monospace;
   --at-bgcolor3: #a7b7c2;
 
   --ot-padding: 4px;
@@ -79,6 +84,16 @@ body {
   line-height: 1.5;
 }
 
+.true {
+  background-color: blue;
+  color: white;
+}
+
+.false {
+  background-color: orange;
+  color: purple;
+}
+
 .warning {
   background-color: var(--red-color);
   color: var(--yellow-color);
@@ -115,4 +130,19 @@ h4 {
   font-weight: 700;
   text-transform: uppercase;
   color: var(--h4-color);
+}
+
+button {
+  width: 120px;
+  margin: 4px;
+  padding: 4px;
+  outline: none;
+}
+button.activeButton {
+  background: var(--at-bgcolor);
+  color: var(--at-color);
+  width: 120px;
+  margin: 4px;
+  padding: 6px;
+  outline: none;
 }

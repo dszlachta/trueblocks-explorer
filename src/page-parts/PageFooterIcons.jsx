@@ -4,10 +4,4 @@ import GitHub from 'assets/icons/github';
 import Medium from 'assets/icons/medium';
 import Twitter from 'assets/icons/twitter';
 
-export {
-  Settings,
-  Discord,
-  GitHub,
-  Medium,
-  Twitter
-}
+export { Settings, Discord, GitHub, Medium, Twitter };
