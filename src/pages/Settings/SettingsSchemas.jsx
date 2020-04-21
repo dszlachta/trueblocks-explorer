@@ -33,17 +33,6 @@ import { systemsSchema } from 'pages/Settings/SettingsSystems';
 export const SettingsSchemas = () => {
   const [current, setCurrent] = useState(stateFromStorage('current-schema', 'systemsSchema', true));
 
-  const changeSchema = (action) => {
-    switch (action.type) {
-      case 'change-schema':
-        localStorage.setItem('current-schema', action.payload);
-        setCurrent(action.payload);
-        break;
-      default:
-        break;
-    }
-  };
-
   //------------------------------------------------------------------------------
   const schemas = [
     { group: 'system', name: 'menuSchema', schema: menuSchema },
@@ -134,6 +123,26 @@ export const SettingsSchemas = () => {
       .join(', ');
   }
 
+  const changeSchema = (action) => {
+    switch (action.type) {
+      case 'change-schema':
+        localStorage.setItem('current-schema', action.payload);
+        setCurrent(action.payload);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handlePillClick = (action) => {
+    console.log(action);
+    switch (action.type) {
+      case 'pill-toggle':
+        break;
+      default:
+        break;
+    }
+  };
   const systemList = schemas.filter((s) => s.group === 'system').map((schema) => schema.name);
   const pagesList = schemas.filter((s) => s.group === 'pages_').map((schema) => schema.name);
   const exploreList = schemas.filter((s) => s.group === 'explore').map((schema) => schema.name);
@@ -168,6 +177,7 @@ export const SettingsSchemas = () => {
           search={false}
           pagination={false}
           expandable={true}
+          pillClick={handlePillClick}
         />
       </div>
       <h4

@@ -9,6 +9,7 @@ import { hasFields, matches, widthsFromColumns } from './utils';
 
 import './DataTable.css';
 
+var skipNext = false;
 //-----------------------------------------------------------------
 export const DataTable = ({
   data,
@@ -21,6 +22,7 @@ export const DataTable = ({
   noHeader = false,
   expandable = true,
   showHidden = false,
+  pillClick = null,
 }) => {
   const [pagingCtx, setPaging] = useState(
     stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0, arrowsOnly: arrowsOnly })
@@ -34,6 +36,12 @@ export const DataTable = ({
   const clickHandler = (action) => {
     const { perPage, curPage } = pagingCtx;
     switch (action.type) {
+      case 'pill-toggle':
+        if (pillClick) {
+          pillClick(action);
+          skipNext = true;
+        }
+        break;
       case 'update_filter':
         setFilterText(action.payload);
         break;
@@ -62,7 +70,8 @@ export const DataTable = ({
         localStorage.setItem('paging', JSON.stringify(newCtx));
         break;
       case 'expand_row':
-        if (expandable) setExpandedRow(expandedRow === action.payload ? '' : action.payload);
+        if (!skipNext && expandable) setExpandedRow(expandedRow === action.payload ? '' : action.payload);
+        skipNext = false;
         break;
       case 'sortBy':
         if (sortCtx1.sortBy === action.payload) {
@@ -161,7 +170,7 @@ export const DataTable = ({
           <div>Loading...</div>
         )}
       </div>
-      {search && <DataTableMessage searchFields={searchFields} />}
+      {search && <Tablebar search={search} searchFields={searchFields} asHeader={false} />}
     </Fragment>
   );
 };
@@ -171,23 +180,6 @@ const StyledDiv = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.widths};
 `;
-
-//-----------------------------------------------------------------
-const DataTableMessage = ({ searchFields }) => {
-  return (
-    <div>
-      Searching fields:{' '}
-      <div style={{ display: 'inline', fontStyle: 'italic' }}>
-        {searchFields &&
-          searchFields
-            .map((field) => {
-              return field;
-            })
-            .join(', ')}
-      </div>
-    </div>
-  );
-};
 
 //-----------------------------------------------------------------
 const DataTableExpandedRow = ({ record, columns, handler }) => {
@@ -293,7 +285,22 @@ const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHi
         }
         const style = column.align ? { justifySelf: column.align } : {};
         return (
-          <div key={key} style={style} className={cn}>
+          <div
+            key={key}
+            style={style}
+            className={cn}
+            onClick={
+              column.isPill
+                ? (e) => {
+                    e.preventDefault();
+                    handleClick(e, handler, { type: 'pill-toggle', field: column.selector, record: id });
+                  }
+                : null
+            }
+          >
+            {column.isPill && !handler && (
+              <div className="warning">pill column '{column.selector}' does not have a handler</div>
+            )}
             {value}
           </div>
         );
@@ -301,3 +308,32 @@ const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHi
     </StyledDiv>
   );
 };
+
+/*
+3 let someData;
+14 let asText = false;
+15 function onDownload() {
+16   console.log('xxx:', someData, ' size: ', someData.length);
+17   var csv;
+18   for (var i = 0; i < someData.length; i++) {
+19     var row = someData[i];
+20     // console.log('i: ', i, ' row: ', row);
+21     csv += [row.group, row.address, row.name].join(asText ? '\t' : ',');
+22     csv += '\n';
+23   }
+24   console.log(csv);
+25   var hiddenElement = document.createElement('a');
+26   hiddenElement.href = 'data:text/' + (asText ? 'text' : 'csv') + ';charset=utf-8,' + encodeURI(csv);
+27   hiddenElement.target = '_blank';
+28   hiddenElement.download = 'download.' + (asText ? 'text' : 'csv');
+29   hiddenElement.click();
+30 }
+31 function onDownload1() {
+32   asText = true;
+33   return onDownload();
+34 }
+35 function onDownload2() {
+36   asText = false;
+37   return onDownload();
+38 }
+*/

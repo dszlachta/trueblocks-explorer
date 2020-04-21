@@ -3,8 +3,8 @@ import { useContext } from 'react';
 
 import GlobalContext from 'store';
 
-import { DataTable, ButtonCaddie } from 'components';
-import { currentPage, getServerData, sortArray } from 'components/utils';
+import { DataTable } from 'components';
+import { getServerData } from 'components/utils';
 import './Monitors.css';
 
 export const Monitors = () => {

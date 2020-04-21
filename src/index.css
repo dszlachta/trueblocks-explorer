@@ -120,21 +120,13 @@ body {
   line-height: 1.5;
 }
 
-.true {
-  background-color: blue;
-  color: white;
-}
-
-.false {
-  background-color: orange;
-  color: purple;
-}
-
+.false,
 .warning {
   background-color: var(--red-color);
   color: var(--yellow-color);
 }
 
+.true,
 .okay {
   background-color: var(--green-color);
   color: var(--white-color);

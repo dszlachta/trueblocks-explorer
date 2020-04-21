@@ -174,42 +174,24 @@ export const formatFieldByType = (type, value, decimals = 0) => {
   return value;
 };
 
-//---------------------------------------------------------------
-const countArrayItems = (array) => {
-  let count = 0;
-  Object.keys(array).map((v) => {
-    count++;
-    return true;
-  });
-  return count;
-};
-
 //----------------------------------------------------------------------------
-//https://flaviocopes.com/react-hook-useeffect/
-export const sortArray = (array, fieldArray, orderArray) => {
+export const sortArray = (array, fArray, dArray) => {
+  if (fArray.size === 0) return array;
   array.sort(function (a, b) {
-    const aValue = fieldArray
-      .map((f) => {
-        return a[f];
-      })
-      .join(',');
-    const bValue = fieldArray
-      .map((f) => {
-        return b[f];
-      })
-      .join(',');
-    if (orderArray[0]) {
-      return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-    } else {
-      return bValue > aValue ? 1 : bValue < aValue ? -1 : 0;
+    for (var index = 0; index < fArray.length; index++) {
+      let aVal = a[fArray[index]];
+      let bVal = b[fArray[index]];
+      let result = (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (dArray[index] ? 1 : -1);
+      if (result) return result;
     }
+    return 0;
   });
   return array;
 };
 
 //----------------------------------------------------------------------------
 export const humanFileSize = (numInBytes) => {
-  numInBytes = fmtNum(numInBytes).replace(/[,.]/g, ''); // clean it
+  numInBytes = fmtNum(numInBytes).split('.')[0].replace(/[,.]/g, ''); // clean it
   if (numInBytes === 0) return '0 B';
   // return numInBytes;
   const si = true;
