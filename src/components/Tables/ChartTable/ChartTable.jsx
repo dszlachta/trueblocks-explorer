@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3-array';
 
-import { Toolbar, DataTable } from 'components';
+import { Tablebar, DataTable } from 'components';
 import { calcValue } from 'store';
 
 import './ChartTable.css';
@@ -64,7 +64,7 @@ export const ChartTable = ({
   const theTitle = title !== '' ? title : chartCtx2.domainCol.name + ' as a function of ' + chartCtx2.rangeCol.name;
   return (
     <div style={{ display: 'inline' }}>
-      <Toolbar title={theTitle} search={false} pagination={false} />
+      <Tablebar title={theTitle} search={false} pagination={false} />
       <ChartHeader />
       <ChartBody data={data} columns={columns} chartCtx={chartCtx2} />
     </div>
@@ -145,14 +145,23 @@ function Scatter({ data, columns, chartCtx }) {
   ));
 
   const idCol = {
+    width: 1,
     name: 'ID',
     selector: 'id',
     hidden: true,
     onDisplay: (record, fieldName) => '12',
   };
-  let dtCols = [idCol, chartCtx.rangeCol, chartCtx.domainCol];
+  let dtCols = [
+    idCol,
+    chartCtx.rangeCol,
+    { selector: 'spacer', type: 'spacer', name: '', width: 1 },
+    chartCtx.domainCol,
+  ];
   dtCols[1].hidden = false;
+  dtCols[1].width = 12;
   dtCols[2].hidden = false;
+  dtCols[2].width = 12;
+  dtCols[2].align = 'center';
 
   return (
     <div

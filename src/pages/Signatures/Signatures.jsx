@@ -21,7 +21,7 @@ export function Signatures() {
   }, [source, dispatch, query]);
 
   return (
-    <DataTable title="" columns={signaturesSchema} data={signatures} searchFields={['encoding', 'type', 'name']} />
+    <DataTable data={signatures} columns={signaturesSchema} title="Signature View" search={true} searchFields={['encoding', 'type', 'name']} pagination={true} />
   );
 }
 

@@ -31,7 +31,7 @@ export function Caches() {
 
   return (
     <div>
-      <DataTable columns={cachesSchema} data={caches} title="" search={false} />
+      <DataTable data={caches} columns={cachesSchema} title="Caches View" />
     </div>
   );
 }

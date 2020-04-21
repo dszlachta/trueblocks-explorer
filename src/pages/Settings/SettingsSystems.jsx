@@ -9,7 +9,7 @@ export const SettingsSystems = () => {
   const status = useStatusData();
   const working = systemCheck(status, 'system');
   const msg = working
-    ? 'All systems GO'
+    ? 'All subsystems go...'
     : 'One or more of the TrueBlocks components is not working properly. You will need to fix it before proceeding.';
   const cn = working ? 'okay' : 'warning';
   return (
@@ -54,7 +54,7 @@ const SettingsRow = ({ which, status }) => {
   if (isOptional && !working) cn = 'caution';
   const statusStr = (
     <span className={cn} style={{ height: '100%', padding: '2px' }}>
-      {working ? 'Working' : isOptional ? 'Paused' : 'Not Working'}
+      {working ? 'Running...' : isOptional ? 'Paused...' : 'Not Running...'}
     </span>
   );
 
@@ -98,7 +98,7 @@ const SettingsRow = ({ which, status }) => {
       >
         <div></div>
         <Fragment>
-          <ObjectTable data={data} columns={systemsSchema} editable={true} compact={true} silentWhenEmpty={true} />
+          <ObjectTable data={data} columns={systemsSchema} compact={true} buttonList={['manage ' + which]} />
         </Fragment>
         <div></div>
       </div>
@@ -133,6 +133,7 @@ export const systemsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    hidden: true,
     onDisplay: getFieldValue,
   },
   {
@@ -154,45 +155,53 @@ export const systemsSchema = [
     name: 'API Provider',
     selector: 'apiProvider',
     type: 'string',
+    hidden: true,
     editable: true,
   },
   {
     name: 'Host',
     selector: 'host',
     type: 'string',
+    hidden: true,
   },
   {
     name: 'RPC Provider',
     selector: 'rpcProvider',
     type: 'string',
+    hidden: true,
     editable: true,
   },
   {
     name: 'Trace Provider',
     selector: 'traceProvider',
     type: 'string',
+    hidden: true,
     editable: true,
   },
   {
     name: 'Balance Provider',
     selector: 'balanceProvider',
     type: 'string',
+    hidden: true,
     editable: true,
   },
   {
     name: 'Cache Path',
     selector: 'cachePath',
     type: 'string',
+    hidden: true,
   },
   {
     name: 'Index Path',
     selector: 'indexPath',
     type: 'string',
+    hidden: true,
   },
   {
     name: 'Version',
     selector: 'version',
     type: 'string',
+    hidden: true,
   },
 ];
 // auto-generate: schema

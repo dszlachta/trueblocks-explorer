@@ -1,6 +1,6 @@
 import React, { useState, Fragment, useEffect } from 'react';
 
-import { Toolbar, PanelTable } from 'components';
+import { Tablebar, PanelTable } from 'components';
 import { fmtNum, handleClick } from 'components/utils';
 
 import './GridTable.css';
@@ -11,9 +11,8 @@ export const GridTable = ({
   data,
   columns,
   title = 'Grid Table (gt-)',
-  search = true,
   meta = { max: 300000, completed: 220001 },
-  cellSize = 1e6,
+  rowSpan = 1e6,
 }) => {
   const [selected, setSelected] = useState(100000); //localStorage.getItem('grid-select'));
   const largest = meta.max;
@@ -22,7 +21,7 @@ export const GridTable = ({
     .fill()
     .map((_, idx) => idx);
 
-  const rows = Array(Math.ceil(largest / cellSize))
+  const rows = Array(Math.ceil(largest / rowSpan))
     .fill()
     .map((_, idx) => idx);
 
@@ -36,8 +35,8 @@ export const GridTable = ({
 
   return (
     <Fragment>
-      <Toolbar title={title} search={search} />
-      <GridHeader cols={cols} cellSize={cellSize} />
+      <Tablebar title={title} />
+      <GridHeader cols={cols} rowSpan={rowSpan} />
       <div className="at-body gt-body">
         {rows.map((row) => {
           return (
@@ -46,26 +45,27 @@ export const GridTable = ({
               row={row}
               cols={cols}
               meta={meta}
-              cellSize={cellSize}
+              rowSpan={rowSpan}
               selected={selected}
               setSelected={selectionChanged}
             />
           );
         })}
       </div>
-      <DetailTable idCol={idCol} data={data} columns={columns} start={selected} cellSize={cellSize / 10} />{' '}
+      <DetailTable data={data} columns={columns} idCol={idCol} start={selected} cellSpan={rowSpan / 10} />{' '}
     </Fragment>
   );
 };
 
 //-----------------------------------------------------------------
-const GridRow = ({ row, cols, meta, cellSize, selected, setSelected }) => {
+const GridRow = ({ row, cols, meta, rowSpan, selected, setSelected }) => {
+  const colSpan = rowSpan / 10;
   return (
     <div className="at-row gt-row">
-      <div className="base-header at-sider">{fmtNum(row * cellSize)}:</div>
+      <div className="base-header at-sider">{fmtNum(row * rowSpan)}:</div>
       {cols.map((col) => {
-        const cellStart = row * cellSize + col * (cellSize / 10);
-        const cellEnd = row * cellSize + (col + 1) * (cellSize / 10);
+        const cellStart = row * rowSpan + col * colSpan;
+        const cellEnd = row * rowSpan + (col + 1) * colSpan;
         let cn = 'inactive';
         if (meta.completed >= cellEnd) cn = 'completed';
         else if (meta.completed >= cellStart) cn = 'in-progress';
@@ -85,19 +85,20 @@ const GridRow = ({ row, cols, meta, cellSize, selected, setSelected }) => {
 };
 
 //-----------------------------------------------------------------
-const GridHeader = ({ cols, cellSize }) => {
+const GridHeader = ({ cols, rowSpan }) => {
+  const colSpan = rowSpan / 10;
   return (
     <div className="base-header at-header gt-header">
       <div> </div>
       {cols.map((n, idx) => {
-        return <div key={n * idx}>{fmtNum(n * (cellSize / 10))}</div>;
+        return <div key={n * idx}>{fmtNum(n * colSpan)}</div>;
       })}
     </div>
   );
 };
 
 //-----------------------------------------------------------------
-const DetailTable = ({ data, columns, idCol, start, cellSize }) => {
+export const DetailTable = ({ data, columns, title, idCol, start, cellSpan }) => {
   if (start === undefined) {
     return (
       <div
@@ -122,11 +123,11 @@ const DetailTable = ({ data, columns, idCol, start, cellSize }) => {
     );
   }
 
-  const range = { start: start, end: start + cellSize };
+  const range = { start: start, end: start + cellSpan };
   const filteredData = data.filter(
     (item) => (item.firstAppearance >= range.start) & (item.firstAppearance < range.end)
   );
-  if (filteredData.length > 200 || cellSize > 100000) {
+  if (filteredData.length > 200 || cellSpan > 100000) {
     return (
       <div
         style={{

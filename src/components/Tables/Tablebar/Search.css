@@ -18,8 +18,10 @@
 
 .clear-button {
   width: 30px;
+  height: 100%;
+  margin: 0px;
   border-radius: 0px var(--at-radius) 0px 0px;
-  border: var(--at-border2);
+  border: var(--at-border1);
   border-bottom: 0px;
   outline: none;
   color: var(--at-color);

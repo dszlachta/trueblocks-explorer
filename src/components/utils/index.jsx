@@ -140,6 +140,9 @@ export const currentPage = () => {
 export const formatFieldByType = (type, value, decimals = 0) => {
   if (type[0] === 'C') return 'Unknown class: ' + JSON.stringify(value, null, 2);
   switch (type) {
+    case 'spacer':
+      value = '';
+      break;
     case 'function':
       if (typeof value === 'function') value = JSON.stringify(value, null, 2);
       break;

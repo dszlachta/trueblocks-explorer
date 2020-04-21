@@ -40,7 +40,7 @@ export const Digests = () => {
 
   let view = undefined;
   if (tableType === 'data-view') {
-    view = <DataTable columns={digestsSchema} data={filtered} title="Table View" search={false} />;
+    view = <DataTable data={filtered} columns={digestsSchema} title="Table View" search={false} pagination={true} />;
     //
   } else if (tableType === 'graph-view') {
     view = (
@@ -56,7 +56,7 @@ export const Digests = () => {
     );
     //
   } else {
-    view = <GridTable columns={digestsSchema} data={filtered} title="Grid View" meta={status} search={false} />;
+    view = <GridTable data={filtered} columns={digestsSchema} title="Grid View" meta={status} pagination={true} />;
     //
   }
 

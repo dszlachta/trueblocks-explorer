@@ -1,9 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useContext } from 'react';
 
-import { currentPage } from 'components/utils';
+import GlobalContext from 'store';
+
+import { DataTable, ButtonCaddie } from 'components';
+import { currentPage, getServerData, sortArray } from 'components/utils';
+import './Monitors.css';
 
 export const Monitors = () => {
-  return <div>{'Actual Monitors Page: ' + currentPage().page + ' ' + currentPage().subpage}</div>;
+  const { monitors, dispatch } = useMonitors();
+
+  const query = 'modes=monitors&details&verbose=10';
+  const url = 'http://localhost:8080/status';
+  useEffect(() => {
+    getServerData(url, query).then((theData) => {
+      //      const d = theData && theData.caches && theData.caches[0] && theData.caches[0].items;
+      dispatch({ type: 'update', payload: theData[0].caches[0].items });
+      console.log('d: ', theData[0].caches[0].items);
+    });
+  }, [query, dispatch]);
+
+  // <pre>{JSON.stringify(monitors, null, 2)}</pre>
+  return (
+    <div>
+      <DataTable
+        data={monitors}
+        columns={monitorsSchema}
+        title="Monitors View"
+        search={true}
+        searchFields={['address', 'name', 'group', 'symbol']}
+        pagination={true}
+      />
+    </div>
+  );
 };
 
 //----------------------------------------------------------------------
@@ -24,72 +53,129 @@ export const monitorsReducer = (state, action) => {
   return ret;
 };
 
+//----------------------------------------------------------------------
+export const useMonitors = () => {
+  return useContext(GlobalContext).monitors;
+};
+
+//----------------------------------------------------------------------------
+function getFieldValue(record, fieldName) {
+  switch (fieldName) {
+    case 'id':
+      return record.address;
+    default:
+      break;
+  }
+}
+
 // auto-generate: schema
 export const monitorsSchema = [
   {
-    name: 'Block Number',
-    selector: 'blocknumber',
-    type: 'blknum',
-  },
-  {
-    name: 'Trans Idx',
-    selector: 'transactionindex',
-    type: 'blknum',
-  },
-  {
-    name: 'Date',
-    selector: 'date',
+    name: 'ID',
+    selector: 'id',
     type: 'string',
+    hidden: true,
+    width: 1,
+    onDisplay: getFieldValue,
   },
   {
-    name: 'TimeStamp',
-    selector: 'timestamp',
-    type: 'timestamp',
-  },
-  {
-    name: 'From',
-    selector: 'from',
+    name: 'Group',
+    selector: 'group',
     type: 'string',
+    width: 3,
+    editable: true,
   },
   {
-    name: 'To',
-    selector: 'to',
+    name: 'Address',
+    selector: 'address',
+    type: 'address',
+    width: 6,
+  },
+  {
+    name: 'Name',
+    selector: 'name',
     type: 'string',
+    width: 4,
+    editable: true,
   },
   {
-    name: 'Ether',
-    selector: 'ether',
+    name: 'Symbol',
+    selector: 'symbol',
     type: 'string',
+    width: 2,
+    editable: true,
+    align: 'center',
   },
   {
-    name: 'EthGasPrice',
-    selector: 'ethergasprice',
-    type: 'gas',
-  },
-  {
-    name: 'GasUsed',
-    selector: 'gasused',
-    type: 'gas',
-  },
-  {
-    name: 'Hash',
-    selector: 'hash',
+    name: 'Source',
+    selector: 'source',
     type: 'string',
+    hidden: true,
+    width: 4,
+    editable: true,
   },
   {
-    name: 'isError',
-    selector: 'iserror',
+    name: 'Decimals',
+    selector: 'decimals',
+    type: 'uint64',
+    width: 2,
+    align: 'center',
+  },
+  {
+    name: 'Description',
+    selector: 'description',
+    type: 'string',
+    width: 4,
+    editable: true,
+  },
+  {
+    name: 'isCustom',
+    selector: 'is_custom',
     type: 'bool',
+    hidden: true,
   },
   {
-    name: 'Encoding',
-    selector: 'encoding',
-    type: 'string',
+    name: 'isPrefund',
+    selector: 'is_prefund',
+    type: 'bool',
+    hidden: true,
   },
   {
-    name: 'CompressedTx',
-    selector: 'compressedTx',
+    name: 'nAppearances',
+    selector: 'nAppearances',
+    type: 'blknum',
+  },
+  {
+    name: 'Last Export',
+    selector: 'lastExport',
+    type: 'blknum',
+  },
+  {
+    name: 'First Appearance',
+    selector: 'firstAppearance',
+    type: 'blknum',
+  },
+  {
+    name: 'Latest Appearance',
+    selector: 'latestAppearance',
+    type: 'blknum',
+  },
+  {
+    name: 'Path',
+    selector: 'path',
     type: 'string',
+    hidden: true,
+  },
+  {
+    name: 'File Size',
+    selector: 'sizeInBytes',
+    type: 'filesize',
+  },
+  {
+    name: 'Deleted',
+    selector: 'deleted',
+    type: 'bool',
+    hidden: true,
   },
 ];
 // auto-generate: schema

@@ -4,20 +4,13 @@ import Mousetrap from 'mousetrap';
 import { handleClick } from 'components/utils';
 
 import 'components/Tables/DataTable/DataTable.css';
-
-import ChevronsLeft from 'assets/icons/ChevronsLeft';
-import ChevronLeft from 'assets/icons/ChevronLeft';
-import ChevronRight from 'assets/icons/ChevronRight';
-import ChevronsRight from 'assets/icons/ChevronsRight';
-import ChevronsUp from 'assets/icons/ChevronsUp';
-import ChevronUp from 'assets/icons/ChevronUp';
-import ChevronDown from 'assets/icons/ChevronDown';
-import ChevronsDown from 'assets/icons/ChevronsDown';
+import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'assets/icons/SetChevrons.jsx';
+import { ChevronsUp, ChevronUp, ChevronDown, ChevronsDown } from 'assets/icons/SetChevrons.jsx';
 
 import './Pagination.css';
 
 //-----------------------------------------------------------------
-export const Pagination = ({ enabled, handler, pagingCtx }) => {
+export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curPage: 0 } }) => {
   useEffect(() => {
     Mousetrap.bind(['meta+shift+home'], getHandler(pagingCtx, 'first', handler));
     Mousetrap.bind(['meta+shift+end'], getHandler(pagingCtx, 'last', handler));
@@ -39,10 +32,11 @@ export const Pagination = ({ enabled, handler, pagingCtx }) => {
     };
   }, [handler]);
 
-  if (!enabled) return <div></div>;
+  if (!enabled) return <div></div>; // we need this div so spacing of title works right
+  if (!handler) return <div className="warning">Pagination is enabled, but no handler given</div>;
+
   return (
     <div className="pagination-container">
-      <pre>{JSON.stringify(pagingCtx, null, 2)}</pre>
       {!pagingCtx.arrowsOnly && <Selector handler={handler} pagingCtx={pagingCtx} />}
       {!pagingCtx.arrowsOnly && <Display pagingCtx={pagingCtx} />}
       {
@@ -73,7 +67,9 @@ const Display = ({ pagingCtx }) => {
 //-----------------------------------------------------------------
 const Selector = ({ handler, pagingCtx }) => {
   const [expanded, setExpanded] = useState(false);
-  const perPageOptions = [2, 5, 10, 15, 20, 30, 50, 75, 100];
+  const perPageOptions = [2, 5, 10, 15, 20, 30, 50, 75, 100].filter((val) => {
+    return val <= pagingCtx.total;
+  });
   const { perPage } = pagingCtx;
   const onClick = (e) => {
     if (e.target.toggle) e.target.toggle();
@@ -114,21 +110,21 @@ const Selector = ({ handler, pagingCtx }) => {
 function isDisabled(pagingCtx, which) {
   const { perPage, curPage, total } = pagingCtx;
   if (which === 'first' || which === 'previous') return curPage === 0;
-  return curPage === Math.floor(total / perPage);
+  return curPage === Math.floor(total / perPage) - !(total % perPage);
 }
 
 //-----------------------------------------------------------------
 function getHandler(pagingCtx, which, handler) {
-  if (isDisabled(pagingCtx, which)) {
-    return () => {}; // noop
-  }
+  if (isDisabled(pagingCtx, which)) return () => {}; // noop
   return (e) => handleClick(e, handler, { type: which });
 }
 
 //-----------------------------------------------------------------
 const PagingIcon = ({ name, handler, pagingCtx }) => {
-  const frstCn = 'pagination-icons ' + (isDisabled(pagingCtx, 'previous') ? 'disabled' : '');
-  const lastCn = 'pagination-icons ' + (isDisabled(pagingCtx, 'next') ? 'disabled' : '');
+  const frstCn =
+    'pagination-icons ' + (isDisabled(pagingCtx, 'previous') || isDisabled(pagingCtx, 'first') ? 'disabled' : '');
+  const lastCn =
+    'pagination-icons ' + (isDisabled(pagingCtx, 'next') || isDisabled(pagingCtx, 'last') ? 'disabled' : '');
 
   const size = 18;
   const filled = false;

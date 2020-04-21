@@ -169,7 +169,6 @@ h4 {
 }
 
 button {
-  width: 120px;
   margin: 4px;
   padding: 4px;
   outline: none;
@@ -177,7 +176,6 @@ button {
 button.activeButton {
   background: var(--at-bgcolor);
   color: var(--at-color);
-  width: 120px;
   margin: 4px;
   padding: 6px;
   outline: none;

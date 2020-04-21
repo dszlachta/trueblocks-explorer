@@ -6,7 +6,7 @@ import { calcValue } from 'store';
 import './Caddie.css';
 
 //----------------------------------------------------
-export const Caddie = ({ cn = 'caddie', title, cards, columns, noSider = false }) => {
+export const Caddie = ({ cn = 'caddie', title, cards, columns }) => {
   const idCol = columns.filter((c) => {
     return c.selector === 'id';
   })[0];
@@ -28,7 +28,7 @@ export const Caddie = ({ cn = 'caddie', title, cards, columns, noSider = false }
           <Fragment></Fragment>
         ) : (
           <Card key={id} title={title} headerLink={route} headerClass="card-center">
-            <ObjectTable data={card} columns={columns} noSider={noSider} />
+            <ObjectTable data={card} columns={columns} />
           </Card>
         );
       })}

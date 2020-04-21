@@ -4,20 +4,23 @@ import { Pagination } from './Pagination';
 import { Search } from './Search';
 
 //-----------------------------------------------------------------------
-export const Toolbar = ({
-  title,
-  search,
-  searchFields,
-  filterText,
-  pagination,
-  handler,
+export const Tablebar = ({
+  title = '',
+  search = false,
+  searchFields = [],
+  filterText = '',
+  pagination = false,
   pagingCtx = { curPage: 0 },
+  handler = null,
 }) => {
+  const wids = pagingCtx.arrowsOnly ? '1fr' : '3fr 7fr 3fr';
   return (
     <div>
-      <div style={{ display: 'grid', gridTemplateColumns: '3fr 7fr 3fr' }}>
-        <Search enabled={search} searchFields={searchFields} searchText={filterText} handler={handler} />
-        <Title title={title} />
+      <div style={{ display: 'grid', gridTemplateColumns: wids }}>
+        {!pagingCtx.arrowsOnly && (
+          <Search enabled={search} searchFields={searchFields} searchText={filterText} handler={handler} />
+        )}
+        {!pagingCtx.arrowsOnly && <Title title={title} />}
         <Pagination enabled={pagination} handler={handler} pagingCtx={pagingCtx} />
       </div>
     </div>

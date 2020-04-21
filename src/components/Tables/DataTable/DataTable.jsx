@@ -1,10 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-import { Toolbar, ObjectTable } from 'components';
+import { Tablebar, ObjectTable } from 'components';
 import { calcValue, getPrimaryKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
 import { SortIcon } from 'assets/icons/SortIcon';
+import { hasFields, matches, widthsFromColumns } from './utils';
 
 import './DataTable.css';
 
@@ -13,26 +14,14 @@ export const DataTable = ({
   data,
   columns,
   title = 'Data Table (dt-)',
-  search = true,
-  pagination = true,
+  search = false,
+  searchFields = [],
+  pagination = false,
   arrowsOnly = false,
-  searchFields,
   noHeader = false,
   expandable = true,
   showHidden = false,
 }) => {
-  let totalWidth = columns.reduce((sum, item) => sum + (item.hidden && !showHidden ? 0 : item.width), 0);
-  let nHidden = 0;
-  const wids = columns.map((item) => {
-    if (item.hidden && !showHidden) {
-      nHidden++;
-      return '';
-    }
-    if (Number.isNaN(totalWidth)) return '1fr ';
-    return Math.floor((item.width / totalWidth) * 64) + 'fr ';
-  });
-  //if (Number.isNaN(totalWidth)) totalWidth = columns.length - nHidden;
-
   const [pagingCtx, setPaging] = useState(
     stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0, arrowsOnly: arrowsOnly })
   );
@@ -61,7 +50,11 @@ export const DataTable = ({
         setPaging({ ...pagingCtx, curPage: curPage - 1, total: filteredData.length });
         break;
       case 'last':
-        setPaging({ ...pagingCtx, curPage: Math.floor(filteredData.length / perPage), total: filteredData.length });
+        setPaging({
+          ...pagingCtx,
+          curPage: Math.floor(filteredData.length / perPage) - !(filteredData.length % perPage),
+          total: filteredData.length,
+        });
         break;
       case 'perPage':
         const newCtx = { perPage: action.payload, curPage: 0, total: filteredData.length, arrowsOnly: arrowsOnly };
@@ -115,28 +108,20 @@ export const DataTable = ({
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
-  const expandedStyle = {
-    display: 'grid',
-    gridTemplateColumns: '2fr 8fr 1fr 5fr',
-    borderBottom: '1px solid grey',
-    padding: '2px',
-  };
-
   const showTools = title !== '' || search || pagination;
   const showHeader = !noHeader;
   return (
     <Fragment key="dt">
-      <pre>paging: {JSON.stringify(pagingCtx, null, 2)}</pre>
-      <pre>arrowsOnly: {arrowsOnly ? 'true' : 'false'}</pre>
+      {/*<pre>arrows only: {JSON.stringify(arrowsOnly, null, 2)}</pre>*/}
       {showTools && (
-        <Toolbar
+        <Tablebar
           title={title}
           handler={clickHandler}
           search={search}
           filterText={filterText}
           searchFields={searchFields}
           pagination={pagination}
-          pagingCtx={pagingCtx}
+          pagingCtx={{ ...pagingCtx, arrowsOnly: arrowsOnly }}
         />
       )}
       {showHeader && (
@@ -146,6 +131,7 @@ export const DataTable = ({
           sortCtx1={sortCtx1}
           sortCtx2={sortCtx2}
           sortHandler={clickHandler}
+          widths={widthsFromColumns(columns, showHidden)}
         />
       )}
       <div className="at-body dt-body">
@@ -158,26 +144,15 @@ export const DataTable = ({
                 <DataTableRow
                   key={key}
                   id={key}
-                  wids={wids}
+                  widths={widthsFromColumns(columns, showHidden)}
                   columns={columns}
                   record={record}
                   expandable={expandable}
                   handler={clickHandler}
                   showHidden={showHidden}
                 />
-                {key === expandedRow ? (
-                  <div style={expandedStyle}>
-                    <div></div>
-                    <ObjectTable data={record} columns={columns} compact={true} showHidden={true} />
-                    <div>
-                      <button>save changes</button>
-                      <button>add monitor</button>
-                      <button>view history</button>
-                    </div>
-                    <div></div>
-                  </div>
-                ) : (
-                  <Fragment></Fragment>
+                {key === expandedRow && (
+                  <DataTableExpandedRow record={record} columns={columns} handler={clickHandler} />
                 )}
               </Fragment>
             );
@@ -186,25 +161,7 @@ export const DataTable = ({
           <div>Loading...</div>
         )}
       </div>
-      {search ? (
-        <div>
-          Searching fields:{' '}
-          <div style={{ display: 'inline', fontStyle: 'italic' }}>
-            {searchFields ? (
-              searchFields
-                .map((field) => {
-                  return field;
-                })
-                .join(', ')
-            ) : (
-              <Fragment></Fragment>
-            )}
-          </div>
-        </div>
-      ) : (
-        <div>{/*Searching is disabled*/}</div>
-      )}
-      {/*<div>Todo: Expandable Rows, Sorting, Row and Icon Hover</div>*/}
+      {search && <DataTableMessage searchFields={searchFields} />}
     </Fragment>
   );
 };
@@ -212,8 +169,55 @@ export const DataTable = ({
 //-----------------------------------------------------------------
 const StyledDiv = styled.div`
   display: grid;
-  grid-template-columns: ${(props) => props.wids};
+  grid-template-columns: ${(props) => props.widths};
 `;
+
+//-----------------------------------------------------------------
+const DataTableMessage = ({ searchFields }) => {
+  return (
+    <div>
+      Searching fields:{' '}
+      <div style={{ display: 'inline', fontStyle: 'italic' }}>
+        {searchFields &&
+          searchFields
+            .map((field) => {
+              return field;
+            })
+            .join(', ')}
+      </div>
+    </div>
+  );
+};
+
+//-----------------------------------------------------------------
+const DataTableExpandedRow = ({ record, columns, handler }) => {
+  const expandedStyle = {
+    display: 'grid',
+    gridTemplateColumns: '2fr 8fr 5fr',
+    borderBottom: '1px solid grey',
+    padding: '2px',
+  };
+
+  return (
+    <div style={expandedStyle}>
+      <div></div>
+      <ObjectTable
+        data={record}
+        columns={columns}
+        compact={true}
+        showHidden={true}
+        buttonList={['save', 'add monitor', 'view']}
+        handler={handler}
+      />
+      <div>
+        <button>save changes</button>
+        <button>add monitor</button>
+        <button>view history</button>
+      </div>
+      <div></div>
+    </div>
+  );
+};
 
 //-----------------------------------------------------------------
 const DataTableHeader = ({
@@ -222,24 +226,13 @@ const DataTableHeader = ({
   sortCtx1 = { sortBy: '', sortDir: '' },
   sortCtx2 = { sortBy: '', sortDir: '' },
   sortHandler,
+  widths,
 }) => {
-  let totalWidth = columns.reduce((sum, item) => sum + (item.hidden && !showHidden ? 0 : item.width), 0);
-  let nHidden = 0;
-  const wids = columns.map((item) => {
-    if (item.hidden && !showHidden) {
-      nHidden++;
-      return '';
-    }
-    if (Number.isNaN(totalWidth)) return '1fr ';
-    return Math.floor((item.width / totalWidth) * 64) + 'fr ';
-  });
-  //if (Number.isNaN(totalWidth)) totalWidth = columns.length - nHidden;
-
   const sortIcon1 = <SortIcon dir={sortCtx1.sortDir} n={1} />;
   const sortIcon2 = <SortIcon dir={sortCtx2.sortDir} n={2} />;
 
   return (
-    <StyledDiv key="dt-header" wids={wids} columns={columns} className="base-header at-header dt-header">
+    <StyledDiv key="dt-header" widths={widths} columns={columns} className="base-header at-header dt-header">
       {columns.map((column, index) => {
         const key = 'dt-' + column.name + '-' + index;
         if (column.hidden && !showHidden) return <Fragment key={key}></Fragment>;
@@ -261,14 +254,14 @@ const DataTableHeader = ({
 };
 
 //-----------------------------------------------------------------
-const DataTableRow = ({ columns, id, record, wids, expandable, handler, showHidden }) => {
+const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHidden }) => {
   const rKey = 'dt-row-' + id;
   return (
     <StyledDiv
       onClick={(e) => handleClick(e, handler, { type: 'expand_row', payload: id })}
       key={rKey}
       className={'at-row' + (expandable ? ' expandable' : '')}
-      wids={wids}
+      widths={widths}
     >
       {columns.map((column, index) => {
         const key = id + column.name + '-' + index;
@@ -277,7 +270,7 @@ const DataTableRow = ({ columns, id, record, wids, expandable, handler, showHidd
         let type = column.type ? column.type : 'string';
         let value = calcValue(record, column);
         value = formatFieldByType(type, value, column.decimals || 0);
-        if (!value || value === undefined) value = '-';
+        if (!value || value === undefined) value = type === 'spacer' ? '' : '-';
 
         let cn = 'at-cell ' + (column.cn ? column.cn : '') + ' ';
         switch (type) {
@@ -285,6 +278,7 @@ const DataTableRow = ({ columns, id, record, wids, expandable, handler, showHidd
           case 'uint64':
           case 'timestamp':
           case 'filesize':
+          case 'blknum':
             cn += 'right ';
             break;
           case 'bool':
@@ -307,47 +301,3 @@ const DataTableRow = ({ columns, id, record, wids, expandable, handler, showHidd
     </StyledDiv>
   );
 };
-
-/**
- * hasField - returns true if the given field is found columns, false otherwise
- *
- * @param {array} columns - list of columns in the data table
- * @param {string} field - column to find
- */
-function hasField(columns, field) {
-  return (
-    columns.filter((item) => {
-      return item.selector === field;
-    }).length > 0
-  );
-}
-
-/**
- * hasFields - returns true if all fields are found columns, false otherwise
- *
- * @param {array} columns - list of columns in the data table
- * @param {array} fields - an array of strings listing field names
- */
-function hasFields(columns, fields) {
-  if (!fields) return false;
-  return (
-    fields.reduce((sum, field) => {
-      return sum + hasField(columns, field);
-    }, 0) === fields.length
-  );
-}
-
-/**
- * matches - returns true if the object matches filterText on any field in fields
- *
- * @param {object} record - the data object to search
- * @param {array} fields - the list of fields to search (assumes hasFields returns true)
- * @param {string} filterText - the text to search for
- */
-function matches(record, fields, filterText) {
-  return (
-    fields.reduce((sum, field) => {
-      return sum + record[field].toLowerCase().includes(filterText);
-    }, 0) > 0
-  );
-}

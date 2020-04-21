@@ -1,18 +1,20 @@
+import { ButtonCaddie } from './ButtonCaddie/ButtonCaddie.jsx';
 import { Card } from './Card/Card';
 import { Caddie } from './Caddie/Caddie';
 import { Menu, MenuItem } from './Menu/Menu';
 import { Editable } from './Editable/Editable';
-import { Toolbar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable } from './Tables';
+import { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable } from './Tables';
 import { MenuPanel, ContentPanel, StatusPanel, HelpPanel, Panel } from './Panels';
 
 export {
+  ButtonCaddie,
   Card,
   Caddie,
   Menu,
   MenuItem,
   Editable,
   Panel,
-  Toolbar,
+  Tablebar,
   DataTable,
   ObjectTable,
   GridTable,

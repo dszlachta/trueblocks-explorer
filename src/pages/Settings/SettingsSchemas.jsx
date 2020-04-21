@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import { DataTable, ObjectTable } from 'components';
-import { handleClick, stateFromStorage } from 'components/utils';
+import { DataTable, ObjectTable, ButtonCaddie } from 'components';
+import { stateFromStorage } from 'components/utils';
 
 import { menuSchema } from 'pages/';
 
@@ -33,9 +33,15 @@ import { systemsSchema } from 'pages/Settings/SettingsSystems';
 export const SettingsSchemas = () => {
   const [current, setCurrent] = useState(stateFromStorage('current-schema', 'systemsSchema', true));
 
-  const changeCurrent = (value) => {
-    localStorage.setItem('current-schema', value);
-    setCurrent(value);
+  const changeSchema = (action) => {
+    switch (action.type) {
+      case 'change-schema':
+        localStorage.setItem('current-schema', action.payload);
+        setCurrent(action.payload);
+        break;
+      default:
+        break;
+    }
   };
 
   //------------------------------------------------------------------------------
@@ -127,26 +133,28 @@ export const SettingsSchemas = () => {
       })
       .join(', ');
   }
+
+  const systemList = schemas.filter((s) => s.group === 'system').map((schema) => schema.name);
+  const pagesList = schemas.filter((s) => s.group === 'pages_').map((schema) => schema.name);
+  const exploreList = schemas.filter((s) => s.group === 'explore').map((schema) => schema.name);
+
   return (
     <div>
-      {['system', 'pages_', 'explore'].map((str) => {
-        return (
-          <div>
-            <div style={{ display: 'inline' }}>{str + ': '}</div>
-            {schemas
-              .filter((item) => item.group === str)
-              .map((schema) => {
-                const cn = schema.name === current ? 'activeButton' : '';
-                return (
-                  <button className={cn} key={schema.name} onClick={(e) => handleClick(e, changeCurrent, schema.name)}>
-                    {schema.name}
-                  </button>
-                );
-              })}
-          </div>
-        );
-      })}
-
+      <ButtonCaddie
+        name="system"
+        buttons={systemList}
+        current={current}
+        action="change-schema"
+        handler={changeSchema}
+      />
+      <ButtonCaddie name="pages_" buttons={pagesList} current={current} action="change-schema" handler={changeSchema} />
+      <ButtonCaddie
+        name="explore"
+        buttons={exploreList}
+        current={current}
+        action="change-schema"
+        handler={changeSchema}
+      />
       <div className="okay">{known.join(', ')}</div>
       <div className="caution">{x.join(', ')}</div>
       <div className="warning">{unknown.join(', ')}</div>

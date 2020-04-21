@@ -23,7 +23,14 @@ export const Other = () => {
 
   return (
     <div>
-      <DataTable columns={schema} data={other} title="" searchFields={searchFields} />
+      <DataTable
+        data={other}
+        columns={schema}
+        title="Other View"
+        search={true}
+        searchFields={searchFields}
+        pagination={true}
+      />
     </div>
   );
 };

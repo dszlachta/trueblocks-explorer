@@ -1,43 +1,57 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
-import { Editable, Toolbar } from 'components';
+import { Editable, Tablebar } from 'components';
 import { formatFieldByType } from 'components/utils';
 import { calcValue, getPrimaryKey } from 'store';
 
 import './ObjectTable.css';
-
-//       if (silentWhenEmpty && (value === '' || value === 0)) {
-//         return <div key={key}></div>;
-//       }
 
 //-----------------------------------------------------------------
 export const ObjectTable = ({
   data,
   columns,
   title = '',
+  search = false,
+  searchFields = [],
+  pagination = false,
+  arrowsOnly = false,
   noSider = false,
   compact = false,
-  silentWhenEmpty = false,
   showHidden = false,
-  pagination = false,
-  search = false,
+  buttonList = [],
+  handler = null,
 }) => {
+  const [filterText] = useState('');
+
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
+
   const id = calcValue(data, idCol);
+  const buttons = buttonList && (
+    <div>
+      {buttonList.map((item) => {
+        return (
+          <Fragment>
+            <button>{item}</button>
+            <br />
+          </Fragment>
+        );
+      })}
+    </div>
+  );
 
   const showTools = title !== '' || pagination;
   return (
     <Fragment>
       {showTools && (
-        <Toolbar
+        <Tablebar
           title={title}
-          handler={null}
           search={search}
-          filterText={''}
-          searchFields={null}
+          filterText={filterText}
+          searchFields={searchFields}
           pagination={pagination}
-          pagingCtx={{}}
+          pagingCtx={{ curPage: 0, arrowsOnly: arrowsOnly }}
+          handler={handler}
         />
       )}
       <div className="at-body">
@@ -45,7 +59,7 @@ export const ObjectTable = ({
           const value = calcValue(data, column);
 
           if (column.hidden && !showHidden) return null;
-          if (value === '' && silentWhenEmpty) return null;
+          if (value === '' && compact) return null;
 
           const cn = 'at-row ' + (noSider ? 'ot-row-nosider' : 'ot-row' + (compact ? '-compact' : ''));
           const name = column.name || column.selector;
@@ -57,18 +71,23 @@ export const ObjectTable = ({
               {noSider ? null : <ObjectTableSider>{displayName}:</ObjectTableSider>}
               {noSider || compact ? null : <div></div>}
               <TableColumn editable={column.editable} noSider={noSider} compact={compact}>
+                {column.editable && !column.onAccept && (
+                  <div className="warning">Editable field '{column.selector}' does not have an onAccept function</div>
+                )}
                 <Editable
                   editable={column.editable}
                   fieldValue={fmtValue}
                   fieldName={column.selector}
                   placeholder={column.selector}
                   onValidate={column.onValidate}
+                  onAccept={column.onAccept}
                 />
               </TableColumn>
             </div>
           );
         })}
       </div>
+      {buttons}
     </Fragment>
   );
 };
