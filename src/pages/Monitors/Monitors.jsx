@@ -16,7 +16,6 @@ export const Monitors = () => {
     getServerData(url, query).then((theData) => {
       //      const d = theData && theData.caches && theData.caches[0] && theData.caches[0].items;
       dispatch({ type: 'update', payload: theData[0].caches[0].items });
-      console.log('d: ', theData[0].caches[0].items);
     });
   }, [query, dispatch]);
 

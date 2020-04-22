@@ -9,7 +9,6 @@ import { hasFields, matches, widthsFromColumns } from './utils';
 
 import './DataTable.css';
 
-var skipNext = false;
 //-----------------------------------------------------------------
 export const DataTable = ({
   data,
@@ -22,7 +21,6 @@ export const DataTable = ({
   noHeader = false,
   expandable = true,
   showHidden = false,
-  pillClick = null,
 }) => {
   const [pagingCtx, setPaging] = useState(
     stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0, arrowsOnly: arrowsOnly })
@@ -36,12 +34,6 @@ export const DataTable = ({
   const clickHandler = (action) => {
     const { perPage, curPage } = pagingCtx;
     switch (action.type) {
-      case 'pill-toggle':
-        if (pillClick) {
-          pillClick(action);
-          skipNext = true;
-        }
-        break;
       case 'update_filter':
         setFilterText(action.payload);
         break;
@@ -70,8 +62,7 @@ export const DataTable = ({
         localStorage.setItem('paging', JSON.stringify(newCtx));
         break;
       case 'expand_row':
-        if (!skipNext && expandable) setExpandedRow(expandedRow === action.payload ? '' : action.payload);
-        skipNext = false;
+        if (expandable) setExpandedRow(expandedRow === action.payload ? '' : action.payload);
         break;
       case 'sortBy':
         if (sortCtx1.sortBy === action.payload) {
@@ -121,7 +112,6 @@ export const DataTable = ({
   const showHeader = !noHeader;
   return (
     <Fragment key="dt">
-      {/*<pre>arrows only: {JSON.stringify(arrowsOnly, null, 2)}</pre>*/}
       {showTools && (
         <Tablebar
           title={title}
@@ -285,19 +275,7 @@ const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHi
         }
         const style = column.align ? { justifySelf: column.align } : {};
         return (
-          <div
-            key={key}
-            style={style}
-            className={cn}
-            onClick={
-              column.isPill
-                ? (e) => {
-                    e.preventDefault();
-                    handleClick(e, handler, { type: 'pill-toggle', field: column.selector, record: id });
-                  }
-                : null
-            }
-          >
+          <div key={key} style={style} className={cn}>
             {column.isPill && !handler && (
               <div className="warning">pill column '{column.selector}' does not have a handler</div>
             )}

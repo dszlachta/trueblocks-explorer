@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const View = (props) => {
+const MenuCaches = (props) => {
   const { color, size, ...otherProps } = props;
   return (
     <svg
@@ -16,25 +16,20 @@ const View = (props) => {
       strokeLinejoin="round"
       {...otherProps}
     >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="14.31" y1="8" x2="20.05" y2="17.94" />
-      <line x1="9.69" y1="8" x2="21.17" y2="8" />
-      <line x1="7.38" y1="12" x2="13.12" y2="2.06" />
-      <line x1="9.69" y1="16" x2="3.95" y2="6.06" />
-      <line x1="14.31" y1="16" x2="2.83" y2="16" />
-      <line x1="16.62" y1="12" x2="10.88" y2="21.94" />
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
     </svg>
   );
 };
 
-View.propTypes = {
+MenuCaches.propTypes = {
   color: PropTypes.string,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-View.defaultProps = {
+MenuCaches.defaultProps = {
   color: 'currentColor',
-  size: '24',
+  size: '22',
 };
 
-export default View;
+export default MenuCaches;

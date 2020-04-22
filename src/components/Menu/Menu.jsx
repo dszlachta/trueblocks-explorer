@@ -1,15 +1,31 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { currentPage } from 'components/utils';
+
+import {
+  Dashboard,
+  Projects,
+  Monitors,
+  Explorer,
+  Names,
+  Digests,
+  Caches,
+  Other,
+  Settings,
+  Support,
+} from 'assets/icons/SetMenus';
+
 import './Menu.css';
 
 //----------------------------------------------------------------------
-export const Menu = ({ menu, parent = '' }) => {
+export const Menu = ({ menu, parent = '', expanded }) => {
+  if (!menu) return <Fragment></Fragment>;
   const indent = parent !== '';
   const style = indent ? { margin: '4px 10px' } : {};
   const sep = indent ? '~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ' : '- - - - - - - - - - - - - - - - ';
+  if (indent && !expanded) return null;
   return (
     <>
       {menu.map((item, index) => {
@@ -20,25 +36,32 @@ export const Menu = ({ menu, parent = '' }) => {
             </div>
           );
         }
-
         const enabled = true; //(item.enableFunc ? item.enableFunc(currentPage().page, currentPage().subpage) : true) && item.enabled;
         const { label, exact, items } = item;
+        const icon = getIcon(label, expanded);
+        console.log(label, icon);
         const route = cleanPath(label, parent, item.route);
-        if (items) {
-          return (
-            <MenuItem key={route} text={label} indent={parent !== ''} to={route}>
-              <Menu menu={items} parent={label.toLowerCase()} exact={exact} />
-            </MenuItem>
-          );
-        }
-        return <MenuItem key={route} text={label} indent={parent !== ''} to={route} exact={exact} enabled={enabled} />;
+        return (
+          <MenuItem
+            key={route}
+            text={label}
+            icon={icon}
+            indent={indent}
+            expanded={expanded}
+            to={route}
+            enabled={enabled}
+            exact={exact}
+          >
+            <Menu menu={items} parent={label.toLowerCase()} exact={exact} expanded={expanded} />
+          </MenuItem>
+        );
       })}
     </> //
   );
 };
 
 //----------------------------------------------------------------------
-export const MenuItem = ({ text, to, indent, exact, enabled, children }) => {
+export const MenuItem = ({ text, icon, to, indent, exact, enabled, expanded, children }) => {
   const style = indent ? { margin: '3px 10px' } : {};
   const { page } = currentPage();
   const active = page !== '/' && to.includes(page);
@@ -46,7 +69,8 @@ export const MenuItem = ({ text, to, indent, exact, enabled, children }) => {
   if (!enabled) {
     return (
       <div style={style} className="menu-disabled">
-        {text}
+        {icon}
+        {(expanded || !icon) && text}
       </div>
     );
   }
@@ -54,7 +78,8 @@ export const MenuItem = ({ text, to, indent, exact, enabled, children }) => {
   return (
     <>
       <NavLink style={style} className="menu-item" activeClassName="is-active" exact={exact} to={to}>
-        {text}
+        {icon}
+        {(expanded || !icon) && text}
       </NavLink>
       {active ? children : <></>}
     </>
@@ -81,3 +106,31 @@ const cleanPath = (label, parent, pathIn) => {
   if (parent !== '') ret = '/' + parent + ret;
   return ret;
 };
+
+function getIcon(label, expanded) {
+  const size = 20;
+  switch (label) {
+    case 'Dashboard':
+      return <Dashboard key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Projects':
+      return <Projects key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Monitors':
+      return <Monitors key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Explorer':
+      return <Explorer key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Names':
+      return <Names key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Digests':
+      return <Digests key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Caches':
+      return <Caches key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Other':
+      return <Other key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Settings':
+      return <Settings key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Support':
+      return <Support key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    default:
+      return null;
+  }
+}

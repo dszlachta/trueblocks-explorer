@@ -134,15 +134,6 @@ export const SettingsSchemas = () => {
     }
   };
 
-  const handlePillClick = (action) => {
-    console.log(action);
-    switch (action.type) {
-      case 'pill-toggle':
-        break;
-      default:
-        break;
-    }
-  };
   const systemList = schemas.filter((s) => s.group === 'system').map((schema) => schema.name);
   const pagesList = schemas.filter((s) => s.group === 'pages_').map((schema) => schema.name);
   const exploreList = schemas.filter((s) => s.group === 'explore').map((schema) => schema.name);
@@ -177,7 +168,6 @@ export const SettingsSchemas = () => {
           search={false}
           pagination={false}
           expandable={true}
-          pillClick={handlePillClick}
         />
       </div>
       <h4
@@ -208,7 +198,6 @@ export const SettingsSchemas = () => {
             showHidden={true}
           />
           <pre>{JSON.stringify(mocks, null, 2)}</pre>
-          {/*<pre>{JSON.stringify(matched.schema, null, 2)}</pre>*/}
         </div>
         <div></div>
         <div>
@@ -253,9 +242,9 @@ function mockData(columns) {
 function getFieldValue(record, fieldName) {
   switch (fieldName) {
     case 'id':
-      return record.selector;
+      return record.selector; // this is right - it's a confusing name
     default:
-      break;
+      return record[fieldName];
   }
 }
 //------------------------------------------------------------------------------

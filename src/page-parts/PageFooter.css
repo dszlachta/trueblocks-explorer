@@ -81,7 +81,7 @@
 
 /*------------------------------------------*/
 .shape_01 {
-  grid-template-columns: minmax(40px, 1fr) 50fr minmax(250px, 13fr);
+  grid-template-columns: minmax(63px, 1fr) 50fr minmax(250px, 13fr);
 }
 .shape_11 {
   grid-template-columns: minmax(175px, 2fr) 50fr minmax(250px, 12fr);

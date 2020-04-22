@@ -7,9 +7,11 @@ import './MenuPanel.css';
 
 //----------------------------------------------------------------------
 export const MenuPanel = () => {
+  const expanded = usePanels().state.menu;
+  const items = useMenus().menu.items;
   return (
-    <Panel title="Menu" type="menu" dir="left" expanded={usePanels().state.menu}>
-      {<Menu menu={useMenus().menu.items} />}
+    <Panel title="Menu" type="menu" dir="left" expanded={expanded}>
+      {<Menu menu={items} expanded={expanded} />}
     </Panel>
   );
 };
