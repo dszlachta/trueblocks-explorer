@@ -1,0 +1,11 @@
+[settings]
+class = "CCollections"
+
+[[subpages]]
+list = [
+    { page = "collections", subpage = "" },
+    { page = "collections", subpage = "View...", route = "view" },
+    { page = "collections", subpage = "Edit...", route = "edit" },
+    { page = "collections", subpage = "Save" },
+    { page = "collections", subpage = "Export" },
+]

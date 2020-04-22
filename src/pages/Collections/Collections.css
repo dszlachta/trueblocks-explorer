@@ -1,0 +1,12 @@
+/* add custom css code for the Collections compnent here. */
+
+.collections {
+  display: flex;
+  flex-wrap: wrap;
+  justify-items: center;
+}
+
+.deleted-collection {
+  color: lightcoral;
+  text-decoration: line-through;
+}
