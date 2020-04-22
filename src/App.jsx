@@ -9,7 +9,7 @@ import { stateFromStorage } from 'components/utils';
 // page-related - for searching do not remove
 // auto-generate: imports
 import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/Dashboard';
-import { projectsDefault, projectsReducer } from 'pages/Projects/Projects';
+import { collectionsDefault, collectionsReducer } from 'pages/Collections/Collections';
 import { monitorsDefault, monitorsReducer } from 'pages/Monitors/Monitors';
 import { explorerDefault, explorerReducer } from 'pages/Explorer/Explorer';
 import { namesDefault, namesReducer } from 'pages/Names/Names';
@@ -30,7 +30,7 @@ const defaultData = {
   status: statusDefault,
   menu: theMenu,
   dashboard: dashboardDefault,
-  projects: stateFromStorage('projectsState', projectsDefault),
+  collections: stateFromStorage('collectionsState', collectionsDefault),
   monitors: monitorsDefault,
   explorer: explorerDefault,
   names: namesDefault,
@@ -49,7 +49,7 @@ function App() {
   const [menusState, menusDispatch] = useReducer(menusReducer, defaultData['menu']);
   // auto-generate: reducers
   const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, defaultData['dashboard']);
-  const [projectsState, projectsDispatch] = useReducer(projectsReducer, defaultData['projects']);
+  const [collectionsState, collectionsDispatch] = useReducer(collectionsReducer, defaultData['collections']);
   const [monitorsState, monitorsDispatch] = useReducer(monitorsReducer, defaultData['monitors']);
   const [explorerState, explorerDispatch] = useReducer(explorerReducer, defaultData['explorer']);
   const [namesState, namesDispatch] = useReducer(namesReducer, defaultData['names']);
@@ -67,7 +67,7 @@ function App() {
     menus: { menu: menusState, dispatch: menusDispatch },
     // auto-generate: state
     dashboard: { dashboard: dashboardState, dispatch: dashboardDispatch },
-    projects: { projects: projectsState, dispatch: projectsDispatch },
+    collections: { collections: collectionsState, dispatch: collectionsDispatch },
     monitors: { monitors: monitorsState, dispatch: monitorsDispatch },
     explorer: { explorer: explorerState, dispatch: explorerDispatch },
     names: { names: namesState, dispatch: namesDispatch },
@@ -100,7 +100,7 @@ const mapHotKeys = (panelDispatch) => {
     window.location = '/dashboard';
   });
   Mousetrap.bind(['alt+1'], function () {
-    window.location = '/projects';
+    window.location = '/collections';
   });
   Mousetrap.bind(['alt+2'], function () {
     window.location = '/monitors';

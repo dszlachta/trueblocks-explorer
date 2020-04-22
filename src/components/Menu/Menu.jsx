@@ -6,10 +6,11 @@ import { currentPage } from 'components/utils';
 
 import {
   Dashboard,
-  Projects,
+  Collections,
   Monitors,
   Explorer,
   Names,
+  Signatures,
   Digests,
   Caches,
   Other,
@@ -112,14 +113,16 @@ function getIcon(label, expanded) {
   switch (label) {
     case 'Dashboard':
       return <Dashboard key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Projects':
-      return <Projects key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Collections':
+      return <Collections key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
     case 'Monitors':
       return <Monitors key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
     case 'Explorer':
       return <Explorer key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
     case 'Names':
       return <Names key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
+    case 'Signatures':
+      return <Signatures key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
     case 'Digests':
       return <Digests key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
     case 'Caches':

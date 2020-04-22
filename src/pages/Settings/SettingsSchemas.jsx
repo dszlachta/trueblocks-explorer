@@ -6,7 +6,7 @@ import { stateFromStorage } from 'components/utils';
 import { menuSchema } from 'pages/';
 
 import { dashboardSchema } from 'pages/Dashboard/Dashboard';
-import { projectsSchema } from 'pages/Projects/Projects';
+import { collectionsSchema } from 'pages/Collections/Collections';
 import { monitorsSchema } from 'pages/Monitors/Monitors';
 import { explorerSchema } from 'pages/Explorer/Explorer';
 import { blocksSchema } from 'pages/Explorer/ExplorerBlocks';
@@ -39,7 +39,7 @@ export const SettingsSchemas = () => {
     { group: 'system', name: 'systemsSchema', schema: systemsSchema },
     { group: 'system', name: 'schemasSchema', schema: schemasSchema },
     { group: 'pages_', name: 'dashboardSchema', schema: dashboardSchema },
-    { group: 'pages_', name: 'projectsSchema', schema: projectsSchema },
+    { group: 'pages_', name: 'collectionsSchema', schema: collectionsSchema },
     { group: 'pages_', name: 'monitorsSchema', schema: monitorsSchema },
     { group: 'pages_', name: 'explorerSchema', schema: explorerSchema },
     { group: 'pages_', name: 'namesSchema', schema: namesSchema },

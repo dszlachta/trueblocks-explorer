@@ -4,7 +4,7 @@ import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
 export const panelDefault = {
-  menu: false,
+  menu: true,
   content: true,
   status: true,
   help: false,

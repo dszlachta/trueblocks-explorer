@@ -8,7 +8,7 @@ import { currentPage, systemCheck } from 'components/utils';
 //----------------------------------------------------------------------
 // auto-generate: imports
 import { Dashboard } from './Dashboard/Dashboard';
-import { Projects } from './Projects/Projects';
+import { Collections } from './Collections/Collections';
 import { Monitors } from './Monitors/Monitors';
 import { Explorer } from './Explorer/Explorer';
 import { Names } from './Names/Names';
@@ -25,11 +25,11 @@ export const thePages = {
   // auto-generate: pages
   'dashboard/': { component: <Dashboard /> },
   //
-  'projects/': { component: <Projects /> },
-  'projects/view': { component: <Projects /> },
-  'projects/edit': { component: <Projects /> },
-  'projects/save': { component: <Projects /> },
-  'projects/export': { component: <Projects /> },
+  'collections/': { component: <Collections /> },
+  'collections/view': { component: <Collections /> },
+  'collections/edit': { component: <Collections /> },
+  'collections/save': { component: <Collections /> },
+  'collections/export': { component: <Collections /> },
   //
   'monitors/': { component: <Monitors /> },
   'monitors/yours': { component: <Monitors /> },
@@ -103,7 +103,7 @@ export const theMenu = {
     },
     { label: 'Separator' },
     {
-      label: 'Projects',
+      label: 'Collections',
       exact: true,
       items: [
         { label: 'View...', route: 'view' },

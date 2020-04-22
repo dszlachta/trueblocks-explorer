@@ -29,7 +29,18 @@ import ToggleRight from 'assets/icons/ToggleRight';
 import Twitter from 'assets/icons/Twitter';
 import Undelete from 'assets/icons/Undelete';
 
-import { Dashboard, Monitors, Explorer, Names, Digests, Caches, Other, Settings, Support } from 'assets/icons/SetMenus';
+import {
+  Dashboard,
+  Monitors,
+  Explorer,
+  Names,
+  Signatures,
+  Digests,
+  Caches,
+  Other,
+  Settings,
+  Support,
+} from 'assets/icons/SetMenus';
 
 export const SettingsIcons = () => {
   const size = 30;
@@ -85,6 +96,7 @@ export const SettingsIcons = () => {
     { name: 'Monitors', component: <Monitors size={size} color={color} fill={fill} style={style} /> },
     { name: 'Explorer', component: <Explorer size={size} color={color} fill={fill} style={style} /> },
     { name: 'Names', component: <Names size={size} color={color} fill={fill} style={style} /> },
+    { name: 'Signatures', component: <Signatures size={size} color={color} fill={fill} style={style} /> },
     { name: 'Digests', component: <Digests size={size} color={color} fill={fill} style={style} /> },
     { name: 'Caches', component: <Caches size={size} color={color} fill={fill} style={style} /> },
     { name: 'Other', component: <Other size={size} color={color} fill={fill} style={style} /> },

@@ -16,8 +16,8 @@ export const Dashboard = () => {
 // page-related - for searching do not remove
 export const dashboardDefault = [
   {
-    name: 'Projects',
-    route: '/projects',
+    name: 'Collections',
+    route: '/collections',
     count: 200,
     sizeInBytes: 102001,
     custom: 'each node',

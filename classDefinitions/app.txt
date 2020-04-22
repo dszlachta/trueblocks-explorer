@@ -1,9 +1,9 @@
 [settings]
 pages = dashboard|separator|\
-    projects|monitors|explorer|separator|\
+    collections|monitors|explorer|separator|\
     names|signatures|digests|caches|other|separator|\
     settings|support
-schemas = menu|dashboard|projects|monitors|\
+schemas = menu|dashboard|collections|monitors|\
     explorer|\
     explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|\
     explorer-traces|explorer-traceActions|explorer-traceResults|\

@@ -46,7 +46,7 @@ export const SupportKeys = () => {
       <div> </div>
       {/* page-related - for searching do not remove */}
       {'\talt+0\t\t\t/dashboard\t\tOpen Dashboard screen\n'}
-      {'\talt+1\t\t\t/projects\t\tOpen Projects screen\n'}
+      {'\talt+1\t\t\t/collections\t\tOpen Collections screen\n'}
       {'\talt+2\t\t\t/monitors\t\tOpen Monitors screen\n'}
       {'\talt+3\t\t\t/explorer\t\tOpen Explorers screen\n'}
       {'\talt+4\t\t\t/names\t\t\tOpen Names screen\n'}
