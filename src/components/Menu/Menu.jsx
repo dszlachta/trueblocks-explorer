@@ -3,20 +3,7 @@ import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { currentPage } from 'components/utils';
-
-import {
-  Dashboard,
-  Collections,
-  Monitors,
-  Explorer,
-  Names,
-  Signatures,
-  Digests,
-  Caches,
-  Other,
-  Settings,
-  Support,
-} from 'assets/icons/SetMenus';
+import { getIcon } from 'pages/utils';
 
 import './Menu.css';
 
@@ -107,33 +94,3 @@ const cleanPath = (label, parent, pathIn) => {
   if (parent !== '') ret = '/' + parent + ret;
   return ret;
 };
-
-function getIcon(label, expanded) {
-  const size = 20;
-  switch (label) {
-    case 'Dashboard':
-      return <Dashboard key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Collections':
-      return <Collections key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Monitors':
-      return <Monitors key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Explorer':
-      return <Explorer key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Names':
-      return <Names key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Signatures':
-      return <Signatures key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Digests':
-      return <Digests key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Caches':
-      return <Caches key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Other':
-      return <Other key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Settings':
-      return <Settings key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    case 'Support':
-      return <Support key={'micon-' + label} size={size} className={expanded ? 'menu-icon' : ''} />;
-    default:
-      return null;
-  }
-}

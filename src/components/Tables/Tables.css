@@ -75,6 +75,9 @@
   padding: var(--at-padding);
   text-align: right;
   padding-right: 3px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /*-----------------------------------*/
@@ -149,22 +152,4 @@
   background: repeating-linear-gradient(-45deg, #daeeda, #daeeda 5px, white 5px, white 10px);
   background-repeat: repeat;
   border-radius: 0px 0px var(--at-radius) var(--at-radius);
-}
-
-/*-----------------------------------*/
-.ot-cell {
-  padding: var(--at-padding);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.ot-cell-nosider {
-  padding: var(--at-padding);
-  overflow: visible;
-}
-
-.ot-cell.editable {
-  display: block;
-  font-style: italic;
 }

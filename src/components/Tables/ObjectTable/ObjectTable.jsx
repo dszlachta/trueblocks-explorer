@@ -15,8 +15,6 @@ export const ObjectTable = ({
   searchFields = [],
   pagination = false,
   arrowsOnly = false,
-  noSider = false,
-  compact = false,
   showHidden = false,
   buttonList = [],
   handler = null,
@@ -27,11 +25,13 @@ export const ObjectTable = ({
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
   const id = calcValue(data, idCol);
+  const warn = buttonList.length > 0 && !handler && <div className="warning">buttonList handler not found</div>;
   const buttons = buttonList && (
-    <div>
+    <div style={{ padding: '0px !important', marginTop: '-4px' }}>
       {buttonList.map((item) => {
         return (
           <Fragment>
+            {warn}
             <button>{item}</button>
             <br />
           </Fragment>
@@ -40,55 +40,57 @@ export const ObjectTable = ({
     </div>
   );
 
-  const showTools = title !== '' || pagination;
+  const tableBar = (title !== '' || pagination) && (
+    <Tablebar
+      title={title}
+      search={search}
+      filterText={filterText}
+      searchFields={searchFields}
+      pagination={pagination}
+      pagingCtx={{ curPage: 0, arrowsOnly: arrowsOnly }}
+      handler={handler}
+    />
+  );
+
   return (
-    <Fragment>
-      {showTools && (
-        <Tablebar
-          title={title}
-          search={search}
-          filterText={filterText}
-          searchFields={searchFields}
-          pagination={pagination}
-          pagingCtx={{ curPage: 0, arrowsOnly: arrowsOnly }}
-          handler={handler}
-        />
-      )}
-      <div className="at-body">
-        {columns.map((column, index) => {
-          const value = calcValue(data, column);
+    <div className="ot-container">
+      {tableBar}
+      <div className={'ot-body' + (buttonList.length > 0 ? '-withbuttons' : '')}>
+        <div className="at-body">
+          {columns.map((column, index) => {
+            // note: in the object table 'columns' renders as rows
+            const value = calcValue(data, column);
 
-          if (column.hidden && !showHidden) return null;
-          if (value === '' && compact) return null;
+            if (!showHidden && column.hidden) return null;
+            if (!showHidden && value === '') return null;
 
-          const cn = 'at-row ' + (noSider ? 'ot-row-nosider' : 'ot-row' + (compact ? '-compact' : ''));
-          const name = column.name || column.selector;
-          const type = column.type || 'string';
-          const displayName = compact ? name : name.substr(0, 8);
-          const fmtValue = formatFieldByType(type, value, column.decimals || 0);
-          return (
-            <div key={id + '_' + column.selector} className={cn}>
-              {noSider ? null : <ObjectTableSider>{displayName}:</ObjectTableSider>}
-              {noSider || compact ? null : <div></div>}
-              <TableColumn editable={column.editable} noSider={noSider} compact={compact}>
-                {column.editable && !column.onAccept && (
-                  <div className="warning">Editable field '{column.selector}' does not have an onAccept function</div>
-                )}
-                <Editable
-                  editable={column.editable}
-                  fieldValue={fmtValue}
-                  fieldName={column.selector}
-                  placeholder={column.selector}
-                  onValidate={column.onValidate}
-                  onAccept={column.onAccept}
-                />
-              </TableColumn>
-            </div>
-          );
-        })}
+            const fieldName = column.name || column.selector;
+            const fieldType = column.type || 'string';
+            const formatted = formatFieldByType(fieldType, value, column.decimals || 0);
+            const key = id + '_' + column.selector;
+            return (
+              <div key={key} className="at-row ot-row">
+                <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
+                <ObjectTableColumn editable={column.editable}>
+                  {/*column.editable && !column.onAccept && (
+                    <div className="warning">Editable field '{column.selector}' does not have an onAccept function</div>
+                  )*/}
+                  <Editable
+                    fieldValue={formatted}
+                    editable={column.editable}
+                    fieldName={column.selector}
+                    placeholder={column.selector}
+                    onValidate={column.onValidate}
+                    onAccept={column.onAccept}
+                  />
+                </ObjectTableColumn>
+              </div>
+            );
+          })}
+        </div>
+        {buttons}
       </div>
-      {buttons}
-    </Fragment>
+    </div>
   );
 };
 
@@ -102,8 +104,8 @@ const ObjectTableSider = ({ children }) => {
 };
 
 //-----------------------------------------------------------------
-export const TableColumn = ({ editable = false, noSider = false, compact, children }) => {
-  let cn = (noSider ? 'ot-cell-nosider' : 'ot-cell' + (compact ? '-compact' : '')) + (editable ? ' editable' : '');
+export const ObjectTableColumn = ({ editable = false, children }) => {
+  let cn = 'ot-cell' + (editable ? ' editable' : '');
   return (
     <div className={cn} align="left">
       {children}

@@ -81,11 +81,11 @@ export const thePages = {
   'settings/config': { component: <Settings /> },
   'settings/skins': { component: <Settings /> },
   'settings/schemas': { component: <Settings /> },
-  'settings/icons': { component: <Settings /> },
   //
   'support/': { component: <Support /> },
   'support/contact': { component: <Support /> },
   'support/keys': { component: <Support /> },
+  'support/icons': { component: <Support /> },
   'support/documentation': { component: <Support /> },
   'support/licensing': { component: <Support /> },
   'support/about': { component: <Support /> },
@@ -195,11 +195,9 @@ export const theMenu = {
       exact: true,
       items: [
         { label: 'System Status', route: 'status' },
-        { label: 'Configuration', route: 'config' },
         { label: 'Separator' },
         { label: 'Skins' },
         { label: 'Schemas' },
-        { label: 'Icons' },
       ],
     },
     {
@@ -209,6 +207,7 @@ export const theMenu = {
         { label: 'Contact Us', route: 'contact' },
         { label: 'Separator' },
         { label: 'Hot Keys', route: 'keys' },
+        { label: 'Icons' },
         { label: 'Documentation' },
         { label: 'Separator' },
         { label: 'Licensing' },

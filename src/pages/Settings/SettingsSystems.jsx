@@ -79,43 +79,56 @@ const SettingsRow = ({ which, status }) => {
     version: version,
   };
 
+  let manageView = <div>X</div>;
+  const manageHandler = (action) => {
+    console.log(action);
+    manageView = <div>{JSON.stringify(action, null, 2)}</div>;
+  };
+
   return (
     <Fragment>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '10fr 10fr',
-        }}
-      >
-        <h4 className="status-header">{names[which].toUpperCase()}</h4>
-        <div></div>
-      </div>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 32fr 44fr',
-        }}
-      >
-        <div></div>
-        <Fragment>
-          <ObjectTable data={data} columns={systemsSchema} compact={true} buttonList={['manage ' + which]} />
-        </Fragment>
-        <div></div>
-      </div>
       <div
         style={{
           display: 'grid',
           gridTemplateColumns: '1fr',
         }}
       >
-        <div>
-          <br />
-        </div>
+        <h4 className="status-header">{names[which].toUpperCase()}</h4>
       </div>
+      {/**/}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 30fr 35fr',
+        }}
+      >
+        <div></div>
+        <ObjectTable
+          data={data}
+          columns={systemsSchema}
+          buttonList={['config ' + which + ' >']}
+          handler={manageHandler}
+        />
+        <div></div>
+      </div>
+      {/**/}
+      <BlankLine />
     </Fragment>
   );
 };
 
+const BlankLine = () => {
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+      }}
+    >
+      <br />
+    </div>
+  );
+};
 //------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
   switch (fieldName) {

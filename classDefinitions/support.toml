@@ -7,6 +7,7 @@ list = [
     { page = "support", subpage = "Contact Us", route = "contact" },
     { page = "support", subpage = "Separator" },
     { page = "support", subpage = "Hot Keys", route = "keys" },
+    { page = "support", subpage = "Icons" },
     { page = "support", subpage = "Documentation" },
     { page = "support", subpage = "Separator" },
     { page = "support", subpage = "Licensing" },

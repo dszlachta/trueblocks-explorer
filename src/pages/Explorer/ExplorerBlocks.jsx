@@ -53,7 +53,6 @@ export const ExplorerBlocks = () => {
         data={explorer}
         title={'Block ' + explorer.blockNumber}
         search={false}
-        compact={true}
         pagination={true}
       />
     </div>

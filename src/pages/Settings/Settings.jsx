@@ -6,7 +6,6 @@ import { currentPage, systemCheck } from 'components/utils';
 import { SettingsSystems } from './SettingsSystems';
 import { SettingsSkins } from './SettingsSkins';
 import { SettingsSchemas } from './SettingsSchemas';
-import { SettingsIcons } from './SettingsIcons';
 
 export const Settings = () => {
   const status = useStatusData();
@@ -18,8 +17,6 @@ export const Settings = () => {
       return <SettingsSchemas />;
     case 'skins':
       return <SettingsSkins />;
-    case 'icons':
-      return <SettingsIcons />;
     case 'status':
     default:
       return <SettingsSystems />;

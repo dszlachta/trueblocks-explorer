@@ -3,6 +3,8 @@ import React from 'react';
 import { Pagination } from './Pagination';
 import { Search } from './Search';
 
+import './Tablebar.css';
+
 //-----------------------------------------------------------------------
 export const Tablebar = ({
   title = '',
@@ -15,7 +17,7 @@ export const Tablebar = ({
   asHeader = true,
 }) => {
   const header = (
-    <div>
+    <div className="tablebar-container">
       <div style={{ display: 'grid', gridTemplateColumns: pagingCtx.arrowsOnly ? '1fr' : '3fr 7fr 3fr' }}>
         {!pagingCtx.arrowsOnly && (
           <Search enabled={search} searchFields={searchFields} searchText={filterText} handler={handler} />

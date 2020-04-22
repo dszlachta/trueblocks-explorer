@@ -2,11 +2,12 @@ import React, { Fragment } from 'react';
 
 import { Card, ObjectTable } from 'components';
 import { calcValue } from 'store';
+import { getIcon } from 'pages/utils';
 
 import './Caddie.css';
 
 //----------------------------------------------------
-export const Caddie = ({ cn = 'caddie', title, cards, columns }) => {
+export const Caddie = ({ cn = 'caddie', title, cards, columns, withIcons }) => {
   const idCol = columns.filter((c) => {
     return c.selector === 'id';
   })[0];
@@ -22,7 +23,12 @@ export const Caddie = ({ cn = 'caddie', title, cards, columns }) => {
       <h4>{title}</h4>
       {cards.map((card) => {
         const id = calcValue(card, idCol);
-        const title = calcValue(card, nameCol);
+        const title = (
+          <div className="inner-card-header">
+            {withIcons ? getIcon(card.name, true, true) : null}
+            {calcValue(card, nameCol)}
+          </div>
+        );
         const route = calcValue(card, routeCol);
         return title === 'Separator' ? (
           <Fragment></Fragment>

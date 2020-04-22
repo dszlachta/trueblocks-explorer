@@ -9,7 +9,7 @@ import './Dashboard.css';
 //----------------------------------------------------
 export const Dashboard = () => {
   const { dashboard } = useDashboard();
-  return <Caddie key="caddie" title="Modules" cards={dashboard} columns={dashboardSchema} />;
+  return <Caddie key="caddie" title="Modules" cards={dashboard} columns={dashboardSchema} withIcons={true} />;
 };
 
 //----------------------------------------------------
@@ -65,16 +65,23 @@ export const dashboardDefault = [
     sizeInBytes: 104203122,
     timestamp: 1577953849,
   },
+  // {
+  //   name: 'Caches',
+  //   route: '/caches',
+  //   count: 10101,
+  //   sizeInBytes: 104203122,
+  //   timestamp: 1577953849,
+  // },
   {
-    name: 'Caches',
-    route: '/caches',
-    count: 10101,
-    sizeInBytes: 104203122,
+    name: 'Settings',
+    route: '/settings/skins',
+    count: 4903,
+    sizeInBytes: 35000000,
     timestamp: 1577953849,
   },
   {
-    name: 'Skins',
-    route: '/settings/skins',
+    name: 'Support',
+    route: '/support',
     count: 4903,
     sizeInBytes: 35000000,
     timestamp: 1577953849,

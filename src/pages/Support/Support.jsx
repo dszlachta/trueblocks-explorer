@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 
 import { currentPage } from 'components/utils';
+import { SupportIcons } from './SupportIcons';
 
 //-----------------------------------------------------------
 export const Support = () => {
@@ -8,6 +9,8 @@ export const Support = () => {
   switch (subpage) {
     case 'keys':
       return <SupportKeys />;
+    case 'icons':
+      return <SupportIcons />;
     case 'documentation':
       return <SupportDocumentation />;
     case 'licensing':

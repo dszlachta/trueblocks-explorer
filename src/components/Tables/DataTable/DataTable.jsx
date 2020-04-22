@@ -186,16 +186,11 @@ const DataTableExpandedRow = ({ record, columns, handler }) => {
       <ObjectTable
         data={record}
         columns={columns}
-        compact={true}
         showHidden={true}
         buttonList={['save', 'add monitor', 'view']}
         handler={handler}
       />
-      <div>
-        <button>save changes</button>
-        <button>add monitor</button>
-        <button>view history</button>
-      </div>
+      <div></div>
       <div></div>
     </div>
   );

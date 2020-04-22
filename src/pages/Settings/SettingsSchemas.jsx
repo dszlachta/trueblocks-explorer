@@ -209,7 +209,6 @@ export const SettingsSchemas = () => {
             search={false}
             pagination={false}
             expandable={true}
-            compact={true}
             showHidden={true}
           />
         </div>

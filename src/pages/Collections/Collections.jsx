@@ -206,9 +206,9 @@ export const collectionsDefault = [
   },
   {
     id: '0x12..03',
-    group: '',
+    group: 'Jimminy',
     name: 'Carson Flowers',
-    client: '',
+    client: 'Joseph Carson',
     addresses: [
       '0x001d14804b399c6ef80e64576f657660804fec0b',
       '0x005a9c03f69d17d66cbb8ad721008a9ebbb836fb',

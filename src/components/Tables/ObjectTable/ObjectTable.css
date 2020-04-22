@@ -1,22 +1,35 @@
 @import url('../Tables.css');
 
-.ot-row {
+.ot-container {
+  /* background-color: orange; */
+  padding: 2px;
+}
+
+.ot-body {
+}
+
+.ot-body-withbuttons {
   display: grid;
-  grid-template-columns: 6fr 1fr 14fr;
+  grid-template-columns: 6fr 1fr;
   justify-content: space-between;
 }
 
-.ot-row-compact {
+.ot-row {
   display: grid;
-  grid-template-columns: 6fr 14fr;
+  grid-template-columns: 8fr 14fr;
+  justify-content: space-between;
 }
 
-.ot-cell-compact {
-  padding: 3px;
-  padding-left: 10px;
+/*-----------------------------------*/
+.ot-cell {
+  padding: var(--at-padding);
+  padding-left: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.ot-row-nosider {
-  display: grid;
-  grid-template-columns: 1fr;
+.ot-cell.editable {
+  display: block;
+  font-style: italic;
 }

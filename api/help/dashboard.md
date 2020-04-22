@@ -1,10 +1,10 @@
 #### DashBoard
 
-Provides central navigation to the different components of TrueBlocks.
+• Provides central navigation to the different components of TrueBlocks.
 
-If you get lost, return to the dashboard to reorient yourself.
+• If you get lost, return to the dashboard to reorient yourself.
 
-The dashboard also provides status information about the system.
+• The dashboard also provides status information about the system.
 
 #### Further Help
 

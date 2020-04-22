@@ -5,9 +5,7 @@ class = "CSettings"
 list = [
     { page = "settings", subpage = "" },
     { page = "settings", subpage = "System Status", route = "status" },
-    { page = "settings", subpage = "Configuration", route = "config" },
     { page = "settings", subpage = "Separator" },
     { page = "settings", subpage = "Skins" },
     { page = "settings", subpage = "Schemas" },
-    { page = "settings", subpage = "Icons" },
 ]
