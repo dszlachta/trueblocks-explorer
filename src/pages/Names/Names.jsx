@@ -4,8 +4,7 @@ import { useContext } from 'react';
 import GlobalContext from 'store';
 
 import { DataTable, ButtonCaddie } from 'components';
-import { getServerData, sortArray } from 'components/utils';
-import { useTags } from 'pages/Tags/Tags';
+import { getServerData, sortArray, sortStrings } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Names.css';
@@ -15,7 +14,7 @@ export function Names() {
   const { names, dispatch } = useNames();
   const [tagList, setTagList] = useState([]);
   const [searchFields, setSearchFields] = useState(['tags', 'address', 'name']);
-  const [curTag, setTag] = useState('all');
+  const [curTag, setTag] = useState('All');
 
   const changeOptions = (action) => {
     switch (action.type) {
@@ -33,16 +32,15 @@ export function Names() {
     getServerData(url, query).then((theData) => {
       const sorted = sortArray(theData, [['tags', 'address', 'name']], ['asc', 'asc', 'asc']);
       dispatch({ type: 'update', payload: sorted });
-      const tagList = [
-        ...new Set(sorted.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
-      ];
-      tagList.unshift('all');
+      let tagList = [...new Set(sorted.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
       setTagList(tagList);
     });
   }, [query, dispatch]);
 
   const filtered = names.filter((item) => {
-    return curTag === 'all' || item.tags.includes(curTag);
+    return curTag === 'All' || item.tags.includes(curTag);
   });
 
   //  const [curSubset, setSubset] = useState('yours');

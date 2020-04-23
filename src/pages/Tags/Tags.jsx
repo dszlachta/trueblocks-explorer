@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import GlobalContext from 'store';
 
 import { DataTable, ButtonCaddie } from 'components';
-import { currentPage, getServerData, sortArray } from 'components/utils';
+import { getServerData, sortArray, sortStrings } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Tags.css';
@@ -15,7 +15,7 @@ export function Tags() {
 
   const [searchFields, setSearchFields] = useState(['tags', 'subtags1', 'subtags2']);
   const [tagList, setTagList] = useState('');
-  const [curTag, setTag] = useState('all');
+  const [curTag, setTag] = useState('All');
 
   const changeOptions = (action) => {
     switch (action.type) {
@@ -36,18 +36,17 @@ export function Tags() {
     getServerData(url, query).then((theData) => {
       const sorted = sortArray(theData, [['tags', 'subtags1', 'subtags2']], ['asc', 'asc', 'asc']);
       dispatch({ type: 'update', payload: sorted });
-      //      setTag('all');
+      //      setTag('All');
       //      setSubset('yours');
-      const tagList = [
-        ...new Set(theData.map((tag) => calcValue(tag, { selector: 'tags', onDisplay: getFieldValue }))),
-      ];
-      tagList.unshift('all');
+      let tagList = [...new Set(sorted.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
       setTagList(tagList);
     });
   }, [query, dispatch]);
 
   const filtered = tags.filter((item) => {
-    return curTag === 'all' || item.tags.includes(curTag);
+    return curTag === 'All' || item.tags.includes(curTag);
   });
 
   //  const [curSubset, setSubset] = useState('yours');

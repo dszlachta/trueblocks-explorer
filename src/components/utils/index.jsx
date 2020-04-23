@@ -212,6 +212,15 @@ export const sortArray = (array, fArray, dArray) => {
 };
 
 //----------------------------------------------------------------------------
+export const sortStrings = (array, dir) => {
+  if (!array || array.size === 0) return array;
+  array.sort(function (aVal, bVal) {
+    return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (dir ? 1 : -1);
+  });
+  return array;
+};
+
+//----------------------------------------------------------------------------
 export const humanFileSize = (numInBytes) => {
   numInBytes = fmtNum(numInBytes).split('.')[0].replace(/[,.]/g, ''); // clean it
   if (numInBytes === 0) return '0 B';
