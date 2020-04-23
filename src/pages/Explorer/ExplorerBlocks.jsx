@@ -103,6 +103,7 @@ export const blocksSchema = [
     name: 'Transactions',
     selector: 'transactions',
     type: 'CTransactionArray',
+    align: 'wordwrap',
   },
   {
     name: 'Difficulty',

@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import GlobalContext from 'store';
 
 import { DataTable } from 'components';
-import { getServerData } from 'components/utils';
+import { getServerData, sortArray } from 'components/utils';
 import './Monitors.css';
 
 export const Monitors = () => {
@@ -15,17 +15,33 @@ export const Monitors = () => {
   useEffect(() => {
     getServerData(url, query).then((theData) => {
       //      const d = theData && theData.caches && theData.caches[0] && theData.caches[0].items;
-      dispatch({ type: 'update', payload: theData[0].caches[0].items });
+      dispatch({
+        type: 'update',
+        payload: sortArray(theData[0].caches[0].items, ['group', 'address'], ['asc', 'asc']),
+      });
     });
   }, [query, dispatch]);
 
-  // <pre>{JSON.stringify(monitors, null, 2)}</pre>
+  const active = monitors.filter((monitor) => {
+    return !monitor.deleted;
+  });
+  const paused = monitors.filter((monitor) => {
+    return monitor.deleted;
+  });
   return (
     <div>
       <DataTable
-        data={monitors}
+        data={active}
         columns={monitorsSchema}
-        title="Monitors View"
+        title="Active Monitors"
+        search={true}
+        searchFields={['address', 'name', 'group', 'symbol']}
+        pagination={true}
+      />
+      <DataTable
+        data={paused}
+        columns={monitorsSchema}
+        title="Paused Monitors"
         search={true}
         searchFields={['address', 'name', 'group', 'symbol']}
         pagination={true}
@@ -126,6 +142,7 @@ export const monitorsSchema = [
     type: 'string',
     width: 4,
     editable: true,
+    hidden: true,
   },
   {
     name: 'isCustom',
@@ -174,7 +191,8 @@ export const monitorsSchema = [
     name: 'Deleted',
     selector: 'deleted',
     type: 'bool',
-    hidden: true,
+    isPill: true,
+    // hidden: true,
   },
 ];
 // auto-generate: schema

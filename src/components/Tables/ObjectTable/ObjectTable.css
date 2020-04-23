@@ -24,12 +24,15 @@
 .ot-cell {
   padding: var(--at-padding);
   padding-left: 4px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .ot-cell.editable {
   display: block;
   font-style: italic;
+}
+
+.ot-cell.nowrap {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

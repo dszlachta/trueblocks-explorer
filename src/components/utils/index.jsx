@@ -1,3 +1,23 @@
+import React from 'react';
+
+export const Spacer = ({ cols = 1 }) => {
+  const wids = Array(cols)
+    .fill()
+    .map(() => '1fr')
+    .join(' ');
+
+  return (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: { wids },
+      }}
+    >
+      <br />
+    </div>
+  );
+};
+
 export const systemCheck = (data, name) => {
   let result = false;
   switch (name) {

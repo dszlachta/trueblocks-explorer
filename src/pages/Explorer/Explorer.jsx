@@ -1,30 +1,27 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Mousetrap from 'mousetrap';
+// import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
-import { currentPage, getServerData } from 'components/utils';
-
-import { ObjectTable } from 'components';
+import { currentPage } from 'components/utils';
 
 import { ExplorerBlocks } from './ExplorerBlocks';
 import { ExplorerTransactions } from './ExplorerTransactions';
-import { transactionsSchema } from './ExplorerTransactions';
-import { receiptsSchema } from './ExplorerReceipts';
-import { logsSchema } from './ExplorerLogs';
-import { tracesSchema } from './ExplorerTraces';
-import { dispatch } from 'd3';
+// import { transactionsSchema } from './ExplorerTransactions';
+// import { receiptsSchema } from './ExplorerReceipts';
+// import { logsSchema } from './ExplorerLogs';
+// import { tracesSchema } from './ExplorerTraces';
+// import { dispatch } from 'd3';
 
 //----------------------------------------------------------------------
 export const Explorer = () => {
   switch (currentPage().subpage) {
-    case 'blocks':
-      return <ExplorerBlocks />;
     case 'transactions':
       return <ExplorerTransactions />;
+    case 'blocks':
     default:
-      break;
+      return <ExplorerBlocks />;
   }
-  return <div>{'Actual Explorer Page: ' + currentPage().page + ' ' + currentPage().subpage}</div>;
+  // return <div>{'Actual Explorer Page: ' + currentPage().page + ' ' + currentPage().subpage}</div>;
 };
 
 //----------------------------------------------------------------------

@@ -27,7 +27,6 @@ export const Menu = ({ menu, parent = '', expanded }) => {
         const enabled = true; //(item.enableFunc ? item.enableFunc(currentPage().page, currentPage().subpage) : true) && item.enabled;
         const { label, exact, items } = item;
         const icon = getIcon(label, expanded);
-        console.log(label, icon);
         const route = cleanPath(label, parent, item.route);
         return (
           <MenuItem

@@ -78,7 +78,6 @@ export const thePages = {
   //
   'settings/': { component: <Settings /> },
   'settings/status': { component: <Settings /> },
-  'settings/config': { component: <Settings /> },
   'settings/skins': { component: <Settings /> },
   'settings/schemas': { component: <Settings /> },
   //

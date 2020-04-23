@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 
 import { Editable, Tablebar } from 'components';
-import { formatFieldByType } from 'components/utils';
+import { formatFieldByType, handleClick } from 'components/utils';
 import { calcValue, getPrimaryKey } from 'store';
 
 import './ObjectTable.css';
@@ -32,7 +32,7 @@ export const ObjectTable = ({
         return (
           <Fragment>
             {warn}
-            <button>{item}</button>
+            <button onClick={(e) => handleClick(e, handler, { type: 'button-click', payload: item })}>{item}</button>
             <br />
           </Fragment>
         );
@@ -71,7 +71,7 @@ export const ObjectTable = ({
             return (
               <div key={key} className="at-row ot-row">
                 <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
-                <ObjectTableColumn editable={column.editable}>
+                <ObjectTableColumn column={column}>
                   {/*column.editable && !column.onAccept && (
                     <div className="warning">Editable field '{column.selector}' does not have an onAccept function</div>
                   )*/}
@@ -104,8 +104,9 @@ const ObjectTableSider = ({ children }) => {
 };
 
 //-----------------------------------------------------------------
-export const ObjectTableColumn = ({ editable = false, children }) => {
-  let cn = 'ot-cell' + (editable ? ' editable' : '');
+export const ObjectTableColumn = ({ column, children }) => {
+  const { align, editable } = column;
+  let cn = 'ot-cell' + (editable ? ' editable' : '') + (align === 'wordwrap' ? ' ' : ' nowrap');
   return (
     <div className={cn} align="left">
       {children}

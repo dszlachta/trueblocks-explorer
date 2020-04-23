@@ -1,55 +1,110 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 
 import { ObjectTable } from 'components';
-import { systemCheck } from 'components/utils';
+import { systemCheck, Spacer } from 'components/utils';
 import { useStatusData } from 'store';
 
 //------------------------------------------------------------------------
 export const SettingsSystems = () => {
   const status = useStatusData();
+  const [curManager, setManager] = useState('');
+  const manageHandler = (action) => {
+    const newManager = action.payload.replace(' >', '').replace('config ', '');
+    if (curManager === newManager) setManager('');
+    else setManager(newManager);
+  };
+
   const working = systemCheck(status, 'system');
   const msg = working
     ? 'All subsystems go...'
     : 'One or more of the TrueBlocks components is not working properly. You will need to fix it before proceeding.';
-  const cn = working ? 'okay' : 'warning';
+
+  // const styleAll = { backgroundColor: 'red', display: 'grid', gridTemplateColumns: '4fr 4fr 1fr', padding: '12px' };
+  const styleAll = { display: 'grid', gridTemplateColumns: '4fr 4fr 1fr', padding: '12px' };
   return (
     <Fragment>
-      <Fragment>
-        <div>
-          <br />
-        </div>
-        <div className={cn}>{msg}</div>
-        <div>
-          <br />
-        </div>
-      </Fragment>
-      <SettingsRow which="api" status={status} />
-      <SettingsRow which="node" status={status} />
-      <SettingsRow which="scraper" status={status} />
-      <SettingsRow which="sharing" status={status} />
-      <div style={{ fontStyle: 'italic' }}>Last updated: {status.date}</div>
+      <div className={working ? 'okay' : 'warning'}>{msg}</div>
+      <div style={styleAll}>
+        <LeftPanel status={status} handler={manageHandler} />
+        <RightPanel status={status} handler={manageHandler} curManager={curManager} subsystem={curManager} />
+      </div>
     </Fragment>
   );
 };
 
-const SettingsRow = ({ which, status }) => {
-  const names = {
-    api: 'TrueBlocks API',
-    node: 'Ethereum Node',
-    scraper: 'TrueBlocks Blaze Scraper',
-    sharing: 'IPFS Node',
-    help: 'TrueBlocks Help API',
-  };
-  const descriptions = {
-    api: 'TrueBlocks API',
-    node: 'Ethereum Node',
-    scraper: 'TrueBlocks Blaze Scraper',
-    sharing: 'IPFS Node',
-    help: 'TrueBlocks Help API',
-  };
+const RightPanel = ({ curManager, status, handler, subsystem }) => {
+  if (subsystem === '') return null;
+  //const styleRight = { backgroundColor: 'yellow', color: 'black', padding: '12px' };
+  const styleRight = { padding: '2px' };
+  return (
+    <div style={styleRight}>
+      <div>
+        <h4>Editing {subsystem} Configuration</h4>
+        <div>
+          <ObjectTable
+            data={getSubsystemData(status, subsystem)}
+            columns={systemsSchema}
+            showHidden={true}
+            handler={handler}
+          />
+        </div>
+        <br />
+      </div>
+      <DisplayLog subsystem={subsystem} />
+    </div>
+  );
+};
 
-  const isOptional = which === 'scraper' || which === 'sharing';
-  const working = systemCheck(status, which);
+function getLogText() {
+  const str =
+    "\n----------------------------------------\n1587604384 ~ <INFO>  : API calling 'chifra status '\n1587604384 ~ <INFO>  : Exiting route 'status' with OK\n----------------------------------------\n";
+  return str + str + str + str;
+}
+const DisplayLog = ({ subsystem }) => {
+  const styleDisp = { backgroundColor: 'black', color: 'aqua', margin: '2px', padding: '3px' };
+  const text = getLogText();
+  return (
+    <Fragment>
+      <h4>{'Log for ' + subsystem + ' subsystem'}</h4>
+      <div style={{ border: '1px solid black' }}>
+        <div style={styleDisp}>
+          <pre>{text}</pre>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
+
+const LeftPanel = ({ status, handler }) => {
+  //  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '12px', backgroundColor: 'palegreen' };
+  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '2px' };
+  const subSystems = ['api', 'node', 'scraper', 'sharing']; //, 'help'];
+  return (
+    <div style={styleLeft}>
+      {subSystems.map((subsystem) => {
+        const filtered = getSubsystemData(status, subsystem);
+        return (
+          <div>
+            <h4>{names[subsystem]}</h4>
+            <div>
+              <ObjectTable
+                data={filtered}
+                columns={systemsSchema}
+                buttonList={['config ' + subsystem + ' >']}
+                handler={handler}
+              />
+            </div>
+            <br />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+function getSubsystemData(status, subsystem) {
+  const isOptional = subsystem === 'scraper' || subsystem === 'sharing' || subsystem === 'help';
+  const working = systemCheck(status, subsystem);
   let cn = working ? 'okay' : 'warning';
   if (isOptional && !working) cn = 'caution';
   const statusStr = (
@@ -59,76 +114,28 @@ const SettingsRow = ({ which, status }) => {
   );
 
   const version =
-    which === 'api'
+    subsystem === 'api'
       ? status.trueblocks_version.substr(0, 40) + '...'
-      : which === 'node'
+      : subsystem === 'node'
       ? status.client_version.substr(0, 40) + '...'
       : '';
 
-  const data = {
+  return {
     status: statusStr,
-    which: which,
-    descr: descriptions[which],
-    apiProvider: which === 'api' ? status.api_provider : '',
-    host: which === 'api' ? status.host : '',
-    rpcProvider: which === 'node' ? status.rpc_provider : '',
-    traceProvider: which === 'node' ? status.rpc_provider : '',
-    balanceProvider: which === 'node' ? status.balance_provider : '',
-    cachePath: which === 'scraper' ? status.cache_path : '',
-    indexPath: which === 'scraper' ? status.index_path : '',
+    which: subsystem,
+    name: names[subsystem],
+    descr: descriptions[subsystem],
+    apiProvider: subsystem === 'api' ? status.api_provider : '',
+    host: subsystem === 'api' ? status.host : '',
+    rpcProvider: subsystem === 'node' ? status.rpc_provider : '',
+    traceProvider: subsystem === 'node' ? status.rpc_provider : '',
+    balanceProvider: subsystem === 'node' ? status.balance_provider : '',
+    cachePath: subsystem === 'scraper' ? status.cache_path : '',
+    indexPath: subsystem === 'scraper' ? status.index_path : '',
     version: version,
   };
+}
 
-  let manageView = <div>X</div>;
-  const manageHandler = (action) => {
-    console.log(action);
-    manageView = <div>{JSON.stringify(action, null, 2)}</div>;
-  };
-
-  return (
-    <Fragment>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr',
-        }}
-      >
-        <h4 className="status-header">{names[which].toUpperCase()}</h4>
-      </div>
-      {/**/}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 30fr 35fr',
-        }}
-      >
-        <div></div>
-        <ObjectTable
-          data={data}
-          columns={systemsSchema}
-          buttonList={['config ' + which + ' >']}
-          handler={manageHandler}
-        />
-        <div></div>
-      </div>
-      {/**/}
-      <BlankLine />
-    </Fragment>
-  );
-};
-
-const BlankLine = () => {
-  return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-      }}
-    >
-      <br />
-    </div>
-  );
-};
 //------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
   switch (fieldName) {
@@ -155,14 +162,20 @@ export const systemsSchema = [
     type: 'string',
   },
   {
+    name: 'Name',
+    selector: 'name',
+    type: 'string',
+  },
+  {
     name: 'Subsystem',
     selector: 'which',
     type: 'string',
   },
   {
-    name: 'Subsystem Name',
+    name: 'Description',
     selector: 'descr',
     type: 'string',
+    align: 'wordwrap',
   },
   {
     name: 'API Provider',
@@ -218,3 +231,24 @@ export const systemsSchema = [
   },
 ];
 // auto-generate: schema
+
+const names = {
+  api: 'TrueBlocks API',
+  node: 'Ethereum Node',
+  scraper: 'Blaze Scraper',
+  sharing: 'IPFS Node',
+  help: 'Help API',
+};
+
+const descriptions = {
+  api:
+    'This API, which runs locally to your machine, provides data extracted from both the Ethereum node and the TrueBlocks back end.',
+  node:
+    'This subsystem monitors the state of your connected Ethereum node configuration of which is handled outside of TrueBlocks.',
+  scraper:
+    'The TrueBlocks scraper reads the blockchain extracting just enough data to enable this application. Unlike old-fashioned web 2.0 data extraction, only a minimal amount of data is extracted so that TrueBlocks continues to work on commercial-grade hardware.',
+  sharing:
+    'TrueBlocks allows you to seemlessly share certain information with other users on a fully p2p basis. You do not need to share anything, but you are able to share anything you want.',
+  help:
+    'The TrueBlocks help system runs alongside this application providing both detailed and context sensitive help.',
+};
