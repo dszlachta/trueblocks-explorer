@@ -32,7 +32,9 @@ export const ObjectTable = ({
         return (
           <Fragment>
             {warn}
-            <button onClick={(e) => handleClick(e, handler, { type: 'button-click', payload: item })}>{item}</button>
+            <button onClick={(e) => handleClick(e, handler, { type: 'button-click', payload: item, id: id })}>
+              {item}
+            </button>
             <br />
           </Fragment>
         );

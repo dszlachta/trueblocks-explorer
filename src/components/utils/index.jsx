@@ -19,6 +19,7 @@ export const Spacer = ({ cols = 1 }) => {
 };
 
 export const systemCheck = (data, name) => {
+  if (!data || data.loading) return false;
   let result = false;
   switch (name) {
     case 'api':
@@ -197,6 +198,7 @@ export const formatFieldByType = (type, value, decimals = 0) => {
 //----------------------------------------------------------------------------
 export const sortArray = (array, fArray, dArray) => {
   if (fArray.size === 0) return array;
+  if (!array || array.size === 0) return array;
   array.sort(function (a, b) {
     for (var index = 0; index < fArray.length; index++) {
       let aVal = a[fArray[index]];

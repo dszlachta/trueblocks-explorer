@@ -22,7 +22,8 @@ import { functionsSchema } from 'pages/Explorer/ExplorerFunctions';
 import { parametersSchema } from 'pages/Explorer/ExplorerParameters';
 import { pricequotesSchema } from 'pages/Explorer/ExplorerPricequotes';
 import { pricesourcesSchema } from 'pages/Explorer/ExplorerPricesources';
-import { namesSchema, groupsSchema } from 'pages/Names/Names';
+import { namesSchema } from 'pages/Names/Names';
+import { tagsSchema } from 'pages/Tags/Tags';
 import { signaturesSchema } from 'pages/Signatures/Signatures';
 import { digestsSchema } from 'pages/Digests/Digests';
 import { cachesSchema } from 'pages/Caches/Caches';
@@ -43,7 +44,7 @@ export const SettingsSchemas = () => {
     { group: 'pages_', name: 'monitorsSchema', schema: monitorsSchema },
     { group: 'pages_', name: 'explorerSchema', schema: explorerSchema },
     { group: 'pages_', name: 'namesSchema', schema: namesSchema },
-    { group: 'pages_', name: 'groupsSchema', schema: groupsSchema },
+    { group: 'pages_', name: 'tagsSchema', schema: tagsSchema },
     { group: 'pages_', name: 'signaturesSchema', schema: signaturesSchema },
     { group: 'pages_', name: 'digestsSchema', schema: digestsSchema },
     { group: 'pages_', name: 'cachesSchema', schema: cachesSchema },

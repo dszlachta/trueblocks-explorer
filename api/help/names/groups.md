@@ -1,4 +1,4 @@
-#### Names : Groups
+#### Names : Tags
 
 This is the help file written in **markdown**
 

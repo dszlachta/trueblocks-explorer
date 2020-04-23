@@ -12,6 +12,7 @@ import { Collections } from './Collections/Collections';
 import { Monitors } from './Monitors/Monitors';
 import { Explorer } from './Explorer/Explorer';
 import { Names } from './Names/Names';
+import { Tags } from './Tags/Tags';
 import { Signatures } from './Signatures/Signatures';
 import { Digests } from './Digests/Digests';
 import { Caches } from './Caches/Caches';
@@ -43,12 +44,8 @@ export const thePages = {
   'explorer/traces': { component: <Explorer /> },
   //
   'names/': { component: <Names /> },
-  'names/yours': { component: <Names /> },
-  'names/wallets': { component: <Names /> },
-  'names/tokens': { component: <Names /> },
-  'names/prefunds': { component: <Names /> },
-  'names/other': { component: <Names /> },
-  'names/groups': { component: <Names /> },
+  //
+  'tags/': { component: <Tags /> },
   //
   'signatures/': { component: <Signatures /> },
   'signatures/known': { component: <Signatures /> },
@@ -134,14 +131,10 @@ export const theMenu = {
     {
       label: 'Names',
       exact: true,
-      items: [
-        { label: 'Your Names', route: 'yours' },
-        { label: 'Wallets' },
-        { label: 'Tokens' },
-        { label: 'Prefunds' },
-        { label: 'Other Names', route: 'other' },
-        { label: 'Groups' },
-      ],
+    },
+    {
+      label: 'Tags',
+      exact: true,
     },
     {
       label: 'Signatures',
@@ -282,7 +275,7 @@ export const useMenus = () => {
 //----------------------------------------------------------------------
 export const InnerPage = () => {
   const status = useStatusData();
-  if (!systemCheck(status, 'api') || !systemCheck(status, 'node')) return <Settings />;
+  if (!status.loading && (!systemCheck(status, 'api') || !systemCheck(status, 'node'))) return <Settings />;
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];
   return ret ? ret.component : <div className="warning">Missing Inner Page</div>;

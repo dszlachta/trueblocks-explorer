@@ -1,7 +1,7 @@
 [settings]
 pages = dashboard|separator|\
     collections|monitors|explorer|separator|\
-    names|signatures|digests|caches|other|separator|\
+    names|tags|signatures|digests|caches|other|separator|\
     settings|support
 schemas = menu|dashboard|collections|monitors|\
     explorer|\
@@ -9,5 +9,5 @@ schemas = menu|dashboard|collections|monitors|\
     explorer-traces|explorer-traceActions|explorer-traceResults|\
     explorer-functions|explorer-parameters|explorer-abis|\
     explorer-appearances|explorer-pricequotes|explorer-pricesources|\
-    names|names-groups|signatures|digests|\
+    names|tags|signatures|digests|\
     caches|other|settings-schemas|settings-systems\

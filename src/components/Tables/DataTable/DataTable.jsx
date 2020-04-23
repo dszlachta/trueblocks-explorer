@@ -21,6 +21,8 @@ export const DataTable = ({
   noHeader = false,
   expandable = true,
   showHidden = false,
+  buttonList = [],
+  buttonHandler = null,
 }) => {
   const [pagingCtx, setPaging] = useState(
     stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0, arrowsOnly: arrowsOnly })
@@ -78,6 +80,9 @@ export const DataTable = ({
           setSortCtx2(sortCtx1);
           setSortCtx1({ sortBy: action.payload, sortDir: 'asc' });
         }
+        break;
+      case 'button-click':
+        buttonHandler(action);
         break;
       default:
         break;
@@ -151,7 +156,12 @@ export const DataTable = ({
                   showHidden={showHidden}
                 />
                 {key === expandedRow && (
-                  <DataTableExpandedRow record={record} columns={columns} handler={clickHandler} />
+                  <DataTableExpandedRow
+                    record={record}
+                    columns={columns}
+                    handler={clickHandler}
+                    buttonList={buttonList}
+                  />
                 )}
               </Fragment>
             );
@@ -172,7 +182,7 @@ const StyledDiv = styled.div`
 `;
 
 //-----------------------------------------------------------------
-const DataTableExpandedRow = ({ record, columns, handler }) => {
+const DataTableExpandedRow = ({ record, columns, handler, buttonList }) => {
   const expandedStyle = {
     display: 'grid',
     gridTemplateColumns: '2fr 8fr 5fr',
@@ -183,13 +193,7 @@ const DataTableExpandedRow = ({ record, columns, handler }) => {
   return (
     <div style={expandedStyle}>
       <div></div>
-      <ObjectTable
-        data={record}
-        columns={columns}
-        showHidden={true}
-        buttonList={['save', 'add monitor', 'view']}
-        handler={handler}
-      />
+      <ObjectTable data={record} columns={columns} showHidden={true} buttonList={buttonList} handler={handler} />
       <div></div>
       <div></div>
     </div>
@@ -219,7 +223,7 @@ const DataTableHeader = ({
             style={{ display: 'flex', justifyItems: 'center' }}
           >
             <div style={{ textTransform: 'capitalize', paddingRight: '4px' }} key={key}>
-              {column.name.substr(0, 8)}
+              {column.name}
             </div>
             {column.selector === sortCtx1.sortBy ? sortIcon1 : <></>}
             {column.selector === sortCtx2.sortBy ? sortIcon2 : <></>}
@@ -283,6 +287,7 @@ const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHi
 };
 
 /*
+export to CSV
 3 let someData;
 14 let asText = false;
 15 function onDownload() {
@@ -291,7 +296,7 @@ const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHi
 18   for (var i = 0; i < someData.length; i++) {
 19     var row = someData[i];
 20     // console.log('i: ', i, ' row: ', row);
-21     csv += [row.group, row.address, row.name].join(asText ? '\t' : ',');
+21     csv += [row.gr oup, row.address, row.name].join(asText ? '\t' : ',');
 22     csv += '\n';
 23   }
 24   console.log(csv);

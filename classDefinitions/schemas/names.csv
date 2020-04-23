@@ -1,6 +1,6 @@
 name              ,selector         ,type     ,hidden ,width ,editable ,decimals ,isPill ,align  ,cn ,domain ,range ,sortable ,onDisplay     ,onAccept ,onValidate
 ID                ,id               ,string   ,true   ,1     ,         ,         ,       ,       ,   ,       ,      ,         ,getFieldValue ,         ,
-Group             ,group            ,string   ,       ,3     ,true     ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
+Tags             ,tags            ,string   ,       ,3     ,true     ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
 Address           ,address          ,address  ,       ,6     ,         ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
 Name              ,name             ,string   ,       ,4     ,true     ,         ,       ,       ,   ,       ,      ,         ,              ,         ,
 Symbol            ,symbol           ,string   ,       ,2     ,true     ,         ,       ,center ,   ,       ,      ,         ,              ,         ,

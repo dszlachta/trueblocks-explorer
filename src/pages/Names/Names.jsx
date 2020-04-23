@@ -5,81 +5,64 @@ import GlobalContext from 'store';
 
 import { DataTable, ButtonCaddie } from 'components';
 import { currentPage, getServerData, sortArray } from 'components/utils';
-import { groupsSchema } from './NamesGroups';
+import { calcValue } from 'store';
+
 import './Names.css';
 
 //---------------------------------------------------------------------------
 export function Names() {
+return <div>NOT HERE</div>
+/*
   const { names, dispatch } = useNames();
-  const subpage = currentPage().subpage;
-  const [group, setGroup] = useState('');
+  const [schema, setSchema] = useState(namesSchema);
+  const [searchFields, setSearchFields] = useState(['address', 'name', 'tags', 'symbol']);
+  const [curTag, setTag] = useState('all');
+  const [curSubset, setSubset] = useState('yours');
 
-  const changeGroup = (action) => {
+  const changeOptions = (action) => {
     switch (action.type) {
-      case 'change-group':
-        if (action.payload === 'clear') {
-          localStorage.setItem('current-group', '');
-          setGroup('');
-        } else {
-          localStorage.setItem('current-group', action.payload);
-          setGroup(action.payload);
-        }
+      case 'set-tags':
+        setTag(action.payload);
+        break;
+      case 'set-subset':
+        setSubset(action.payload);
         break;
       default:
         break;
     }
   };
 
-  const changeSubset = (action) => {
-    window.location = '/names/' + action.payload;
-  };
+  const subpage = currentPage().subpage;
+  useEffect(() => {
+    setSchema(namesSchema);
+    setSearchFields(['address', 'name', 'tags', 'symbol']);
+  }, [subpage]);
 
-  let query = subpage;
-  if (query === 'prefunds') query = 'prefund';
-  else if (query === 'tokens') query = 'named';
-  else if (query === 'wallets') query = 'owned';
-  else if (query === 'yours') query = 'custom';
-  if (query === '') query = 'custom';
-  query += '&verbose=10';
+  let query = 'verbose=10&' + (subpage || 'all');
   const url = 'http://localhost:8080/names';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
       dispatch({ type: 'update', payload: theData });
-      setGroup('');
+      setTag('all');
+      setSubset('yours');
     });
   }, [query, dispatch]);
 
-  const [schema, setSchema] = useState(namesSchema);
-  const [searchFields, setSearchFields] = useState(['address', 'name', 'group', 'symbol']);
-  useEffect(() => {
-    setSchema(subpage === 'groups' ? groupsSchema : namesSchema);
-    setSearchFields(subpage === 'groups' ? ['group'] : ['address', 'name', 'group', 'symbol']);
-  }, [subpage]);
+  const sorted = sortArray(names, ['tagz'], ['asc']);
 
-  const sorted = sortArray(names, ['group'], ['asc']);
-  const groups = [...new Set(sorted.map((item) => item.group))];
-  groups.unshift('clear');
-  const subsets = ['yours', 'wallets', 'tokens', 'prefunds', 'other', 'groups'];
+  const subsets = ['yours', 'wallets', 'tokens', 'prefunds', 'other', 'all', 'tags'];
+
+  const tags = [...new Set(sorted.map((item) => calcValue(item, { selector: 'firstTag', onDisplay: getFieldValue })))];
+  tags.unshift('all');
+
   const filtered = names.filter((item) => {
-    return group === '' || item.group === group;
+    return curTag === 'all' || item.tag.includes(curTag);
   });
 
   return (
     <div>
-      <ButtonCaddie
-        name="Subsets"
-        buttons={subsets}
-        current={currentPage().subpage !== '' ? currentPage().subpage : subsets[0]}
-        action="change-subset"
-        handler={changeSubset}
-      />
-      <ButtonCaddie
-        name="Groups"
-        buttons={groups}
-        current={group !== '' ? group : groups[0]}
-        action="change-group"
-        handler={changeGroup}
-      />
+      <ButtonCaddie name="Subsets" buttons={subsets} current={curSubset} action="set-subset" handler={changeOptions} />
+      <ButtonCaddie name="Tags" buttons={tags} current={curTag} action="set-tag" handler={changeOptions} />
       <DataTable
         data={filtered}
         columns={schema}
@@ -90,6 +73,7 @@ export function Names() {
       />
     </div>
   );
+*/
 }
 
 //----------------------------------------------------------------------
@@ -120,12 +104,13 @@ function getFieldValue(record, fieldName) {
   switch (fieldName) {
     case 'id':
       return record.address;
+    case 'firstTag':
+      const arr = record.tag.split(':');
+      return arr.length ? arr[0] : '';
     default:
       break;
   }
 }
-
-export { groupsSchema };
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -139,8 +124,8 @@ export const namesSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'Group',
-    selector: 'group',
+    name: 'Tag',
+    selector: 'tag',
     type: 'string',
     width: 3,
     editable: true,

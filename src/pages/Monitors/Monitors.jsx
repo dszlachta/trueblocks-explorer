@@ -3,48 +3,55 @@ import { useContext } from 'react';
 
 import GlobalContext from 'store';
 
-import { DataTable } from 'components';
+import { DataTable, ButtonCaddie } from 'components';
 import { getServerData, sortArray } from 'components/utils';
 import './Monitors.css';
 
 export const Monitors = () => {
   const { monitors, dispatch } = useMonitors();
+  const [which, setWhich] = useState('active');
+
+  const buttonClicked = (action) => {
+    setWhich(action.payload);
+  };
+  const buttonHandler = (action) => {
+    console.log(action);
+  };
 
   const query = 'modes=monitors&details&verbose=10';
   const url = 'http://localhost:8080/status';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
-      //      const d = theData && theData.caches && theData.caches[0] && theData.caches[0].items;
       dispatch({
         type: 'update',
-        payload: sortArray(theData[0].caches[0].items, ['group', 'address'], ['asc', 'asc']),
+        payload: sortArray(theData[0].caches[0].items, ['tags', 'address'], ['asc', 'asc']),
       });
     });
   }, [query, dispatch]);
 
-  const active = monitors.filter((monitor) => {
-    return !monitor.deleted;
+  const filtered = monitors.filter((monitor) => {
+    return which === 'active' ? !monitor.deleted : monitor.deleted;
   });
-  const paused = monitors.filter((monitor) => {
-    return monitor.deleted;
-  });
+
+  const buttons = which === 'active' ? ['pause', 'view', 'freshen'] : ['resume', 'remove'];
   return (
     <div>
-      <DataTable
-        data={active}
-        columns={monitorsSchema}
-        title="Active Monitors"
-        search={true}
-        searchFields={['address', 'name', 'group', 'symbol']}
-        pagination={true}
+      <ButtonCaddie
+        name="which"
+        buttons={['active', 'paused']}
+        current={which}
+        action="change-schema"
+        handler={buttonClicked}
       />
       <DataTable
-        data={paused}
+        data={filtered}
         columns={monitorsSchema}
-        title="Paused Monitors"
+        title={(which === 'active' ? 'Active' : 'Paused') + ' Monitors'}
         search={true}
-        searchFields={['address', 'name', 'group', 'symbol']}
+        searchFields={['address', 'name', 'tags', 'symbol']}
         pagination={true}
+        buttonList={buttons}
+        buttonHandler={buttonHandler}
       />
     </div>
   );
@@ -94,8 +101,8 @@ export const monitorsSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'Group',
-    selector: 'group',
+    name: 'Tags',
+    selector: 'tags',
     type: 'string',
     width: 3,
     editable: true,
@@ -117,6 +124,7 @@ export const monitorsSchema = [
     name: 'Symbol',
     selector: 'symbol',
     type: 'string',
+    hidden: true,
     width: 2,
     editable: true,
     align: 'center',
@@ -133,6 +141,7 @@ export const monitorsSchema = [
     name: 'Decimals',
     selector: 'decimals',
     type: 'uint64',
+    hidden: true,
     width: 2,
     align: 'center',
   },
@@ -140,9 +149,9 @@ export const monitorsSchema = [
     name: 'Description',
     selector: 'description',
     type: 'string',
+    hidden: true,
     width: 4,
     editable: true,
-    hidden: true,
   },
   {
     name: 'isCustom',
@@ -191,8 +200,7 @@ export const monitorsSchema = [
     name: 'Deleted',
     selector: 'deleted',
     type: 'bool',
-    isPill: true,
-    // hidden: true,
+    hidden: true,
   },
 ];
 // auto-generate: schema

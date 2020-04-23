@@ -1,0 +1,7 @@
+[settings]
+class = "CTags"
+
+[[subpages]]
+list = [
+    { page = "tags", subpage = "" },
+]

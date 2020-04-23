@@ -5022,12 +5022,12 @@
       "data_type": "<string>",
       "description": "add a new record to the name database (format: grp+subgrp+addr+name+sym+src+desc)"
     },
-    "groups": {
+    "tags": {
       "num": "12445",
       "group": "tools",
       "api_route": "names",
       "tool": "ethNames",
-      "command": "groups",
+      "command": "tags",
       "hotkey": "g",
       "def_val": "",
       "is_required": false,
@@ -5037,7 +5037,7 @@
       "generate": "header",
       "option_kind": "switch",
       "data_type": "<boolean>",
-      "description": "export the list of groups and subgroups only"
+      "description": "export the list of tags and subtags only"
     },
     "": {
       "num": "12460",

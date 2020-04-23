@@ -52,6 +52,15 @@ export const dashboardDefault = [
     timestamp: 1577953849,
   },
   {
+    name: 'Tags',
+    route: '/tags',
+    count: 200,
+    sizeInBytes: 102001,
+    custom: 'each node',
+    date: 'June 2019',
+    timestamp: 1577953849,
+  },
+  {
     name: 'Signatures',
     route: '/signatures',
     count: 200,

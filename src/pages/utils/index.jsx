@@ -6,6 +6,7 @@ import {
   Monitors,
   Explorer,
   Names,
+  Tags,
   Signatures,
   Digests,
   Caches,
@@ -30,6 +31,8 @@ export function getIcon(label, expanded, pad = false) {
       return <Explorer key={'micon-' + label} size={size} className={cn} />;
     case 'Names':
       return <Names key={'micon-' + label} size={size} className={cn} />;
+    case 'Tags':
+      return <Tags key={'micon-' + label} size={size} className={cn} />;
     case 'Signatures':
       return <Signatures key={'micon-' + label} size={size} className={cn} />;
     case 'Digests':

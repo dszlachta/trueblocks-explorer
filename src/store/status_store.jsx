@@ -18,24 +18,21 @@ export const statusDefault = {
     finalized: 0,
     client: 0,
   },
+  loading: true,
 };
 
 //----------------------------------------------------------------------
 export const statusReducer = (state, action) => {
-  let ret = state;
   switch (action.type) {
-    //case 'start':
-    //  return {...state};
+    case 'loading':
+      return { ...state, loading: true };
     case 'success':
-      ret = action.payload;
-      break;
+      return { ...action.payload, loading: false };
     case 'fail':
-      break;
+      return { ...statusDefault, loading: false };
     default:
-      break;
+      return state;
   }
-  // write whatever you need to put in localStorage here...
-  return ret;
 };
 
 //----------------------------------------------------------------------

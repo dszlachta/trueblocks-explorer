@@ -10,22 +10,21 @@ import './StatusPanel.css';
 
 //----------------------------------------------------------------------
 export const StatusPanel = () => {
-  const dispatch = useStatus().dispatch;
+  const { status, dispatch } = useStatus();
   const { data, error } = useSWR('http://localhost:8080/status', dataFetcher);
-  const [status, setStatus] = useState('');
+  //  const [status, setStatus] = useState('');
 
   useEffect(() => {
     if (error) {
-      setStatus(statusDefault);
+      dispatch({ type: 'failure', payload: statusDefault });
     } else {
-      if (!data) setStatus('loading...');
-      else {
-        delete data['types'];
-        setStatus(data);
-        dispatch({ type: 'success', payload: status });
+      if (!data) {
+        dispatch({ type: 'loading' });
+      } else {
+        dispatch({ type: 'success', payload: data });
       }
     }
-  }, [error, data, status, dispatch]);
+  }, [error, data, dispatch]);
 
   const expanded = usePanels().state.status;
   return (
@@ -34,7 +33,7 @@ export const StatusPanel = () => {
         <>
           <StatusReport />
           <StatusError error={error} errMsg={'Error: Is the API running?'} />
-          <StatusError error={!systemCheck(status, 'node')} errMsg={'Error: Is the Ethereum node running?'} />
+          {/*<StatusError error={!systemCheck(status, 'node')} errMsg={'Error: Is the Ethereum node running?'} />*/}
         </> //
       ) : (
         <></> //
@@ -43,10 +42,12 @@ export const StatusPanel = () => {
   );
 };
 
+//----------------------------------------------------------------------
 const StatusError = ({ error, errMsg }) => {
   return error ? <div className="warning">{errMsg}</div> : <></>; //
 };
 
+//----------------------------------------------------------------------
 const StatusReport = () => {
   const status = useStatusData();
   const meta = useStatusMeta();
@@ -59,12 +60,15 @@ const StatusReport = () => {
   const apiOkay = systemCheck(data, 'api');
   const nodeOkay = systemCheck(data, 'node');
   const scraperOkay = systemCheck(data, 'scraper');
+  const isTesting = data.is_testing;
 
   var status1 = (
     <div className={`${nodeOkay ? 'connected' : 'disconnected'}`}>{nodeOkay ? 'Connected' : 'Not connected'}</div>
   );
   var status2 = (
-    <div className={`${apiOkay ? 'connected' : 'disconnected'}`}>{apiOkay ? 'Running' : 'Not running'}</div>
+    <div className={`${apiOkay ? 'connected' : 'disconnected'}`}>
+      {apiOkay ? 'Running' : isTesting ? 'In Test Mode...' : 'Not Running...'}
+    </div>
   );
   var status3 = (
     <div className={`${scraperOkay ? 'connected' : 'disconnected'}`}>{scraperOkay ? 'Scraping' : 'Not scraping'}</div>
@@ -174,6 +178,7 @@ const StatusReport = () => {
   );
 };
 
+//----------------------------------------------------------------------
 const SectionItem = ({ name, value, wide, icon, details }) => {
   if (!wide) {
     return (
@@ -197,6 +202,7 @@ const SectionItem = ({ name, value, wide, icon, details }) => {
   );
 };
 
+//----------------------------------------------------------------------
 const Section = ({ title, children }) => {
   return (
     <>

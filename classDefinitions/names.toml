@@ -4,10 +4,4 @@ class = "CNames"
 [[subpages]]
 list = [
     { page = "names", subpage = "" },
-    { page = "names", subpage = "Your Names", route = "yours" },
-    { page = "names", subpage = "Wallets" },
-    { page = "names", subpage = "Tokens" },
-    { page = "names", subpage = "Prefunds" },
-    { page = "names", subpage = "Other Names", route = "other" },
-    { page = "names", subpage = "Groups" },
 ]

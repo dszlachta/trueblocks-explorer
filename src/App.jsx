@@ -13,6 +13,7 @@ import { collectionsDefault, collectionsReducer } from 'pages/Collections/Collec
 import { monitorsDefault, monitorsReducer } from 'pages/Monitors/Monitors';
 import { explorerDefault, explorerReducer } from 'pages/Explorer/Explorer';
 import { namesDefault, namesReducer } from 'pages/Names/Names';
+import { tagsDefault, tagsReducer } from 'pages/Tags/Tags';
 import { signaturesDefault, signaturesReducer } from 'pages/Signatures/Signatures';
 import { digestsDefault, digestsReducer } from 'pages/Digests/Digests';
 import { cachesDefault, cachesReducer } from 'pages/Caches/Caches';
@@ -34,6 +35,7 @@ const defaultData = {
   monitors: monitorsDefault,
   explorer: explorerDefault,
   names: namesDefault,
+  tags: tagsDefault,
   signatures: signaturesDefault,
   digests: digestsDefault,
   caches: cachesDefault,
@@ -53,6 +55,7 @@ function App() {
   const [monitorsState, monitorsDispatch] = useReducer(monitorsReducer, defaultData['monitors']);
   const [explorerState, explorerDispatch] = useReducer(explorerReducer, defaultData['explorer']);
   const [namesState, namesDispatch] = useReducer(namesReducer, defaultData['names']);
+  const [tagsState, tagsDispatch] = useReducer(tagsReducer, defaultData['tags']);
   const [signaturesState, signaturesDispatch] = useReducer(signaturesReducer, defaultData['signatures']);
   const [digestsState, digestsDispatch] = useReducer(digestsReducer, defaultData['digests']);
   const [cachesState, cachesDispatch] = useReducer(cachesReducer, defaultData['caches']);
@@ -71,6 +74,7 @@ function App() {
     monitors: { monitors: monitorsState, dispatch: monitorsDispatch },
     explorer: { explorer: explorerState, dispatch: explorerDispatch },
     names: { names: namesState, dispatch: namesDispatch },
+    tags: { tags: tagsState, dispatch: tagsDispatch },
     signatures: { signatures: signaturesState, dispatch: signaturesDispatch },
     digests: { digests: digestsState, dispatch: digestsDispatch },
     caches: { caches: cachesState, dispatch: cachesDispatch },

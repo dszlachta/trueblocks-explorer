@@ -1,5 +1,0 @@
-name       ,selector  ,type   ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,domain ,range ,sortable ,onDisplay     ,onAccept ,onValidate
-ID         ,id        ,string ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,         ,getFieldValue ,         ,
-Group      ,group     ,string ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,getFieldValue ,         ,
-Subgroup 1 ,subgroup1 ,string ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,getFieldValue ,         ,
-Subgroup 2 ,subgroup2 ,string ,       ,      ,         ,         ,       ,      ,   ,       ,      ,         ,getFieldValue ,         ,

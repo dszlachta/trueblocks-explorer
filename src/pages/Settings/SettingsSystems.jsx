@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
 import { ObjectTable } from 'components';
-import { systemCheck, Spacer } from 'components/utils';
+import { systemCheck } from 'components/utils';
 import { useStatusData } from 'store';
 
 //------------------------------------------------------------------------
@@ -15,9 +15,12 @@ export const SettingsSystems = () => {
   };
 
   const working = systemCheck(status, 'system');
-  const msg = working
-    ? 'All subsystems go...'
-    : 'One or more of the TrueBlocks components is not working properly. You will need to fix it before proceeding.';
+  let msg = working ? 'All subsystems go...' : 'One or more of the TrueBlocks components is not working properly.';
+  if (!working && status.is_testing) {
+    msg += ' It appears that the API is in test mode. Wait until the test is finished and then reload.';
+  } else {
+    msg += '  You will need to fix it before proceeding.';
+  }
 
   // const styleAll = { backgroundColor: 'red', display: 'grid', gridTemplateColumns: '4fr 4fr 1fr', padding: '12px' };
   const styleAll = { display: 'grid', gridTemplateColumns: '4fr 4fr 1fr', padding: '12px' };
@@ -32,6 +35,7 @@ export const SettingsSystems = () => {
   );
 };
 
+//------------------------------------------------------------------------
 const RightPanel = ({ curManager, status, handler, subsystem }) => {
   if (subsystem === '') return null;
   //const styleRight = { backgroundColor: 'yellow', color: 'black', padding: '12px' };
@@ -55,6 +59,7 @@ const RightPanel = ({ curManager, status, handler, subsystem }) => {
   );
 };
 
+//------------------------------------------------------------------------
 function getLogText() {
   const str =
     "\n----------------------------------------\n1587604384 ~ <INFO>  : API calling 'chifra status '\n1587604384 ~ <INFO>  : Exiting route 'status' with OK\n----------------------------------------\n";
@@ -75,6 +80,7 @@ const DisplayLog = ({ subsystem }) => {
   );
 };
 
+//------------------------------------------------------------------------
 const LeftPanel = ({ status, handler }) => {
   //  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '12px', backgroundColor: 'palegreen' };
   const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '2px' };
@@ -102,6 +108,7 @@ const LeftPanel = ({ status, handler }) => {
   );
 };
 
+//------------------------------------------------------------------------
 function getSubsystemData(status, subsystem) {
   const isOptional = subsystem === 'scraper' || subsystem === 'sharing' || subsystem === 'help';
   const working = systemCheck(status, subsystem);
@@ -109,7 +116,7 @@ function getSubsystemData(status, subsystem) {
   if (isOptional && !working) cn = 'caution';
   const statusStr = (
     <span className={cn} style={{ height: '100%', padding: '2px' }}>
-      {working ? 'Running...' : isOptional ? 'Paused...' : 'Not Running...'}
+      {working ? 'Running...' : isOptional ? 'Paused...' : status.is_testing ? 'In Test Mode...' : 'Not Running...'}
     </span>
   );
 
@@ -232,6 +239,7 @@ export const systemsSchema = [
 ];
 // auto-generate: schema
 
+//------------------------------------------------------------------------
 const names = {
   api: 'TrueBlocks API',
   node: 'Ethereum Node',
@@ -240,6 +248,7 @@ const names = {
   help: 'Help API',
 };
 
+//------------------------------------------------------------------------
 const descriptions = {
   api:
     'This API, which runs locally to your machine, provides data extracted from both the Ethereum node and the TrueBlocks back end.',
