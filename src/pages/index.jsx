@@ -1,9 +1,7 @@
 import React from 'react';
 
 import { useContext } from 'react';
-import GlobalContext, { useStatusData } from 'store';
-
-import { currentPage, systemCheck } from 'components/utils';
+import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
 // auto-generate: imports
@@ -270,13 +268,4 @@ export const menusReducer = (state, action) => {
 //----------------------------------------------------------------------
 export const useMenus = () => {
   return useContext(GlobalContext).menus;
-};
-
-//----------------------------------------------------------------------
-export const InnerPage = () => {
-  const status = useStatusData();
-  if (!status.loading && (!systemCheck(status, 'api') || !systemCheck(status, 'node'))) return <Settings />;
-  const { page, subpage } = currentPage();
-  const ret = thePages[page + '/' + subpage];
-  return ret ? ret.component : <div className="warning">Missing Inner Page</div>;
 };

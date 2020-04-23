@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { usePanels } from 'store';
+import { useToggles } from 'store';
 import { Settings, Discord, GitHub, Medium, Twitter } from 'assets/icons/SetSocial';
 import './PageFooter.css';
 
 //----------------------------------------------------------------------
 export const PageFooter = () => {
   return (
-    <div className={'page-footer ' + (usePanels().state.menu ? 'shape_11' : 'shape_01')}>
+    <div className={'page-footer ' + (useToggles().state.menu ? 'shape_11' : 'shape_01')}>
       <LeftFooter />
       <CenterFooter />
       <RightFooter />

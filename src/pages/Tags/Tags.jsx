@@ -11,22 +11,20 @@ import './Tags.css';
 
 //---------------------------------------------------------------------------
 export function Tags() {
-return <div>Not here</div>
-/*
   const { tags, dispatch } = useTags();
-  const [schema, setSchema] = useState(tagsSchema);
-  const [searchFields, setSearchFields] = useState(['tags']);
+
+  const [searchFields, setSearchFields] = useState(['tags', 'subtags1', 'subtags2']);
+  const [tagList, setTagList] = useState('');
   const [curTag, setTag] = useState('all');
-  const [curSubset, setSubset] = useState('yours');
 
   const changeOptions = (action) => {
     switch (action.type) {
       case 'set-tags':
         setTag(action.payload);
         break;
-      case 'set-subset':
-        setSubset(action.payload);
-        break;
+      //      case 'set-subset':
+      //        setSubset(action.payload);
+      //        break;
       default:
         break;
     }
@@ -36,31 +34,33 @@ return <div>Not here</div>
   const url = 'http://localhost:8080/names';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
-      dispatch({ type: 'update', payload: theData });
-      setTag('all');
-      setSubset('yours');
+      const sorted = sortArray(theData, [['tags', 'subtags1', 'subtags2']], ['asc', 'asc', 'asc']);
+      dispatch({ type: 'update', payload: sorted });
+      //      setTag('all');
+      //      setSubset('yours');
+      const tagList = [
+        ...new Set(theData.map((tag) => calcValue(tag, { selector: 'tags', onDisplay: getFieldValue }))),
+      ];
+      tagList.unshift('all');
+      setTagList(tagList);
     });
   }, [query, dispatch]);
-
-  const sorted = sortArray(tags, ['tags'], ['asc']);
-
-  const subsets = ['yours', 'wallets', 'tokens', 'prefunds', 'other', 'all', 'tags'];
-  const tagList = [
-    ...new Set(sorted.map((item) => calcValue(item, { selector: 'firstTag', onDisplay: getFieldValue }))),
-  ];
-  tagList.unshift('all');
 
   const filtered = tags.filter((item) => {
     return curTag === 'all' || item.tags.includes(curTag);
   });
 
+  //  const [curSubset, setSubset] = useState('yours');
+  //  const subsets = ['yours', 'wallets', 'tokens', 'prefunds', 'other', 'all', 'tags'];
+  //      <ButtonCaddie name="Subsets" buttons={subsets} current={curSubset} action="set-subset" handler={changeOptions} />
   return (
     <div>
-      <ButtonCaddie name="Subsets" buttons={subsets} current={curSubset} action="set-subset" handler={changeOptions} />
-      <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={changeOptions} />
+      {tagList.length ? (
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={changeOptions} />
+      ) : null}
       <DataTable
         data={filtered}
-        columns={schema}
+        columns={tagsSchema}
         title="Tags"
         search={true}
         searchFields={searchFields}
@@ -68,7 +68,6 @@ return <div>Not here</div>
       />
     </div>
   );
-*/
 }
 
 //----------------------------------------------------------------------
@@ -121,20 +120,20 @@ export const tagsSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'Tag',
-    selector: 'tag',
+    name: 'Tags',
+    selector: 'tags',
     type: 'string',
     onDisplay: getFieldValue,
   },
   {
-    name: 'Subtag 1',
-    selector: 'subtag1',
+    name: 'Subtags 1',
+    selector: 'subtags1',
     type: 'string',
     onDisplay: getFieldValue,
   },
   {
-    name: 'Subtag 2',
-    selector: 'subtag2',
+    name: 'Subtags 2',
+    selector: 'subtags2',
     type: 'string',
     onDisplay: getFieldValue,
   },

@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import Mousetrap from 'mousetrap';
 
 import { PageHeader, PageFooter, PageContent } from 'page-parts';
-import GlobalContext, { panelDefault, panelReducer, statusDefault, statusReducer } from 'store';
+import GlobalContext, { defaultToggles, togglesReducer, statusDefault, statusReducer } from 'store';
 import { theMenu, menusReducer } from 'pages';
 import { stateFromStorage } from 'components/utils';
 
@@ -27,7 +27,7 @@ import 'App.css';
 //-----------------------------------------------------
 // only here to make auto code generation easier
 const defaultData = {
-  panel: panelDefault,
+  panel: defaultToggles,
   status: statusDefault,
   menu: theMenu,
   dashboard: dashboardDefault,
@@ -46,7 +46,7 @@ const defaultData = {
 
 //-----------------------------------------------------
 function App() {
-  const [panelState, panelDispatch] = useReducer(panelReducer, stateFromStorage('panelState', defaultData['panel']));
+  const [panelState, panelDispatch] = useReducer(togglesReducer, stateFromStorage('panelState', defaultData['panel']));
   const [statusState, statusDispatch] = useReducer(statusReducer, defaultData['status']);
   const [menusState, menusDispatch] = useReducer(menusReducer, defaultData['menu']);
   // auto-generate: reducers

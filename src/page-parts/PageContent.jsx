@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { usePanels } from 'store';
-import { MenuPanel, ContentPanel, StatusPanel, HelpPanel } from 'components/';
+import { useToggles } from 'store';
+import { MenuPanel, ContentPanel, StatusPanel, HelpPanel } from 'panels/';
+
 import './PageContent.css';
 
 //----------------------------------------------------------------------
@@ -18,7 +19,7 @@ export const PageContent = () => {
 
 //----------------------------------------------------------------------
 const usePanelBits = () => {
-  const panelState = usePanels().state;
+  const panelState = useToggles().state;
   let ret = '';
   ret += panelState.menu ? '1' : '0';
   ret += panelState.content ? '1' : '0';

@@ -4,7 +4,7 @@ import { Caddie } from './Caddie/Caddie';
 import { Menu, MenuItem } from './Menu/Menu';
 import { Editable } from './Editable/Editable';
 import { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable } from './Tables';
-import { MenuPanel, ContentPanel, StatusPanel, HelpPanel, Panel } from './Panels';
+import { Panel } from './Panel/Panel';
 
 export {
   ButtonCaddie,
@@ -20,8 +20,4 @@ export {
   GridTable,
   ChartTable,
   PanelTable,
-  MenuPanel,
-  ContentPanel,
-  StatusPanel,
-  HelpPanel,
 };

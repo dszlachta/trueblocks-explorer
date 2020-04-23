@@ -21,14 +21,14 @@ export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curP
     Mousetrap.bind(['down'], getHandler(pagingCtx, 'next', handler));
     Mousetrap.bind(['right'], getHandler(pagingCtx, 'next', handler));
     return () => {
-      Mousetrap.unbind(['meta+shift+home'], getHandler(pagingCtx, 'first', handler));
-      Mousetrap.unbind(['meta+shift+end'], getHandler(pagingCtx, 'last', handler));
-      Mousetrap.unbind(['home'], getHandler(pagingCtx, 'first', handler));
-      Mousetrap.unbind(['end'], getHandler(pagingCtx, 'last', handler));
-      Mousetrap.unbind(['up'], getHandler(pagingCtx, 'previous', handler));
-      Mousetrap.unbind(['left'], getHandler(pagingCtx, 'previous', handler));
-      Mousetrap.unbind(['down'], getHandler(pagingCtx, 'next', handler));
-      Mousetrap.unbind(['right'], getHandler(pagingCtx, 'next', handler));
+      Mousetrap.unbind(['meta+shift+home']);
+      Mousetrap.unbind(['meta+shift+end']);
+      Mousetrap.unbind(['home']);
+      Mousetrap.unbind(['end']);
+      Mousetrap.unbind(['up']);
+      Mousetrap.unbind(['left']);
+      Mousetrap.unbind(['down']);
+      Mousetrap.unbind(['right']);
     };
   }, [handler]);
 

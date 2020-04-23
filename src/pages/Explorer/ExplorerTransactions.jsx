@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Mousetrap from 'mousetrap';
 
 import { useExplorer } from './Explorer';
 import { ObjectTable } from 'components';
-import { getServerData } from 'components/utils';
+import { getServerData, handleClick } from 'components/utils';
 
 //----------------------------------------------------------------------
 export const ExplorerTransactions = () => {
@@ -11,6 +11,29 @@ export const ExplorerTransactions = () => {
   const [current, setCurrent] = useState('');
   const { explorer, dispatch } = useExplorer();
   const [fetching, setFetch] = useState(false);
+
+  const handleNavigate = useCallback(
+    (action) => {
+      console.log(action);
+      switch (action.type) {
+        case 'first':
+          setCurrent('46147.0');
+          break;
+        case 'last':
+          setCurrent('latest');
+          break;
+        case 'previous':
+          setCurrent(explorer.blockNumber + '.' + explorer.transactionIndex + '.prev');
+          break;
+        case 'next':
+          setCurrent(explorer.blockNumber + '.' + explorer.transactionIndex + '.next');
+          break;
+        default:
+          break;
+      }
+    },
+    [explorer.blockNumber, explorer.transactionIndex]
+  );
 
   let query = 'transactions=' + (current === '' ? 'latest' : current);
   query += '&verbose=10&force';
@@ -24,29 +47,25 @@ export const ExplorerTransactions = () => {
   }, [query, dispatch, current]);
 
   useEffect(() => {
-    Mousetrap.bind(['e >'], function () {
-      const p = 'latest';
-      setCurrent(p);
-    });
-    Mousetrap.bind(['e n'], function () {
-      const p = explorer.blockNumber + '.' + explorer.transactionIndex + '.next';
-      setCurrent(p);
-    });
-    Mousetrap.bind(['e p'], function () {
-      const p = explorer.blockNumber + '.' + explorer.transactionIndex + '.prev';
-      setCurrent(p);
-    });
-    Mousetrap.bind(['e <'], function () {
-      const p = explorer.blockNumber - 1 + '.0';
-      setCurrent(p);
-    });
+    Mousetrap.bind(['meta+shift+home'], (e) => handleClick(null, handleNavigate, { type: 'first' }));
+    Mousetrap.bind(['meta+shift+end'], (e) => handleClick(null, handleNavigate, { type: 'last' }));
+    Mousetrap.bind(['home'], (e) => handleClick(null, handleNavigate, { type: 'first' }));
+    Mousetrap.bind(['end'], (e) => handleClick(null, handleNavigate, { type: 'last' }));
+    Mousetrap.bind(['up'], (e) => handleClick(null, handleNavigate, { type: 'previous' }));
+    Mousetrap.bind(['left'], (e) => handleClick(null, handleNavigate, { type: 'previous' }));
+    Mousetrap.bind(['down'], (e) => handleClick(null, handleNavigate, { type: 'next' }));
+    Mousetrap.bind(['right'], (e) => handleClick(null, handleNavigate, { type: 'next' }));
     return () => {
-      Mousetrap.unbind(['e >']);
-      Mousetrap.unbind(['e n']);
-      Mousetrap.unbind(['e p']);
-      Mousetrap.unbind(['e <']);
+      Mousetrap.unbind(['meta+shift+home']);
+      Mousetrap.unbind(['meta+shift+end']);
+      Mousetrap.unbind(['home']);
+      Mousetrap.unbind(['end']);
+      Mousetrap.unbind(['up']);
+      Mousetrap.unbind(['left']);
+      Mousetrap.unbind(['down']);
+      Mousetrap.unbind(['right']);
     };
-  }, [dispatch, explorer.blockNumber, explorer.transactionIndex]);
+  }, [dispatch, explorer.blockNumber, explorer.transactionIndex, handleNavigate]);
 
   if (fetching) return <pre>Fetching...</pre>;
   if (explorer.blockNumber === undefined) return <pref>fetching...</pref>;
@@ -58,7 +77,6 @@ export const ExplorerTransactions = () => {
         data={explorer}
         title={'Transaction ' + explorer.blockNumber + '.' + explorer.transactionIndex}
         search={false}
-        pagination={true}
       />
     </div>
   );

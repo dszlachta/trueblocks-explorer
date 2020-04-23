@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
-export const panelDefault = {
+export const defaultToggles = {
   menu: true,
   content: true,
   status: true,
@@ -11,7 +11,7 @@ export const panelDefault = {
 };
 
 //----------------------------------------------------------------------
-export const panelReducer = (state, action) => {
+export const togglesReducer = (state, action) => {
   let ret = state;
   switch (action.type) {
     case 'collapse':
@@ -33,7 +33,7 @@ export const panelReducer = (state, action) => {
       ret = { ...state, help: !state.help };
       break;
     case 'reset':
-      ret = panelDefault;
+      ret = defaultToggles;
       break;
     default:
       break;
@@ -43,6 +43,6 @@ export const panelReducer = (state, action) => {
 };
 
 //----------------------------------------------------------------------
-export const usePanels = () => {
+export const useToggles = () => {
   return useContext(GlobalContext).panels;
 };

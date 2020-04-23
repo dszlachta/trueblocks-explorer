@@ -1,79 +1,68 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useContext } from 'react';
 
 import GlobalContext from 'store';
 
 import { DataTable, ButtonCaddie } from 'components';
-import { currentPage, getServerData, sortArray } from 'components/utils';
+import { getServerData, sortArray } from 'components/utils';
+import { useTags } from 'pages/Tags/Tags';
 import { calcValue } from 'store';
 
 import './Names.css';
 
 //---------------------------------------------------------------------------
 export function Names() {
-return <div>NOT HERE</div>
-/*
   const { names, dispatch } = useNames();
-  const [schema, setSchema] = useState(namesSchema);
-  const [searchFields, setSearchFields] = useState(['address', 'name', 'tags', 'symbol']);
+  const [tagList, setTagList] = useState([]);
+  const [searchFields, setSearchFields] = useState(['tags', 'address', 'name']);
   const [curTag, setTag] = useState('all');
-  const [curSubset, setSubset] = useState('yours');
 
   const changeOptions = (action) => {
     switch (action.type) {
       case 'set-tags':
         setTag(action.payload);
         break;
-      case 'set-subset':
-        setSubset(action.payload);
-        break;
       default:
         break;
     }
   };
 
-  const subpage = currentPage().subpage;
-  useEffect(() => {
-    setSchema(namesSchema);
-    setSearchFields(['address', 'name', 'tags', 'symbol']);
-  }, [subpage]);
-
-  let query = 'verbose=10&' + (subpage || 'all');
+  let query = 'verbose=10&all';
   const url = 'http://localhost:8080/names';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
-      dispatch({ type: 'update', payload: theData });
-      setTag('all');
-      setSubset('yours');
+      const sorted = sortArray(theData, [['tags', 'address', 'name']], ['asc', 'asc', 'asc']);
+      dispatch({ type: 'update', payload: sorted });
+      const tagList = [
+        ...new Set(sorted.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
+      ];
+      tagList.unshift('all');
+      setTagList(tagList);
     });
   }, [query, dispatch]);
 
-  const sorted = sortArray(names, ['tagz'], ['asc']);
-
-  const subsets = ['yours', 'wallets', 'tokens', 'prefunds', 'other', 'all', 'tags'];
-
-  const tags = [...new Set(sorted.map((item) => calcValue(item, { selector: 'firstTag', onDisplay: getFieldValue })))];
-  tags.unshift('all');
-
   const filtered = names.filter((item) => {
-    return curTag === 'all' || item.tag.includes(curTag);
+    return curTag === 'all' || item.tags.includes(curTag);
   });
 
+  //  const [curSubset, setSubset] = useState('yours');
+  //  const subsets = ['yours', 'wallets', 'tokens', 'prefunds', 'other', 'all', 'tags'];
+  //      <ButtonCaddie name="Subsets" buttons={subsets} current={curSubset} action="set-subset" handler={changeOptions} />
   return (
     <div>
-      <ButtonCaddie name="Subsets" buttons={subsets} current={curSubset} action="set-subset" handler={changeOptions} />
-      <ButtonCaddie name="Tags" buttons={tags} current={curTag} action="set-tag" handler={changeOptions} />
+      {tagList.length ? (
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={changeOptions} />
+      ) : null}
       <DataTable
         data={filtered}
-        columns={schema}
-        title="Names View"
+        columns={namesSchema}
+        title="Names"
         search={true}
         searchFields={searchFields}
         pagination={true}
       />
     </div>
   );
-*/
 }
 
 //----------------------------------------------------------------------
@@ -104,9 +93,9 @@ function getFieldValue(record, fieldName) {
   switch (fieldName) {
     case 'id':
       return record.address;
-    case 'firstTag':
-      const arr = record.tag.split(':');
-      return arr.length ? arr[0] : '';
+    case 'tags':
+      const array = record.tags.split(':');
+      return array.length > 0 ? array[0] : '';
     default:
       break;
   }
@@ -124,8 +113,8 @@ export const namesSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'Tag',
-    selector: 'tag',
+    name: 'Tags',
+    selector: 'tags',
     type: 'string',
     width: 3,
     editable: true,

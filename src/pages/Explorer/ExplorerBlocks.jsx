@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Mousetrap from 'mousetrap';
 
 import { useExplorer } from './Explorer';
 import { ObjectTable } from 'components';
-import { getServerData } from 'components/utils';
+import { getServerData, handleClick } from 'components/utils';
 
 //----------------------------------------------------------------------
 export const ExplorerBlocks = () => {
@@ -11,6 +11,29 @@ export const ExplorerBlocks = () => {
   const [block, setBlock] = useState(-1);
   const { explorer, dispatch } = useExplorer();
   const [fetching, setFetch] = useState(false);
+
+  const handleNavigate = useCallback(
+    (action) => {
+      console.log(action);
+      switch (action.type) {
+        case 'first':
+          setBlock(1);
+          break;
+        case 'last':
+          setBlock(-1);
+          break;
+        case 'previous':
+          setBlock(explorer.blockNumber - 1);
+          break;
+        case 'next':
+          setBlock(explorer.blockNumber + 1);
+          break;
+        default:
+          break;
+      }
+    },
+    [explorer.blockNumber]
+  );
 
   let query = 'hashes_only&blocks=' + (block === -1 ? 'latest' : block);
   query += '&verbose=10';
@@ -24,37 +47,31 @@ export const ExplorerBlocks = () => {
   }, [query, dispatch, block]);
 
   useEffect(() => {
-    Mousetrap.bind(['e 0'], function () {
-      setBlock(1);
-    });
-    Mousetrap.bind(['e n'], function () {
-      setBlock(explorer.blockNumber + 1);
-    });
-    Mousetrap.bind(['e p'], function () {
-      setBlock(explorer.blockNumber - 1);
-    });
-    Mousetrap.bind(['e >'], function () {
-      setBlock(0);
-    });
+    Mousetrap.bind(['meta+shift+home'], (e) => handleClick(null, handleNavigate, { type: 'first' }));
+    Mousetrap.bind(['meta+shift+end'], (e) => handleClick(null, handleNavigate, { type: 'last' }));
+    Mousetrap.bind(['home'], (e) => handleClick(null, handleNavigate, { type: 'first' }));
+    Mousetrap.bind(['end'], (e) => handleClick(null, handleNavigate, { type: 'last' }));
+    Mousetrap.bind(['up'], (e) => handleClick(null, handleNavigate, { type: 'previous' }));
+    Mousetrap.bind(['left'], (e) => handleClick(null, handleNavigate, { type: 'previous' }));
+    Mousetrap.bind(['down'], (e) => handleClick(null, handleNavigate, { type: 'next' }));
+    Mousetrap.bind(['right'], (e) => handleClick(null, handleNavigate, { type: 'next' }));
     return () => {
-      Mousetrap.unbind(['e 0']);
-      Mousetrap.unbind(['e n']);
-      Mousetrap.unbind(['e p']);
-      Mousetrap.unbind(['e >']);
+      Mousetrap.unbind(['meta+shift+home']);
+      Mousetrap.unbind(['meta+shift+end']);
+      Mousetrap.unbind(['home']);
+      Mousetrap.unbind(['end']);
+      Mousetrap.unbind(['up']);
+      Mousetrap.unbind(['left']);
+      Mousetrap.unbind(['down']);
+      Mousetrap.unbind(['right']);
     };
-  }, [dispatch, explorer.blockNumber]);
+  }, [dispatch, explorer.blockNumber, handleNavigate]);
 
   if (fetching) return <pre>fetching...</pre>;
   return (
     <div>
       <pre>{query}</pre>
-      <ObjectTable
-        columns={schema}
-        data={explorer}
-        title={'Block ' + explorer.blockNumber}
-        search={false}
-        pagination={true}
-      />
+      <ObjectTable columns={schema} data={explorer} title={'Block ' + explorer.blockNumber} search={false} />
     </div>
   );
 };

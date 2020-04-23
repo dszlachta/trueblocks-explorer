@@ -1,13 +1,22 @@
 import React from 'react';
 
-import { panelDefault, panelReducer, usePanels } from './panel_store';
+import { defaultToggles, togglesReducer, useToggles } from './panel_store';
 import { statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta } from './status_store';
 
 //----------------------------------------------------------------------
 const GlobalContext = React.createContext({});
 export default GlobalContext;
 
-export { panelDefault, panelReducer, usePanels, statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta };
+export {
+  defaultToggles,
+  togglesReducer,
+  useToggles,
+  statusDefault,
+  statusReducer,
+  useStatus,
+  useStatusData,
+  useStatusMeta,
+};
 
 //----------------------------------------------------------------------
 //export function isVerbose() {

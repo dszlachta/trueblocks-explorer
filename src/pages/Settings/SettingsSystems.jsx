@@ -84,7 +84,7 @@ const DisplayLog = ({ subsystem }) => {
 const LeftPanel = ({ status, handler }) => {
   //  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '12px', backgroundColor: 'palegreen' };
   const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '2px' };
-  const subSystems = ['api', 'node', 'scraper', 'sharing']; //, 'help'];
+  const subSystems = ['api', 'node', 'scraper', 'sharing', 'help'];
   return (
     <div style={styleLeft}>
       {subSystems.map((subsystem) => {
@@ -100,6 +100,8 @@ const LeftPanel = ({ status, handler }) => {
                 handler={handler}
               />
             </div>
+            <br />
+            <br />
             <br />
           </div>
         );
@@ -183,6 +185,7 @@ export const systemsSchema = [
     selector: 'descr',
     type: 'string',
     align: 'wordwrap',
+    hidden: true,
   },
   {
     name: 'API Provider',
