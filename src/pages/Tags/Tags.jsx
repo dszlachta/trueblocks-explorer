@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useContext } from 'react';
 
 import GlobalContext from 'store';
@@ -38,12 +38,15 @@ export function Tags() {
       dispatch({ type: 'update', payload: sorted });
       //      setTag('All');
       //      setSubset('yours');
-      let tagList = [...new Set(sorted.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
     });
   }, [query, dispatch]);
+
+  useMemo(() => {
+    let tagList = [...new Set(tags.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    tagList = sortStrings(tagList, true);
+    tagList.unshift('All');
+    setTagList(tagList);
+  }, [tags]);
 
   const filtered = tags.filter((item) => {
     return curTag === 'All' || item.tags.includes(curTag);

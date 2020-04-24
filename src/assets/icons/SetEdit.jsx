@@ -7,5 +7,7 @@ import Edit from 'assets/icons/Edit';
 import Delete from 'assets/icons/Delete';
 import Undelete from 'assets/icons/Undelete';
 import Remove from 'assets/icons/Remove';
+import ExternalLink from 'assets/icons/ExternalLink';
+//import View from 'assets/icons/View';
 
-export { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove };
+export { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink };

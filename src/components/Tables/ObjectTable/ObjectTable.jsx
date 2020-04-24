@@ -16,7 +16,7 @@ export const ObjectTable = ({
   pagination = false,
   arrowsOnly = false,
   showHidden = false,
-  buttonList = [],
+  otButtonList = [],
   handler = null,
 }) => {
   const [filterText] = useState('');
@@ -25,10 +25,10 @@ export const ObjectTable = ({
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
   const id = calcValue(data, idCol);
-  const warn = buttonList.length > 0 && !handler && <div className="warning">buttonList handler not found</div>;
-  const buttons = buttonList && (
+  const warn = otButtonList.length > 0 && !handler && <div className="warning">otButtonList handler not found</div>;
+  const buttons = otButtonList && (
     <div style={{ padding: '0px !important', marginTop: '-4px' }}>
-      {buttonList.map((item) => {
+      {otButtonList.map((item) => {
         return (
           <Fragment>
             {warn}
@@ -57,7 +57,7 @@ export const ObjectTable = ({
   return (
     <div className="ot-container">
       {tableBar}
-      <div className={'ot-body' + (buttonList.length > 0 ? '-withbuttons' : '')}>
+      <div className={'ot-body' + (otButtonList.length > 0 ? '-withbuttons' : '')}>
         <div className="at-body">
           {columns.map((column, index) => {
             // note: in the object table 'columns' renders as rows

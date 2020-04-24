@@ -33,7 +33,7 @@ export const Tablebar = ({
 
 //-----------------------------------------------------------------------
 const Title = ({ title }) => {
-  return <div className="at-title">{title ? title.replace('%20', ' ') : ''}</div>;
+  return <div className="at-title">{title && typeof title === 'string' ? title.replace('%20', ' ') : title}</div>;
 };
 
 //-----------------------------------------------------------------

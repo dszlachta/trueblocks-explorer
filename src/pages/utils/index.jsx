@@ -14,37 +14,55 @@ import {
   Settings,
   Support,
 } from 'assets/icons/SetMenus';
+import { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink } from 'assets/icons/SetEdit';
 
 import './Utils.css';
 
-export function getIcon(label, expanded, pad = false) {
+export function getIcon(labelIn, expanded, pad = false) {
+  const label = labelIn.toLowerCase();
   const size = 20;
   const cn = (expanded ? 'menu-icon' : '') + (pad ? ' menu-icon-padded' : '');
   switch (label) {
-    case 'Dashboard':
+    case 'dashboard':
       return <Dashboard key={'micon-' + label} size={size} className={cn} />;
-    case 'Collections':
+    case 'collections':
       return <Collections key={'micon-' + label} size={size} className={cn} />;
-    case 'Monitors':
+    case 'monitors':
       return <Monitors key={'micon-' + label} size={size} className={cn} />;
-    case 'Explorer':
+    case 'explorer':
       return <Explorer key={'micon-' + label} size={size} className={cn} />;
-    case 'Names':
+    case 'names':
       return <Names key={'micon-' + label} size={size} className={cn} />;
-    case 'Tags':
+    case 'tags':
       return <Tags key={'micon-' + label} size={size} className={cn} />;
-    case 'Signatures':
+    case 'signatures':
       return <Signatures key={'micon-' + label} size={size} className={cn} />;
-    case 'Digests':
+    case 'digests':
       return <Digests key={'micon-' + label} size={size} className={cn} />;
-    case 'Caches':
+    case 'caches':
       return <Caches key={'micon-' + label} size={size} className={cn} />;
-    case 'Other':
+    case 'other':
       return <Other key={'micon-' + label} size={size} className={cn} />;
-    case 'Settings':
+    case 'settings':
       return <Settings key={'micon-' + label} size={size} className={cn} />;
-    case 'Support':
+    case 'support':
       return <Support key={'micon-' + label} size={size} className={cn} />;
+    case 'toggleleft':
+      return <ToggleLeft key={'micon-' + label} size={size} className={cn} />;
+    case 'toggleright':
+      return <ToggleRight key={'micon-' + label} size={size} className={cn} />;
+    case 'add':
+      return <Add key={'micon-' + label} size={size} className={cn} />;
+    case 'edit':
+      return <Edit key={'micon-' + label} size={size} className={cn} />;
+    case 'delete':
+      return <Delete key={'micon-' + label} size={size} className={cn} />;
+    case 'undelete':
+      return <Undelete key={'micon-' + label} size={size} className={cn} />;
+    case 'remove':
+      return <Remove key={'micon-' + label} size={size} className={cn} />;
+    case 'ExternalLink':
+      return <ExternalLink key={'micon-' + label} size={size} className={cn} />;
     default:
       return null;
   }

@@ -43,18 +43,28 @@ export function matches(record, fields, filterText) {
 }
 
 /**
- * widthsFromColumns - scan an array of columns and return grid column widths
+ * widthsFromColumns - scan an array of columns and return column widths - we don't count 'icons' type
  *
  * @param {array} columns - the list of columns in the table
  * @param {bool} showHidden - include or do not include hidden columns in return value
  */
 export function widthsFromColumns(columns, showHidden) {
-  let totalWidth = columns.reduce((sum, item) => sum + (item.hidden && !showHidden ? 0 : item.width), 0);
-  return columns.map((item) => {
-    if (item.hidden && !showHidden) {
-      return '';
-    }
-    if (Number.isNaN(totalWidth)) return '1fr ';
-    return Math.floor((item.width / totalWidth) * 64) + 'fr ';
+  let totalWidth = columns.reduce((sum, column) => {
+    const hidden = (column.hidden && !showHidden) || column.type === 'icons';
+    const width = column.width || 1;
+    return sum + (hidden ? 0 : width);
+  }, 0);
+
+  let hasIcons = false;
+  let iconWidth = 3;
+  const ret = columns.map((column) => {
+    const hidden = (column.hidden && !showHidden) || column.type === 'icons';
+    hasIcons = hasIcons || column.type === 'icons';
+    iconWidth = column.type === 'icons' && column.width ? column.width : iconWidth;
+    if (hidden) return '';
+    const width = column.width || 1;
+    return Math.floor((width / totalWidth) * 64) + 'fr ';
   });
+  if (hasIcons) ret.push(' ' + iconWidth + 'fr');
+  return ret;
 }

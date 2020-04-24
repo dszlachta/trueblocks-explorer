@@ -96,7 +96,7 @@ const LeftPanel = ({ status, handler }) => {
               <ObjectTable
                 data={filtered}
                 columns={systemsSchema}
-                buttonList={['config ' + subsystem + ' >']}
+                otButtonList={['config ' + subsystem + ' >']}
                 handler={handler}
               />
             </div>

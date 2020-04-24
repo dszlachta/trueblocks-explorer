@@ -1,13 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { Fragment, useEffect, useState, useMemo, useRef } from 'react';
 import { useContext } from 'react';
+import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ButtonCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
 import { getServerData, sortArray, sortStrings } from 'components/utils';
 import { calcValue } from 'store';
+import Add from 'assets/icons/Add';
 
 import './Names.css';
+import { handleClick } from 'components/Modal/Modal';
 
 //---------------------------------------------------------------------------
 export function Names() {
@@ -15,9 +18,19 @@ export function Names() {
   const [tagList, setTagList] = useState([]);
   const [searchFields, setSearchFields] = useState(['tags', 'address', 'name']);
   const [curTag, setTag] = useState('All');
+  const [dialogShowing, setShowing] = useState(false);
 
-  const changeOptions = (action) => {
+  const clickHandler = (action) => {
+    console.log(action);
     switch (action.type) {
+      case 'Add':
+        setShowing(true);
+        break;
+      case 'close':
+      case 'cancel':
+      case 'okay':
+        setShowing(false);
+        break;
       case 'set-tags':
         setTag(action.payload);
         break;
@@ -32,12 +45,22 @@ export function Names() {
     getServerData(url, query).then((theData) => {
       const sorted = sortArray(theData, [['tags', 'address', 'name']], ['asc', 'asc', 'asc']);
       dispatch({ type: 'update', payload: sorted });
-      let tagList = [...new Set(sorted.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
     });
   }, [query, dispatch]);
+
+  useMemo(() => {
+    let tagList = [...new Set(names.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    tagList = sortStrings(tagList, true);
+    tagList.unshift('All');
+    setTagList(tagList);
+  }, [names]);
+
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
 
   const filtered = names.filter((item) => {
     return curTag === 'All' || item.tags.includes(curTag);
@@ -45,20 +68,33 @@ export function Names() {
 
   //  const [curSubset, setSubset] = useState('yours');
   //  const subsets = ['yours', 'wallets', 'tokens', 'prefunds', 'other', 'all', 'tags'];
-  //      <ButtonCaddie name="Subsets" buttons={subsets} current={curSubset} action="set-subset" handler={changeOptions} />
+  //      <ButtonCaddie name="Subsets" buttons={subsets} current={curSubset} action="set-subset" handler={clickHandler} />
+
+  const title = (
+    <Fragment>
+      {'Names '}
+      <Add size={20} onClick={(e) => handleClick(e, clickHandler, { type: 'Add' })} />
+    </Fragment>
+  );
   return (
     <div>
       {tagList.length ? (
-        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={changeOptions} />
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
       ) : null}
       <DataTable
         data={filtered}
         columns={namesSchema}
-        title="Names"
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}
+        recordIcons={['Edit', 'header-Add', 'Delete', 'Explorer', 'ExternalLink']}
       />
+      {dialogShowing && (
+        <Modal showing={dialogShowing} handler={clickHandler}>
+          <ObjectTable data={{}} columns={namesSchema} title="Add Name" editable={true} showHidden={true} />
+        </Modal>
+      )}
     </div>
   );
 }
@@ -207,6 +243,11 @@ export const namesSchema = [
     selector: 'sizeInBytes',
     type: 'filesize',
     hidden: true,
+  },
+  {
+    name: 'Icons',
+    type: 'icons',
+    selector: 'icons',
   },
 ];
 // auto-generate: schema

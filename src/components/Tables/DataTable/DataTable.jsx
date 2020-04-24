@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { Tablebar, ObjectTable } from 'components';
+import { getIcon } from 'pages/utils';
 import { calcValue, getPrimaryKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
 import { SortIcon } from 'assets/icons/SortIcon';
@@ -21,7 +22,8 @@ export const DataTable = ({
   noHeader = false,
   expandable = true,
   showHidden = false,
-  buttonList = [],
+  recordIcons = [],
+  otButtonList = [],
   buttonHandler = null,
 }) => {
   const [pagingCtx, setPaging] = useState(
@@ -136,6 +138,7 @@ export const DataTable = ({
           sortCtx2={sortCtx2}
           sortHandler={clickHandler}
           widths={widthsFromColumns(columns, showHidden)}
+          recordIcons={recordIcons}
         />
       )}
       <div className="at-body dt-body">
@@ -154,13 +157,14 @@ export const DataTable = ({
                   expandable={expandable}
                   handler={clickHandler}
                   showHidden={showHidden}
+                  recordIcons={recordIcons}
                 />
                 {key === expandedRow && (
                   <DataTableExpandedRow
                     record={record}
                     columns={columns}
                     handler={clickHandler}
-                    buttonList={buttonList}
+                    otButtonList={otButtonList}
                   />
                 )}
               </Fragment>
@@ -182,25 +186,6 @@ const StyledDiv = styled.div`
 `;
 
 //-----------------------------------------------------------------
-const DataTableExpandedRow = ({ record, columns, handler, buttonList }) => {
-  const expandedStyle = {
-    display: 'grid',
-    gridTemplateColumns: '2fr 8fr 5fr',
-    borderBottom: '1px solid grey',
-    padding: '2px',
-  };
-
-  return (
-    <div style={expandedStyle}>
-      <div></div>
-      <ObjectTable data={record} columns={columns} showHidden={true} buttonList={buttonList} handler={handler} />
-      <div></div>
-      <div></div>
-    </div>
-  );
-};
-
-//-----------------------------------------------------------------
 const DataTableHeader = ({
   columns,
   showHidden = false,
@@ -208,7 +193,11 @@ const DataTableHeader = ({
   sortCtx2 = { sortBy: '', sortDir: '' },
   sortHandler,
   widths,
+  recordIcons = null,
 }) => {
+  const headerIcons = recordIcons.filter((icon) => {
+    return icon.includes('header-');
+  });
   const sortIcon1 = <SortIcon dir={sortCtx1.sortDir} n={1} />;
   const sortIcon2 = <SortIcon dir={sortCtx2.sortDir} n={2} />;
 
@@ -216,7 +205,9 @@ const DataTableHeader = ({
     <StyledDiv key="dt-header" widths={widths} columns={columns} className="base-header at-header dt-header">
       {columns.map((column, index) => {
         const key = 'dt-' + column.name + '-' + index;
-        if (column.hidden && !showHidden) return <Fragment key={key}></Fragment>;
+        if ((column.hidden && !showHidden) || (column.type === 'icons' && headerIcons.length > 0))
+          return <Fragment key={key}></Fragment>;
+
         return (
           <div
             onClick={(e) => handleClick(e, sortHandler, { type: 'sortBy', payload: column.selector })}
@@ -230,13 +221,17 @@ const DataTableHeader = ({
           </div>
         );
       })}
+      {headerIcons.length > 0 && <div>{headerIcons.map((a) => getIcon(a.replace('header-', '')))} </div>}
     </StyledDiv>
   );
 };
 
 //-----------------------------------------------------------------
-const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHidden }) => {
+const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHidden, recordIcons = null }) => {
   const rKey = 'dt-row-' + id;
+  const rowIcons = recordIcons.filter((icon) => {
+    return !icon.includes('header-');
+  });
   return (
     <StyledDiv
       onClick={(e) => handleClick(e, handler, { type: 'expand_row', payload: id })}
@@ -246,7 +241,8 @@ const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHi
     >
       {columns.map((column, index) => {
         const key = id + column.name + '-' + index;
-        if (column.hidden && !showHidden) return <Fragment key={key}></Fragment>;
+        if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0))
+          return <Fragment key={key}></Fragment>;
 
         let type = column.type ? column.type : 'string';
         let value = calcValue(record, column);
@@ -282,7 +278,27 @@ const DataTableRow = ({ columns, id, record, widths, expandable, handler, showHi
           </div>
         );
       })}
+      {rowIcons.length > 0 && <div>{rowIcons.map((a) => getIcon(a))} </div>}
     </StyledDiv>
+  );
+};
+
+//-----------------------------------------------------------------
+const DataTableExpandedRow = ({ record, columns, handler, otButtonList }) => {
+  const expandedStyle = {
+    display: 'grid',
+    gridTemplateColumns: '2fr 8fr 5fr',
+    borderBottom: '1px solid grey',
+    padding: '2px',
+  };
+
+  return (
+    <div style={expandedStyle}>
+      <div></div>
+      <ObjectTable data={record} columns={columns} showHidden={true} otButtonList={otButtonList} handler={handler} />
+      <div></div>
+      <div></div>
+    </div>
   );
 };
 

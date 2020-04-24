@@ -50,7 +50,7 @@ export const Monitors = () => {
         search={true}
         searchFields={['address', 'name', 'tags', 'symbol']}
         pagination={true}
-        buttonList={buttons}
+        otButtonList={buttons}
         buttonHandler={buttonHandler}
       />
     </div>
