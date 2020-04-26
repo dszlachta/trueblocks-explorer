@@ -17,7 +17,7 @@ import { useExplorer } from './Explorer';
 // auto-generate: page-settings
 
 //---------------------------------------------------------------------------
-export const ExplorerLogs = () => {
+export const Explorer[{PROPER}] = () => {
   const { explorer, dispatch } = useExplorer();
   const [current, setCurrent] = useState('latest');
 
@@ -47,8 +47,8 @@ export const ExplorerLogs = () => {
 
   useArrowKeys(clickHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, clickHandler]);
 
-  let query = 'transactions=' + current + '&verbose=10';
-  const url = 'http://localhost:8080/logs';
+  let query = '[{QUERY}]';
+  const url = '[{URL}]';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
       let result = theData.data;
@@ -64,9 +64,9 @@ export const ExplorerLogs = () => {
     explorer.map((item) => {
       return (
         <ObjectTable
-          columns={logsSchema}
+          columns={[{LONG}]Schema}
           data={item}
-          title={'Log ' + getFieldValue(item, 'id')}
+          title={'[{SINGULAR}] ' + getFieldValue(item, 'id')}
           search={false}
         />
       );
@@ -83,12 +83,6 @@ export const ExplorerLogs = () => {
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
   // EXISTING_CODE
-  switch (fieldName) {
-    case 'id':
-      return record.blockNumber + '-' + record.transactionIndex;
-    default:
-      break;
-  }
   // EXISTING_CODE
 }
 
@@ -97,85 +91,4 @@ function getFieldValue(record, fieldName) {
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
-export const logsSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Address',
-    selector: 'address',
-    type: 'address',
-    searchable: true,
-  },
-  {
-    name: 'Block Hash',
-    selector: 'blockHash',
-    type: 'hash',
-    searchable: true,
-  },
-  {
-    name: 'Block Number',
-    selector: 'blockNumber',
-    type: 'blknum',
-    searchable: true,
-  },
-  {
-    name: 'Data',
-    selector: 'data',
-    type: 'string',
-  },
-  {
-    name: 'Log Index',
-    selector: 'logIndex',
-    type: 'blknum',
-  },
-  {
-    name: 'Removed',
-    selector: 'removed',
-    type: 'bool',
-  },
-  {
-    name: 'Topics',
-    selector: 'topics',
-    type: 'CTopicArray',
-    searchable: true,
-  },
-  {
-    name: 'Articulated Log',
-    selector: 'articulatedLog',
-    type: 'CFunction',
-    searchable: true,
-  },
-  {
-    name: 'Compressed Log',
-    selector: 'compressedLog',
-    type: 'string',
-  },
-  {
-    name: 'Transaction Hash',
-    selector: 'transactionHash',
-    type: 'hash',
-    searchable: true,
-  },
-  {
-    name: 'Tx Index',
-    selector: 'transactionIndex',
-    type: 'blknum',
-  },
-  {
-    name: 'Tx Log Index',
-    selector: 'transactionLogIndex',
-    type: 'blknum',
-  },
-  {
-    name: 'Type',
-    selector: 'type',
-    type: 'string',
-    searchable: true,
-  },
-];
 // auto-generate: schema

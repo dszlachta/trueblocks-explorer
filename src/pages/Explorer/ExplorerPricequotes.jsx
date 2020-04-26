@@ -13,6 +13,14 @@ export const pricequotesSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    searchable: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'date',
+    selector: 'date',
+    type: 'date',
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {

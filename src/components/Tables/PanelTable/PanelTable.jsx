@@ -14,5 +14,5 @@ export const PanelTable = ({ data, columns, title = 'Panel Table (pt-)' }) => {
 
 //-----------------------------------------------------------------
 const PanelTableHeader = ({ title }) => {
-  return <div className="base-header at-header pt-header">{title}</div>;
+  return <div className="at-header-base at-header pt-header">{title}</div>;
 };

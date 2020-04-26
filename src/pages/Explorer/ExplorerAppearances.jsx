@@ -13,32 +13,36 @@ export const appearancesSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
-    name: 'bn',
+    name: 'Block Number',
     selector: 'bn',
     type: 'blknum',
+    searchable: true,
   },
   {
-    name: 'tx',
+    name: 'Transaction ID',
     selector: 'tx',
     type: 'blknum',
   },
   {
-    name: 'tc',
+    name: 'Trace ID',
     selector: 'tc',
     type: 'blknum',
   },
   {
-    name: 'addr',
+    name: 'Address',
     selector: 'addr',
     type: 'address',
+    searchable: true,
   },
   {
-    name: 'reason',
+    name: 'Reason',
     selector: 'reason',
     type: 'string',
+    searchable: true,
   },
 ];
 // auto-generate: schema

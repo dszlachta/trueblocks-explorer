@@ -115,12 +115,14 @@ export const dashboardSchema = [
     selector: 'id',
     type: 'string',
     hidden: true,
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'Name',
     selector: 'name',
     type: 'string',
+    searchable: true,
   },
   {
     name: 'Route',
@@ -141,6 +143,7 @@ export const dashboardSchema = [
     name: 'Custom',
     selector: 'custom',
     type: 'string',
+    searchable: true,
   },
   {
     name: 'Date',

@@ -13,17 +13,20 @@ export const pricesourcesSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'url',
     selector: 'url',
     type: 'string',
+    searchable: true,
   },
   {
     name: 'pair',
     selector: 'pair',
     type: 'string',
+    searchable: true,
   },
 ];
 // auto-generate: schema

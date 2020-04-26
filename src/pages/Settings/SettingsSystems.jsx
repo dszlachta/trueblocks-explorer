@@ -1,17 +1,26 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
 import { ObjectTable } from 'components';
-import { systemCheck } from 'components/utils';
+import { systemCheck, handleClick } from 'components/utils';
 import { useStatusData } from 'store';
 
 //------------------------------------------------------------------------
 export const SettingsSystems = () => {
   const status = useStatusData();
-  const [curManager, setManager] = useState('');
+  const [curSubsystem, setManager] = useState('');
+
   const manageHandler = (action) => {
-    const newManager = action.payload.replace(' >', '').replace('config ', '');
-    if (curManager === newManager) setManager('');
-    else setManager(newManager);
+    console.log(action);
+    switch (action.type) {
+      case 'config':
+        const newSystem = action.payload;
+        console.log('new: ', newSystem);
+        if (curSubsystem === newSystem) setManager('');
+        else setManager(newSystem);
+        break;
+      default:
+        break;
+    }
   };
 
   const working = systemCheck(status, 'system');
@@ -23,22 +32,61 @@ export const SettingsSystems = () => {
   }
 
   // const styleAll = { backgroundColor: 'red', display: 'grid', gridTemplateColumns: '4fr 4fr 1fr', padding: '12px' };
-  const styleAll = { display: 'grid', gridTemplateColumns: '4fr 4fr 1fr', padding: '12px' };
+  const styleAll = { display: 'grid', gridTemplateColumns: '8fr 8fr 1fr', padding: '12px' };
   return (
     <Fragment>
       <div className={working ? 'okay' : 'warning'}>{msg}</div>
       <div style={styleAll}>
-        <LeftPanel status={status} handler={manageHandler} />
-        <RightPanel status={status} handler={manageHandler} curManager={curManager} subsystem={curManager} />
+        <LeftPanel status={status} handler={manageHandler} curSubsystem={curSubsystem} />
+        <RightPanel status={status} handler={manageHandler} subsystem={curSubsystem} />
       </div>
     </Fragment>
   );
 };
 
 //------------------------------------------------------------------------
-const RightPanel = ({ curManager, status, handler, subsystem }) => {
+const LeftPanel = ({ status, handler, curSubsystem }) => {
+  //  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '12px', backgroundColor: 'palegreen' };
+  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '2px' };
+  const subSystems = ['api', 'node', 'scraper', 'sharing', 'help'];
+  return (
+    <div style={styleLeft}>
+      {subSystems.map((subsystem) => {
+        const filtered = getSubsystemData(status, subsystem);
+        return (
+          <div style={{ display: 'grid', gridTemplateColumns: '6fr 1fr' }}>
+            <div>
+              <h4>{names[subsystem]}</h4>
+              <ObjectTable data={filtered} columns={systemsSchema} handler={handler} />
+              <br />
+            </div>
+            <div>
+              <h4>
+                <br />
+              </h4>
+              <button
+                style={{ height: '2em' }}
+                onClick={(e) => handleClick(e, handler, { type: 'config', payload: subsystem })}
+              >
+                {curSubsystem === subsystem ? 'close' : 'configure ' + subsystem}
+              </button>
+            </div>
+          </div>
+        );
+      })}
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+    </div>
+  );
+};
+
+//------------------------------------------------------------------------
+const RightPanel = ({ status, handler, subsystem }) => {
   if (subsystem === '') return null;
-  //const styleRight = { backgroundColor: 'yellow', color: 'black', padding: '12px' };
   const styleRight = { padding: '2px' };
   return (
     <div style={styleRight}>
@@ -63,7 +111,7 @@ const RightPanel = ({ curManager, status, handler, subsystem }) => {
 function getLogText() {
   const str =
     "\n----------------------------------------\n1587604384 ~ <INFO>  : API calling 'chifra status '\n1587604384 ~ <INFO>  : Exiting route 'status' with OK\n----------------------------------------\n";
-  return str + str + str + str;
+  return str + str;
 }
 const DisplayLog = ({ subsystem }) => {
   const styleDisp = { backgroundColor: 'black', color: 'aqua', margin: '2px', padding: '3px' };
@@ -77,36 +125,6 @@ const DisplayLog = ({ subsystem }) => {
         </div>
       </div>
     </Fragment>
-  );
-};
-
-//------------------------------------------------------------------------
-const LeftPanel = ({ status, handler }) => {
-  //  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '12px', backgroundColor: 'palegreen' };
-  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '2px' };
-  const subSystems = ['api', 'node', 'scraper', 'sharing', 'help'];
-  return (
-    <div style={styleLeft}>
-      {subSystems.map((subsystem) => {
-        const filtered = getSubsystemData(status, subsystem);
-        return (
-          <div>
-            <h4>{names[subsystem]}</h4>
-            <div>
-              <ObjectTable
-                data={filtered}
-                columns={systemsSchema}
-                otButtonList={['config ' + subsystem + ' >']}
-                handler={handler}
-              />
-            </div>
-            <br />
-            <br />
-            <br />
-          </div>
-        );
-      })}
-    </div>
   );
 };
 
@@ -163,17 +181,20 @@ export const systemsSchema = [
     selector: 'id',
     type: 'string',
     hidden: true,
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'Status',
     selector: 'status',
     type: 'string',
+    searchable: true,
   },
   {
     name: 'Name',
     selector: 'name',
     type: 'string',
+    searchable: true,
   },
   {
     name: 'Subsystem',
@@ -184,8 +205,9 @@ export const systemsSchema = [
     name: 'Description',
     selector: 'descr',
     type: 'string',
-    align: 'wordwrap',
     hidden: true,
+    align: 'wordwrap',
+    searchable: true,
   },
   {
     name: 'API Provider',

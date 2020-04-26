@@ -6,17 +6,21 @@ import { currentPage } from 'components/utils';
 
 import { ExplorerBlocks } from './ExplorerBlocks';
 import { ExplorerTransactions } from './ExplorerTransactions';
-// import { transactionsSchema } from './ExplorerTransactions';
-// import { receiptsSchema } from './ExplorerReceipts';
-// import { logsSchema } from './ExplorerLogs';
-// import { tracesSchema } from './ExplorerTraces';
-// import { dispatch } from 'd3';
+import { ExplorerReceipts } from './ExplorerReceipts';
+import { ExplorerLogs } from './ExplorerLogs';
+import { ExplorerTraces } from './ExplorerTraces';
 
 //----------------------------------------------------------------------
 export const Explorer = () => {
   switch (currentPage().subpage) {
     case 'transactions':
       return <ExplorerTransactions />;
+    case 'receipts':
+      return <ExplorerReceipts />;
+    case 'logs':
+      return <ExplorerLogs />;
+    case 'traces':
+      return <ExplorerTraces />;
     case 'blocks':
     default:
       return <ExplorerBlocks />;

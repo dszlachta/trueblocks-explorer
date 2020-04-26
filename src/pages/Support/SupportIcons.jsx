@@ -23,7 +23,6 @@ import Plus from 'assets/icons/Plus';
 import PlusCircle from 'assets/icons/PlusCircle';
 import PlusSquare from 'assets/icons/PlusSquare';
 import Remove from 'assets/icons/Remove';
-//import SortIcon from 'assets/icons/SortIcon';
 import ToggleLeft from 'assets/icons/ToggleLeft';
 import ToggleRight from 'assets/icons/ToggleRight';
 import Twitter from 'assets/icons/Twitter';
@@ -43,8 +42,10 @@ import {
   Support,
 } from 'assets/icons/SetMenus';
 
+const getIcon = (size = 25, color = 'black', fill = 'orange', style = null) => {};
+
 export const SupportIcons = () => {
-  const size = 30;
+  const size = 25;
   const fill = 'orange';
   const color = 'black';
   const style = {
@@ -88,7 +89,6 @@ export const SupportIcons = () => {
         { name: 'ChevronsLeft', component: <ChevronsLeft size={size} color={color} fill={fill} style={style} /> },
         { name: 'ChevronsRight', component: <ChevronsRight size={size} color={color} fill={fill} style={style} /> },
         { name: 'ChevronsUp', component: <ChevronsUp size={size} color={color} fill={fill} style={style} /> },
-        { name: '', component: <Skipper size={size} color={color} fill={fill} style={style} /> },
       ],
     },
     {
@@ -144,15 +144,5 @@ export const SupportIcons = () => {
         );
       })}
     </Fragment>
-  );
-};
-
-const Skipper = () => {
-  return (
-    <div>
-      <br />
-      <br />
-      <br />
-    </div>
   );
 };

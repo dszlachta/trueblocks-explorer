@@ -2,15 +2,15 @@ import React, { Fragment, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { Panel } from 'components/';
-import { fmtNum, dataFetcher, systemCheck } from 'components/utils';
+import { fmtNum, systemCheck } from 'components/utils';
 import { useStatus, useStatusMeta, useStatusData, statusDefault } from 'store';
 import { useToggles } from 'store';
-import GridIcon from 'assets/icons/GridIcon';
+import { getIcon } from 'pages/utils';
 import './StatusPanel.css';
 
 //----------------------------------------------------------------------
 export const StatusPanel = () => {
-  const { status, dispatch } = useStatus();
+  const dispatch = useStatus().dispatch;
   const { data, error } = useSWR('http://localhost:8080/status', dataFetcher);
 
   useEffect(() => {
@@ -114,9 +114,6 @@ const StatusReport = () => {
     unripe_behind += ')';
   }
 
-  const greenlight = <GridIcon fill="#6b902a" color="#333" size="15px" />;
-  const yellowlight = <GridIcon fill="yellow" color="#333" size="15px" />;
-  const redlight = <GridIcon fill="red" color="#333" size="15px" />;
   const fDetails = (
     <>
       <br />
@@ -153,9 +150,9 @@ const StatusReport = () => {
         <Section title="TrueBlocks">
           <SectionItem name="API" value={status2} />
           <SectionItem name="Scraper" value={status3} />
-          <SectionItem name="Final" value={fmtNum(meta.finalized)} icon={greenlight} details={fDetails} />
-          <SectionItem name="Staging" value={fmtNum(meta.staging)} icon={yellowlight} details={sDetails} />
-          <SectionItem name="Unripe" value={fmtNum(meta.unripe)} icon={redlight} details={uDetails} />
+          <SectionItem name="Final" value={fmtNum(meta.finalized)} icon={getIcon('GreenLight')} details={fDetails} />
+          <SectionItem name="Staging" value={fmtNum(meta.staging)} icon={getIcon('YellowLight')} details={sDetails} />
+          <SectionItem name="Unripe" value={fmtNum(meta.unripe)} icon={getIcon('RedLight')} details={uDetails} />
         </Section>
 
         <Section title="Options">
@@ -209,3 +206,9 @@ const Section = ({ title, children }) => {
     </> //
   );
 };
+
+//----------------------------------------------------------------------
+export const dataFetcher = (url) =>
+  fetch(url).then((r) => {
+    return r.json();
+  });

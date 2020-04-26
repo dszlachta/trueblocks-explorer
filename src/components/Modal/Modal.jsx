@@ -1,13 +1,8 @@
 import React, { Fragment, useEffect } from 'react';
-
 import Mousetrap from 'mousetrap';
-import './Modal.css';
 
-//----------------------------------------------------------------------
-export const handleClick = (e, dispatch, action = {}) => {
-  if (e) e.preventDefault();
-  if (dispatch) dispatch(action);
-};
+import { handleClick } from 'components/utils';
+import './Modal.css';
 
 export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children }) => {
   useEffect(() => {

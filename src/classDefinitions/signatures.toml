@@ -1,5 +1,9 @@
 [settings]
 class = "CSignatures"
+recordIcons = "header-Add,Edit/Remove,Delete/Undelete,footer-CSV,footer-TXT"
+defaultSort = "encoding,type,name"
+url = "http://localhost:8080/abi"
+query = "verbose=10&monitored&known"
 
 [[subpages]]
 list = [

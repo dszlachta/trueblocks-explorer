@@ -1,29 +1,120 @@
-import React, { useEffect } from 'react';
-import { useContext } from 'react';
+/*
+ * This file was generated with makeClass. Edit only those parts of the code inside
+ * of 'EXISTING_CODE' tags.
+ */
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable } from 'components';
-import { currentPage, getServerData } from 'components/utils';
+import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
+import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
+import { calcValue } from 'store';
 
 import './Signatures.css';
 
-//---------------------------------------------------------------------------
-export function Signatures() {
-  const { signatures, dispatch } = useSignatures();
+// auto-generate: page-settings
+const recordIconList = [
+  'header-Add',
+  'Edit/Remove',
+  'Delete/Undelete',
+  'footer-CSV',
+  'footer-TXT',
+  //
+];
+const defaultSort = ['encoding', 'type', 'name'];
+const defaultSearch = ['encoding', 'type', 'name'];
+// auto-generate: page-settings
 
-  const source = currentPage().subpage;
-  const query = (source === '' ? 'monitored&known' : source) + '&verbose=10';
+//---------------------------------------------------------------------------
+export const Signatures = () => {
+  const { signatures, dispatch } = useSignatures();
+  const [tagList, setTagList] = useState([]);
+  const [searchFields] = useState(defaultSearch);
+  const [curTag, setTag] = useState('All');
+  const [dialogShowing, setShowing] = useState(false);
+
+  const clickHandler = (action) => {
+    switch (action.type) {
+      case 'Add':
+        setShowing(true);
+        break;
+      case 'close':
+      case 'cancel':
+      case 'okay':
+        setShowing(false);
+        break;
+      case 'set-tags':
+        setTag(action.payload);
+        break;
+      default:
+        break;
+    }
+  };
+
+  let query = 'verbose=10&monitored&known';
+  const url = 'http://localhost:8080/abi';
   useEffect(() => {
-    getServerData('http://localhost:8080/abi', query).then((theData) => {
-      dispatch({ type: 'update', payload: theData });
+    getServerData(url, query).then((theData) => {
+      let result = theData.data;
+      // EXISTING_CODE
+      result = theData.data.filter((item) => item.type !== 'constructor');
+      // EXISTING_CODE
+      const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
+      dispatch({ type: 'update', payload: sorted });
     });
-  }, [source, dispatch, query]);
+  }, [query, dispatch]);
+
+  useMemo(() => {
+    let tagList = [
+      ...new Set(signatures.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
+    ];
+    tagList = sortStrings(tagList, true);
+    tagList.unshift('All');
+    setTagList(tagList);
+  }, [signatures]);
+
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
+
+  const filtered = signatures.filter((item) => {
+    return curTag === 'All' || item.tags.includes(curTag);
+  });
 
   return (
-    <DataTable data={signatures} columns={signaturesSchema} title="Signature View" search={true} searchFields={['encoding', 'type', 'name']} pagination={true} />
+    <div>
+      {/* prettier-ignore */}
+      {tagList.length ? (
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
+      ) : null}
+      <DataTable
+        data={filtered}
+        columns={signaturesSchema}
+        title="Signatures"
+        search={true}
+        searchFields={searchFields}
+        pagination={true}
+        recordIcons={recordIconList}
+      />
+      {dialogShowing && (
+        <Modal showing={dialogShowing} handler={clickHandler}>
+          {/* prettier-ignore */}
+          <ObjectTable
+            data={{}}
+            columns={signaturesSchema}
+            title="Add Signature"
+            editable={true}
+            showHidden={true}
+          />
+        </Modal>
+      )}
+    </div>
   );
-}
+};
 
 //----------------------------------------------------------------------
 export const signaturesDefault = [];
@@ -33,13 +124,11 @@ export const signaturesReducer = (state, action) => {
   let ret = state;
   switch (action.type) {
     case 'update':
-      ret = action.payload.filter((item) => item.type !== 'constructor');
+      ret = action.payload;
       break;
     default:
     // do nothing
   }
-  // TODO(tjayrush): this data is on the backend -- we do not store it locally
-  // localStorage.setItem('signaturesState', JSON.stringify(ret));
   return ret;
 };
 
@@ -50,6 +139,7 @@ export const useSignatures = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  // EXISTING_CODE
   switch (fieldName) {
     case 'id':
       return record.encoding;
@@ -57,13 +147,6 @@ function getFieldValue(record, fieldName) {
     case 'inputs': {
       if (!record[fieldName]) return '';
       return JSON.stringify(record[fieldName]);
-      // const value = record[fieldName];
-      // if (!value || !value.length || !value.map) return '';
-      // return value
-      //   .map((item) => {
-      //     return item.name;
-      //   })
-      //   .join(',');
     }
     case 'function': {
       const value = record['inputs'];
@@ -85,7 +168,11 @@ function getFieldValue(record, fieldName) {
     default:
       break;
   }
+  // EXISTING_CODE
 }
+
+// EXISTING_CODE
+// EXISTING_CODE
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -96,6 +183,7 @@ export const signaturesSchema = [
     type: 'string',
     hidden: true,
     width: 1,
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
@@ -103,6 +191,7 @@ export const signaturesSchema = [
     selector: 'encoding',
     type: 'hash',
     width: 1,
+    searchable: true,
   },
   {
     name: 'Type',
@@ -110,12 +199,14 @@ export const signaturesSchema = [
     type: 'string',
     width: 1,
     isPill: true,
+    searchable: true,
   },
   {
     name: 'Name',
     selector: 'name',
     type: 'string',
     width: 2,
+    searchable: true,
   },
   {
     name: 'Signature',
@@ -145,7 +236,13 @@ export const signaturesSchema = [
     selector: 'function',
     type: 'string',
     width: 6,
+    searchable: true,
     onDisplay: getFieldValue,
+  },
+  {
+    name: 'Icons',
+    selector: 'icons',
+    type: 'icons',
   },
 ];
 // auto-generate: schema

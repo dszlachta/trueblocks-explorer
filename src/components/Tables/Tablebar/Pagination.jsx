@@ -12,17 +12,13 @@ import './Pagination.css';
 //-----------------------------------------------------------------
 export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curPage: 0 } }) => {
   useEffect(() => {
-    Mousetrap.bind(['meta+shift+home'], getHandler(pagingCtx, 'first', handler));
-    Mousetrap.bind(['meta+shift+end'], getHandler(pagingCtx, 'last', handler));
-    Mousetrap.bind(['home'], getHandler(pagingCtx, 'first', handler));
-    Mousetrap.bind(['end'], getHandler(pagingCtx, 'last', handler));
-    Mousetrap.bind(['up'], getHandler(pagingCtx, 'previous', handler));
-    Mousetrap.bind(['left'], getHandler(pagingCtx, 'previous', handler));
-    Mousetrap.bind(['down'], getHandler(pagingCtx, 'next', handler));
-    Mousetrap.bind(['right'], getHandler(pagingCtx, 'next', handler));
+    Mousetrap.bind(['home'], getHandler(pagingCtx, 'home', handler));
+    Mousetrap.bind(['end'], getHandler(pagingCtx, 'end', handler));
+    Mousetrap.bind(['up'], getHandler(pagingCtx, 'up', handler));
+    Mousetrap.bind(['left'], getHandler(pagingCtx, 'left', handler));
+    Mousetrap.bind(['down'], getHandler(pagingCtx, 'down', handler));
+    Mousetrap.bind(['right'], getHandler(pagingCtx, 'right', handler));
     return () => {
-      Mousetrap.unbind(['meta+shift+home']);
-      Mousetrap.unbind(['meta+shift+end']);
       Mousetrap.unbind(['home']);
       Mousetrap.unbind(['end']);
       Mousetrap.unbind(['up']);
@@ -41,10 +37,10 @@ export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curP
       {!pagingCtx.arrowsOnly && <Display pagingCtx={pagingCtx} />}
       {
         <Fragment>
-          <PagingIcon name="first" handler={handler} pagingCtx={pagingCtx} />
-          <PagingIcon name="previous" handler={handler} pagingCtx={pagingCtx} />
-          <PagingIcon name="next" handler={handler} pagingCtx={pagingCtx} />
-          <PagingIcon name="last" handler={handler} pagingCtx={pagingCtx} />
+          <PagingIcon name="home" handler={handler} pagingCtx={pagingCtx} />
+          <PagingIcon name="left" handler={handler} pagingCtx={pagingCtx} />
+          <PagingIcon name="right" handler={handler} pagingCtx={pagingCtx} />
+          <PagingIcon name="end" handler={handler} pagingCtx={pagingCtx} />
         </Fragment>
       }
     </div>
@@ -109,7 +105,7 @@ const Selector = ({ handler, pagingCtx }) => {
 //-----------------------------------------------------------------
 function isDisabled(pagingCtx, which) {
   const { perPage, curPage, total } = pagingCtx;
-  if (which === 'first' || which === 'previous') return curPage === 0;
+  if (which === 'home' || which === 'up' || which === 'left') return curPage === 0;
   return curPage === Math.floor(total / perPage) - !(total % perPage);
 }
 
@@ -122,32 +118,35 @@ function getHandler(pagingCtx, which, handler) {
 //-----------------------------------------------------------------
 const PagingIcon = ({ name, handler, pagingCtx }) => {
   const frstCn =
-    'pagination-icons ' + (isDisabled(pagingCtx, 'previous') || isDisabled(pagingCtx, 'first') ? 'disabled' : '');
+    'pagination-icons ' +
+    (isDisabled(pagingCtx, 'home') || isDisabled(pagingCtx, 'up') || isDisabled(pagingCtx, 'left') ? 'disabled' : '');
   const lastCn =
-    'pagination-icons ' + (isDisabled(pagingCtx, 'next') || isDisabled(pagingCtx, 'last') ? 'disabled' : '');
+    'pagination-icons ' +
+    (isDisabled(pagingCtx, 'end') || isDisabled(pagingCtx, 'down') || isDisabled(pagingCtx, 'right') ? 'disabled' : '');
 
   const size = 18;
   const filled = false;
   const func = getHandler(pagingCtx, name, handler);
 
   switch (name) {
-    case 'first':
+    case 'home':
       return <ChevronsLeft onClick={func} className={frstCn} size={size} filled={filled} />;
-    case 'previous':
-      return <ChevronLeft onClick={func} className={frstCn} size={size} filled={filled} />;
+    case 'end':
+      return <ChevronsRight onClick={func} className={lastCn} size={size} filled={filled} />;
     case 'top':
       return <ChevronsUp onClick={func} className={frstCn} size={size} filled={filled} />;
-    case 'up':
-      return <ChevronUp onClick={func} className={frstCn} size={size} filled={filled} />;
-
-    case 'last':
-      return <ChevronsRight onClick={func} className={lastCn} size={size} filled={filled} />;
-    case 'next':
-      return <ChevronRight onClick={func} className={lastCn} size={size} filled={filled} />;
     case 'bottom':
       return <ChevronsDown onClick={func} className={lastCn} size={size} filled={filled} />;
+
+    case 'left':
+      return <ChevronLeft onClick={func} className={frstCn} size={size} filled={filled} />;
+    case 'right':
+      return <ChevronRight onClick={func} className={lastCn} size={size} filled={filled} />;
+    case 'up':
+      return <ChevronUp onClick={func} className={frstCn} size={size} filled={filled} />;
     case 'down':
       return <ChevronDown onClick={func} className={lastCn} size={size} filled={filled} />;
+
     default:
       return <Fragment>{name} </Fragment>;
   }

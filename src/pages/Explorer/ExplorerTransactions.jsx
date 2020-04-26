@@ -1,32 +1,42 @@
-import React, { useEffect, useState, useCallback } from 'react';
+/*
+ * This file was generated with makeClass. Edit only those parts of the code inside
+ * of 'EXISTING_CODE' tags.
+ */
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
+import GlobalContext from 'store';
+
+import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
+import { getServerData, sortArray, sortStrings, handleClick, useArrowKeys, notEmpty } from 'components/utils';
+import { calcValue } from 'store';
+
 import { useExplorer } from './Explorer';
-import { ObjectTable } from 'components';
-import { getServerData, handleClick } from 'components/utils';
 
-//----------------------------------------------------------------------
+// auto-generate: page-settings
+// auto-generate: page-settings
+
+//---------------------------------------------------------------------------
 export const ExplorerTransactions = () => {
-  const [schema] = useState(transactionsSchema);
-  const [current, setCurrent] = useState('');
   const { explorer, dispatch } = useExplorer();
-  const [fetching, setFetch] = useState(false);
+  const [current, setCurrent] = useState('latest');
 
-  const handleNavigate = useCallback(
+  const clickHandler = useCallback(
     (action) => {
-      console.log(action);
       switch (action.type) {
-        case 'first':
-          setCurrent('46147.0');
+        case 'home':
+          setCurrent('first');
           break;
-        case 'last':
+        case 'end':
           setCurrent('latest');
           break;
-        case 'previous':
-          setCurrent(explorer.blockNumber + '.' + explorer.transactionIndex + '.prev');
+        case 'up':
+        case 'left':
+          setCurrent(getFieldValue(explorer, "id") + '.prev');
           break;
-        case 'next':
-          setCurrent(explorer.blockNumber + '.' + explorer.transactionIndex + '.next');
+        case 'down':
+        case 'right':
+          setCurrent(getFieldValue(explorer, "id") + '.next');
           break;
         default:
           break;
@@ -35,79 +45,77 @@ export const ExplorerTransactions = () => {
     [explorer.blockNumber, explorer.transactionIndex]
   );
 
-  let query = 'transactions=' + (current === '' ? 'latest' : current);
-  query += '&verbose=10&force';
+  useArrowKeys(clickHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, clickHandler]);
+
+  let query = 'transactions=' + current + '&verbose=10&force';
   const url = 'http://localhost:8080/transactions';
   useEffect(() => {
-    setFetch(true);
     getServerData(url, query).then((theData) => {
-      dispatch({ type: 'update', payload: theData[0] });
+      let result = theData.data;
+      // EXISTING_CODE
+      // EXISTING_CODE
+      dispatch({ type: 'update', payload: result });
     });
-    setFetch(false);
   }, [query, dispatch, current]);
 
-  useEffect(() => {
-    Mousetrap.bind(['meta+shift+home'], (e) => handleClick(null, handleNavigate, { type: 'first' }));
-    Mousetrap.bind(['meta+shift+end'], (e) => handleClick(null, handleNavigate, { type: 'last' }));
-    Mousetrap.bind(['home'], (e) => handleClick(null, handleNavigate, { type: 'first' }));
-    Mousetrap.bind(['end'], (e) => handleClick(null, handleNavigate, { type: 'last' }));
-    Mousetrap.bind(['up'], (e) => handleClick(null, handleNavigate, { type: 'previous' }));
-    Mousetrap.bind(['left'], (e) => handleClick(null, handleNavigate, { type: 'previous' }));
-    Mousetrap.bind(['down'], (e) => handleClick(null, handleNavigate, { type: 'next' }));
-    Mousetrap.bind(['right'], (e) => handleClick(null, handleNavigate, { type: 'next' }));
-    return () => {
-      Mousetrap.unbind(['meta+shift+home']);
-      Mousetrap.unbind(['meta+shift+end']);
-      Mousetrap.unbind(['home']);
-      Mousetrap.unbind(['end']);
-      Mousetrap.unbind(['up']);
-      Mousetrap.unbind(['left']);
-      Mousetrap.unbind(['down']);
-      Mousetrap.unbind(['right']);
-    };
-  }, [dispatch, explorer.blockNumber, explorer.transactionIndex, handleNavigate]);
+  // prettier-ignore
+  const table =
+    explorer &&
+    explorer.map((item) => {
+      return (
+        <ObjectTable
+          columns={transactionsSchema}
+          data={item}
+          title={'Transaction ' + getFieldValue(item, 'id')}
+          search={false}
+        />
+      );
+    });
 
-  if (fetching) return <pre>Fetching...</pre>;
-  if (explorer.blockNumber === undefined) return <pref>fetching...</pref>;
   return (
     <div>
-      <pre>{query}</pre>
-      <ObjectTable
-        columns={schema}
-        data={explorer}
-        title={'Transaction ' + explorer.blockNumber + '.' + explorer.transactionIndex}
-        search={false}
-      />
+      <pre>{url + '?' + query}</pre>
+      {table}
     </div>
   );
 };
 
+//----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  // EXISTING_CODE
   switch (fieldName) {
     case 'id':
-      return record.blockNumber + '-' + record.transactionIndex;
+      return record.blockNumber + '.' + record.transactionIndex;
     default:
       break;
   }
+  // EXISTING_CODE
 }
 
+// EXISTING_CODE
+// EXISTING_CODE
+
+//----------------------------------------------------------------------------
 // auto-generate: schema
 export const transactionsSchema = [
   {
     name: 'ID',
     selector: 'id',
     type: 'string',
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'Hash',
     selector: 'hash',
     type: 'hash',
+    searchable: true,
   },
   {
     name: 'Block Hash',
     selector: 'blockHash',
     type: 'hash',
+    searchable: true,
   },
   {
     name: 'Block Number',
@@ -133,11 +141,13 @@ export const transactionsSchema = [
     name: 'From',
     selector: 'from',
     type: 'address',
+    searchable: true,
   },
   {
     name: 'To',
     selector: 'to',
     type: 'address',
+    searchable: true,
   },
   {
     name: 'Value',
@@ -178,6 +188,7 @@ export const transactionsSchema = [
     name: 'Articulated Tx',
     selector: 'articulatedTx',
     type: 'CFunction',
+    searchable: true,
   },
   {
     name: 'Compressed Tx',

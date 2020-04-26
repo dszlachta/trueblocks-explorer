@@ -11,9 +11,9 @@ import { stateFromStorage } from 'components/utils';
 import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/Dashboard';
 import { collectionsDefault, collectionsReducer } from 'pages/Collections/Collections';
 import { monitorsDefault, monitorsReducer } from 'pages/Monitors/Monitors';
+import { tagsDefault, tagsReducer } from 'pages/Tags/Tags';
 import { explorerDefault, explorerReducer } from 'pages/Explorer/Explorer';
 import { namesDefault, namesReducer } from 'pages/Names/Names';
-import { tagsDefault, tagsReducer } from 'pages/Tags/Tags';
 import { signaturesDefault, signaturesReducer } from 'pages/Signatures/Signatures';
 import { digestsDefault, digestsReducer } from 'pages/Digests/Digests';
 import { cachesDefault, cachesReducer } from 'pages/Caches/Caches';
@@ -53,9 +53,9 @@ function App() {
   const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, defaultData['dashboard']);
   const [collectionsState, collectionsDispatch] = useReducer(collectionsReducer, defaultData['collections']);
   const [monitorsState, monitorsDispatch] = useReducer(monitorsReducer, defaultData['monitors']);
+  const [tagsState, tagsDispatch] = useReducer(tagsReducer, defaultData['tags']);
   const [explorerState, explorerDispatch] = useReducer(explorerReducer, defaultData['explorer']);
   const [namesState, namesDispatch] = useReducer(namesReducer, defaultData['names']);
-  const [tagsState, tagsDispatch] = useReducer(tagsReducer, defaultData['tags']);
   const [signaturesState, signaturesDispatch] = useReducer(signaturesReducer, defaultData['signatures']);
   const [digestsState, digestsDispatch] = useReducer(digestsReducer, defaultData['digests']);
   const [cachesState, cachesDispatch] = useReducer(cachesReducer, defaultData['caches']);
@@ -72,9 +72,9 @@ function App() {
     dashboard: { dashboard: dashboardState, dispatch: dashboardDispatch },
     collections: { collections: collectionsState, dispatch: collectionsDispatch },
     monitors: { monitors: monitorsState, dispatch: monitorsDispatch },
+    tags: { tags: tagsState, dispatch: tagsDispatch },
     explorer: { explorer: explorerState, dispatch: explorerDispatch },
     names: { names: namesState, dispatch: namesDispatch },
-    tags: { tags: tagsState, dispatch: tagsDispatch },
     signatures: { signatures: signaturesState, dispatch: signaturesDispatch },
     digests: { digests: digestsState, dispatch: digestsDispatch },
     caches: { caches: cachesState, dispatch: cachesDispatch },
@@ -100,35 +100,41 @@ export default App;
 
 //------------------------------------------------------
 const mapHotKeys = (panelDispatch) => {
-  Mousetrap.bind(['alt+0'], function () {
+  Mousetrap.bind(['s d'], function () {
     window.location = '/dashboard';
   });
-  Mousetrap.bind(['alt+1'], function () {
+  Mousetrap.bind(['s c'], function () {
     window.location = '/collections';
   });
-  Mousetrap.bind(['alt+2'], function () {
+  Mousetrap.bind(['s m'], function () {
     window.location = '/monitors';
   });
-  Mousetrap.bind(['alt+3'], function () {
+  Mousetrap.bind(['s e'], function () {
     window.location = '/explorer';
   });
-  Mousetrap.bind(['alt+4'], function () {
+  Mousetrap.bind(['s n'], function () {
     window.location = '/names';
   });
-  Mousetrap.bind(['alt+5'], function () {
+  Mousetrap.bind(['s t'], function () {
+    window.location = '/tags';
+  });
+  Mousetrap.bind(['s g'], function () {
     window.location = '/signatures';
   });
-  Mousetrap.bind(['alt+6'], function () {
+  Mousetrap.bind(['s i'], function () {
     window.location = '/digests';
   });
-  Mousetrap.bind(['alt+7'], function () {
+  Mousetrap.bind(['s h'], function () {
     window.location = '/caches';
   });
-  Mousetrap.bind(['alt+8'], function () {
+  Mousetrap.bind(['s o'], function () {
+    window.location = '/other';
+  });
+  Mousetrap.bind(['s s'], function () {
     window.location = '/settings';
   });
-  Mousetrap.bind(['alt+9'], function () {
-    window.location = '/support/keys';
+  Mousetrap.bind(['s u'], function () {
+    window.location = '/support';
   });
   Mousetrap.bind(['e b'], function () {
     window.location = '/explorer/blocks';

@@ -46,34 +46,39 @@ export const SupportKeys = () => {
   return (
     <pre>
       <h4>Accessing Screens</h4>
-      <div> </div>
-      {/* page-related - for searching do not remove */}
-      {'\talt+0\t\t\t/dashboard\t\tOpen Dashboard screen\n'}
-      {'\talt+1\t\t\t/collections\t\tOpen Collections screen\n'}
-      {'\talt+2\t\t\t/monitors\t\tOpen Monitors screen\n'}
-      {'\talt+3\t\t\t/explorer\t\tOpen Explorers screen\n'}
-      {'\talt+4\t\t\t/names\t\t\tOpen Names screen\n'}
-      {'\talt+5\t\t\t/signatures\t\tOpen Signatures screen\n'}
-      {'\talt+6\t\t\t/digests\t\tOpen Digests screen\n'}
-      {'\talt+7\t\t\t/caches\t\t\tOpen Caches screen\n'}
-      {'\talt+8\t\t\t/settings\t\tOpen Settings screen\n'}
-      {'\talt+9\t\t\t/support/keys\t\tView hot keys\n'}
+      {'\ts d\t\tOpen Dashboard screen\n'}
+      {'\ts c\t\tOpen Collections screen\n'}
+      {'\ts m\t\tOpen Monitors screen\n'}
+      {'\ts e\t\tOpen Explorers screen\n'}
+      {'\ts n\t\tOpen Names screen\n'}
+      {'\ts t\t\tOpen Tags screen\n'}
+      {'\ts g\t\tOpen Signatures screen\n'}
+      {'\ts i\t\tOpen Digests screen\n'}
+      {'\ts h\t\tOpen Caches screen\n'}
+      {'\ts o\t\tOpen Other screen\n'}
+      {'\ts s\t\tOpen Settings screen\n'}
+      {'\ts u\t\tOpen Support screen\n'}
       <div> </div>
       <h4>Showing / Hiding Panels</h4>
+      {'\tq l\t\tHide panels but contents\n'}
+      {'\tq a\t\tExpand all panels\n'}
+      {'\tq h\t\tShow / hide help panel\n'}
+      {'\tq m\t\tShow / hide menu panel\n'}
+      {'\tq c\t\tShow / hide content panel\n'}
+      {'\tq s\t\tShow / hide status panel\n'}
       <div> </div>
-      {'\tq l\t\t\tcollapse\t\tHide help, status, and men panels\n'}
-      {'\tq a\t\t\texpand\t\t\tExpand all panels\n'}
-      {'\tq h\t\t\thelp\t\t\tShow / hide help panel\n'}
-      {'\tq m\t\t\tmenu\t\t\tShow / hide menu panel\n'}
-      {'\tq c\t\t\tcontent\t\t\tShow / hide content panel\n'}
-      {'\tq s\t\t\tstatus\t\t\tShow / hide status panel\n'}
+      <h4>In the Explorer...</h4>
+      {'\te b\t\tView blocks\n'}
+      {'\te t\t\tView transactions\n'}
+      {'\te r\t\tView receipts\n'}
+      {'\te l\t\tView logs\n'}
+      {'\te c\t\tView traces\n'}
       <div> </div>
       <h4>When Viewing Tables...</h4>
-      <div> </div>
-      {'\tHome\t\t\thome\t\t\tReturn to the first page of the table\n'}
-      {'\tEnd\t\t\thome\t\t\tGo to the last page of data\n'}
-      {'\tLeft Arrow\t\tprevious\t\tGo to the previous page\n'}
-      {'\tRight Arrow\t\tnext\t\t\tGo to the next page\n'}
+      {'\tHome\t\tGo to the first page of data\n'}
+      {'\tEnd\t\tGo to the last page of data\n'}
+      {'\tLeft\t\tGo to the previous page\n'}
+      {'\tRight\t\tGo to the next page\n'}
     </pre>
   );
 };

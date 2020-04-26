@@ -1,99 +1,108 @@
-import React, { useEffect, useState, useCallback } from 'react';
+/*
+ * This file was generated with makeClass. Edit only those parts of the code inside
+ * of 'EXISTING_CODE' tags.
+ */
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
+import GlobalContext from 'store';
+
+import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
+import { getServerData, sortArray, sortStrings, handleClick, useArrowKeys, notEmpty } from 'components/utils';
+import { calcValue } from 'store';
+
 import { useExplorer } from './Explorer';
-import { ObjectTable } from 'components';
-import { getServerData, handleClick } from 'components/utils';
 
-//----------------------------------------------------------------------
+// auto-generate: page-settings
+// auto-generate: page-settings
+
+//---------------------------------------------------------------------------
 export const ExplorerBlocks = () => {
-  const [schema] = useState(blocksSchema);
-  const [block, setBlock] = useState(-1);
   const { explorer, dispatch } = useExplorer();
-  const [fetching, setFetch] = useState(false);
+  const [current, setCurrent] = useState('latest');
 
-  const handleNavigate = useCallback(
+  const clickHandler = useCallback(
     (action) => {
-      console.log(action);
       switch (action.type) {
-        case 'first':
-          setBlock(1);
+        case 'home':
+          setCurrent('first');
           break;
-        case 'last':
-          setBlock(-1);
+        case 'end':
+          setCurrent('latest');
           break;
-        case 'previous':
-          setBlock(explorer.blockNumber - 1);
+        case 'up':
+        case 'left':
+          setCurrent(getFieldValue(explorer, "id") + '.prev');
           break;
-        case 'next':
-          setBlock(explorer.blockNumber + 1);
+        case 'down':
+        case 'right':
+          setCurrent(getFieldValue(explorer, "id") + '.next');
           break;
         default:
           break;
       }
     },
-    [explorer.blockNumber]
+    [explorer.blockNumber, explorer.transactionIndex]
   );
 
-  let query = 'hashes_only&blocks=' + (block === -1 ? 'latest' : block);
-  query += '&verbose=10';
+  useArrowKeys(clickHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, clickHandler]);
+
+  let query = 'blocks=' + current + '&hashes_only&verbose=10';
   const url = 'http://localhost:8080/blocks';
   useEffect(() => {
-    setFetch(true);
     getServerData(url, query).then((theData) => {
-      dispatch({ type: 'update', payload: theData[0] });
+      let result = theData.data;
+      // EXISTING_CODE
+      // EXISTING_CODE
+      dispatch({ type: 'update', payload: result });
     });
-    setFetch(false);
-  }, [query, dispatch, block]);
+  }, [query, dispatch, current]);
 
-  useEffect(() => {
-    Mousetrap.bind(['meta+shift+home'], (e) => handleClick(null, handleNavigate, { type: 'first' }));
-    Mousetrap.bind(['meta+shift+end'], (e) => handleClick(null, handleNavigate, { type: 'last' }));
-    Mousetrap.bind(['home'], (e) => handleClick(null, handleNavigate, { type: 'first' }));
-    Mousetrap.bind(['end'], (e) => handleClick(null, handleNavigate, { type: 'last' }));
-    Mousetrap.bind(['up'], (e) => handleClick(null, handleNavigate, { type: 'previous' }));
-    Mousetrap.bind(['left'], (e) => handleClick(null, handleNavigate, { type: 'previous' }));
-    Mousetrap.bind(['down'], (e) => handleClick(null, handleNavigate, { type: 'next' }));
-    Mousetrap.bind(['right'], (e) => handleClick(null, handleNavigate, { type: 'next' }));
-    return () => {
-      Mousetrap.unbind(['meta+shift+home']);
-      Mousetrap.unbind(['meta+shift+end']);
-      Mousetrap.unbind(['home']);
-      Mousetrap.unbind(['end']);
-      Mousetrap.unbind(['up']);
-      Mousetrap.unbind(['left']);
-      Mousetrap.unbind(['down']);
-      Mousetrap.unbind(['right']);
-    };
-  }, [dispatch, explorer.blockNumber, handleNavigate]);
+  // prettier-ignore
+  const table =
+    explorer &&
+    explorer.map((item) => {
+      return (
+        <ObjectTable
+          columns={blocksSchema}
+          data={item}
+          title={'Block ' + getFieldValue(item, 'id')}
+          search={false}
+        />
+      );
+    });
 
-  if (fetching) return <pre>fetching...</pre>;
   return (
     <div>
-      <pre>{query}</pre>
-      <ObjectTable columns={schema} data={explorer} title={'Block ' + explorer.blockNumber} search={false} />
+      <pre>{url + '?' + query}</pre>
+      {table}
     </div>
   );
 };
 
-//----------------------------------------------------------------------
+//----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
-  console.log('fieldName: ', fieldName);
+  // EXISTING_CODE
   switch (fieldName) {
     case 'id':
-      console.log('ret: ', record.blockNumber);
       return record.blockNumber;
     default:
       break;
   }
+  // EXISTING_CODE
 }
 
+// EXISTING_CODE
+// EXISTING_CODE
+
+//----------------------------------------------------------------------------
 // auto-generate: schema
 export const blocksSchema = [
   {
     name: 'ID',
     selector: 'id',
     type: 'string',
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
@@ -105,11 +114,13 @@ export const blocksSchema = [
     name: 'Hash',
     selector: 'hash',
     type: 'hash',
+    searchable: true,
   },
   {
     name: 'Parent Hash',
     selector: 'parentHash',
     type: 'hash',
+    searchable: true,
   },
   {
     name: 'Timestamp',
@@ -131,6 +142,7 @@ export const blocksSchema = [
     name: 'Miner',
     selector: 'miner',
     type: 'address',
+    searchable: true,
   },
   {
     name: 'Gas Limit',
@@ -157,6 +169,7 @@ export const blocksSchema = [
     name: 'Name',
     selector: 'name',
     type: 'string',
+    searchable: true,
   },
   {
     name: 'Light',

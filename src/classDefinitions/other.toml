@@ -1,5 +1,9 @@
 [settings]
 class = "COther"
+recordIcons = "header-Add,Edit/Remove,Delete/Undelete"
+defaultSort = "blockNumber,name,date"
+url = "http://localhost:8080/when"
+query = "verbose=10&list"
 
 [[subpages]]
 list = [

@@ -1,27 +1,43 @@
-import React, { Fragment, useEffect, useState, useMemo, useRef } from 'react';
-import { useContext } from 'react';
+/*
+ * This file was generated with makeClass. Edit only those parts of the code inside
+ * of 'EXISTING_CODE' tags.
+ */
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import { getServerData, sortArray, sortStrings } from 'components/utils';
+import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
 import { calcValue } from 'store';
-import Add from 'assets/icons/Add';
 
 import './Names.css';
-import { handleClick } from 'components/Modal/Modal';
+
+// auto-generate: page-settings
+const recordIconList = [
+  'header-Add',
+  'Edit/Remove',
+  'Delete/Undelete',
+  'Explorer',
+  'ExternalLink',
+  'footer-CSV',
+  'footer-TXT',
+  'footer-Import',
+  //
+];
+const defaultSort = ['tags', 'address', 'name'];
+const defaultSearch = ['tags', 'address', 'name'];
+// auto-generate: page-settings
 
 //---------------------------------------------------------------------------
-export function Names() {
+export const Names = () => {
   const { names, dispatch } = useNames();
   const [tagList, setTagList] = useState([]);
-  const [searchFields, setSearchFields] = useState(['tags', 'address', 'name']);
+  const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
   const [dialogShowing, setShowing] = useState(false);
 
   const clickHandler = (action) => {
-    console.log(action);
     switch (action.type) {
       case 'Add':
         setShowing(true);
@@ -43,13 +59,18 @@ export function Names() {
   const url = 'http://localhost:8080/names';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
-      const sorted = sortArray(theData, [['tags', 'address', 'name']], ['asc', 'asc', 'asc']);
+      let result = theData.data;
+      // EXISTING_CODE
+      // EXISTING_CODE
+      const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
       dispatch({ type: 'update', payload: sorted });
     });
   }, [query, dispatch]);
 
   useMemo(() => {
-    let tagList = [...new Set(names.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    let tagList = [
+      ...new Set(names.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
+    ];
     tagList = sortStrings(tagList, true);
     tagList.unshift('All');
     setTagList(tagList);
@@ -66,38 +87,36 @@ export function Names() {
     return curTag === 'All' || item.tags.includes(curTag);
   });
 
-  //  const [curSubset, setSubset] = useState('yours');
-  //  const subsets = ['yours', 'wallets', 'tokens', 'prefunds', 'other', 'all', 'tags'];
-  //      <ButtonCaddie name="Subsets" buttons={subsets} current={curSubset} action="set-subset" handler={clickHandler} />
-
-  const title = (
-    <Fragment>
-      {'Names '}
-      <Add size={20} onClick={(e) => handleClick(e, clickHandler, { type: 'Add' })} />
-    </Fragment>
-  );
   return (
     <div>
+      {/* prettier-ignore */}
       {tagList.length ? (
         <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
       ) : null}
       <DataTable
         data={filtered}
         columns={namesSchema}
-        title={title}
+        title="Names"
         search={true}
         searchFields={searchFields}
         pagination={true}
-        recordIcons={['Edit', 'header-Add', 'Delete', 'Explorer', 'ExternalLink']}
+        recordIcons={recordIconList}
       />
       {dialogShowing && (
         <Modal showing={dialogShowing} handler={clickHandler}>
-          <ObjectTable data={{}} columns={namesSchema} title="Add Name" editable={true} showHidden={true} />
+          {/* prettier-ignore */}
+          <ObjectTable
+            data={{}}
+            columns={namesSchema}
+            title="Add Name"
+            editable={true}
+            showHidden={true}
+          />
         </Modal>
       )}
     </div>
   );
-}
+};
 
 //----------------------------------------------------------------------
 export const namesDefault = [];
@@ -112,8 +131,6 @@ export const namesReducer = (state, action) => {
     default:
     // do nothing
   }
-  // TODO(tjayrush): this data is on the backend -- we do not store it locally
-  // localStorage.setItem('namesState', JSON.stringify(ret));
   return ret;
 };
 
@@ -124,6 +141,7 @@ export const useNames = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  // EXISTING_CODE
   switch (fieldName) {
     case 'id':
       return record.address;
@@ -133,7 +151,11 @@ function getFieldValue(record, fieldName) {
     default:
       break;
   }
+  // EXISTING_CODE
 }
+
+// EXISTING_CODE
+// EXISTING_CODE
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -144,6 +166,7 @@ export const namesSchema = [
     type: 'string',
     hidden: true,
     width: 1,
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
@@ -152,12 +175,14 @@ export const namesSchema = [
     type: 'string',
     width: 3,
     editable: true,
+    searchable: true,
   },
   {
     name: 'Address',
     selector: 'address',
     type: 'address',
     width: 6,
+    searchable: true,
   },
   {
     name: 'Name',
@@ -165,6 +190,7 @@ export const namesSchema = [
     type: 'string',
     width: 4,
     editable: true,
+    searchable: true,
   },
   {
     name: 'Symbol',
@@ -173,6 +199,7 @@ export const namesSchema = [
     width: 2,
     editable: true,
     align: 'center',
+    searchable: true,
   },
   {
     name: 'Source',
@@ -195,6 +222,7 @@ export const namesSchema = [
     type: 'string',
     width: 4,
     editable: true,
+    searchable: true,
   },
   {
     name: 'isCustom',
@@ -239,15 +267,15 @@ export const namesSchema = [
     hidden: true,
   },
   {
-    name: 'size',
+    name: 'Size',
     selector: 'sizeInBytes',
     type: 'filesize',
     hidden: true,
   },
   {
     name: 'Icons',
-    type: 'icons',
     selector: 'icons',
+    type: 'icons',
   },
 ];
 // auto-generate: schema

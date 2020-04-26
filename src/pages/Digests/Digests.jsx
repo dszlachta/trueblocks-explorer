@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 
 import { DataTable, GridTable, ChartTable } from 'components';
-import { currentPage, getServerData1, pad2 } from 'components/utils';
+import { currentPage, getServerData, pad2 } from 'components/utils';
 import GlobalContext, { useStatusMeta } from 'store';
 
 import './Digests.css';
@@ -23,7 +23,7 @@ export const Digests = () => {
 
   useEffect(() => {
     dispatch({ type: 'loading', payload: true });
-    getServerData1('http://localhost:8080/status', query).then((theData) => {
+    getServerData('http://localhost:8080/status', query).then((theData) => {
       dispatch({ type: 'update', payload: theData.data[0].caches[0].items });
     });
     dispatch({ type: 'loading', payload: true });
@@ -146,6 +146,7 @@ export const digestsSchema = [
     selector: 'id',
     type: 'string',
     hidden: true,
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
@@ -260,6 +261,7 @@ export const digestsSchema = [
     selector: 'filename',
     type: 'string',
     hidden: true,
+    searchable: true,
   },
   {
     name: 'Chunk Size',
@@ -281,6 +283,7 @@ export const digestsSchema = [
     type: 'hash',
     align: 'center',
     cn: 'hashes',
+    searchable: true,
   },
   {
     name: 'Bloom Hash',
@@ -288,6 +291,7 @@ export const digestsSchema = [
     type: 'hash',
     align: 'center',
     cn: 'hashes',
+    searchable: true,
   },
 ];
 // auto-generate: schema

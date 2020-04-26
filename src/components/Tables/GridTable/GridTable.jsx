@@ -62,7 +62,7 @@ const GridRow = ({ row, cols, meta, rowSpan, selected, setSelected }) => {
   const colSpan = rowSpan / 10;
   return (
     <div className="at-row gt-row">
-      <div className="base-header at-sider">{fmtNum(row * rowSpan)}:</div>
+      <div className="at-header-base at-sider">{fmtNum(row * rowSpan)}:</div>
       {cols.map((col) => {
         const cellStart = row * rowSpan + col * colSpan;
         const cellEnd = row * rowSpan + (col + 1) * colSpan;
@@ -73,7 +73,7 @@ const GridRow = ({ row, cols, meta, rowSpan, selected, setSelected }) => {
         return (
           <div
             key={col}
-            className={'at-cell gt-cell ' + cn + ' expandable'}
+            className={'at-cell gt-cell ' + cn}
             onClick={(e) => handleClick(e, setSelected, row * 1e6 + col * 1e5)}
           >
             {cn.includes('completed') && '✔'}
@@ -88,7 +88,7 @@ const GridRow = ({ row, cols, meta, rowSpan, selected, setSelected }) => {
 const GridHeader = ({ cols, rowSpan }) => {
   const colSpan = rowSpan / 10;
   return (
-    <div className="base-header at-header gt-header">
+    <div className="at-header-base at-header gt-header">
       <div> </div>
       {cols.map((n, idx) => {
         return <div key={n * idx}>{fmtNum(n * colSpan)}</div>;
@@ -177,18 +177,12 @@ export const DetailTable = ({ data, columns, title, idCol, start, cellSpan }) =>
       >
         <h4>{subtit}</h4>
         <div style={{ display: 'grid', gridTemplateColumns: '4fr 92 4fr', justifyItems: 'stretch', gridGap: '20px' }}>
-          <div></div>
           <div
             style={{
               display: 'flex',
               flexFlow: 'row wrap',
-              // justifyContent: 'start',
-              // justifyItems: 'center',
-              //             display: 'grid',
-              // gridTemplateColumns: '1fr 1fr 1fr 1fr',
               justifyItems: 'stretch',
               gridGap: '4px',
-              border: '1px solid brown',
             }}
           >
             {filteredData.map((record) => {

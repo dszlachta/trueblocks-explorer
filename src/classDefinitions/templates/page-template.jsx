@@ -11,22 +11,14 @@ import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
 import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
 import { calcValue } from 'store';
 
-import './Tags.css';
+import './[{PROPER}].css';
 
 // auto-generate: page-settings
-const recordIconList = [
-  'header-Add',
-  'Edit/Remove',
-  'Delete/Undelete',
-  //
-];
-const defaultSort = ['tags', 'subtags1', 'subtags2'];
-const defaultSearch = ['tags', 'subtags1', 'subtags2'];
 // auto-generate: page-settings
 
 //---------------------------------------------------------------------------
-export const Tags = () => {
-  const { tags, dispatch } = useTags();
+export const [{PROPER}] = () => {
+  const { [{LONG}], dispatch } = use[{PROPER}]();
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
@@ -50,8 +42,8 @@ export const Tags = () => {
     }
   };
 
-  let query = 'verbose=10&tags';
-  const url = 'http://localhost:8080/names';
+  let query = '[{QUERY}]';
+  const url = '[{URL}]';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
       let result = theData.data;
@@ -64,12 +56,12 @@ export const Tags = () => {
 
   useMemo(() => {
     let tagList = [
-      ...new Set(tags.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
+      ...new Set([{LONG}].map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
     ];
     tagList = sortStrings(tagList, true);
     tagList.unshift('All');
     setTagList(tagList);
-  }, [tags]);
+  }, [[{LONG}]]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
@@ -78,7 +70,7 @@ export const Tags = () => {
     };
   }, []);
 
-  const filtered = tags.filter((item) => {
+  const filtered = [{LONG}].filter((item) => {
     return curTag === 'All' || item.tags.includes(curTag);
   });
 
@@ -90,8 +82,8 @@ export const Tags = () => {
       ) : null}
       <DataTable
         data={filtered}
-        columns={tagsSchema}
-        title="Tags"
+        columns={[{LONG}]Schema}
+        title="[{PROPER}]"
         search={true}
         searchFields={searchFields}
         pagination={true}
@@ -102,8 +94,8 @@ export const Tags = () => {
           {/* prettier-ignore */}
           <ObjectTable
             data={{}}
-            columns={tagsSchema}
-            title="Add Tag"
+            columns={[{LONG}]Schema}
+            title="Add [{SINGULAR}]"
             editable={true}
             showHidden={true}
           />
@@ -114,10 +106,10 @@ export const Tags = () => {
 };
 
 //----------------------------------------------------------------------
-export const tagsDefault = [];
+export const [{LONG}]Default = [];
 
 //----------------------------------------------------------------------
-export const tagsReducer = (state, action) => {
+export const [{LONG}]Reducer = (state, action) => {
   let ret = state;
   switch (action.type) {
     case 'update':
@@ -130,27 +122,13 @@ export const tagsReducer = (state, action) => {
 };
 
 //----------------------------------------------------------------------
-export const useTags = () => {
-  return useContext(GlobalContext).tags;
+export const use[{PROPER}] = () => {
+  return useContext(GlobalContext).[{LONG}];
 };
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
   // EXISTING_CODE
-  if (!record.tags) return '';
-  const array = record.tags.split(':');
-  switch (fieldName) {
-    case 'id':
-      return record.tags;
-    case 'tags':
-      return array.length > 0 ? array[0] : '';
-    case 'substag1':
-      return array.length > 1 ? array[1] : '';
-    case 'substag2':
-      return array.length > 2 ? array[2] : '';
-    default:
-      break;
-  }
   // EXISTING_CODE
 }
 
@@ -159,40 +137,4 @@ function getFieldValue(record, fieldName) {
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
-export const tagsSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Tags',
-    selector: 'tags',
-    type: 'string',
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Subtags 1',
-    selector: 'subtags1',
-    type: 'string',
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Subtags 2',
-    selector: 'subtags2',
-    type: 'string',
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-  },
-];
 // auto-generate: schema

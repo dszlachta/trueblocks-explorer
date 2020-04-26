@@ -34,6 +34,8 @@ export const thePages = {
   'monitors/yours': { component: <Monitors /> },
   'monitors/shared': { component: <Monitors /> },
   //
+  'tags/': { component: <Tags /> },
+  //
   'explorer/': { component: <Explorer /> },
   'explorer/blocks': { component: <Explorer /> },
   'explorer/transactions': { component: <Explorer /> },
@@ -42,8 +44,6 @@ export const thePages = {
   'explorer/traces': { component: <Explorer /> },
   //
   'names/': { component: <Names /> },
-  //
-  'tags/': { component: <Tags /> },
   //
   'signatures/': { component: <Signatures /> },
   'signatures/known': { component: <Signatures /> },
@@ -115,6 +115,10 @@ export const theMenu = {
       ],
     },
     {
+      label: 'Tags',
+      exact: true,
+    },
+    {
       label: 'Explorer',
       exact: true,
       items: [
@@ -128,10 +132,6 @@ export const theMenu = {
     { label: 'Separator' },
     {
       label: 'Names',
-      exact: true,
-    },
-    {
-      label: 'Tags',
       exact: true,
     },
     {

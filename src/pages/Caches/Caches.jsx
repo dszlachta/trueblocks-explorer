@@ -1,40 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import { useContext } from 'react';
+/*
+ * This file was generated with makeClass. Edit only those parts of the code inside
+ * of 'EXISTING_CODE' tags.
+ */
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable } from 'components';
-import { getServerData1 } from 'components/utils';
+import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
+import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
+import { calcValue } from 'store';
 
 import './Caches.css';
 
-//---------------------------------------------------------------------------
-export function Caches() {
-  const { caches, dispatch } = useCaches();
-  const [types] = useState(['all']);
-  const [verbose] = useState(10);
-  const [details] = useState(true);
-  const [depth] = useState(0);
-  const [modes] = useState(['abis', 'caches']);
+// auto-generate: page-settings
+const recordIconList = [
+  'header-Add',
+  'Edit/Remove',
+  'Delete/Undelete',
+  'ExternalLink',
+  'footer-CSV',
+  'footer-TXT',
+  'footer-Import',
+  //
+];
+const defaultSort = ['path'];
+const defaultSearch = ['path'];
+// auto-generate: page-settings
 
-  //  const source = currentPage().subpage;
-  let query = 'modes=' + modes.map((mode) => mode).join('%20');
-  query += '&types=' + types.map((type) => type).join('%20');
-  query += details ? '&details' : '';
-  query += depth ? '&depth=' + depth : '';
-  query += verbose ? '&verbose=' + verbose : '';
+//---------------------------------------------------------------------------
+export const Caches = () => {
+  const { caches, dispatch } = useCaches();
+  const [tagList, setTagList] = useState([]);
+  const [searchFields] = useState(defaultSearch);
+  const [curTag, setTag] = useState('All');
+  const [dialogShowing, setShowing] = useState(false);
+
+  const clickHandler = (action) => {
+    switch (action.type) {
+      case 'Add':
+        setShowing(true);
+        break;
+      case 'close':
+      case 'cancel':
+      case 'okay':
+        setShowing(false);
+        break;
+      case 'set-tags':
+        setTag(action.payload);
+        break;
+      default:
+        break;
+    }
+  };
+
+  let query = 'verbose=10&modes=abis%20caches&types=all&details&depth=1';
+  const url = 'http://localhost:8080/status';
   useEffect(() => {
-    getServerData1('http://localhost:8080/status', query).then((theData) => {
-      dispatch({ type: 'update', payload: theData.data[0].caches });
+    getServerData(url, query).then((theData) => {
+      let result = theData.data;
+      // EXISTING_CODE
+      result = theData.data[0].caches;
+      // EXISTING_CODE
+      const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
+      dispatch({ type: 'update', payload: sorted });
     });
   }, [query, dispatch]);
 
+  useMemo(() => {
+    let tagList = [
+      ...new Set(caches.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
+    ];
+    tagList = sortStrings(tagList, true);
+    tagList.unshift('All');
+    setTagList(tagList);
+  }, [caches]);
+
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
+
+  const filtered = caches.filter((item) => {
+    return curTag === 'All' || item.tags.includes(curTag);
+  });
+
   return (
     <div>
-      <DataTable data={caches} columns={cachesSchema} title="Caches View" />
+      {/* prettier-ignore */}
+      {tagList.length ? (
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
+      ) : null}
+      <DataTable
+        data={filtered}
+        columns={cachesSchema}
+        title="Caches"
+        search={true}
+        searchFields={searchFields}
+        pagination={true}
+        recordIcons={recordIconList}
+      />
+      {dialogShowing && (
+        <Modal showing={dialogShowing} handler={clickHandler}>
+          {/* prettier-ignore */}
+          <ObjectTable
+            data={{}}
+            columns={cachesSchema}
+            title="Add Cache"
+            editable={true}
+            showHidden={true}
+          />
+        </Modal>
+      )}
     </div>
   );
-}
+};
 
 //----------------------------------------------------------------------
 export const cachesDefault = [];
@@ -49,8 +131,6 @@ export const cachesReducer = (state, action) => {
     default:
     // do nothing
   }
-  // TODO(tjayrush): this data is on the backend -- we do not store it locally
-  // localStorage.setItem('cachesState', JSON.stringify(ret));
   return ret;
 };
 
@@ -61,6 +141,7 @@ export const useCaches = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  // EXISTING_CODE
   switch (fieldName) {
     case 'id':
       return record.path;
@@ -69,7 +150,11 @@ function getFieldValue(record, fieldName) {
     default:
       break;
   }
+  // EXISTING_CODE
 }
+
+// EXISTING_CODE
+// EXISTING_CODE
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -80,6 +165,7 @@ export const cachesSchema = [
     type: 'string',
     hidden: true,
     width: 1,
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
@@ -87,12 +173,14 @@ export const cachesSchema = [
     selector: 'type',
     type: 'string',
     width: 1,
+    searchable: true,
   },
   {
     name: 'Location',
     selector: 'path',
     type: 'string',
     width: 2,
+    searchable: true,
   },
   {
     name: '# Folders',
@@ -125,6 +213,11 @@ export const cachesSchema = [
     type: 'bool',
     hidden: true,
     width: 1,
+  },
+  {
+    name: 'Icons',
+    selector: 'icons',
+    type: 'icons',
   },
 ];
 // auto-generate: schema

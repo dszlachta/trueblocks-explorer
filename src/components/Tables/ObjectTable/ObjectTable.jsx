@@ -16,7 +16,6 @@ export const ObjectTable = ({
   pagination = false,
   arrowsOnly = false,
   showHidden = false,
-  otButtonList = [],
   handler = null,
 }) => {
   const [filterText] = useState('');
@@ -25,22 +24,6 @@ export const ObjectTable = ({
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
   const id = calcValue(data, idCol);
-  const warn = otButtonList.length > 0 && !handler && <div className="warning">otButtonList handler not found</div>;
-  const buttons = otButtonList && (
-    <div style={{ padding: '0px !important', marginTop: '-4px' }}>
-      {otButtonList.map((item) => {
-        return (
-          <Fragment>
-            {warn}
-            <button onClick={(e) => handleClick(e, handler, { type: 'button-click', payload: item, id: id })}>
-              {item}
-            </button>
-            <br />
-          </Fragment>
-        );
-      })}
-    </div>
-  );
 
   const tableBar = (title !== '' || pagination) && (
     <Tablebar
@@ -57,40 +40,34 @@ export const ObjectTable = ({
   return (
     <div className="ot-container">
       {tableBar}
-      <div className={'ot-body' + (otButtonList.length > 0 ? '-withbuttons' : '')}>
-        <div className="at-body">
-          {columns.map((column, index) => {
-            // note: in the object table 'columns' renders as rows
-            const value = calcValue(data, column);
+      <div className={'ot-body at-body'}>
+        {columns.map((column, index) => {
+          if (!showHidden && column.hidden) return null;
 
-            if (!showHidden && column.hidden) return null;
-            if (!showHidden && value === '') return null;
+          const value = calcValue(data, column);
+          if (!showHidden && value === '') return null;
 
-            const fieldName = column.name || column.selector;
-            const fieldType = column.type || 'string';
-            const formatted = formatFieldByType(fieldType, value, column.decimals || 0);
-            const key = id + '_' + column.selector;
-            return (
-              <div key={key} className="at-row ot-row">
-                <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
-                <ObjectTableColumn column={column}>
-                  {/*column.editable && !column.onAccept && (
-                    <div className="warning">Editable field '{column.selector}' does not have an onAccept function</div>
-                  )*/}
-                  <Editable
-                    fieldValue={formatted}
-                    editable={column.editable}
-                    fieldName={column.selector}
-                    placeholder={column.selector}
-                    onValidate={column.onValidate}
-                    onAccept={column.onAccept}
-                  />
-                </ObjectTableColumn>
-              </div>
-            );
-          })}
-        </div>
-        {buttons}
+          const fieldName = column.name || column.selector;
+          const fieldType = column.type || 'string';
+          const formatted = formatFieldByType(fieldType, value, column.decimals);
+          const key = id + '_' + column.selector;
+
+          return (
+            <div key={key} className="at-row ot-row">
+              <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
+              <ObjectTableColumn column={column}>
+                <Editable
+                  fieldValue={formatted}
+                  editable={column.editable}
+                  fieldName={column.selector}
+                  placeholder={column.selector}
+                  onValidate={column.onValidate}
+                  onAccept={column.onAccept}
+                />
+              </ObjectTableColumn>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -100,7 +77,7 @@ export const ObjectTable = ({
 const ObjectTableSider = ({ children }) => {
   return (
     <Fragment>
-      <div className="base-header at-sider">{children}</div>
+      <div className="at-header-base at-sider">{children}</div>
     </Fragment>
   );
 };

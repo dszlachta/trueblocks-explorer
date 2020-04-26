@@ -1,5 +1,5 @@
 /*-----------------------------------*/
-.base-header {
+.at-header-base {
   font-size: 1em;
   font-weight: 500;
   font-family: var(--at-font-family);
@@ -87,7 +87,7 @@
 .at-row:last-child {
   border-bottom: 0px;
 }
-.expandable:hover {
+.dt-row:hover {
   cursor: pointer;
   background-color: var(--at-color2);
   color: var(--at-bgcolor2);
@@ -102,9 +102,27 @@
 /*-----------------------------------*/
 .at-cell {
   padding: var(--at-padding);
+  padding-right: 6px;
+  padding-left: 6px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  border-right: var(--at-border2);
+}
+.at-cell:last-child {
+  padding: var(--at-padding);
+  padding-right: 6px;
+  padding-left: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  border-right: 0px;
+}
+.gt-cell:hover {
+  cursor: pointer;
+  background-color: var(--at-color2);
+  color: var(--at-bgcolor2);
+  opacity: 70%;
 }
 
 /*-----------------------------------*/

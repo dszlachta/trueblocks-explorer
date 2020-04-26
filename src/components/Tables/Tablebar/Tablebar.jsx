@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Pagination } from './Pagination';
 import { Search } from './Search';
+import { getIcon } from 'pages/utils';
 
 import './Tablebar.css';
 
@@ -15,6 +16,7 @@ export const Tablebar = ({
   pagingCtx = { curPage: 0 },
   handler = null,
   asHeader = true,
+  footerIcons = null,
 }) => {
   const header = (
     <div className="tablebar-container">
@@ -27,7 +29,7 @@ export const Tablebar = ({
       </div>
     </div>
   );
-  const footer = <FooterMessage searchFields={searchFields} />;
+  const footer = <TableFooterRow searchFields={searchFields} footerIcons={footerIcons} />;
   return asHeader ? header : footer;
 };
 
@@ -37,17 +39,32 @@ const Title = ({ title }) => {
 };
 
 //-----------------------------------------------------------------
-const FooterMessage = ({ searchFields }) => {
+const TableFooterRow = ({ searchFields, footerIcons }) => {
+  const style1 = {
+    alignSelf: 'start',
+    justifySelf: 'end',
+    display: 'flex',
+  };
+  const style2 = { alignSelf: 'start' };
   return (
-    <div>
-      Searching fields:{' '}
-      <div style={{ display: 'inline', fontStyle: 'italic' }}>
-        {searchFields &&
-          searchFields
-            .map((field) => {
-              return field;
-            })
-            .join(', ')}
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+      <div>
+        Searching fields:{' '}
+        <div style={{ display: 'inline', fontStyle: 'italic' }}>
+          {searchFields &&
+            searchFields
+              .map((field) => {
+                return field;
+              })
+              .join(', ')}
+        </div>
+      </div>
+      <div style={{ justifySelf: 'center', color: 'white' }}></div>
+      <div style={style1}>
+        {footerIcons.map((a) => {
+          const icon = a.replace('footer-', '').split('/')[0];
+          return getIcon(icon, false, true, 18);
+        })}
       </div>
     </div>
   );

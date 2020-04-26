@@ -73,7 +73,7 @@ export const ChartTable = ({
 
 //-----------------------------------------------------------------
 const ChartHeader = ({ title }) => {
-  return <div className="base-header at-header ct-header">{title}</div>;
+  return <div className="at-header-base at-header ct-header">{title}</div>;
 };
 
 const ChartBody = ({ data, columns, chartCtx }) => {
@@ -173,7 +173,7 @@ function Scatter({ data, columns, chartCtx }) {
       className="at-body"
     >
       <div></div>
-      <Selectors columns={columns} chartCtx={chartCtx} />
+      <Selectors fields={columns} chartCtx={chartCtx} />
       <div className="at-row chart">
         <svg width={w} height={h}>
           <g transform={`translate(${margin.left},${margin.top})`}>
@@ -199,7 +199,7 @@ function Scatter({ data, columns, chartCtx }) {
   );
 }
 
-const Selectors = ({ columns, chartCtx }) => {
+const Selectors = ({ fields, chartCtx }) => {
   const selected = { backgroundColor: 'blue', color: 'white', fontSize: '.9em', margin: '2px' };
   const notSelected = { fontSize: '.9em', margin: '2px' };
   const getStyle = (which, field) => {
@@ -258,14 +258,14 @@ const Selectors = ({ columns, chartCtx }) => {
   return (
     <div>
       <h4>Range: </h4>
-      {columns.map((column) => {
+      {fields.map((column, index) => {
         if (!column.range) return '';
         return getButton('range', column);
       })}
       <br />
       <br />
       <h4>Domain: </h4>
-      {columns.map((column) => {
+      {fields.map((column, index) => {
         if (!column.domain) return '';
         return getButton('domain', column);
       })}

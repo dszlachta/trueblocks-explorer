@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
+import Mousetrap from 'mousetrap';
 
 export const Spacer = ({ cols = 1 }) => {
   const wids = Array(cols)
@@ -98,14 +100,6 @@ export async function getServerData(route, query) {
   const url = route + '?' + query;
   const response = await fetch(url);
   const data = await response.json();
-  return data.data;
-}
-
-//----------------------------------------------------------------------------
-export async function getServerData1(route, query) {
-  const url = route + '?' + query;
-  const response = await fetch(url);
-  const data = await response.json();
   return data;
 }
 
@@ -114,27 +108,6 @@ export const notEmpty = (fieldName, value) => {
   return value === '' ? 'field may not be empty' : '';
 };
 
-//----------------------------------------------------------------------
-export const dataFetcher = (url) =>
-  fetch(url).then((r) => {
-    return r.json();
-  });
-
-/*
-export const Logo = () => (
-  <div
-    style={{
-      margin: "1rem auto",
-      display: "flex",
-      flexWrap: "wrap",
-      alignItems: "center",
-      justifyContent: "center"
-    }}
-  >
-  Centered in window
-  </div>
-);
-*/
 //----------------------------------------------------------------------
 export const range = (len) => {
   const arr = [];
@@ -159,7 +132,7 @@ export const currentPage = () => {
 
 //---------------------------------------------------------------
 export const formatFieldByType = (type, value, decimals = 0) => {
-  if (type[0] === 'C') return 'Unknown class: ' + JSON.stringify(value, null, 2);
+  if (type[0] === 'C') return 'Unknown class: ' + type + ': ' + JSON.stringify(value, null, 2);
   switch (type) {
     case 'spacer':
       value = '';
@@ -179,15 +152,22 @@ export const formatFieldByType = (type, value, decimals = 0) => {
     case 'filesize':
       value = humanFileSize(value, true);
       break;
+    case 'uint32':
     case 'uint64':
+    case 'blknum':
+    case 'double':
       const isZero = value === '0' || value === 0;
       value = isZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
       break;
     case 'hash':
       value = value ? value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1) : '';
       break;
+    case 'gas':
+    case 'wei':
+    case 'address':
     case 'timestamp':
     case 'string':
+    case 'bytes32':
     default:
       break;
   }
@@ -291,3 +271,22 @@ TESTING
     {check(fmtNum(1234567.0123456789, 6, '€', '.', ','), "1.234.567,012346 €")}
   </div>
 */
+
+export const useArrowKeys = (handler, deps) => {
+  useEffect(() => {
+    Mousetrap.bind(['home'], (e) => handleClick(e, handler, { type: 'home' }));
+    Mousetrap.bind(['end'], (e) => handleClick(e, handler, { type: 'end' }));
+    Mousetrap.bind(['up'], (e) => handleClick(e, handler, { type: 'up' }));
+    Mousetrap.bind(['left'], (e) => handleClick(e, handler, { type: 'left' }));
+    Mousetrap.bind(['down'], (e) => handleClick(e, handler, { type: 'down' }));
+    Mousetrap.bind(['right'], (e) => handleClick(e, handler, { type: 'right' }));
+    return () => {
+      Mousetrap.unbind(['home']);
+      Mousetrap.unbind(['end']);
+      Mousetrap.unbind(['up']);
+      Mousetrap.unbind(['left']);
+      Mousetrap.unbind(['down']);
+      Mousetrap.unbind(['right']);
+    };
+  }, deps);
+};

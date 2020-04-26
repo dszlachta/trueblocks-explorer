@@ -1,58 +1,120 @@
-import React, { useEffect, useState } from 'react';
-import { useContext } from 'react';
+/*
+ * This file was generated with makeClass. Edit only those parts of the code inside
+ * of 'EXISTING_CODE' tags.
+ */
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ButtonCaddie } from 'components';
-import { getServerData, sortArray } from 'components/utils';
+import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
+import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
+import { calcValue } from 'store';
+
 import './Monitors.css';
 
+// auto-generate: page-settings
+const recordIconList = [
+  'header-Add',
+  'Edit/Remove',
+  'Delete/Undelete',
+  'Explorer',
+  'ExternalLink',
+  'footer-CSV',
+  'footer-TXT',
+  'footer-Import',
+  //
+];
+const defaultSort = ['tags', 'address'];
+const defaultSearch = ['tags', 'address'];
+// auto-generate: page-settings
+
+//---------------------------------------------------------------------------
 export const Monitors = () => {
   const { monitors, dispatch } = useMonitors();
-  const [which, setWhich] = useState('active');
+  const [tagList, setTagList] = useState([]);
+  const [searchFields] = useState(defaultSearch);
+  const [curTag, setTag] = useState('All');
+  const [dialogShowing, setShowing] = useState(false);
 
-  const buttonClicked = (action) => {
-    setWhich(action.payload);
-  };
-  const buttonHandler = (action) => {
-    console.log(action);
+  const clickHandler = (action) => {
+    switch (action.type) {
+      case 'Add':
+        setShowing(true);
+        break;
+      case 'close':
+      case 'cancel':
+      case 'okay':
+        setShowing(false);
+        break;
+      case 'set-tags':
+        setTag(action.payload);
+        break;
+      default:
+        break;
+    }
   };
 
-  const query = 'modes=monitors&details&verbose=10';
+  let query = 'modes=monitors&details&verbose=10';
   const url = 'http://localhost:8080/status';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
-      dispatch({
-        type: 'update',
-        payload: sortArray(theData[0].caches[0].items, ['tags', 'address'], ['asc', 'asc']),
-      });
+      let result = theData.data;
+      // EXISTING_CODE
+      result = theData.data[0].caches[0].items;
+      // EXISTING_CODE
+      const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
+      dispatch({ type: 'update', payload: sorted });
     });
   }, [query, dispatch]);
 
-  const filtered = monitors.filter((monitor) => {
-    return which === 'active' ? !monitor.deleted : monitor.deleted;
+  useMemo(() => {
+    let tagList = [
+      ...new Set(monitors.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
+    ];
+    tagList = sortStrings(tagList, true);
+    tagList.unshift('All');
+    setTagList(tagList);
+  }, [monitors]);
+
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
+
+  const filtered = monitors.filter((item) => {
+    return curTag === 'All' || item.tags.includes(curTag);
   });
 
-  const buttons = which === 'active' ? ['pause', 'view', 'freshen'] : ['resume', 'remove'];
   return (
     <div>
-      <ButtonCaddie
-        name="which"
-        buttons={['active', 'paused']}
-        current={which}
-        action="change-schema"
-        handler={buttonClicked}
-      />
+      {/* prettier-ignore */}
+      {tagList.length ? (
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
+      ) : null}
       <DataTable
         data={filtered}
         columns={monitorsSchema}
-        title={(which === 'active' ? 'Active' : 'Paused') + ' Monitors'}
+        title="Monitors"
         search={true}
-        searchFields={['address', 'name', 'tags', 'symbol']}
+        searchFields={searchFields}
         pagination={true}
-        otButtonList={buttons}
-        buttonHandler={buttonHandler}
+        recordIcons={recordIconList}
       />
+      {dialogShowing && (
+        <Modal showing={dialogShowing} handler={clickHandler}>
+          {/* prettier-ignore */}
+          <ObjectTable
+            data={{}}
+            columns={monitorsSchema}
+            title="Add Monitor"
+            editable={true}
+            showHidden={true}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
@@ -70,8 +132,6 @@ export const monitorsReducer = (state, action) => {
     default:
     // do nothing
   }
-  // TODO(tjayrush): this data is on the backend -- we do not store it locally
-  // localStorage.setItem('otherState', JSON.stringify(ret));
   return ret;
 };
 
@@ -82,14 +142,23 @@ export const useMonitors = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  // EXISTING_CODE
   switch (fieldName) {
     case 'id':
       return record.address;
+    case 'tags':
+      const array = record.tags.split(':');
+      return array.length > 0 ? array[0] : '';
     default:
       break;
   }
+  // EXISTING_CODE
 }
 
+// EXISTING_CODE
+// EXISTING_CODE
+
+//----------------------------------------------------------------------------
 // auto-generate: schema
 export const monitorsSchema = [
   {
@@ -98,6 +167,7 @@ export const monitorsSchema = [
     type: 'string',
     hidden: true,
     width: 1,
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
@@ -106,12 +176,14 @@ export const monitorsSchema = [
     type: 'string',
     width: 3,
     editable: true,
+    searchable: true,
   },
   {
     name: 'Address',
     selector: 'address',
     type: 'address',
     width: 6,
+    searchable: true,
   },
   {
     name: 'Name',
@@ -119,6 +191,7 @@ export const monitorsSchema = [
     type: 'string',
     width: 4,
     editable: true,
+    searchable: true,
   },
   {
     name: 'Symbol',
@@ -128,6 +201,7 @@ export const monitorsSchema = [
     width: 2,
     editable: true,
     align: 'center',
+    searchable: true,
   },
   {
     name: 'Source',
@@ -136,6 +210,7 @@ export const monitorsSchema = [
     hidden: true,
     width: 4,
     editable: true,
+    searchable: true,
   },
   {
     name: 'Decimals',
@@ -152,6 +227,7 @@ export const monitorsSchema = [
     hidden: true,
     width: 4,
     editable: true,
+    searchable: true,
   },
   {
     name: 'isCustom',
@@ -201,6 +277,11 @@ export const monitorsSchema = [
     selector: 'deleted',
     type: 'bool',
     hidden: true,
+  },
+  {
+    name: 'Icons',
+    selector: 'icons',
+    type: 'icons',
   },
 ];
 // auto-generate: schema

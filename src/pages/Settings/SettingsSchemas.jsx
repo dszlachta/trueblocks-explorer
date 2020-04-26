@@ -168,7 +168,6 @@ export const SettingsSchemas = () => {
           columns={schemasSchema}
           search={false}
           pagination={false}
-          expandable={true}
         />
       </div>
       <h4
@@ -195,7 +194,6 @@ export const SettingsSchemas = () => {
             columns={matched.schema}
             search={false}
             pagination={false}
-            expandable={true}
             showHidden={true}
           />
           <pre>{JSON.stringify(mocks, null, 2)}</pre>
@@ -209,7 +207,6 @@ export const SettingsSchemas = () => {
             columns={matched.schema}
             search={false}
             pagination={false}
-            expandable={true}
             showHidden={true}
           />
         </div>

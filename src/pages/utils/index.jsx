@@ -15,12 +15,12 @@ import {
   Support,
 } from 'assets/icons/SetMenus';
 import { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink } from 'assets/icons/SetEdit';
+import GridIcon from 'assets/icons/GridIcon';
 
 import './Utils.css';
 
-export function getIcon(labelIn, expanded, pad = false) {
+export function getIcon(labelIn, expanded = false, pad = false, size = 20) {
   const label = labelIn.toLowerCase();
-  const size = 20;
   const cn = (expanded ? 'menu-icon' : '') + (pad ? ' menu-icon-padded' : '');
   switch (label) {
     case 'dashboard':
@@ -61,8 +61,18 @@ export function getIcon(labelIn, expanded, pad = false) {
       return <Undelete key={'micon-' + label} size={size} className={cn} />;
     case 'remove':
       return <Remove key={'micon-' + label} size={size} className={cn} />;
-    case 'ExternalLink':
+    case 'externallink':
       return <ExternalLink key={'micon-' + label} size={size} className={cn} />;
+    case 'greenlight':
+      return <GridIcon fill="#6b902a" color="#333" size="15px" />;
+    case 'yellowlight':
+      return <GridIcon fill="yellow" color="#333" size="15px" />;
+    case 'redlight':
+      return <GridIcon fill="red" color="#333" size="15px" />;
+    case 'csv':
+    case 'txt':
+    case 'import':
+      return <button>{labelIn}</button>;
     default:
       return null;
   }

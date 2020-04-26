@@ -13,27 +13,31 @@ export const traceResultsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    searchable: true,
     onDisplay: getFieldValue,
   },
   {
-    name: 'address',
+    name: 'Address',
     selector: 'address',
     type: 'address',
+    searchable: true,
   },
   {
-    name: 'code',
+    name: 'Code',
     selector: 'code',
     type: 'string',
+    searchable: true,
   },
   {
-    name: 'gasUsed',
+    name: 'Gas Used',
     selector: 'gasUsed',
     type: 'gas',
   },
   {
-    name: 'output',
+    name: 'Output',
     selector: 'output',
     type: 'string',
+    searchable: true,
   },
 ];
 // auto-generate: schema

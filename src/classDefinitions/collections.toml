@@ -1,5 +1,9 @@
 [settings]
 class = "CCollections"
+recordIcons =  "header-Add,Edit/Remove,Delete/Undelete,ExternalLink,footer-CSV,footer-TXT,footer-Import"
+defaultSort = "tags,address,name"
+url = "http://localhost:8080/names"
+query = "verbose=10&collections"
 
 [[subpages]]
 list = [
