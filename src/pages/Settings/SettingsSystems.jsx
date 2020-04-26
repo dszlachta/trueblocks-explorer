@@ -10,11 +10,9 @@ export const SettingsSystems = () => {
   const [curSubsystem, setManager] = useState('');
 
   const manageHandler = (action) => {
-    console.log(action);
     switch (action.type) {
       case 'config':
         const newSystem = action.payload;
-        console.log('new: ', newSystem);
         if (curSubsystem === newSystem) setManager('');
         else setManager(newSystem);
         break;
@@ -154,6 +152,7 @@ function getSubsystemData(status, subsystem) {
     descr: descriptions[subsystem],
     apiProvider: subsystem === 'api' ? status.api_provider : '',
     host: subsystem === 'api' ? status.host : '',
+    environ: process.env.REACT_APP_API_URL,
     rpcProvider: subsystem === 'node' ? status.rpc_provider : '',
     traceProvider: subsystem === 'node' ? status.rpc_provider : '',
     balanceProvider: subsystem === 'node' ? status.balance_provider : '',
@@ -213,7 +212,6 @@ export const systemsSchema = [
     name: 'API Provider',
     selector: 'apiProvider',
     type: 'string',
-    hidden: true,
     editable: true,
   },
   {
@@ -223,10 +221,14 @@ export const systemsSchema = [
     hidden: true,
   },
   {
+    name: 'Host Env',
+    selector: 'environ',
+    type: 'string',
+  },
+  {
     name: 'RPC Provider',
     selector: 'rpcProvider',
     type: 'string',
-    hidden: true,
     editable: true,
   },
   {

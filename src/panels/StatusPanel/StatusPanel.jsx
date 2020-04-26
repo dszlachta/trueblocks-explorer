@@ -15,7 +15,7 @@ export const StatusPanel = () => {
 
   useEffect(() => {
     if (error) {
-      dispatch({ type: 'failure', payload: statusDefault });
+      dispatch({ type: 'fail', error: error, payload: statusDefault });
     } else {
       if (!data) {
         dispatch({ type: 'loading' });

@@ -29,7 +29,8 @@ export const ContentPanel = () => {
 //----------------------------------------------------------------------
 export const InnerContent = () => {
   const status = useStatusData();
-  if (!status.loading && (!systemCheck(status, 'api') || !systemCheck(status, 'node'))) return <Settings />;
+  //  if (!status.loading && (!systemCheck(status, 'api') || !systemCheck(status, 'node'))) return <Settings />;
+  if (!status.loading && !systemCheck(status, 'api')) return <Settings />;
 
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];

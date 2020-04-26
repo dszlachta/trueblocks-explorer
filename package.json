@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start-docker": "PORT=3002 REACT_APP_API_URL=http://localhost:80 react-scripts start",
     "start": "PORT=3002 REACT_APP_API_URL=http://localhost:8080 react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",

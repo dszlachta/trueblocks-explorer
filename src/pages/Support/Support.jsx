@@ -105,7 +105,7 @@ export const SupportDocumentation = () => {
           </a>
         }
       </p>
-      <img className="doc_images" alt={'the'} src={process.env.PUBLIC_URL + '/images/documentation_1.png'} />
+      <img className="doc_images" alt={'the'} src={'http://quickblocks.io/images/documentation_1.png'} />
       <p></p>
     </Fragment>
   );
@@ -237,7 +237,7 @@ export const SupportAbout = () => {
         </div>
         <p></p>
         <div style={{ marginLeft: '10%' }}>
-          <img className="doc_images" alt={'the'} src={process.env.PUBLIC_URL + '/images/calweb.png'} />
+          <img className="doc_images" alt={'the'} src={'http://quickblocks.io/images/calweb.png'} />
         </div>
         <p></p>
         <div>
