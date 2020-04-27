@@ -19,14 +19,16 @@ import './[{PROPER}].css';
 //---------------------------------------------------------------------------
 export const [{PROPER}] = () => {
   const { [{LONG}], dispatch } = use[{PROPER}]();
+
+  const [filtered, setFiltered] = useState([{LONG}]Default);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
   const [dialogShowing, setShowing] = useState(false);
 
-  const clickHandler = (action) => {
-    switch (action.type) {
-      case 'Add':
+  const [{LONG}]Handler = (action) => {
+    switch (action.type.toLowerCase()) {
+      case 'add':
         setShowing(true);
         break;
       case 'close':
@@ -54,6 +56,13 @@ export const [{PROPER}] = () => {
     });
   }, [query, dispatch]);
 
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, [{LONG}]Handler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
+
   useMemo(() => {
     let tagList = [
       ...new Set([{LONG}].map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
@@ -63,22 +72,19 @@ export const [{PROPER}] = () => {
     setTagList(tagList);
   }, [[{LONG}]]);
 
-  useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
-    return () => {
-      Mousetrap.unbind(['plus']);
-    };
-  }, []);
-
-  const filtered = [{LONG}].filter((item) => {
-    return curTag === 'All' || item.tags.includes(curTag);
-  });
+  useMemo(() => {
+    const result = [{LONG}].filter((item) => {
+      return curTag === 'All' || item.tags.includes(curTag);
+    });
+    setFiltered(result);
+  }, [[{LONG}], curTag]);
 
   return (
     <div>
+      <pre>url: {url + "?" + query}</pre>
       {/* prettier-ignore */}
       {tagList.length ? (
-        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={[{LONG}]Handler} />
       ) : null}
       <DataTable
         data={filtered}
@@ -90,7 +96,7 @@ export const [{PROPER}] = () => {
         recordIcons={recordIconList}
       />
       {dialogShowing && (
-        <Modal showing={dialogShowing} handler={clickHandler}>
+        <Modal showing={dialogShowing} handler={[{LONG}]Handler}>
           {/* prettier-ignore */}
           <ObjectTable
             data={{}}

@@ -98,6 +98,11 @@
   color: var(--at-bgcolor2);
   opacity: 95%;
 }
+.selected:hover {
+  background-color: var(--at-bgcolor);
+  color: var(--at-bgcolor2);
+  opacity: 95%;
+}
 
 /*-----------------------------------*/
 .at-cell {

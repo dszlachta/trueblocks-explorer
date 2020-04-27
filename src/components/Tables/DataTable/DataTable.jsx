@@ -5,12 +5,270 @@ import { Tablebar, ObjectTable } from 'components';
 import { getIcon } from 'pages/utils';
 import { calcValue, getPrimaryKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
-import { SortIcon } from 'assets/icons/SortIcon';
 import { hasFields, matches } from './utils';
+
+import ChevronUp from 'assets/icons/ChevronUp';
+import ChevronDown from 'assets/icons/ChevronDown';
 
 import './DataTable.css';
 
+const colors = ['red', 'green', 'blue', 'black', 'purple', 'red', 'orange', 'grey'];
+const DataTableHeader = ({
+  columns,
+  showHidden = false,
+  sortCtx1 = { sortBy: '', sortDir: '' },
+  sortCtx2 = { sortBy: '', sortDir: '' },
+  sortHandler,
+  headerIcons = null,
+  nIcons = 0,
+  widths = '',
+}) => {
+  const sortIcon1 = <SortIcon dir={sortCtx1.sortDir} n={1} />;
+  const sortIcon2 = <SortIcon dir={sortCtx2.sortDir} n={2} />;
+  return (
+    <div id="whatever" className="at-header-base at-header dt-header" key="dt-header">
+      {columns.map((column, index) => {
+        const cellText = (
+          <div style={{ display: 'inline' }}>
+            {column.name}
+            {column.selector === sortCtx1.sortBy && sortIcon1}
+            {column.selector === sortCtx2.sortBy && sortIcon2}
+          </div>
+        );
+        return column.hidden || column.selector === 'icons' ? null : (
+          <div
+            onClick={(e) => handleClick(e, sortHandler, { type: 'sortBy', payload: column.selector })}
+            style={{
+              textAlign: 'center',
+              borderRight: '1px solid #2aa198',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              wordWrap: 'none',
+            }}
+          >
+            <div>{cellText}</div>
+          </div>
+        );
+      })}
+      <IconTray iconList={headerIcons} nIcons={nIcons} />
+    </div>
+  );
+};
+
+const DataTableRows = ({ data, columns, hasData, handler, idCol, firstInPage, lastInPage }) => {
+  return (
+    <Fragment>
+      {hasData ? (
+        data.map((record, index) => {
+          // ...for each row
+          const key = calcValue(record, idCol) + '_' + index;
+          const id = calcValue(record, idCol) + '_' + index;
+          const rKey = 'dt-row-' + id;
+          if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
+          return (
+            <div
+              id="whatever-row"
+              className="at-body dt-body"
+              onClick={(e) => handleClick(e, handler, { type: 'row_click', payload: id })}
+              onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', payload: id })}
+              key={rKey}
+            >
+              {columns.map((column) => {
+                // ...for each column
+                if (column.hidden) return null;
+                return <div className="dtt-row-cell">{calcValue(record, column)}</div>;
+              })}
+            </div>
+          );
+        })
+      ) : (
+        <div>Loading...</div>
+      )}
+    </Fragment>
+
+    /*
+const DataTableRow = ({
+  record,
+  columns,
+  id,
+  isSelected,
+  handler,
+  showHidden,
+  rowIcons = null,
+  nIcons = 0,
+  widths = '',
+}) => {
+  //if (hasIcons) ret.push(' minmax(' + nIcons * 25 + 'px, ' + nIcons + 'fr)');
+  return (
+    <StyledDiv
+      onClick={(e) => handleClick(e, handler, { type: 'row_click', payload: id })}
+      onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', payload: id })}
+      key={rKey}
+      className={'at-row dt-row' + (isSelected ? ' selected' : '')}
+      widths={widths}
+    >
+      {columns.map((column, index) => {
+        const key = id + column.name + '-' + index;
+        if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0))
+          return <Fragment key={key}></Fragment>;
+
+        let type = column.type ? column.type : 'string';
+        let value = calcValue(record, column);
+        value = formatFieldByType(type, value, column.decimals);
+        if (!value || value === undefined) value = type === 'spacer' ? '' : '-';
+
+        let cn = 'at-cell ' + (column.cn ? column.cn : '');
+        switch (type) {
+          case 'calc':
+          case 'uint32':
+          case 'uint64':
+          case 'blknum':
+          case 'double':
+          case 'timestamp':
+          case 'filesize':
+          case 'gas':
+          case 'wei':
+            cn += ' right ';
+            break;
+          case 'bool':
+          case 'hash':
+            cn += ' center ';
+            break;
+          case 'address':
+          case 'bytes32':
+          case 'function':
+          case 'string':
+          default:
+            break;
+        }
+        if (column.isPill) {
+          cn += ' at-pill center ';
+          cn += type === 'bool' ? (record[column.selector] ? 'true' : 'false') : record[column.selector];
+        }
+
+        const style = column.align ? { justifySelf: column.align } : {};
+        return (
+          <div key={key} style={style} className={cn}>
+            {column.isPill && !handler && (
+              <div className="warning">pill column '{column.selector}' does not have a handler</div>
+            )}
+            {value}
+          </div>
+        );
+      })}
+      <IconTray iconList={rowIcons} nIcons={nIcons} />
+    </StyledDiv>
+  );
+};
+                <DataTableRow
+                  key={key}
+                  id={key}
+                  columns={columns}
+                  isSelected={key === selectedRow}
+                  record={record}
+                  handler={dataTableHandler}
+                  showHidden={showHidden}
+                  rowIcons={rowIcons}
+                  nIcons={maxIcons}
+                  widths={widths}
+                />
+                {key === expandedRow && (
+                  <DataTableExpandedRow record={record} columns={columns} handler={dataTableHandler} />
+                )}
+*/
+  );
+};
+
+/*
+
+
 //-----------------------------------------------------------------
+const DataTableExpandedRow = ({ record, columns, handler }) => {
+  const expandedStyle = {
+    display: 'grid',
+    gridTemplateColumns: '2fr 8fr 5fr',
+    borderBottom: '1px solid grey',
+    padding: '2px',
+  };
+
+  return (
+    <div style={expandedStyle}>
+      <div></div>
+      <ObjectTable data={record} columns={columns} showHidden={true} handler={handler} />
+      <div></div>
+      <div></div>
+    </div>
+  );
+};
+
+//-----------------------------------------------------------------
+*/
+
+/*
+export to CSV
+3 let someData;
+14 let asText = false;
+15 function onDownload() {
+16   console.log('xxx:', someData, ' size: ', someData.length);
+17   var csv;
+18   for (var i = 0; i < someData.length; i++) {
+19     var row = someData[i];
+20     // console.log('i: ', i, ' row: ', row);
+21     csv += [row.gr oup, row.address, row.name].join(asText ? '\t' : ',');
+22     csv += '\n';
+23   }
+24   console.log(csv);
+25   var hiddenElement = document.createElement('a');
+26   hiddenElement.href = 'data:text/' + (asText ? 'text' : 'csv') + ';charset=utf-8,' + encodeURI(csv);
+27   hiddenElement.target = '_blank';
+28   hiddenElement.download = 'download.' + (asText ? 'text' : 'csv');
+29   hiddenElement.click();
+30 }
+31 function onDownload1() {
+32   asText = true;
+33   return onDownload();
+34 }
+35 function onDownload2() {
+36   asText = false;
+37   return onDownload();
+38 }
+*/
+
+export function widthsFromColumns(columns, showHidden) {
+  let totalWidth = columns.reduce((sum, column) => {
+    const hidden = (column.hidden && !showHidden) || column.type === 'icons';
+    const width = column.width || 1;
+    return sum + (hidden ? 0 : width);
+  }, 0);
+
+  const ret = columns
+    .map((column) => {
+      const hidden = (column.hidden && !showHidden) || column.type === 'icons';
+      if (hidden) return null;
+      const width = column.width || 1;
+      return Math.floor((width / totalWidth) * 64) + 'fr ';
+    })
+    .filter((x) => x !== null);
+
+  return ret;
+}
+
+//-----------------------------------------------------------------
+export const SortIcon = ({ dir, n = -1 }) => {
+  if (dir === '') return <></>;
+  return (
+    <div style={{ display: 'inline' }}>
+      {dir === 'asc' ? <ChevronDown size="13px" /> : dir === 'desc' ? <ChevronUp size="13px" /> : <></>}
+      {n !== -1 ? (
+        <small>
+          <small>{n}</small>
+        </small>
+      ) : null}
+    </div>
+  );
+};
+
 export const DataTable = ({
   data,
   columns,
@@ -33,7 +291,8 @@ export const DataTable = ({
   const [sortCtx1, setSortCtx1] = useState({ sortBy: '', sortDir: 'asc' });
   const [sortCtx2, setSortCtx2] = useState({ sortBy: '', sortDir: '' });
 
-  const clickHandler = (action) => {
+  const dataTableHandler = (action) => {
+    console.log(action);
     const { perPage, curPage } = pagingCtx;
     switch (action.type) {
       case 'update_filter':
@@ -126,16 +385,33 @@ export const DataTable = ({
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
-  const showTools = title !== '' || search || pagination;
+  let showTools = title !== '' || search || pagination;
+  search = false;
+
   const headerIcons = recordIcons.filter((icon) => icon.includes('header-'));
   const footerIcons = recordIcons.filter((icon) => icon.includes('footer-'));
   const rowIcons = recordIcons.filter((icon) => !icon.includes('header-') && !icon.includes('footer-'));
+  const maxIcons = Math.max(Math.max(headerIcons.length, footerIcons.length), rowIcons.length);
+  const widths = widthsFromColumns(columns, showHidden);
+  if (maxIcons) widths.push(' minmax(' + maxIcons * 25 + 'px, 1fr)');
+  let widStr = widths.map((a) => a + ' ').join(' ');
+  widStr = widStr.replace(',', '').replace('  ', ' ').replace(' 1fr)', ', 1fr)');
+
+  const str = 'grid-template-columns: ' + widStr + '; display: grid;';
+  createClass('#whatever', str);
+  createClass('#whatever-row', str);
+  createClass('#whatever-row:hover', 'background-color: white;');
+
+  // <pre>{str}</pre>
+  // <pre>sort1: {JSON.stringify(sortCtx1, null, 2)}</pre>
+  // <pre>sort2: {JSON.stringify(sortCtx2, null, 2)}</pre>
+
   return (
     <Fragment key="dt">
       {showTools && (
         <Tablebar
           title={title}
-          handler={clickHandler}
+          handler={dataTableHandler}
           search={search}
           filterText={filterText}
           searchFields={searchFields}
@@ -148,177 +424,48 @@ export const DataTable = ({
         showHidden={showHidden}
         sortCtx1={sortCtx1}
         sortCtx2={sortCtx2}
-        sortHandler={clickHandler}
+        sortHandler={dataTableHandler}
         headerIcons={headerIcons}
+        nIcons={maxIcons}
+        widths={widths}
       />
-      <div className="at-body dt-body">
-        {hasData ? (
-          filteredData.map((record, index) => {
-            const key = calcValue(record, idCol) + '_' + index;
-            if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
-            return (
-              <Fragment>
-                <DataTableRow
-                  key={key}
-                  id={key}
-                  columns={columns}
-                  isSelected={key === selectedRow}
-                  record={record}
-                  handler={clickHandler}
-                  showHidden={showHidden}
-                  rowIcons={rowIcons}
-                />
-                {key === expandedRow && (
-                  <DataTableExpandedRow record={record} columns={columns} handler={clickHandler} />
-                )}
-              </Fragment>
-            );
-          })
-        ) : (
-          <div>Loading...</div>
-        )}
-      </div>
-      {search && <Tablebar search={search} searchFields={searchFields} asHeader={false} footerIcons={footerIcons} />}
+      <DataTableRows
+        data={filteredData}
+        columns={columns}
+        hasData={hasData}
+        idCol={idCol}
+        handler={dataTableHandler}
+        // key={key}
+        firstInPage={firstInPage}
+        lastInPage={lastInPage}
+      />
+      {search && (
+        <Tablebar
+          search={search}
+          searchFields={searchFields}
+          asHeader={false}
+          handler={dataTableHandler}
+          footerIcons={footerIcons}
+          nIcons={maxIcons}
+        />
+      )}
     </Fragment>
   );
 };
 
-//-----------------------------------------------------------------
-const StyledDiv = styled.div`
-  display: grid;
-  grid-template-columns: ${(props) => props.widths};
-`;
+function createClass(name, rules) {
+  var style = document.createElement('style');
+  style.type = 'text/css';
+  document.getElementsByTagName('head')[0].appendChild(style);
+  if (!(style.sheet || {}).insertRule) (style.styleSheet || style.sheet).addRule(name, rules);
+  else style.sheet.insertRule(name + '{' + rules + '}', 0);
+}
 
-//-----------------------------------------------------------------
-const DataTableHeader = ({
-  columns,
-  showHidden = false,
-  sortCtx1 = { sortBy: '', sortDir: '' },
-  sortCtx2 = { sortBy: '', sortDir: '' },
-  sortHandler,
-  headerIcons = null,
-}) => {
-  const widths = widthsFromColumns(columns, showHidden, headerIcons.length);
-  const sortIcon1 = <SortIcon dir={sortCtx1.sortDir} n={1} />;
-  const sortIcon2 = <SortIcon dir={sortCtx2.sortDir} n={2} />;
-
-  return (
-    <StyledDiv className="at-header-base at-header dt-header" key="dt-header" widths={widths}>
-      {columns.map((column, index) => {
-        const key = 'dt-' + column.name + '-' + index;
-        if ((column.hidden && !showHidden) || (column.type === 'icons' && headerIcons.length > 0))
-          return <Fragment key={key}></Fragment>;
-
-        return (
-          <div
-            onClick={(e) => handleClick(e, sortHandler, { type: 'sortBy', payload: column.selector })}
-            style={{ display: 'flex', justifyItems: 'center' }}
-          >
-            <div style={{ textTransform: 'capitalize', paddingRight: '4px' }} key={key}>
-              {column.name}
-            </div>
-            {column.selector === sortCtx1.sortBy ? sortIcon1 : <></>}
-            {column.selector === sortCtx2.sortBy ? sortIcon2 : <></>}
-          </div>
-        );
-      })}
-      <IconTray iconList={headerIcons} />
-    </StyledDiv>
-  );
-};
-
-//-----------------------------------------------------------------
-const DataTableRow = ({ columns, id, record, isSelected, handler, showHidden, rowIcons = null }) => {
-  const widths = widthsFromColumns(columns, showHidden, rowIcons.length);
-  const rKey = 'dt-row-' + id;
-  return (
-    <StyledDiv
-      onClick={(e) => handleClick(e, handler, { type: 'row_click', payload: id })}
-      onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', payload: id })}
-      key={rKey}
-      className="at-row dt-row"
-      widths={widths}
-    >
-      {columns.map((column, index) => {
-        const key = id + column.name + '-' + index;
-        if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0))
-          return <Fragment key={key}></Fragment>;
-
-        let type = column.type ? column.type : 'string';
-        let value = calcValue(record, column);
-        value = formatFieldByType(type, value, column.decimals);
-        if (!value || value === undefined) value = type === 'spacer' ? '' : '-';
-
-        let cn = 'at-cell ' + (column.cn ? column.cn : '');
-        switch (type) {
-          case 'calc':
-          case 'uint32':
-          case 'uint64':
-          case 'blknum':
-          case 'double':
-          case 'timestamp':
-          case 'filesize':
-          case 'gas':
-          case 'wei':
-            cn += ' right ';
-            break;
-          case 'bool':
-          case 'hash':
-            cn += ' center ';
-            break;
-          case 'address':
-          case 'bytes32':
-          case 'function':
-          case 'string':
-          default:
-            break;
-        }
-        if (column.isPill) {
-          cn += ' at-pill center ';
-          cn += type === 'bool' ? (record[column.selector] ? 'true' : 'false') : record[column.selector];
-        }
-        cn += isSelected ? ' selected' : '';
-
-        const style = column.align ? { justifySelf: column.align } : {};
-        return (
-          <div key={key} style={style} className={cn}>
-            {column.isPill && !handler && (
-              <div className="warning">pill column '{column.selector}' does not have a handler</div>
-            )}
-            {value}
-          </div>
-        );
-      })}
-      <IconTray isSelected={isSelected} iconList={rowIcons} />
-    </StyledDiv>
-  );
-};
-
-//-----------------------------------------------------------------
-const DataTableExpandedRow = ({ record, columns, handler }) => {
-  const expandedStyle = {
-    display: 'grid',
-    gridTemplateColumns: '2fr 8fr 5fr',
-    borderBottom: '1px solid grey',
-    padding: '2px',
-  };
-
-  return (
-    <div style={expandedStyle}>
-      <div></div>
-      <ObjectTable data={record} columns={columns} showHidden={true} handler={handler} />
-      <div></div>
-      <div></div>
-    </div>
-  );
-};
-
-//-----------------------------------------------------------------
-const IconTray = ({ iconList, isSelected }) => {
-  if (!iconList || iconList.length === 0) return null;
+const IconTray = ({ iconList, nIcons }) => {
+  if (nIcons === 0) return null;
+  if (!iconList) return <div></div>;
   return (
     <div
-      className={isSelected ? ' selected' : ''}
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(' + iconList.length + ', 1fr)',
@@ -333,53 +480,3 @@ const IconTray = ({ iconList, isSelected }) => {
     </div>
   );
 };
-
-export function widthsFromColumns(columns, showHidden, nIcons) {
-  let totalWidth = columns.reduce((sum, column) => {
-    const hidden = (column.hidden && !showHidden) || column.type === 'icons';
-    const width = column.width || 1;
-    return sum + (hidden ? 0 : width);
-  }, 0);
-  let hasIcons = false;
-  const ret = columns
-    .map((column) => {
-      const hidden = (column.hidden && !showHidden) || column.type === 'icons';
-      hasIcons = hasIcons || column.type === 'icons';
-      if (hidden) return null;
-      const width = column.width || 1;
-      return Math.floor((width / totalWidth) * 64) + 'fr ';
-    })
-    .filter((x) => x !== null);
-  if (hasIcons) ret.push(' minmax(' + nIcons * 22 + 'px, ' + nIcons + 'fr)');
-  return ret;
-}
-
-/*
-export to CSV
-3 let someData;
-14 let asText = false;
-15 function onDownload() {
-16   console.log('xxx:', someData, ' size: ', someData.length);
-17   var csv;
-18   for (var i = 0; i < someData.length; i++) {
-19     var row = someData[i];
-20     // console.log('i: ', i, ' row: ', row);
-21     csv += [row.gr oup, row.address, row.name].join(asText ? '\t' : ',');
-22     csv += '\n';
-23   }
-24   console.log(csv);
-25   var hiddenElement = document.createElement('a');
-26   hiddenElement.href = 'data:text/' + (asText ? 'text' : 'csv') + ';charset=utf-8,' + encodeURI(csv);
-27   hiddenElement.target = '_blank';
-28   hiddenElement.download = 'download.' + (asText ? 'text' : 'csv');
-29   hiddenElement.click();
-30 }
-31 function onDownload1() {
-32   asText = true;
-33   return onDownload();
-34 }
-35 function onDownload2() {
-36   asText = false;
-37   return onDownload();
-38 }
-*/

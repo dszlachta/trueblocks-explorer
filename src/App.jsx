@@ -31,7 +31,7 @@ const defaultData = {
   status: statusDefault,
   menu: theMenu,
   dashboard: dashboardDefault,
-  collections: stateFromStorage('collectionsState', collectionsDefault),
+  collections: collectionsDefault,
   monitors: monitorsDefault,
   explorer: explorerDefault,
   names: namesDefault,

@@ -21,7 +21,7 @@ export const ExplorerBlocks = () => {
   const { explorer, dispatch } = useExplorer();
   const [current, setCurrent] = useState('latest');
 
-  const clickHandler = useCallback(
+  const blocksHandler = useCallback(
     (action) => {
       switch (action.type) {
         case 'home':
@@ -45,7 +45,7 @@ export const ExplorerBlocks = () => {
     [explorer.blockNumber, explorer.transactionIndex]
   );
 
-  useArrowKeys(clickHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, clickHandler]);
+  useArrowKeys(blocksHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, blocksHandler]);
 
   let query = 'blocks=' + current + '&hashes_only&verbose=10';
   const url = 'http://localhost:8080/blocks';

@@ -29,14 +29,16 @@ const defaultSearch = ['encoding', 'type', 'name'];
 //---------------------------------------------------------------------------
 export const Signatures = () => {
   const { signatures, dispatch } = useSignatures();
+
+  const [filtered, setFiltered] = useState(signaturesDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
   const [dialogShowing, setShowing] = useState(false);
 
-  const clickHandler = (action) => {
-    switch (action.type) {
-      case 'Add':
+  const signaturesHandler = (action) => {
+    switch (action.type.toLowerCase()) {
+      case 'add':
         setShowing(true);
         break;
       case 'close':
@@ -65,6 +67,13 @@ export const Signatures = () => {
     });
   }, [query, dispatch]);
 
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, signaturesHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
+
   useMemo(() => {
     let tagList = [
       ...new Set(signatures.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
@@ -74,24 +83,22 @@ export const Signatures = () => {
     setTagList(tagList);
   }, [signatures]);
 
-  useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
-    return () => {
-      Mousetrap.unbind(['plus']);
-    };
-  }, []);
-
-  const filtered = signatures.filter((item) => {
-    return curTag === 'All' || item.tags.includes(curTag);
-  });
+  useMemo(() => {
+    const result = signatures.filter((item) => {
+      return curTag === 'All' || item.tags.includes(curTag);
+    });
+    setFiltered(result);
+  }, [signatures, curTag]);
 
   return (
     <div>
+      <pre>url: {url + "?" + query}</pre>
       {/* prettier-ignore */}
       {tagList.length ? (
-        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={signaturesHandler} />
       ) : null}
       <DataTable
+        name="signatures-table"
         data={filtered}
         columns={signaturesSchema}
         title="Signatures"
@@ -101,7 +108,7 @@ export const Signatures = () => {
         recordIcons={recordIconList}
       />
       {dialogShowing && (
-        <Modal showing={dialogShowing} handler={clickHandler}>
+        <Modal showing={dialogShowing} handler={signaturesHandler}>
           {/* prettier-ignore */}
           <ObjectTable
             data={{}}

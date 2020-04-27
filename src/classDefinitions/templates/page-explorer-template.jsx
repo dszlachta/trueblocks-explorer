@@ -21,7 +21,7 @@ export const Explorer[{PROPER}] = () => {
   const { explorer, dispatch } = useExplorer();
   const [current, setCurrent] = useState('latest');
 
-  const clickHandler = useCallback(
+  const [{LONG}]Handler = useCallback(
     (action) => {
       switch (action.type) {
         case 'home':
@@ -45,7 +45,7 @@ export const Explorer[{PROPER}] = () => {
     [explorer.blockNumber, explorer.transactionIndex]
   );
 
-  useArrowKeys(clickHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, clickHandler]);
+  useArrowKeys([{LONG}]Handler, [dispatch, explorer.blockNumber, explorer.transactionIndex, [{LONG}]Handler]);
 
   let query = '[{QUERY}]';
   const url = '[{URL}]';

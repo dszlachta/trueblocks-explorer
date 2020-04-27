@@ -27,14 +27,16 @@ const defaultSearch = ['tags', 'subtags1', 'subtags2'];
 //---------------------------------------------------------------------------
 export const Tags = () => {
   const { tags, dispatch } = useTags();
+
+  const [filtered, setFiltered] = useState(tagsDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
   const [dialogShowing, setShowing] = useState(false);
 
-  const clickHandler = (action) => {
-    switch (action.type) {
-      case 'Add':
+  const tagsHandler = (action) => {
+    switch (action.type.toLowerCase()) {
+      case 'add':
         setShowing(true);
         break;
       case 'close':
@@ -62,6 +64,13 @@ export const Tags = () => {
     });
   }, [query, dispatch]);
 
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, tagsHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
+
   useMemo(() => {
     let tagList = [
       ...new Set(tags.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
@@ -71,24 +80,22 @@ export const Tags = () => {
     setTagList(tagList);
   }, [tags]);
 
-  useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
-    return () => {
-      Mousetrap.unbind(['plus']);
-    };
-  }, []);
-
-  const filtered = tags.filter((item) => {
-    return curTag === 'All' || item.tags.includes(curTag);
-  });
+  useMemo(() => {
+    const result = tags.filter((item) => {
+      return curTag === 'All' || item.tags.includes(curTag);
+    });
+    setFiltered(result);
+  }, [tags, curTag]);
 
   return (
     <div>
+      <pre>url: {url + "?" + query}</pre>
       {/* prettier-ignore */}
       {tagList.length ? (
-        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={tagsHandler} />
       ) : null}
       <DataTable
+        name="tags-table"
         data={filtered}
         columns={tagsSchema}
         title="Tags"
@@ -98,7 +105,7 @@ export const Tags = () => {
         recordIcons={recordIconList}
       />
       {dialogShowing && (
-        <Modal showing={dialogShowing} handler={clickHandler}>
+        <Modal showing={dialogShowing} handler={tagsHandler}>
           {/* prettier-ignore */}
           <ObjectTable
             data={{}}

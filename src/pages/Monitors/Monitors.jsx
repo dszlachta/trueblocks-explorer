@@ -32,14 +32,16 @@ const defaultSearch = ['tags', 'address'];
 //---------------------------------------------------------------------------
 export const Monitors = () => {
   const { monitors, dispatch } = useMonitors();
+
+  const [filtered, setFiltered] = useState(monitorsDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
   const [dialogShowing, setShowing] = useState(false);
 
-  const clickHandler = (action) => {
-    switch (action.type) {
-      case 'Add':
+  const monitorsHandler = (action) => {
+    switch (action.type.toLowerCase()) {
+      case 'add':
         setShowing(true);
         break;
       case 'close':
@@ -68,6 +70,13 @@ export const Monitors = () => {
     });
   }, [query, dispatch]);
 
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, monitorsHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
+
   useMemo(() => {
     let tagList = [
       ...new Set(monitors.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
@@ -77,24 +86,22 @@ export const Monitors = () => {
     setTagList(tagList);
   }, [monitors]);
 
-  useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
-    return () => {
-      Mousetrap.unbind(['plus']);
-    };
-  }, []);
-
-  const filtered = monitors.filter((item) => {
-    return curTag === 'All' || item.tags.includes(curTag);
-  });
+  useMemo(() => {
+    const result = monitors.filter((item) => {
+      return curTag === 'All' || item.tags.includes(curTag);
+    });
+    setFiltered(result);
+  }, [monitors, curTag]);
 
   return (
     <div>
+      <pre>url: {url + "?" + query}</pre>
       {/* prettier-ignore */}
       {tagList.length ? (
-        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={monitorsHandler} />
       ) : null}
       <DataTable
+        name="monitors-table"
         data={filtered}
         columns={monitorsSchema}
         title="Monitors"
@@ -104,7 +111,7 @@ export const Monitors = () => {
         recordIcons={recordIconList}
       />
       {dialogShowing && (
-        <Modal showing={dialogShowing} handler={clickHandler}>
+        <Modal showing={dialogShowing} handler={monitorsHandler}>
           {/* prettier-ignore */}
           <ObjectTable
             data={{}}

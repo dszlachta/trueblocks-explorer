@@ -21,24 +21,25 @@ const recordIconList = [
   'ExternalLink',
   'footer-CSV',
   'footer-TXT',
-  'footer-Import',
   //
 ];
-const defaultSort = ['tags', 'address', 'name'];
-const defaultSearch = ['tags', 'address', 'name'];
+const defaultSort = ['tags', 'name', 'client'];
+const defaultSearch = ['tags', 'name', 'client'];
 // auto-generate: page-settings
 
 //---------------------------------------------------------------------------
 export const Collections = () => {
   const { collections, dispatch } = useCollections();
+
+  const [filtered, setFiltered] = useState(collectionsDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
   const [dialogShowing, setShowing] = useState(false);
 
-  const clickHandler = (action) => {
-    switch (action.type) {
-      case 'Add':
+  const collectionsHandler = (action) => {
+    switch (action.type.toLowerCase()) {
+      case 'add':
         setShowing(true);
         break;
       case 'close':
@@ -66,6 +67,13 @@ export const Collections = () => {
     });
   }, [query, dispatch]);
 
+  useEffect(() => {
+    Mousetrap.bind(['plus'], (e) => handleClick(e, collectionsHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind(['plus']);
+    };
+  }, []);
+
   useMemo(() => {
     let tagList = [
       ...new Set(collections.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
@@ -75,24 +83,22 @@ export const Collections = () => {
     setTagList(tagList);
   }, [collections]);
 
-  useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, clickHandler, { type: 'Add' }));
-    return () => {
-      Mousetrap.unbind(['plus']);
-    };
-  }, []);
-
-  const filtered = collections.filter((item) => {
-    return curTag === 'All' || item.tags.includes(curTag);
-  });
+  useMemo(() => {
+    const result = collections.filter((item) => {
+      return curTag === 'All' || item.tags.includes(curTag);
+    });
+    setFiltered(result);
+  }, [collections, curTag]);
 
   return (
     <div>
+      <pre>url: {url + "?" + query}</pre>
       {/* prettier-ignore */}
       {tagList.length ? (
-        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={clickHandler} />
+        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={collectionsHandler} />
       ) : null}
       <DataTable
+        name="collections-table"
         data={filtered}
         columns={collectionsSchema}
         title="Collections"
@@ -102,7 +108,7 @@ export const Collections = () => {
         recordIcons={recordIconList}
       />
       {dialogShowing && (
-        <Modal showing={dialogShowing} handler={clickHandler}>
+        <Modal showing={dialogShowing} handler={collectionsHandler}>
           {/* prettier-ignore */}
           <ObjectTable
             data={{}}
@@ -188,7 +194,7 @@ export const collectionsSchema = [
   {
     name: 'Client',
     selector: 'client',
-    type: 'CClient',
+    type: 'string',
     editable: true,
     searchable: true,
     onValidate: validateUserInput,

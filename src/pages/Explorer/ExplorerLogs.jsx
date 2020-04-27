@@ -21,7 +21,7 @@ export const ExplorerLogs = () => {
   const { explorer, dispatch } = useExplorer();
   const [current, setCurrent] = useState('latest');
 
-  const clickHandler = useCallback(
+  const logsHandler = useCallback(
     (action) => {
       switch (action.type) {
         case 'home':
@@ -45,7 +45,7 @@ export const ExplorerLogs = () => {
     [explorer.blockNumber, explorer.transactionIndex]
   );
 
-  useArrowKeys(clickHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, clickHandler]);
+  useArrowKeys(logsHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, logsHandler]);
 
   let query = 'transactions=' + current + '&verbose=10';
   const url = 'http://localhost:8080/logs';
