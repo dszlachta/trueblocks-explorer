@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Tags.css';
@@ -32,21 +32,29 @@ export const Tags = () => {
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
-  const [dialogShowing, setShowing] = useState(false);
+  const [editor, setEditor] = useState({ showing: false, name: 'Add Tag', record: {} });
 
   const tagsHandler = (action) => {
+    const address = action.payload && action.payload.split('_')[0];
+    const record = filtered.filter((record) => record.address === address);
+    console.log('tagsHandler: ', action);
     switch (action.type.toLowerCase()) {
       case 'add':
-        setShowing(true);
+        setEditor({ showing: true, record: null });
+        break;
+      case 'edit':
+        if (record) setEditor({ showing: true, name: 'Edit Tag', record: record });
         break;
       case 'close':
       case 'cancel':
       case 'okay':
-        setShowing(false);
+        setEditor({ showing: false, record: null });
         break;
       case 'set-tags':
         setTag(action.payload);
         break;
+      // EXISTING_CODE
+      // EXISTING_CODE
       default:
         break;
     }
@@ -72,9 +80,8 @@ export const Tags = () => {
   }, []);
 
   useMemo(() => {
-    let tagList = [
-      ...new Set(tags.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
-    ];
+    // prettier-ignore
+    let tagList = [...new Set(tags.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
     tagList = sortStrings(tagList, true);
     tagList.unshift('All');
     setTagList(tagList);
@@ -89,13 +96,12 @@ export const Tags = () => {
 
   return (
     <div>
-      <pre>url: {url + "?" + query}</pre>
+      {/*<pre>url: {url + "?" + query}</pre>*/}
       {/* prettier-ignore */}
       {tagList.length ? (
         <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={tagsHandler} />
       ) : null}
       <DataTable
-        name="tags-table"
         data={filtered}
         columns={tagsSchema}
         title="Tags"
@@ -103,14 +109,15 @@ export const Tags = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
+        buttonHandler={tagsHandler}
       />
-      {dialogShowing && (
-        <Modal showing={dialogShowing} handler={tagsHandler}>
+      {editor.showing && (
+        <Modal showing={true} handler={tagsHandler}>
           {/* prettier-ignore */}
           <ObjectTable
-            data={{}}
+            data={editor.record}
             columns={tagsSchema}
-            title="Add Tag"
+            title={editor.name}
             editable={true}
             showHidden={true}
           />

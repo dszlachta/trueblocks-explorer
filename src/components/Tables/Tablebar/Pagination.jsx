@@ -63,8 +63,12 @@ const Display = ({ pagingCtx }) => {
 //-----------------------------------------------------------------
 const Selector = ({ handler, pagingCtx }) => {
   const [expanded, setExpanded] = useState(false);
+  let extra = false;
   const perPageOptions = [2, 5, 10, 15, 20, 30, 50, 75, 100].filter((val) => {
-    return val <= pagingCtx.total;
+    if (val < pagingCtx.total) return true;
+    if (extra) return false;
+    extra = true;
+    return true;
   });
   const { perPage } = pagingCtx;
   const onClick = (e) => {

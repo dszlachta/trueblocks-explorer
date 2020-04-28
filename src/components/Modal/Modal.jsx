@@ -30,7 +30,7 @@ export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children
     backgroundColor: '#fff',
     border: '1px solid black',
     borderRadius: 5,
-    maxWidth: 500,
+    maxWidth: 600,
     minHeight: 300,
     margin: '0 auto',
     padding: 10,

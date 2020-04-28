@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { handleClick } from 'components/utils';
+
 import {
   Dashboard,
   Collections,
@@ -77,3 +79,20 @@ export function getIcon(labelIn, expanded = false, pad = false, size = 20) {
       return null;
   }
 }
+
+//----------------------------------------------------------------------
+export const ClickableIcon = ({ link, icon, handler, record_id }) => {
+  if (link) {
+    return (
+      <a href={link} target="_blank" rel="noopener noreferrer">
+        {icon}
+      </a>
+    );
+  }
+
+  return (
+    <div style={{ display: 'inline' }} onClick={(e) => handleClick(e, handler, { type: icon, record_id: record_id })}>
+      {getIcon(icon, false, true, 18)}
+    </div>
+  );
+};

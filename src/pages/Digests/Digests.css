@@ -3,6 +3,11 @@
 .hashes {
   color: turquoise;
   font-weight: 700;
+  /* background-color: blue; */
+}
+.hashes:hover {
+  color: red;
+  background-color: black;
 }
 
 .apps {

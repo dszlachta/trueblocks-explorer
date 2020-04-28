@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
+import { getServerData, sortArray, sortStrings, handleClick, navigate } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Names.css';
@@ -16,9 +16,9 @@ import './Names.css';
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
+  'Explorer/None',
   'Edit/Remove',
   'Delete/Undelete',
-  'Explorer',
   'ExternalLink',
   'footer-CSV',
   'footer-TXT',
@@ -37,21 +37,50 @@ export const Names = () => {
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
-  const [dialogShowing, setShowing] = useState(false);
+  const [editor, setEditor] = useState({ showing: false, name: 'Add Name', record: {} });
 
   const namesHandler = (action) => {
+    const address = action.payload && action.payload.split('_')[0];
+    const record = filtered.filter((record) => record.address === address);
+    console.log('namesHandler: ', action);
     switch (action.type.toLowerCase()) {
       case 'add':
-        setShowing(true);
+        setEditor({ showing: true, record: null });
+        break;
+      case 'edit':
+        if (record) setEditor({ showing: true, name: 'Edit Name', record: record });
         break;
       case 'close':
       case 'cancel':
       case 'okay':
-        setShowing(false);
+        setEditor({ showing: false, record: null });
         break;
       case 'set-tags':
         setTag(action.payload);
         break;
+      // EXISTING_CODE
+      case 'explorer':
+        setEditor({ showing: true, name: 'Edit Name', record: { name: 'My Name', address: 'My Address' } });
+        break;
+      case 'externallink':
+        navigate('https://etherscan.io/address/' + address, true);
+        break;
+      case 'delete':
+      case 'undelete':
+        let query1 = 'verbose=10&address=' + address;
+        const url1 = 'http://localhost:8080/rm';
+        getServerData(url1, query1).then((theData) => {
+          // don't worry about it.
+        });
+        break;
+      case 'remove':
+        let query2 = 'verbose=10&address=' + address;
+        const url2 = 'http://localhost:8080/rm';
+        getServerData(url2, query2).then((theData) => {
+          // don't worry about it.
+        });
+        break;
+      // EXISTING_CODE
       default:
         break;
     }
@@ -77,9 +106,8 @@ export const Names = () => {
   }, []);
 
   useMemo(() => {
-    let tagList = [
-      ...new Set(names.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
-    ];
+    // prettier-ignore
+    let tagList = [...new Set(names.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
     tagList = sortStrings(tagList, true);
     tagList.unshift('All');
     setTagList(tagList);
@@ -94,13 +122,12 @@ export const Names = () => {
 
   return (
     <div>
-      <pre>url: {url + "?" + query}</pre>
+      {/*<pre>url: {url + "?" + query}</pre>*/}
       {/* prettier-ignore */}
       {tagList.length ? (
         <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={namesHandler} />
       ) : null}
       <DataTable
-        name="names-table"
         data={filtered}
         columns={namesSchema}
         title="Names"
@@ -108,14 +135,15 @@ export const Names = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
+        buttonHandler={namesHandler}
       />
-      {dialogShowing && (
-        <Modal showing={dialogShowing} handler={namesHandler}>
+      {editor.showing && (
+        <Modal showing={true} handler={namesHandler}>
           {/* prettier-ignore */}
           <ObjectTable
-            data={{}}
+            data={editor.record}
             columns={namesSchema}
-            title="Add Name"
+            title={editor.name}
             editable={true}
             showHidden={true}
           />

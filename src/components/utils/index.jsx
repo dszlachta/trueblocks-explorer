@@ -96,11 +96,27 @@ export const fetchFromServer = (url, onSuccess, onFail) => {
 };
 
 //----------------------------------------------------------------------------
+export function navigate(href, newTab) {
+  var a = document.createElement('a');
+  a.href = href;
+  if (newTab) {
+    a.setAttribute('target', '_blank');
+  }
+  a.click();
+}
+
+//----------------------------------------------------------------------------
 export async function getServerData(route, query) {
   const url = route + '?' + query;
   const response = await fetch(url);
   const data = await response.json();
   return data;
+}
+
+//----------------------------------------------------------------------------
+export async function sendServerCommand(route, query) {
+  const url = route + '?' + query;
+  await fetch(url);
 }
 
 //----------------------------------------------------------------------------
@@ -160,6 +176,7 @@ export const formatFieldByType = (type, value, decimals = 0) => {
       value = isZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
       break;
     case 'hash':
+      if (value.length === 10) return value;
       value = value ? value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1) : '';
       break;
     case 'gas':

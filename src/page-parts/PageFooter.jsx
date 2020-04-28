@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useToggles } from 'store';
 import { Settings, Discord, GitHub, Medium, Twitter } from 'assets/icons/SetSocial';
+import { ClickableIcon } from 'pages/utils';
 import './PageFooter.css';
 
 //----------------------------------------------------------------------
@@ -69,15 +70,6 @@ const FooterLink = ({ link, text }) => {
   return (
     <a className="footer-links" href={link} target="_blank" rel="noopener noreferrer">
       {text !== undefined ? text : link}
-    </a>
-  );
-};
-
-//----------------------------------------------------------------------
-const ClickableIcon = ({ link, icon }) => {
-  return (
-    <a href={link} target="_blank" rel="noopener noreferrer">
-      {icon}
     </a>
   );
 };

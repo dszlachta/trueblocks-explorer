@@ -30,7 +30,6 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.0",
     "shortid": "^2.2.15",
-    "styled-components": ">= ^3.2.3 || >= ^4.0.0 || >= ^5.0.0",
     "swr": "^0.1.18",
     "yarn.lock": "^0.0.1-security"
   },

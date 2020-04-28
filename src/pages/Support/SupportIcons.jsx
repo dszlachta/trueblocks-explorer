@@ -42,8 +42,6 @@ import {
   Support,
 } from 'assets/icons/SetMenus';
 
-const getIcon = (size = 25, color = 'black', fill = 'orange', style = null) => {};
-
 export const SupportIcons = () => {
   const size = 25;
   const fill = 'orange';

@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Signatures.css';
@@ -34,21 +34,29 @@ export const Signatures = () => {
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
-  const [dialogShowing, setShowing] = useState(false);
+  const [editor, setEditor] = useState({ showing: false, name: 'Add Signature', record: {} });
 
   const signaturesHandler = (action) => {
+    const address = action.payload && action.payload.split('_')[0];
+    const record = filtered.filter((record) => record.address === address);
+    console.log('signaturesHandler: ', action);
     switch (action.type.toLowerCase()) {
       case 'add':
-        setShowing(true);
+        setEditor({ showing: true, record: null });
+        break;
+      case 'edit':
+        if (record) setEditor({ showing: true, name: 'Edit Signature', record: record });
         break;
       case 'close':
       case 'cancel':
       case 'okay':
-        setShowing(false);
+        setEditor({ showing: false, record: null });
         break;
       case 'set-tags':
         setTag(action.payload);
         break;
+      // EXISTING_CODE
+      // EXISTING_CODE
       default:
         break;
     }
@@ -75,9 +83,8 @@ export const Signatures = () => {
   }, []);
 
   useMemo(() => {
-    let tagList = [
-      ...new Set(signatures.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
-    ];
+    // prettier-ignore
+    let tagList = [...new Set(signatures.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
     tagList = sortStrings(tagList, true);
     tagList.unshift('All');
     setTagList(tagList);
@@ -92,13 +99,12 @@ export const Signatures = () => {
 
   return (
     <div>
-      <pre>url: {url + "?" + query}</pre>
+      {/*<pre>url: {url + "?" + query}</pre>*/}
       {/* prettier-ignore */}
       {tagList.length ? (
         <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={signaturesHandler} />
       ) : null}
       <DataTable
-        name="signatures-table"
         data={filtered}
         columns={signaturesSchema}
         title="Signatures"
@@ -106,14 +112,15 @@ export const Signatures = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
+        buttonHandler={signaturesHandler}
       />
-      {dialogShowing && (
-        <Modal showing={dialogShowing} handler={signaturesHandler}>
+      {editor.showing && (
+        <Modal showing={true} handler={signaturesHandler}>
           {/* prettier-ignore */}
           <ObjectTable
-            data={{}}
+            data={editor.record}
             columns={signaturesSchema}
-            title="Add Signature"
+            title={editor.name}
             editable={true}
             showHidden={true}
           />

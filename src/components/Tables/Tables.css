@@ -106,6 +106,7 @@
 
 /*-----------------------------------*/
 .at-cell {
+  font-family: var(--at-font-family);
   padding: var(--at-padding);
   padding-right: 6px;
   padding-left: 6px;
@@ -175,4 +176,16 @@
   background: repeating-linear-gradient(-45deg, #daeeda, #daeeda 5px, white 5px, white 10px);
   background-repeat: repeat;
   border-radius: 0px 0px var(--at-radius) var(--at-radius);
+}
+
+.at-deleted {
+  text-decoration: line-through;
+  font-style: italic;
+  color: var(--deleted-color);
+}
+.at-deleted:hover {
+  text-decoration: line-through;
+  font-style: italic;
+  color: var(--deleted-color);
+  /* background-color: var(--at-bgcolor2); */
 }

@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import { getServerData, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Monitors.css';
@@ -16,10 +16,10 @@ import './Monitors.css';
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
-  'Edit/Remove',
-  'Delete/Undelete',
-  'Explorer',
   'ExternalLink',
+  'Delete/Undelete',
+  'Edit/Remove',
+  'Explorer/None',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',
@@ -37,21 +37,57 @@ export const Monitors = () => {
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState('All');
-  const [dialogShowing, setShowing] = useState(false);
+  const [editor, setEditor] = useState({ showing: false, name: 'Add Monitor', record: {} });
+  const [shit, setShit] = useState('');
 
   const monitorsHandler = (action) => {
+    const record_id = action.record_id;
+    const record = filtered.filter((record) => {
+      //setShit(shit + '\ncalc: ' + calcValue(record, { selector: 'id', onDisplay: getFieldValue }));
+      return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
+    });
+    console.log('monitorsHandler: ', action);
+    console.log('monitorsHandler: ', record);
     switch (action.type.toLowerCase()) {
       case 'add':
-        setShowing(true);
+        setEditor({ showing: true, record: null });
+        break;
+      case 'edit':
+        if (record) setEditor({ showing: true, name: 'Edit Monitor', record: record });
         break;
       case 'close':
       case 'cancel':
       case 'okay':
-        setShowing(false);
+        setEditor({ showing: false, record: null });
         break;
       case 'set-tags':
         setTag(action.payload);
         break;
+      // EXISTING_CODE
+      case 'explorer':
+        setEditor({ showing: true, name: 'Edit Name', record: record });
+        break;
+      case 'externallink':
+        navigate('https://etherscan.io/address/' + action.record_id, true);
+        break;
+      case 'delete':
+      case 'undelete':
+        let query1 = 'verbose=10&address=' + action.record_id;
+        const url1 = 'http://localhost:8080/rm';
+        // setShit(action.record_id + '\n' + JSON.stringify(record, null, 2) + '\n' + url1 + '?' + query1);
+        sendServerCommand(url1, query1).then(() => {
+          // reload
+        });
+        dispatch(action);
+        break;
+      case 'remove':
+        let query2 = 'verbose=10&address=' + action.record_id;
+        const url2 = 'http://localhost:8080/rm';
+        getServerData(url2, query2).then((theData) => {
+          // don't worry about it.
+        });
+        break;
+      // EXISTING_CODE
       default:
         break;
     }
@@ -66,7 +102,7 @@ export const Monitors = () => {
       result = theData.data[0].caches[0].items;
       // EXISTING_CODE
       const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-      dispatch({ type: 'update', payload: sorted });
+      dispatch({ type: 'success', payload: sorted });
     });
   }, [query, dispatch]);
 
@@ -78,9 +114,8 @@ export const Monitors = () => {
   }, []);
 
   useMemo(() => {
-    let tagList = [
-      ...new Set(monitors.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue }))),
-    ];
+    // prettier-ignore
+    let tagList = [...new Set(monitors.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
     tagList = sortStrings(tagList, true);
     tagList.unshift('All');
     setTagList(tagList);
@@ -95,13 +130,13 @@ export const Monitors = () => {
 
   return (
     <div>
-      <pre>url: {url + "?" + query}</pre>
+      {<pre>shit: {shit}</pre>}
+      {/*<pre>url: {url + "?" + query}</pre>*/}
       {/* prettier-ignore */}
       {tagList.length ? (
         <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={monitorsHandler} />
       ) : null}
       <DataTable
-        name="monitors-table"
         data={filtered}
         columns={monitorsSchema}
         title="Monitors"
@@ -109,14 +144,15 @@ export const Monitors = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
+        buttonHandler={monitorsHandler}
       />
-      {dialogShowing && (
-        <Modal showing={dialogShowing} handler={monitorsHandler}>
+      {editor.showing && (
+        <Modal showing={true} handler={monitorsHandler}>
           {/* prettier-ignore */}
           <ObjectTable
-            data={{}}
+            data={editor.record}
             columns={monitorsSchema}
-            title="Add Monitor"
+            title={editor.name}
             editable={true}
             showHidden={true}
           />
@@ -131,9 +167,24 @@ export const monitorsDefault = [];
 
 //----------------------------------------------------------------------
 export const monitorsReducer = (state, action) => {
+  console.log('monitorsReducer: ', action);
   let ret = state;
-  switch (action.type) {
-    case 'update':
+  switch (action.type.toLowerCase()) {
+    case 'undelete':
+    case 'delete':
+      {
+        const record = ret.filter((r) => {
+          const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
+          return val === action.record_id;
+        })[0];
+        console.log('record: ', record);
+        if (record) {
+          record.deleted = !record.deleted;
+          ret = replaceRecord(ret, record, action.record_id);
+        }
+      }
+      break;
+    case 'success':
       ret = action.payload;
       break;
     default:
@@ -283,7 +334,6 @@ export const monitorsSchema = [
     name: 'Deleted',
     selector: 'deleted',
     type: 'bool',
-    hidden: true,
   },
   {
     name: 'Icons',
@@ -292,3 +342,52 @@ export const monitorsSchema = [
   },
 ];
 // auto-generate: schema
+
+const replaceRecord = (array, record, id) => {
+  var ret = array.map((item) => {
+    if (calcValue(item, { selector: 'id', onDisplay: getFieldValue }) === id) return record;
+    return item;
+  });
+  return ret;
+};
+
+/*
+//----------------------------------------------------------------------
+export const projectsReducer = (state, action) => {
+  let ret = state;
+  let record = ret.find((p) => p.id === action.id);
+  switch (action.type) {
+    case 'toggle_monitor':
+      record.monitored = !record.monitored;
+      ret = replaceRecord(ret, record, action.id);
+      break;
+    case 'toggle_deleted':
+      record.deleted = !record.deleted;
+      ret = replaceRecord(ret, record, action.id);
+      break;
+    case 'edit_record':
+      window.location = "/records/edit?id=" + record.id;
+      break;
+    case 'remove_record':
+      ret = ret.filter((record) => record.id !== action.id);
+      break;
+    case 'update':
+      record[action.fieldName] = action.value;
+      console.log('record: ', record);
+      ret = replaceRecord(ret, record, action.id);
+      console.log('ret: ', ret.find((p) => p.id === action.id));
+    case 'reset':
+      ret = recordsDefault;
+      break;
+    case 'fail':
+      break;
+    default:
+      break;
+  }
+  // TODO(tjayrush): this does not write to the back end
+  localStorage.setItem('recordsState', JSON.stringify(ret));
+  return ret;
+};
+
+//----------------------------------------------------------------------
+*/

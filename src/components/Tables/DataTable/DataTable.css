@@ -1,9 +1,5 @@
 @import url('../Tables.css');
 
-.dtt-row-cell {
-  border-right: var(--at-border);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  word-wrap: none;
+.dt-cell:first-child {
+  border-left: var(--at-border2);
 }
