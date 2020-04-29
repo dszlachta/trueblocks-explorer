@@ -1,0 +1,7 @@
+cat ~/.quickBlocks/names/names.txt | grep -i $1 | tr '\t' '\n' | grep -v '^$'
+echo "------------------"
+ethNames --all $1  --verbose | tr '\t' '\n' | grep -v '^$'
+echo "------------------------------"
+ls -l ~/.quickBlocks/names/names.txt
+ls -l /Volumes/Samsung_T4/scraper/names/names.bin
+date

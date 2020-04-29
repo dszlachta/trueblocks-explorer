@@ -31,6 +31,13 @@ export const Names = () => {
     });
     if (record) record = record[0];
     switch (action.type.toLowerCase()) {
+      case 'set-tags':
+        setTag(action.payload);
+        localStorage.setItem('namesTag', action.payload);
+        break;
+      case 'explorer':
+        setEditor({ showing: true, name: 'Explore Name', record: record });
+        break;
       case 'add':
         setEditor({ showing: true, record: {} });
         break;
@@ -41,41 +48,52 @@ export const Names = () => {
       case 'cancel':
         setEditor({ showing: false, record: {} });
         break;
+
       case 'okay':
-        setEditor({ showing: false, record: {} });
-        const url3 = 'http://localhost:8080/names';
-        let query3 = 'verbose=10&edit=A%2B0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3%2BC%2BD%2BE%2BF';
-        sendServerCommand(url3, query3).then(() => {
-          // we assume the delete worked, so we don't reload the data
-        });
-        dispatch(action);
-        break;
-        break;
-      case 'set-tags':
-        setTag(action.payload);
-        localStorage.setItem('namesTag', action.payload);
-        break;
-      case 'explorer':
-        setEditor({ showing: true, name: 'Explore Name', record: record });
+        {
+          const url = 'http://localhost:8080/names';
+          const query = 'editcmd=edit&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F&verbose=10';
+          sendServerCommand(url, query).then(() => {
+            // we assume the delete worked, so we don't reload the data
+          });
+          dispatch(action);
+          setEditor({ showing: false, record: {} });
+        }
         break;
       case 'delete':
+        {
+          let url = 'http://localhost:8080/names';
+          let query = 'editcmd=delete&terms=' + action.record_id + '&verbose=10';
+          sendServerCommand(url, query).then(() => {
+            // we assume the delete worked, so we don't reload the data
+            url = 'http://localhost:8080/names';
+            query = 'verbose=10&all';
+            refreshData(url, query, dispatch);
+          });
+          //          dispatch(action);
+        }
+        break;
       case 'undelete':
-        const url1 = 'http://localhost:8080/names';
-        let query1 = 'verbose=10&del=' + action.record_id;
-        sendServerCommand(url1, query1).then(() => {
-          // we assume the delete worked, so we don't reload the data
-        });
-        dispatch(action);
+        {
+          const url = 'http://localhost:8080/names';
+          const query = 'editcmd=undelete&terms=' + action.record_id + '&verbose=10';
+          sendServerCommand(url, query).then(() => {
+            // we assume the delete worked, so we don't reload the data
+          });
+          dispatch(action);
+        }
         break;
       case 'remove':
-        let url2 = 'http://localhost:8080/names';
-        let query2 = 'verbose=10&remove=' + action.record_id;
-        sendServerCommand(url2, query2).then((theData) => {
-          // the command worked, but now we need to reload the data
-          const url = 'http://localhost:8080/names';
-          let query = 'verbose=10&all';
-          refreshData(url, query, dispatch);
-        });
+        {
+          let url = 'http://localhost:8080/names';
+          let query = 'editcmd=remove&terms=' + action.record_id + '&verbose=10';
+          sendServerCommand(url, query).then((theData) => {
+            // the command worked, but now we need to reload the data
+            url = 'http://localhost:8080/names';
+            query = 'verbose=10&all';
+            refreshData(url, query, dispatch);
+          });
+        }
         break;
       case 'externallink':
         navigate('https://etherscan.io/address/' + action.record_id, true);
@@ -293,6 +311,11 @@ export const namesSchema = [
     width: 4,
     editable: true,
     searchable: true,
+  },
+  {
+    name: 'Deleted',
+    selector: 'deleted',
+    type: 'bool',
   },
   {
     name: 'isCustom',
