@@ -1,0 +1,560 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>TrueBlocks API</title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"><style>@import url('https://fonts.googleapis.com/css?family=Roboto:400,700|Inconsolata|Raleway:200');.hljs-comment,.hljs-title{color:#8e908c}.hljs-variable,.hljs-attribute,.hljs-tag,.hljs-regexp,.ruby .hljs-constant,.xml .hljs-tag .hljs-title,.xml .hljs-pi,.xml .hljs-doctype,.html .hljs-doctype,.css .hljs-id,.css .hljs-class,.css .hljs-pseudo{color:#c82829}.hljs-number,.hljs-preprocessor,.hljs-pragma,.hljs-built_in,.hljs-literal,.hljs-params,.hljs-constant{color:#f5871f}.ruby .hljs-class .hljs-title,.css .hljs-rules .hljs-attribute{color:#eab700}.hljs-string,.hljs-value,.hljs-inheritance,.hljs-header,.ruby .hljs-symbol,.xml .hljs-cdata{color:#718c00}.css .hljs-hexcolor{color:#3e999f}.hljs-function,.python .hljs-decorator,.python .hljs-title,.ruby .hljs-function .hljs-title,.ruby .hljs-title .hljs-keyword,.perl .hljs-sub,.javascript .hljs-title,.coffeescript .hljs-title{color:#4271ae}.hljs-keyword,.javascript .hljs-function{color:#8959a8}.hljs{display:block;background:white;color:#4d4d4c;padding:.5em}.coffeescript .javascript,.javascript .xml,.tex .hljs-formula,.xml .javascript,.xml .vbscript,.xml .css,.xml .hljs-cdata{opacity:.5}.right .hljs-comment{color:#969896}.right .css .hljs-class,.right .css .hljs-id,.right .css .hljs-pseudo,.right .hljs-attribute,.right .hljs-regexp,.right .hljs-tag,.right .hljs-variable,.right .html .hljs-doctype,.right .ruby .hljs-constant,.right .xml .hljs-doctype,.right .xml .hljs-pi,.right .xml .hljs-tag .hljs-title{color:#c66}.right .hljs-built_in,.right .hljs-constant,.right .hljs-literal,.right .hljs-number,.right .hljs-params,.right .hljs-pragma,.right .hljs-preprocessor{color:#de935f}.right .css .hljs-rule .hljs-attribute,.right .ruby .hljs-class .hljs-title{color:#f0c674}.right .hljs-header,.right .hljs-inheritance,.right .hljs-name,.right .hljs-string,.right .hljs-value,.right .ruby .hljs-symbol,.right .xml .hljs-cdata{color:#b5bd68}.right .css .hljs-hexcolor,.right .hljs-title{color:#8abeb7}.right .coffeescript .hljs-title,.right .hljs-function,.right .javascript .hljs-title,.right .perl .hljs-sub,.right .python .hljs-decorator,.right .python .hljs-title,.right .ruby .hljs-function .hljs-title,.right .ruby .hljs-title .hljs-keyword{color:#81a2be}.right .hljs-keyword,.right .javascript .hljs-function{color:#b294bb}.right .hljs{display:block;overflow-x:auto;background:#1d1f21;color:#c5c8c6;padding:.5em;-webkit-text-size-adjust:none}.right .coffeescript .javascript,.right .javascript .xml,.right .tex .hljs-formula,.right .xml .css,.right .xml .hljs-cdata,.right .xml .javascript,.right .xml .vbscript{opacity:.5}body{color:black;background:white;font:400 14px / 1.42 'Roboto',Helvetica,sans-serif}header{border-bottom:1px solid #f2f2f2;margin-bottom:12px}h1,h2,h3,h4,h5{color:black;margin:12px 0}h1 .permalink,h2 .permalink,h3 .permalink,h4 .permalink,h5 .permalink{margin-left:0;opacity:0;transition:opacity .25s ease}h1:hover .permalink,h2:hover .permalink,h3:hover .permalink,h4:hover .permalink,h5:hover .permalink{opacity:1}.triple h1 .permalink,.triple h2 .permalink,.triple h3 .permalink,.triple h4 .permalink,.triple h5 .permalink{opacity:.15}.triple h1:hover .permalink,.triple h2:hover .permalink,.triple h3:hover .permalink,.triple h4:hover .permalink,.triple h5:hover .permalink{opacity:.15}h1{font:200 36px 'Raleway',Helvetica,sans-serif;font-size:36px}h2{font:200 36px 'Raleway',Helvetica,sans-serif;font-size:30px}h3{font-size:100%;text-transform:uppercase}h5{font-size:100%;font-weight:normal}p{margin:0 0 10px}p.choices{line-height:1.6}a{color:#428bca;text-decoration:none}li p{margin:0}hr.split{border:0;height:1px;width:100%;padding-left:6px;margin:12px auto;background-image:linear-gradient(to right, rgba(0,0,0,0) 20%, rgba(0,0,0,0.2) 51.4%, rgba(255,255,255,0.2) 51.4%, rgba(255,255,255,0) 80%)}dl dt{float:left;width:130px;clear:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}dl dd{margin-left:150px}blockquote{color:rgba(0,0,0,0.5);font-size:15.5px;padding:10px 20px;margin:12px 0;border-left:5px solid #e8e8e8}blockquote p:last-child{margin-bottom:0}pre{background-color:#f5f5f5;padding:12px;border:1px solid #cfcfcf;border-radius:6px;overflow:auto}pre code{color:black;background-color:transparent;padding:0;border:none}code{color:#444;background-color:#f5f5f5;font:'Inconsolata',monospace;padding:1px 4px;border:1px solid #cfcfcf;border-radius:3px}ul,ol{padding-left:2em}table{border-collapse:collapse;border-spacing:0;margin-bottom:12px}table tr:nth-child(2n){background-color:#fafafa}table th,table td{padding:6px 12px;border:1px solid #e6e6e6}.text-muted{opacity:.5}.note,.warning{padding:.3em 1em;margin:1em 0;border-radius:2px;font-size:90%}.note h1,.warning h1,.note h2,.warning h2,.note h3,.warning h3,.note h4,.warning h4,.note h5,.warning h5,.note h6,.warning h6{font-family:200 36px 'Raleway',Helvetica,sans-serif;font-size:135%;font-weight:500}.note p,.warning p{margin:.5em 0}.note{color:black;background-color:#f0f6fb;border-left:4px solid #428bca}.note h1,.note h2,.note h3,.note h4,.note h5,.note h6{color:#428bca}.warning{color:black;background-color:#fbf1f0;border-left:4px solid #c9302c}.warning h1,.warning h2,.warning h3,.warning h4,.warning h5,.warning h6{color:#c9302c}header{margin-top:24px}nav{position:fixed;top:24px;bottom:0;overflow-y:auto}nav .resource-group{padding:0}nav .resource-group .heading{position:relative}nav .resource-group .heading .chevron{position:absolute;top:12px;right:12px;opacity:.5}nav .resource-group .heading a{display:block;color:black;opacity:.7;border-left:2px solid transparent;margin:0}nav .resource-group .heading a:hover{text-decoration:none;background-color:bad-color;border-left:2px solid black}nav ul{list-style-type:none;padding-left:0}nav ul a{display:block;font-size:13px;color:rgba(0,0,0,0.7);padding:8px 12px;border-top:1px solid #d9d9d9;border-left:2px solid transparent;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}nav ul a:hover{text-decoration:none;background-color:bad-color;border-left:2px solid black}nav ul>li{margin:0}nav ul>li:first-child{margin-top:-12px}nav ul>li:last-child{margin-bottom:-12px}nav ul ul a{padding-left:24px}nav ul ul li{margin:0}nav ul ul li:first-child{margin-top:0}nav ul ul li:last-child{margin-bottom:0}nav>div>div>ul>li:first-child>a{border-top:none}.preload *{transition:none !important}.pull-left{float:left}.pull-right{float:right}.badge{display:inline-block;float:right;min-width:10px;min-height:14px;padding:3px 7px;font-size:12px;color:#000;background-color:#f2f2f2;border-radius:10px;margin:-2px 0}.badge.get{color:#70bbe1;background-color:#d9edf7}.badge.head{color:#70bbe1;background-color:#d9edf7}.badge.options{color:#70bbe1;background-color:#d9edf7}.badge.put{color:#f0db70;background-color:#fcf8e3}.badge.patch{color:#f0db70;background-color:#fcf8e3}.badge.post{color:#93cd7c;background-color:#dff0d8}.badge.delete{color:#ce8383;background-color:#f2dede}.collapse-button{float:right}.collapse-button .close{display:none;color:#428bca;cursor:pointer}.collapse-button .open{color:#428bca;cursor:pointer}.collapse-button.show .close{display:inline}.collapse-button.show .open{display:none}.collapse-content{max-height:0;overflow:hidden;transition:max-height .3s ease-in-out}nav{width:220px}.container{max-width:940px;margin-left:auto;margin-right:auto}.container .row .content{margin-left:244px;width:696px}.container .row:after{content:'';display:block;clear:both}.container-fluid nav{width:22%}.container-fluid .row .content{margin-left:24%}.container-fluid.triple nav{width:16.5%;padding-right:1px}.container-fluid.triple .row .content{position:relative;margin-left:16.5%;padding-left:24px}.middle:before,.middle:after{content:'';display:table}.middle:after{clear:both}.middle{box-sizing:border-box;width:51.5%;padding-right:12px}.right{box-sizing:border-box;float:right;width:48.5%;padding-left:12px}.right a{color:#428bca}.right h1,.right h2,.right h3,.right h4,.right h5,.right p,.right div{color:white}.right pre{background-color:#1d1f21;border:1px solid #1d1f21}.right pre code{color:#c5c8c6}.right .description{margin-top:12px}.triple .resource-heading{font-size:125%}.definition{margin-top:12px;margin-bottom:12px}.definition .method{font-weight:bold}.definition .method.get{color:#2e8ab8}.definition .method.head{color:#2e8ab8}.definition .method.options{color:#2e8ab8}.definition .method.post{color:#56b82e}.definition .method.put{color:#b8a22e}.definition .method.patch{color:#b8a22e}.definition .method.delete{color:#b82e2e}.definition .uri{word-break:break-all;word-wrap:break-word}.definition .hostname{opacity:.5}.example-names{background-color:#eee;padding:12px;border-radius:6px}.example-names .tab-button{cursor:pointer;color:black;border:1px solid #ddd;padding:6px;margin-left:12px}.example-names .tab-button.active{background-color:#d5d5d5}.right .example-names{background-color:#444}.right .example-names .tab-button{color:white;border:1px solid #666;border-radius:6px}.right .example-names .tab-button.active{background-color:#5e5e5e}#nav-background{position:fixed;left:0;top:0;bottom:0;width:16.5%;padding-right:14.4px;background-color:#fbfbfb;border-right:1px solid #f0f0f0;z-index:-1}#right-panel-background{position:absolute;right:-12px;top:-12px;bottom:-12px;width:48.6%;background-color:#333;z-index:-1}@media (max-width:1200px){nav{width:198px}.container{max-width:840px}.container .row .content{margin-left:224px;width:606px}}@media (max-width:992px){nav{width:169.4px}.container{max-width:720px}.container .row .content{margin-left:194px;width:526px}}@media (max-width:768px){nav{display:none}.container{width:95%;max-width:none}.container .row .content,.container-fluid .row .content,.container-fluid.triple .row .content{margin-left:auto;margin-right:auto;width:95%}#nav-background{display:none}#right-panel-background{width:48.6%}}.back-to-top{position:fixed;z-index:1;bottom:0;right:24px;padding:4px 8px;color:rgba(0,0,0,0.5);background-color:#f2f2f2;text-decoration:none !important;border-top:1px solid #d9d9d9;border-left:1px solid #d9d9d9;border-right:1px solid #d9d9d9;border-top-left-radius:3px;border-top-right-radius:3px}.resource-group{padding:12px;margin-bottom:12px;background-color:white;border:1px solid #d9d9d9;border-radius:6px}.resource-group h2.group-heading,.resource-group .heading a{padding:12px;margin:-12px -12px 12px -12px;background-color:#f2f2f2;border-bottom:1px solid #d9d9d9;border-top-left-radius:6px;border-top-right-radius:6px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.triple .content .resource-group{padding:0;border:none}.triple .content .resource-group h2.group-heading,.triple .content .resource-group .heading a{margin:0 0 12px 0;border:1px solid #d9d9d9}nav .resource-group .heading a{padding:12px;margin-bottom:0}nav .resource-group .collapse-content{padding:0}.action{margin-bottom:12px;padding:12px 12px 0 12px;overflow:hidden;border:1px solid transparent;border-radius:6px}.action h4.action-heading{padding:6px 12px;margin:-12px -12px 12px -12px;border-bottom:1px solid transparent;border-top-left-radius:6px;border-top-right-radius:6px;overflow:hidden}.action h4.action-heading .name{float:right;font-weight:normal;padding:6px 0}.action h4.action-heading .method{padding:6px 12px;margin-right:12px;border-radius:3px;display:inline-block}.action h4.action-heading .method.get{color:#fff;background-color:#337ab7}.action h4.action-heading .method.head{color:#fff;background-color:#337ab7}.action h4.action-heading .method.options{color:#fff;background-color:#337ab7}.action h4.action-heading .method.put{color:#fff;background-color:#ed9c28}.action h4.action-heading .method.patch{color:#fff;background-color:#ed9c28}.action h4.action-heading .method.post{color:#fff;background-color:#5cb85c}.action h4.action-heading .method.delete{color:#fff;background-color:#d9534f}.action h4.action-heading code{color:#444;background-color:#f5f5f5;border-color:#cfcfcf;font-weight:normal;word-break:break-all;display:inline-block;margin-top:2px}.action dl.inner{padding-bottom:2px}.action .title{border-bottom:1px solid white;margin:0 -12px -1px -12px;padding:12px}.action.get{border-color:#bce8f1}.action.get h4.action-heading{color:#337ab7;background:#d9edf7;border-bottom-color:#bce8f1}.action.head{border-color:#bce8f1}.action.head h4.action-heading{color:#337ab7;background:#d9edf7;border-bottom-color:#bce8f1}.action.options{border-color:#bce8f1}.action.options h4.action-heading{color:#337ab7;background:#d9edf7;border-bottom-color:#bce8f1}.action.post{border-color:#d6e9c6}.action.post h4.action-heading{color:#5cb85c;background:#dff0d8;border-bottom-color:#d6e9c6}.action.put{border-color:#faebcc}.action.put h4.action-heading{color:#ed9c28;background:#fcf8e3;border-bottom-color:#faebcc}.action.patch{border-color:#faebcc}.action.patch h4.action-heading{color:#ed9c28;background:#fcf8e3;border-bottom-color:#faebcc}.action.delete{border-color:#ebccd1}.action.delete h4.action-heading{color:#d9534f;background:#f2dede;border-bottom-color:#ebccd1}</style></head><body class="preload"><a href="#top" class="text-muted back-to-top"><i class="fa fa-toggle-up"></i>&nbsp;Back to top</a><div class="container"><div class="row"><nav><div class="resource-group"><div class="heading"><div class="chevron"><i class="open fa fa-angle-down"></i></div><a href="#top">Overview</a></div><div class="collapse-content"><ul><li><a href="#header-installation">Installation</a></li><li><a href="#header-design-documents">Design Documents</a></li><li><a href="#header-example-usage">Example Usage</a></li></ul></div></div><div class="resource-group"><div class="heading"><div class="chevron"><i class="open fa fa-angle-down"></i></div><a href="#accounts">Accounts</a></div><div class="collapse-content"><ul><li><a href="#accounts-list-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/list</a></li><li><a href="#accounts-export-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/export</a></li><li><a href="#accounts-slurp-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/slurp</a></li><li><a href="#accounts-names-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/names</a></li><li><a href="#accounts-abi-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/abi</a></li></ul></div></div><div class="resource-group"><div class="heading"><div class="chevron"><i class="open fa fa-angle-down"></i></div><a href="#state">State</a></div><div class="collapse-content"><ul><li><a href="#state-view-state-detail-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/state</a></li></ul></div></div><div class="resource-group"><div class="heading"><div class="chevron"><i class="open fa fa-angle-down"></i></div><a href="#data">Data</a></div><div class="collapse-content"><ul><li><a href="#data-view-block-detail-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/blocks</a></li><li><a href="#data-view-transactions-detail-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/transactions</a></li><li><a href="#data-view-receipts-detail-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/receipts</a></li><li><a href="#data-view-logs-detail-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/logs</a></li><li><a href="#data-view-traces-detail-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/traces</a></li></ul></div></div><div class="resource-group"><div class="heading"><div class="chevron"><i class="open fa fa-angle-down"></i></div><a href="#other">Other</a></div><div class="collapse-content"><ul><li><a href="#other-view-quotes-detail-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/quotes</a></li></ul></div></div><div class="resource-group"><div class="heading"><div class="chevron"><i class="open fa fa-angle-down"></i></div><a href="#admin">Admin</a></div><div class="collapse-content"><ul><li><a href="#admin-view-status-detail-get"><span class="badge get"><i class="fa fa-arrow-down"></i></span>/status</a></li></ul></div></div><p style="text-align: center; word-wrap: break-word;"><a href="http://localhost:8080">http://localhost:8080</a></p></nav><div class="content"><header><h1 id="top">TrueBlocks API</h1></header><p><strong>TrueBlocks</strong> provides easy access to Ethereum <strong>blocks</strong>, <strong>transactions</strong>, <strong>receipts</strong>, <strong>logs</strong>, <strong>trace data</strong>, <strong>abis</strong>, and <strong>prices</strong> directly from your own Ethereum node. An Ethereum RPC endpoint, which may be either remote or local (preferred), is required.</p>
+<p><strong>TrueBlocks</strong> is different from other solutions, however, in two ways: (1) the primary focus of <strong>TrueBlocks</strong> is delivering complete, fully-detailed, audit-quality historical lists of transactions for individual or groups of Ethereum addresses; and (2) <strong>TrueBlocks</strong> is decentralized from first principals.</p>
+<p>Any data available from the node is delivered to you directly, without the intervention of a third party. Other data, such as prices and abi definitions, is provided from immutable data stores with an optional mechanism to participate in community-wide sharing of that data.</p>
+<h4 id="header-installation">Installation <a class="permalink" href="#header-installation" aria-hidden="true">¶</a></h4>
+<p>Instructions for installing the package are here.</p>
+<h4 id="header-design-documents">Design Documents <a class="permalink" href="#header-design-documents" aria-hidden="true">¶</a></h4>
+<p>Discussion of design choices is here.</p>
+<h4 id="header-example-usage">Example Usage <a class="permalink" href="#header-example-usage" aria-hidden="true">¶</a></h4>
+<p>Examples of using the API are here.</p>
+<section id="accounts" class="resource-group"><h2 class="group-heading">Accounts <a href="#accounts" class="permalink">&para;</a></h2><div id="accounts-list" class="resource"><h3 class="resource-heading">List <a href="#accounts-list" class="permalink">&nbsp;&para;</a></h3><p>A resource that tells trueBlocks that you want to list appearances for <code>address</code>. Trueblocks returns its appearance index, each appearance consisting of <code>{blockNumber, txId}</code>.</p>
+<div id="accounts-list-get" class="action get"><h4 class="action-heading"><div class="name">/list</div><a href="#accounts-list-get" class="method get">GET</a><code class="uri">/list{?addrs}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/list?<span class="hljs-attribute">addrs=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>addrs</dt><dd><code>list&lt;addr&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>one or more Ethereum addresses</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>Plain Text Export</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">text/plain</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">text/plain</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>89796   6
+89880   3
+94675   17
+94754   3
+99979   10
+101279  0
+105338  18
+105439  2
+110350  40
+110457  1
+112698  35
+112789  0</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="accounts-export" class="resource"><h3 class="resource-heading">Export <a href="#accounts-export" class="permalink">&nbsp;&para;</a></h3><p>A resource that tells trueblocks that you want to export transactions for <code>address</code>. Trueblocks will use its appearance index to ask the node for detailed information about each appearance. The information is then returned in either JSON or CSV.</p>
+<div id="accounts-export-get" class="action get"><h4 class="action-heading"><div class="name">/export</div><a href="#accounts-export-get" class="method get">GET</a><code class="uri">/export{?addrs}{?appearances}{?receipts}{?logs}{?traces}{?balances}{?hashes_only}{?count_only}{?articulate}{?occurrence}{?emitter}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/export?<span class="hljs-attribute">addrs=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">appearances=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">receipts=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">logs=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">traces=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">balances=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">hashes_only=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">count_only=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">articulate=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">occurrence=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">emitter=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>addrs</dt><dd><code>list&lt;addr&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>one or more addresses (0x…) to export</p>
+</dd><dt>appearances</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>export a list of appearances</p>
+</dd><dt>receipts</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>export receipts instead of transaction list</p>
+</dd><dt>logs</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>export logs instead of transaction list</p>
+</dd><dt>traces</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>export traces instead of transaction list</p>
+</dd><dt>balances</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>export balance history instead of transaction list</p>
+</dd><dt>hashes_only</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>export the IPFS hashes of the index chunks the address appears in</p>
+</dd><dt>count_only</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display only the count of the number of data items requested</p>
+</dd><dt>articulate</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>articulate transactions, traces, logs, and outputs</p>
+</dd><dt>occurrence</dt><dd><code>&lt;blknum&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>for each loaded list of appearances, export only this occurrence</p>
+</dd><dt>emitter</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>available for --logs option only, export will only export if the address emitted the event</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>Plain Text Export</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">text/plain</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">text/plain</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>Hash,BlockNumber,TransactionIndex,Timestamp,<span class="hljs-built_in">Date</span>,From,FromName,To,ToName,EtherValue,DollarsThen,EtherGasCost,GasCostThen,GasUsed,isError,inFlow,outFlow,Internal,Encoding,FunctionName,Category,Note
+<span class="hljs-string">"0xced11523d71c444ce6d4296aaf4be2198d13358dd33925218ba5e49ccee5de43"</span>,<span class="hljs-string">"7218566"</span>,<span class="hljs-string">"6"</span>,<span class="hljs-string">"1550131308"</span>,<span class="hljs-string">"2/14/2019 8:01:48"</span>,<span class="hljs-string">"0x512e07a093aaa20ba288392eadf03838c7a4e522"</span>,,<span class="hljs-string">"0x0"</span>,,<span class="hljs-string">"0"</span>,<span class="hljs-string">"0"</span>,<span class="hljs-string">"0.113701400000000000"</span>,<span class="hljs-string">"13.871571937014"</span>,<span class="hljs-string">"5685070"</span>,<span class="hljs-string">"0"</span>,<span class="hljs-string">""</span>,<span class="hljs-string">""</span>,<span class="hljs-string">"0"</span>,<span class="hljs-string">"0x60806040"</span>,,<span class="hljs-string">"contract creation"</span>,</code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON Export</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+  "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-string">"ok"</span></span>,
+  "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x184ff1f00c1c5da9c62774e4e2bf0925de39046e056c13edf31f0bb9ce4d9b38"</span></span>,
+      "<span class="hljs-attribute">blockHash</span>": <span class="hljs-value"><span class="hljs-string">"0xda4c0d8c4df359aeb0dbcdc98767da4f31f95c3a9eb705a96933bd5322c8007f"</span></span>,
+      "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">89796</span></span>,
+      "<span class="hljs-attribute">transactionIndex</span>": <span class="hljs-value"><span class="hljs-number">6</span></span>,
+      "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439629343</span></span>,
+      "<span class="hljs-attribute">from</span>": <span class="hljs-value"><span class="hljs-string">"0xe6a7a1d47ff21b6321162aea7c6cb457d5476bca"</span></span>,
+      "<span class="hljs-attribute">to</span>": <span class="hljs-value"><span class="hljs-string">"0x3b01ebd2419f6d39db6ab4471e6382848716641f"</span></span>,
+      "<span class="hljs-attribute">value</span>": <span class="hljs-value"><span class="hljs-number">83372067757175030000</span></span>,
+      "<span class="hljs-attribute">gas</span>": <span class="hljs-value"><span class="hljs-number">22000</span></span>,
+      "<span class="hljs-attribute">gasPrice</span>": <span class="hljs-value"><span class="hljs-number">55815739021</span></span>,
+      "<span class="hljs-attribute">isError</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+      "<span class="hljs-attribute">receipt</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">contractAddress</span>": <span class="hljs-value"><span class="hljs-string">"0x0"</span></span>,
+        "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">21000</span></span>,
+        "<span class="hljs-attribute">logs</span>": <span class="hljs-value">[]</span>,
+        "<span class="hljs-attribute">status</span>": <span class="hljs-value"><span class="hljs-literal">null</span>
+      </span>}</span>,
+      "<span class="hljs-attribute">traces</span>": <span class="hljs-value">[]</span>,
+      "<span class="hljs-attribute">gasCost</span>": <span class="hljs-value"><span class="hljs-number">1172130519441000</span></span>,
+      "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">21000</span></span>,
+      "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-15 09:02:23 UTC"</span></span>,
+      "<span class="hljs-attribute">datesh</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-15"</span></span>,
+      "<span class="hljs-attribute">time</span>": <span class="hljs-value"><span class="hljs-string">"9:02:23 UTC"</span></span>,
+      "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21450442"</span></span>,
+      "<span class="hljs-attribute">ether</span>": <span class="hljs-value"><span class="hljs-number">83.37206775717503</span>
+    </span>}
+  ]
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="accounts-slurp" class="resource"><h3 class="resource-heading">Slurp <a href="#accounts-slurp" class="permalink">&nbsp;&para;</a></h3><p>Slurp against etherscan.</p>
+<div id="accounts-slurp-get" class="action get"><h4 class="action-heading"><div class="name">/slurp</div><a href="#accounts-slurp-get" class="method get">GET</a><code class="uri">/slurp{?addrs}{?blocks}{?types}{?appearances}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/slurp?<span class="hljs-attribute">addrs=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">blocks=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">types=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">appearances=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>addrs</dt><dd><code>list&lt;addr&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>one or more addresses to slurp from Etherscan</p>
+</dd><dt>blocks</dt><dd><code>list&lt;blknum&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>an optional range of blocks to slurp</p>
+</dd><dt>types</dt><dd><code>list&lt;enum[ext*|int|token|nfts|miner|all]&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>one or more types of transactions to request</p>
+</dd><dt>appearances</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>show only the blocknumer.tx_id appearances of the exported transactions</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="accounts-names" class="resource"><h3 class="resource-heading">names <a href="#accounts-names" class="permalink">&nbsp;&para;</a></h3><p>I don’t really know what this is.</p>
+<div id="accounts-names-get" class="action get"><h4 class="action-heading"><div class="name">/names</div><a href="#accounts-names-get" class="method get">GET</a><code class="uri">/names{?terms}{?expand}{?match_case}{?all}{?owned}{?custom}{?prefund}{?named}{?addr}{?collections}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/names?<span class="hljs-attribute">terms=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">expand=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">match_case=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">all=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">owned=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">custom=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">prefund=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">named=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">addr=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">collections=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>terms</dt><dd><code>list&lt;string&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>a space separated list of one or more search terms</p>
+</dd><dt>expand</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>expand search to include all fields (default searches name, address, and symbol only)</p>
+</dd><dt>match_case</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>do case-sensitive search</p>
+</dd><dt>all</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>include all accounts in the search</p>
+</dd><dt>owned</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>include personal accounts in the search</p>
+</dd><dt>custom</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>include your custom named accounts</p>
+</dd><dt>prefund</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>include prefund accounts</p>
+</dd><dt>named</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>include well know token and airdrop addresses in the search</p>
+</dd><dt>addr</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display only addresses in the results (useful for scripting)</p>
+</dd><dt>collections</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display collections data</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>{
+  "<span class="hljs-attribute">type</span>": <span class="hljs-value"><span class="hljs-string">"CEthState"</span></span>,
+  "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
+    {
+      "<span class="hljs-attribute">schema</span>": <span class="hljs-value"><span class="hljs-number">5005</span></span>,
+      "<span class="hljs-attribute">deleted</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+      "<span class="hljs-attribute">showing</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+      "<span class="hljs-attribute">cname</span>": <span class="hljs-value"><span class="hljs-string">"EthState"</span></span>,
+      "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">1365929</span></span>,
+      "<span class="hljs-attribute">balance</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+      "<span class="hljs-attribute">nonce</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+      "<span class="hljs-attribute">code</span>": <span class="hljs-value"><span class="hljs-string">"0x"</span></span>,
+      "<span class="hljs-attribute">storage</span>": <span class="hljs-value"><span class="hljs-string">""</span></span>,
+      "<span class="hljs-attribute">address</span>": <span class="hljs-value"><span class="hljs-string">"0x06012c8cf97bead5deae237070f9587f8e7a266d"</span></span>,
+      "<span class="hljs-attribute">deployed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+      "<span class="hljs-attribute">accttype</span>": <span class="hljs-value"><span class="hljs-string">"EOA"</span></span>,
+      "<span class="hljs-attribute">ether</span>": <span class="hljs-value"><span class="hljs-number">0</span>
+    </span>}
+  ]</span>,
+  "<span class="hljs-attribute">meta</span>": <span class="hljs-value">{
+    "<span class="hljs-attribute">pending</span>": <span class="hljs-value"><span class="hljs-number">622000</span></span>,
+    "<span class="hljs-attribute">staging</span>": <span class="hljs-value"><span class="hljs-number">622000</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">539800</span></span>,
+    "<span class="hljs-attribute">client</span>": <span class="hljs-value"><span class="hljs-number">1365929</span>
+  </span>}
+</span>}</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="accounts-abi" class="resource"><h3 class="resource-heading">ABI <a href="#accounts-abi" class="permalink">&nbsp;&para;</a></h3><p>Get abi.</p>
+<div id="accounts-abi-get" class="action get"><h4 class="action-heading"><div class="name">/abi</div><a href="#accounts-abi-get" class="method get">GET</a><code class="uri">/abi{?addrs}{?canonical}{?generate}{?noconst}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/abi?<span class="hljs-attribute">addrs=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">canonical=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">generate=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">noconst=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>addrs</dt><dd><code>list&lt;addr&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>list of one or more smart contracts whose ABI to grab from EtherScan</p>
+</dd><dt>canonical</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>convert all types to their canonical represenation and remove all spaces from display</p>
+</dd><dt>generate</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>generate C++ code into the current folder for all functions and events found in the ABI</p>
+</dd><dt>noconst</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>generate encodings for non-constant functions and events only (always true when generating)</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="state" class="resource-group"><h2 class="group-heading">State <a href="#state" class="permalink">&para;</a></h2><div id="state-view-state-detail" class="resource"><h3 class="resource-heading">View State detail <a href="#state-view-state-detail" class="permalink">&nbsp;&para;</a></h3><p>Look at state.</p>
+<div id="state-view-state-detail-get" class="action get"><h4 class="action-heading"><div class="name">/state</div><a href="#state-view-state-detail-get" class="method get">GET</a><code class="uri">/state{?addrs}{?blocks}{?parts}{?changes}{?no_zero}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/state?<span class="hljs-attribute">addrs=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">blocks=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">parts=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">changes=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">no_zero=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>addrs</dt><dd><code>list&lt;addr&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>one or more addresses (0x…) from which to retrieve balances</p>
+</dd><dt>blocks</dt><dd><code>list&lt;blknum&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>an optional list of one or more blocks at which to report balances, defaults to ‘latest’</p>
+</dd><dt>parts</dt><dd><code>list&lt;enum[none|some*|all|balance|nonce|code|storage|deployed|accttype]&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>control which state to export</p>
+</dd><dt>changes</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>only report a balance when it changes from one block to the next</p>
+</dd><dt>no_zero</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>suppress the display of zero balance accounts</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="data" class="resource-group"><h2 class="group-heading">Data <a href="#data" class="permalink">&para;</a></h2><div id="data-view-block-detail" class="resource"><h3 class="resource-heading">View block detail <a href="#data-view-block-detail" class="permalink">&nbsp;&para;</a></h3><p>Look at a block.</p>
+<div id="data-view-block-detail-get" class="action get"><h4 class="action-heading"><div class="name">/blocks</div><a href="#data-view-block-detail-get" class="method get">GET</a><code class="uri">/blocks{?blocks}{?hashes_only}{?addrs}{?uniq}{?uniq_tx}{?count_only}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/blocks?<span class="hljs-attribute">blocks=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">hashes_only=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">addrs=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">uniq=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">uniq_tx=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">count_only=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>blocks</dt><dd><code>list&lt;blknum&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>a space-separated list of one or more blocks to retrieve</p>
+</dd><dt>hashes_only</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display only transaction hashes, default is to display full transaction detail</p>
+</dd><dt>addrs</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display all addresses included in the block</p>
+</dd><dt>uniq</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display only uniq addresses found per block</p>
+</dd><dt>uniq_tx</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display only uniq addresses found per transaction</p>
+</dd><dt>count_only</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display counts of appearances (for --addrs, --uniq, or --uniq_tx only)</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="data-view-transactions-detail" class="resource"><h3 class="resource-heading">View transactions detail <a href="#data-view-transactions-detail" class="permalink">&nbsp;&para;</a></h3><p>Look at transactions.</p>
+<div id="data-view-transactions-detail-get" class="action get"><h4 class="action-heading"><div class="name">/transactions</div><a href="#data-view-transactions-detail-get" class="method get">GET</a><code class="uri">/transactions{?transactions}{?articulate}{?trace}{?uniq}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/transactions?<span class="hljs-attribute">transactions=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">articulate=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">trace=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">uniq=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>transactions</dt><dd><code>list&lt;tx_id&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>a space-separated list of one or more transaction identifiers (tx_hash, bn.txID, blk_hash.txID)</p>
+</dd><dt>articulate</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>articulate the transactions if an ABI is found for the ‘to’ address</p>
+</dd><dt>trace</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display the transaction’s trace</p>
+</dd><dt>uniq</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display a list of uniq addresses found in this transaction</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="data-view-receipts-detail" class="resource"><h3 class="resource-heading">View receipts detail <a href="#data-view-receipts-detail" class="permalink">&nbsp;&para;</a></h3><p>Look at receipts.</p>
+<div id="data-view-receipts-detail-get" class="action get"><h4 class="action-heading"><div class="name">/receipts</div><a href="#data-view-receipts-detail-get" class="method get">GET</a><code class="uri">/receipts{?transactions}{?articulate}{?logs}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/receipts?<span class="hljs-attribute">transactions=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">articulate=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">logs=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>transactions</dt><dd><code>list&lt;tx_id&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>a space-separated list of one or more transaction identifiers (tx_hash, bn.txID, blk_hash.txID)</p>
+</dd><dt>articulate</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>articulate the transactions if an ABI is found for the ‘to’ address</p>
+</dd><dt>logs</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>display the receipt’s logs</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="data-view-logs-detail" class="resource"><h3 class="resource-heading">View logs detail <a href="#data-view-logs-detail" class="permalink">&nbsp;&para;</a></h3><p>Look at logs.</p>
+<div id="data-view-logs-detail-get" class="action get"><h4 class="action-heading"><div class="name">/logs</div><a href="#data-view-logs-detail-get" class="method get">GET</a><code class="uri">/logs{?transactions}{?articulate}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/logs?<span class="hljs-attribute">transactions=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">articulate=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>transactions</dt><dd><code>list&lt;tx_id&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>a space-separated list of one or more transaction identifiers (tx_hash, bn.txID, blk_hash.txID)</p>
+</dd><dt>articulate</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>articulate the transactions if an ABI is found for the ‘to’ address</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div><div id="data-view-traces-detail" class="resource"><h3 class="resource-heading">View traces detail <a href="#data-view-traces-detail" class="permalink">&nbsp;&para;</a></h3><p>Look at traces.</p>
+<div id="data-view-traces-detail-get" class="action get"><h4 class="action-heading"><div class="name">/traces</div><a href="#data-view-traces-detail-get" class="method get">GET</a><code class="uri">/traces{?transactions}{?articulate}{?count_only}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/traces?<span class="hljs-attribute">transactions=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">articulate=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">count_only=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>transactions</dt><dd><code>list&lt;tx_id&gt;</code>&nbsp;<span class="required">(required)</span>&nbsp;<p>a space-separated list of one or more transaction identifiers (tx_hash, bn.txID, blk_hash.txID)</p>
+</dd><dt>articulate</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>articulate the transactions if an ABI is found for the ‘to’ address</p>
+</dd><dt>count_only</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>show the number of traces for the transaction only (fast)</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="other" class="resource-group"><h2 class="group-heading">Other <a href="#other" class="permalink">&para;</a></h2><div id="other-view-quotes-detail" class="resource"><h3 class="resource-heading">View quotes detail <a href="#other-view-quotes-detail" class="permalink">&nbsp;&para;</a></h3><p>Look at quotes.</p>
+<div id="other-view-quotes-detail-get" class="action get"><h4 class="action-heading"><div class="name">/quotes</div><a href="#other-view-quotes-detail-get" class="method get">GET</a><code class="uri">/quotes{?freshen}{?period}{?pair}{?feed}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/quotes?<span class="hljs-attribute">freshen=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">period=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">pair=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">feed=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>freshen</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>Freshen price database (append new data)</p>
+</dd><dt>period</dt><dd><code>5|15|30|60|120*|240|1440|10080|hourly|daily|weekly</code>&nbsp;<span>(optional)</span>&nbsp;<p>increment of display</p>
+</dd><dt>pair</dt><dd><code>&lt;string&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>which price pair to freshen or list (see Poloniex)</p>
+</dd><dt>feed</dt><dd><code>poloniex*|maker|tellor</code>&nbsp;<span>(optional)</span>&nbsp;<p>the feed for the price data</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div></section><section id="admin" class="resource-group"><h2 class="group-heading">Admin <a href="#admin" class="permalink">&para;</a></h2><div id="admin-view-status-detail" class="resource"><h3 class="resource-heading">View status detail <a href="#admin-view-status-detail" class="permalink">&nbsp;&para;</a></h3><p>Look at status. Great status.</p>
+<div id="admin-view-status-detail-get" class="action get"><h4 class="action-heading"><div class="name">/status</div><a href="#admin-view-status-detail-get" class="method get">GET</a><code class="uri">/status{?modes}{?details}{?report}{?fmt}{?help}</code></h4><h4>Example URI</h4><div class="definition"><span class="method get">GET</span>&nbsp;<span class="uri"><span class="hostname">http://localhost:8080</span>/status?<span class="hljs-attribute">modes=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">details=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">report=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">fmt=</span><span class="hljs-literal"></span>?<span class="hljs-attribute">help=</span><span class="hljs-literal"></span></span></div><div class="title"><strong>URI Parameters</strong><div class="collapse-button show"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><dl class="inner"><dt>modes</dt><dd><code>list&lt;enum[index|monitors|collections|names|abis|caches|some*|all]&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>the type of status info to retrieve</p>
+</dd><dt>details</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>include details about items found in monitors, slurps, abis, or price caches</p>
+</dd><dt>report</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>show a summary of the current status of the blockchain and TrueBlocks scrapers</p>
+</dd><dt>fmt</dt><dd><code>none|json*|txt|csv|api</code>&nbsp;<span>(optional)</span>&nbsp;<p>export format (where appropriate)</p>
+</dd><dt>help</dt><dd><code>&lt;boolean&gt;</code>&nbsp;<span>(optional)</span>&nbsp;<p>get help on this command</p>
+</dd></dl></div><div class="title"><strong>Request&nbsp;&nbsp;<code>JSON data</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Accept</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div></div></div><div class="title"><strong>Response&nbsp;&nbsp;<code>200</code></strong><div class="collapse-button"><span class="close">Hide</span><span class="open">Show</span></div></div><div class="collapse-content"><div class="inner"><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span></code></pre><div style="height: 1px;"></div><h5>Body</h5><pre><code>[
+  {
+    "<span class="hljs-attribute">gasLimit</span>": <span class="hljs-value"><span class="hljs-number">3141592</span></span>,
+    "<span class="hljs-attribute">gasUsed</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">hash</span>": <span class="hljs-value"><span class="hljs-string">"0x3e5c2f13bc01a0a32c7eda3560ec3ede19c9d2f6c0fda8436999eee2914e862d"</span></span>,
+    "<span class="hljs-attribute">blockNumber</span>": <span class="hljs-value"><span class="hljs-number">101010</span></span>,
+    "<span class="hljs-attribute">parentHash</span>": <span class="hljs-value"><span class="hljs-string">"0x8290679004240a002dcf274bf56310c2654b5137c643e5c20ff647ebda61033b"</span></span>,
+    "<span class="hljs-attribute">miner</span>": <span class="hljs-value"><span class="hljs-string">"0xc603ab5ef41fc61aa8b76beddb09e3cfcbb174bd"</span></span>,
+    "<span class="hljs-attribute">difficulty</span>": <span class="hljs-value"><span class="hljs-number">3871451743585</span></span>,
+    "<span class="hljs-attribute">price</span>": <span class="hljs-value"><span class="hljs-number">0</span></span>,
+    "<span class="hljs-attribute">finalized</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+    "<span class="hljs-attribute">timestamp</span>": <span class="hljs-value"><span class="hljs-number">1439815989</span></span>,
+    "<span class="hljs-attribute">transactions</span>": <span class="hljs-value">[]</span>,
+    "<span class="hljs-attribute">date</span>": <span class="hljs-value"><span class="hljs-string">"2015-08-17 12:53:09 UTC"</span></span>,
+    "<span class="hljs-attribute">age</span>": <span class="hljs-value"><span class="hljs-string">"21263796"</span>
+  </span>}
+]</code></pre><div style="height: 1px;"></div></div></div></div></div></section></div></div></div><p style="text-align: center;" class="text-muted">Generated by&nbsp;<a href="https://github.com/danielgtaylor/aglio" class="aglio">aglio</a>&nbsp;on 29 Apr 2020</p><script>/* eslint-env browser */
+/* eslint quotes: [2, "single"] */
+'use strict';
+
+/*
+  Determine if a string ends with another string.
+*/
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
+/*
+  Get a list of direct child elements by class name.
+*/
+function childrenByClass(element, name) {
+  var filtered = [];
+
+  for (var i = 0; i < element.children.length; i++) {
+    var child = element.children[i];
+    var classNames = child.className.split(' ');
+    if (classNames.indexOf(name) !== -1) {
+      filtered.push(child);
+    }
+  }
+
+  return filtered;
+}
+
+/*
+  Get an array [width, height] of the window.
+*/
+function getWindowDimensions() {
+  var w = window,
+      d = document,
+      e = d.documentElement,
+      g = d.body,
+      x = w.innerWidth || e.clientWidth || g.clientWidth,
+      y = w.innerHeight || e.clientHeight || g.clientHeight;
+
+  return [x, y];
+}
+
+/*
+  Collapse or show a request/response example.
+*/
+function toggleCollapseButton(event) {
+    var button = event.target.parentNode;
+    var content = button.parentNode.nextSibling;
+    var inner = content.children[0];
+
+    if (button.className.indexOf('collapse-button') === -1) {
+      // Clicked without hitting the right element?
+      return;
+    }
+
+    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+        // Currently showing, so let's hide it
+        button.className = 'collapse-button';
+        content.style.maxHeight = '0px';
+    } else {
+        // Currently hidden, so let's show it
+        button.className = 'collapse-button show';
+        content.style.maxHeight = inner.offsetHeight + 12 + 'px';
+    }
+}
+
+function toggleTabButton(event) {
+    var i, index;
+    var button = event.target;
+
+    // Get index of the current button.
+    var buttons = childrenByClass(button.parentNode, 'tab-button');
+    for (i = 0; i < buttons.length; i++) {
+        if (buttons[i] === button) {
+            index = i;
+            button.className = 'tab-button active';
+        } else {
+            buttons[i].className = 'tab-button';
+        }
+    }
+
+    // Hide other tabs and show this one.
+    var tabs = childrenByClass(button.parentNode.parentNode, 'tab');
+    for (i = 0; i < tabs.length; i++) {
+        if (i === index) {
+            tabs[i].style.display = 'block';
+        } else {
+            tabs[i].style.display = 'none';
+        }
+    }
+}
+
+/*
+  Collapse or show a navigation menu. It will not be hidden unless it
+  is currently selected or `force` has been passed.
+*/
+function toggleCollapseNav(event, force) {
+    var heading = event.target.parentNode;
+    var content = heading.nextSibling;
+    var inner = content.children[0];
+
+    if (heading.className.indexOf('heading') === -1) {
+      // Clicked without hitting the right element?
+      return;
+    }
+
+    if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+      // Currently showing, so let's hide it, but only if this nav item
+      // is already selected. This prevents newly selected items from
+      // collapsing in an annoying fashion.
+      if (force || window.location.hash && endsWith(event.target.href, window.location.hash)) {
+        content.style.maxHeight = '0px';
+      }
+    } else {
+      // Currently hidden, so let's show it
+      content.style.maxHeight = inner.offsetHeight + 12 + 'px';
+    }
+}
+
+/*
+  Refresh the page after a live update from the server. This only
+  works in live preview mode (using the `--server` parameter).
+*/
+function refresh(body) {
+    document.querySelector('body').className = 'preload';
+    document.body.innerHTML = body;
+
+    // Re-initialize the page
+    init();
+    autoCollapse();
+
+    document.querySelector('body').className = '';
+}
+
+/*
+  Determine which navigation items should be auto-collapsed to show as many
+  as possible on the screen, based on the current window height. This also
+  collapses them.
+*/
+function autoCollapse() {
+  var windowHeight = getWindowDimensions()[1];
+  var itemsHeight = 64; /* Account for some padding */
+  var itemsArray = Array.prototype.slice.call(
+    document.querySelectorAll('nav .resource-group .heading'));
+
+  // Get the total height of the navigation items
+  itemsArray.forEach(function (item) {
+    itemsHeight += item.parentNode.offsetHeight;
+  });
+
+  // Should we auto-collapse any nav items? Try to find the smallest item
+  // that can be collapsed to show all items on the screen. If not possible,
+  // then collapse the largest item and do it again. First, sort the items
+  // by height from smallest to largest.
+  var sortedItems = itemsArray.sort(function (a, b) {
+    return a.parentNode.offsetHeight - b.parentNode.offsetHeight;
+  });
+
+  while (sortedItems.length && itemsHeight > windowHeight) {
+    for (var i = 0; i < sortedItems.length; i++) {
+      // Will collapsing this item help?
+      var itemHeight = sortedItems[i].nextSibling.offsetHeight;
+      if ((itemsHeight - itemHeight <= windowHeight) || i === sortedItems.length - 1) {
+        // It will, so let's collapse it, remove its content height from
+        // our total and then remove it from our list of candidates
+        // that can be collapsed.
+        itemsHeight -= itemHeight;
+        toggleCollapseNav({target: sortedItems[i].children[0]}, true);
+        sortedItems.splice(i, 1);
+        break;
+      }
+    }
+  }
+}
+
+/*
+  Initialize the interactive functionality of the page.
+*/
+function init() {
+    var i, j;
+
+    // Make collapse buttons clickable
+    var buttons = document.querySelectorAll('.collapse-button');
+    for (i = 0; i < buttons.length; i++) {
+        buttons[i].onclick = toggleCollapseButton;
+
+        // Show by default? Then toggle now.
+        if (buttons[i].className.indexOf('show') !== -1) {
+            toggleCollapseButton({target: buttons[i].children[0]});
+        }
+    }
+
+    var responseCodes = document.querySelectorAll('.example-names');
+    for (i = 0; i < responseCodes.length; i++) {
+        var tabButtons = childrenByClass(responseCodes[i], 'tab-button');
+        for (j = 0; j < tabButtons.length; j++) {
+            tabButtons[j].onclick = toggleTabButton;
+
+            // Show by default?
+            if (j === 0) {
+                toggleTabButton({target: tabButtons[j]});
+            }
+        }
+    }
+
+    // Make nav items clickable to collapse/expand their content.
+    var navItems = document.querySelectorAll('nav .resource-group .heading');
+    for (i = 0; i < navItems.length; i++) {
+        navItems[i].onclick = toggleCollapseNav;
+
+        // Show all by default
+        toggleCollapseNav({target: navItems[i].children[0]});
+    }
+}
+
+// Initial call to set up buttons
+init();
+
+window.onload = function () {
+    autoCollapse();
+    // Remove the `preload` class to enable animations
+    document.querySelector('body').className = '';
+};
+</script></body></html>

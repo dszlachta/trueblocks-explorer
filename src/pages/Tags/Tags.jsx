@@ -8,31 +8,11 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import {
-  getServerData,
-  sendServerCommand,
-  sortArray,
-  sortStrings,
-  handleClick,
-  navigate,
-  notEmpty,
-  replaceRecord,
-  stateFromStorage,
-} from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage, } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Tags.css';
-
-// auto-generate: page-settings
-const recordIconList = [
-  'header-Add',
-  'Delete/Undelete',
-  'Edit/Remove',
-  //
-];
-const defaultSort = ['tags', 'subtags1', 'subtags2'];
-const defaultSearch = ['tags', 'subtags1', 'subtags2'];
-// auto-generate: page-settings
 
 //---------------------------------------------------------------------------
 export const Tags = () => {
@@ -159,6 +139,17 @@ export const Tags = () => {
     </div>
   );
 };
+
+// auto-generate: page-settings
+const recordIconList = [
+  'header-Add',
+  'Delete/Undelete',
+  'Edit/Remove',
+  //
+];
+const defaultSort = ['tags', 'subtags1', 'subtags2'];
+const defaultSearch = ['tags', 'subtags1', 'subtags2'];
+// auto-generate: page-settings
 
 //----------------------------------------------------------------------
 function refreshData(url, query, dispatch) {

@@ -8,33 +8,11 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import {
-  getServerData,
-  sendServerCommand,
-  sortArray,
-  sortStrings,
-  handleClick,
-  navigate,
-  notEmpty,
-  replaceRecord,
-  stateFromStorage,
-} from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage, } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Signatures.css';
-
-// auto-generate: page-settings
-const recordIconList = [
-  'header-Add',
-  'Delete/Undelete',
-  'Edit/Remove',
-  'footer-CSV',
-  'footer-TXT',
-  //
-];
-const defaultSort = ['encoding', 'type', 'name'];
-const defaultSearch = ['encoding', 'type', 'name'];
-// auto-generate: page-settings
 
 //---------------------------------------------------------------------------
 export const Signatures = () => {
@@ -161,6 +139,19 @@ export const Signatures = () => {
     </div>
   );
 };
+
+// auto-generate: page-settings
+const recordIconList = [
+  'header-Add',
+  'Delete/Undelete',
+  'Edit/Remove',
+  'footer-CSV',
+  'footer-TXT',
+  //
+];
+const defaultSort = ['encoding', 'type', 'name'];
+const defaultSearch = ['encoding', 'type', 'name'];
+// auto-generate: page-settings
 
 //----------------------------------------------------------------------
 function refreshData(url, query, dispatch) {

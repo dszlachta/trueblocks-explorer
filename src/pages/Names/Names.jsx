@@ -8,36 +8,11 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import {
-  getServerData,
-  sendServerCommand,
-  sortArray,
-  sortStrings,
-  handleClick,
-  navigate,
-  notEmpty,
-  replaceRecord,
-  stateFromStorage,
-} from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Names.css';
-
-// auto-generate: page-settings
-const recordIconList = [
-  'ExternalLink',
-  'header-Add',
-  'Delete/Undelete',
-  'Edit/Remove',
-  'Explorer/None',
-  'footer-CSV',
-  'footer-TXT',
-  'footer-Import',
-  //
-];
-const defaultSort = ['tags', 'address', 'name'];
-const defaultSearch = ['tags', 'address', 'name'];
-// auto-generate: page-settings
 
 //---------------------------------------------------------------------------
 export const Names = () => {
@@ -57,15 +32,24 @@ export const Names = () => {
     if (record) record = record[0];
     switch (action.type.toLowerCase()) {
       case 'add':
-        setEditor({ showing: true, record: null });
+        setEditor({ showing: true, record: {} });
         break;
       case 'edit':
         if (record) setEditor({ showing: true, name: 'Edit Name', record: record });
         break;
       case 'close':
       case 'cancel':
+        setEditor({ showing: false, record: {} });
+        break;
       case 'okay':
         setEditor({ showing: false, record: {} });
+        const url3 = 'http://localhost:8080/names';
+        let query3 = 'verbose=10&edit=A%2B0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3%2BC%2BD%2BE%2BF';
+        sendServerCommand(url3, query3).then(() => {
+          // we assume the delete worked, so we don't reload the data
+        });
+        dispatch(action);
+        break;
         break;
       case 'set-tags':
         setTag(action.payload);
@@ -76,16 +60,16 @@ export const Names = () => {
         break;
       case 'delete':
       case 'undelete':
-        const url1 = 'http://localhost:8080/rm';
-        let query1 = 'verbose=10&address=' + action.record_id;
+        const url1 = 'http://localhost:8080/names';
+        let query1 = 'verbose=10&del=' + action.record_id;
         sendServerCommand(url1, query1).then(() => {
           // we assume the delete worked, so we don't reload the data
         });
         dispatch(action);
         break;
       case 'remove':
-        let url2 = 'http://localhost:8080/rm';
-        let query2 = 'verbose=10&address=' + action.record_id + '&yes';
+        let url2 = 'http://localhost:8080/names';
+        let query2 = 'verbose=10&remove=' + action.record_id;
         sendServerCommand(url2, query2).then((theData) => {
           // the command worked, but now we need to reload the data
           const url = 'http://localhost:8080/names';
@@ -164,6 +148,21 @@ export const Names = () => {
     </div>
   );
 };
+
+// auto-generate: page-settings
+const recordIconList = [
+  'ExternalLink',
+  'header-Add',
+  'Delete/Undelete',
+  'Edit/Remove',
+  'footer-CSV',
+  'footer-TXT',
+  'footer-Import',
+  //
+];
+const defaultSort = ['tags', 'address', 'name'];
+const defaultSearch = ['tags', 'address', 'name'];
+// auto-generate: page-settings
 
 //----------------------------------------------------------------------
 function refreshData(url, query, dispatch) {

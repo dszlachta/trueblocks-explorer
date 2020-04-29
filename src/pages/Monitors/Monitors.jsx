@@ -8,36 +8,11 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import {
-  getServerData,
-  sendServerCommand,
-  sortArray,
-  sortStrings,
-  handleClick,
-  navigate,
-  notEmpty,
-  replaceRecord,
-  stateFromStorage,
-} from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage, } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Monitors.css';
-
-// auto-generate: page-settings
-const recordIconList = [
-  'ExternalLink',
-  'header-Add',
-  'Delete/Undelete',
-  'Edit/Remove',
-  'Explorer/None',
-  'footer-CSV',
-  'footer-TXT',
-  'footer-Import',
-  //
-];
-const defaultSort = ['tags', 'address'];
-const defaultSearch = ['tags', 'address'];
-// auto-generate: page-settings
 
 //---------------------------------------------------------------------------
 export const Monitors = () => {
@@ -165,6 +140,22 @@ export const Monitors = () => {
   );
 };
 
+// auto-generate: page-settings
+const recordIconList = [
+  'ExternalLink',
+  'header-Add',
+  'Delete/Undelete',
+  'Edit/Remove',
+  'Explorer/None',
+  'footer-CSV',
+  'footer-TXT',
+  'footer-Import',
+  //
+];
+const defaultSort = ['tags', 'address'];
+const defaultSearch = ['tags', 'address'];
+// auto-generate: page-settings
+
 //----------------------------------------------------------------------
 function refreshData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
@@ -228,44 +219,11 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 /*
-//----------------------------------------------------------------------
-export const projectsReducer = (state, action) => {
-  let ret = state;
-  let record = ret.find((p) => p.id === action.id);
-  switch (action.type) {
-    case 'toggle_monitor':
-      record.monitored = !record.monitored;
-      ret = replaceRecord(ret, record, action.id);
-      break;
-    case 'toggle_deleted':
-      record.deleted = !record.deleted;
-      ret = replaceRecord(ret, record, action.id);
-      break;
-    case 'edit_record':
-      window.location = "/records/edit?id=" + record.id;
-      break;
-    case 'remove_record':
-      ret = ret.filter((record) => record.id !== action.id);
-      break;
     case 'update':
       record[action.fieldName] = action.value;
       console.log('record: ', record);
       ret = replaceRecord(ret, record, action.id);
       console.log('ret: ', ret.find((p) => p.id === action.id));
-    case 'reset':
-      ret = recordsDefault;
-      break;
-    case 'fail':
-      break;
-    default:
-      break;
-  }
-  // TODO(tjayrush): this does not write to the back end
-  localStorage.setItem('recordsState', JSON.stringify(ret));
-  return ret;
-};
-
-//----------------------------------------------------------------------
 */
 // EXISTING_CODE
 
