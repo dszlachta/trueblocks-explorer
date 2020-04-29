@@ -106,6 +106,15 @@ export function navigate(href, newTab) {
 }
 
 //----------------------------------------------------------------------------
+export const replaceRecord = (array, record, id, calc, get) => {
+  var ret = array.map((item) => {
+    if (calc(item, { selector: 'id', onDisplay: get }) === id) return record;
+    return item;
+  });
+  return ret;
+};
+
+//----------------------------------------------------------------------------
 export async function getServerData(route, query) {
   const url = route + '?' + query;
   const response = await fetch(url);
@@ -176,6 +185,7 @@ export const formatFieldByType = (type, value, decimals = 0) => {
       value = isZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
       break;
     case 'hash':
+      if (!value) return value;
       if (value.length === 10) return value;
       value = value ? value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1) : '';
       break;
@@ -242,7 +252,7 @@ export const humanFileSize = (numInBytes) => {
 export const fmtNum = (n, dd = 0, type = '', delim = ',', dec = '.') => {
   if (n === 0) return '0';
   if (!n) return '';
-  const number = type === '' ? n.toString() : n.toFixed(dd);
+  const number = type === '' ? n.toString() : n.toFixed ? n.toFixed(dd) : n.toString();
   const prefix = type === '' ? '' : type === '$' ? type + ' ' : '';
   const postfx = type === '' ? '' : type === '$' ? '' : ' ' + type;
 

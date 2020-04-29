@@ -17,6 +17,7 @@ export const DataTable = ({
   data,
   columns,
   title = 'Data Table (dt-)',
+  name = '',
   search = false,
   searchFields = [],
   pagination = false,
@@ -32,8 +33,8 @@ export const DataTable = ({
   const [selectedRow, setSelectedRow] = useState('');
   const [filterText, setFilterText] = useState('');
 
-  const [sortCtx1, setSortCtx1] = useState({ sortBy: '', sortDir: 'asc' });
-  const [sortCtx2, setSortCtx2] = useState({ sortBy: '', sortDir: '' });
+  const [sortCtx1, setSortCtx1] = useState(stateFromStorage(name + '_sort1', { sortBy: '', sortDir: 'asc' }));
+  const [sortCtx2, setSortCtx2] = useState(stateFromStorage(name + '_sort2', { sortBy: '', sortDir: 'asc' }));
 
   const dataTableHandler = (action) => {
     console.log(action);
@@ -52,19 +53,25 @@ export const DataTable = ({
         localStorage.setItem('paging', JSON.stringify(newCtx));
         break;
       case 'sortBy':
+        let newSort1 = sortCtx1;
+        let newSort2 = sortCtx2;
         if (sortCtx1.sortBy === action.fieldName) {
           if (sortCtx1.sortDir === 'asc') {
-            setSortCtx1({ ...sortCtx1, sortDir: 'desc' });
+            newSort1.sortDir = 'desc';
           } else if (sortCtx1.sortDir === 'desc') {
-            setSortCtx1(sortCtx2);
-            setSortCtx2({ sortBy: '', sortDir: 'asc' });
+            newSort1 = sortCtx2;
+            newSort2 = { sortBy: '', sortDir: 'asc' };
           } else {
-            setSortCtx1({ ...sortCtx1, sortDir: 'asc' });
+            newSort1.sortDir = 'asc';
           }
         } else {
-          setSortCtx2(sortCtx1);
-          setSortCtx1({ sortBy: action.fieldName, sortDir: 'asc' });
+          newSort1 = { sortBy: action.fieldName, sortDir: 'asc' };
+          newSort2 = sortCtx1;
         }
+        setSortCtx1(newSort1);
+        setSortCtx2(newSort2);
+        localStorage.setItem(name + '_sort1', JSON.stringify(newSort1));
+        localStorage.setItem(name + '_sort2', JSON.stringify(newSort2));
         setPaging({ ...pagingCtx, curPage: 0, total: filteredData.length });
         break;
 

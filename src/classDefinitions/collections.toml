@@ -1,6 +1,6 @@
 [settings]
 class = "CCollections"
-recordIcons =  "header-Add,Edit/Remove,Delete/Undelete,ExternalLink,footer-CSV,footer-TXT"
+recordIcons =  "editing,exporting"
 defaultSort = "tags,name,client"
 url = "http://localhost:8080/names"
 query = "verbose=10&collections"
@@ -8,8 +8,4 @@ query = "verbose=10&collections"
 [[subpages]]
 list = [
     { page = "collections", subpage = "" },
-    { page = "collections", subpage = "View...", route = "view" },
-    { page = "collections", subpage = "Edit...", route = "edit" },
-    { page = "collections", subpage = "Save" },
-    { page = "collections", subpage = "Export" },
 ]

@@ -1,6 +1,6 @@
 [settings]
 class = "CCaches"
-recordIcons =  "header-Add,Edit/Remove,Delete/Undelete,footer-CSV,footer-TXT"
+recordIcons =  "editing,exporting"
 defaultSort = "path"
 url = "http://localhost:8080/status"
 query = "verbose=10&modes=abis%20caches&types=all&details&depth=1"

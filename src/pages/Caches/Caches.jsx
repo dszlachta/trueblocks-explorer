@@ -8,7 +8,17 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, notEmpty } from 'components/utils';
+import {
+  getServerData,
+  sendServerCommand,
+  sortArray,
+  sortStrings,
+  handleClick,
+  navigate,
+  notEmpty,
+  replaceRecord,
+  stateFromStorage,
+} from 'components/utils';
 import { calcValue } from 'store';
 
 import './Caches.css';
@@ -16,8 +26,8 @@ import './Caches.css';
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
-  'Edit/Remove',
   'Delete/Undelete',
+  'Edit/Remove',
   'footer-CSV',
   'footer-TXT',
   //
@@ -33,13 +43,15 @@ export const Caches = () => {
   const [filtered, setFiltered] = useState(cachesDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
-  const [curTag, setTag] = useState('All');
-  const [editor, setEditor] = useState({ showing: false, name: 'Add Cache', record: {} });
+  const [curTag, setTag] = useState(localStorage.getItem('cachesTag') || 'All');
+  const [editor, setEditor] = useState({ showing: false, record: {} });
 
   const cachesHandler = (action) => {
-    const address = action.payload && action.payload.split('_')[0];
-    const record = filtered.filter((record) => record.address === address);
-    console.log('cachesHandler: ', action);
+    const record_id = action.record_id;
+    let record = filtered.filter((record) => {
+      return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
+    });
+    if (record) record = record[0];
     switch (action.type.toLowerCase()) {
       case 'add':
         setEditor({ showing: true, record: null });
@@ -50,10 +62,36 @@ export const Caches = () => {
       case 'close':
       case 'cancel':
       case 'okay':
-        setEditor({ showing: false, record: null });
+        setEditor({ showing: false, record: {} });
         break;
       case 'set-tags':
         setTag(action.payload);
+        localStorage.setItem('cachesTag', action.payload);
+        break;
+      case 'explorer':
+        setEditor({ showing: true, name: 'Explore Cache', record: record });
+        break;
+      case 'delete':
+      case 'undelete':
+        const url1 = 'http://localhost:8080/rm';
+        let query1 = 'verbose=10&address=' + action.record_id;
+        sendServerCommand(url1, query1).then(() => {
+          // we assume the delete worked, so we don't reload the data
+        });
+        dispatch(action);
+        break;
+      case 'remove':
+        let url2 = 'http://localhost:8080/rm';
+        let query2 = 'verbose=10&address=' + action.record_id + '&yes';
+        sendServerCommand(url2, query2).then((theData) => {
+          // the command worked, but now we need to reload the data
+          const url = 'http://localhost:8080/status';
+          let query = 'verbose=10&modes=abis%20caches&types=all&details&depth=1';
+          refreshData(url, query, dispatch);
+        });
+        break;
+      case 'externallink':
+        navigate('https://etherscan.io/address/' + action.record_id, true);
         break;
       // EXISTING_CODE
       // EXISTING_CODE
@@ -62,17 +100,10 @@ export const Caches = () => {
     }
   };
 
-  let query = 'verbose=10&modes=abis%20caches&types=all&details&depth=1';
   const url = 'http://localhost:8080/status';
+  let query = 'verbose=10&modes=abis%20caches&types=all&details&depth=1';
   useEffect(() => {
-    getServerData(url, query).then((theData) => {
-      let result = theData.data;
-      // EXISTING_CODE
-      result = theData.data[0].caches;
-      // EXISTING_CODE
-      const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-      dispatch({ type: 'update', payload: sorted });
-    });
+    refreshData(url, query, dispatch);
   }, [query, dispatch]);
 
   useEffect(() => {
@@ -105,6 +136,7 @@ export const Caches = () => {
         <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={cachesHandler} />
       ) : null}
       <DataTable
+        name={'cachesTable'}
         data={filtered}
         columns={cachesSchema}
         title="Caches"
@@ -131,13 +163,38 @@ export const Caches = () => {
 };
 
 //----------------------------------------------------------------------
+function refreshData(url, query, dispatch) {
+  getServerData(url, query).then((theData) => {
+    let result = theData.data;
+    // EXISTING_CODE
+    result = theData.data[0].caches;
+    // EXISTING_CODE
+    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: sorted });
+  });
+}
+
+//----------------------------------------------------------------------
 export const cachesDefault = [];
 
 //----------------------------------------------------------------------
 export const cachesReducer = (state, action) => {
   let ret = state;
-  switch (action.type) {
-    case 'update':
+  switch (action.type.toLowerCase()) {
+    case 'undelete':
+    case 'delete':
+      {
+        const record = ret.filter((r) => {
+          const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
+          return val === action.record_id;
+        })[0];
+        if (record) {
+          record.deleted = !record.deleted;
+          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+        }
+      }
+      break;
+    case 'success':
       ret = action.payload;
       break;
     default:

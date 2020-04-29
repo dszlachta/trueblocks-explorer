@@ -1,6 +1,6 @@
 [settings]
 class = "CNames"
-recordIcons = "header-Add,Explorer/None,Edit/Remove,Delete/Undelete,ExternalLink,footer-CSV,footer-TXT,footer-Import"
+recordIcons = "viewing,editing,exploring,exporting,importing"
 defaultSort = "tags,address,name"
 url = "http://localhost:8080/names"
 query = "verbose=10&all"

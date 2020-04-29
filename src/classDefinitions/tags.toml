@@ -1,6 +1,6 @@
 [settings]
 class = "CTags"
-recordIcons = "header-Add,Edit/Remove,Delete/Undelete"
+recordIcons = "editing"
 defaultSort = "tags,subtags1,subtags2"
 url = "http://localhost:8080/names"
 query = "verbose=10&tags"

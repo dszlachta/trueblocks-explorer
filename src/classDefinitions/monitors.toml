@@ -1,6 +1,6 @@
 [settings]
 class = "CMonitors"
-recordIcons = "header-Add,Explorer/None,Edit/Remove,Delete/Undelete,ExternalLink,footer-CSV,footer-TXT,footer-Import"
+recordIcons = "viewing,editing,exploring,exporting,importing"
 defaultSort = "tags,address"
 url = "http://localhost:8080/status"
 query = "modes=monitors&details&verbose=10"

@@ -25,10 +25,6 @@ export const thePages = {
   'dashboard/': { component: <Dashboard /> },
   //
   'collections/': { component: <Collections /> },
-  'collections/view': { component: <Collections /> },
-  'collections/edit': { component: <Collections /> },
-  'collections/save': { component: <Collections /> },
-  'collections/export': { component: <Collections /> },
   //
   'monitors/': { component: <Monitors /> },
   'monitors/yours': { component: <Monitors /> },
@@ -99,12 +95,6 @@ export const theMenu = {
     {
       label: 'Collections',
       exact: true,
-      items: [
-        { label: 'View...', route: 'view' },
-        { label: 'Edit...', route: 'edit' },
-        { label: 'Save' },
-        { label: 'Export' },
-      ],
     },
     {
       label: 'Monitors',
