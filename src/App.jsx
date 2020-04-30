@@ -179,6 +179,7 @@ const mapHotKeys = (panelDispatch) => {
 // https://github.com/jbetancur/react-data-table-component
 // https://jbetancur.github.io/react-data-table-component/?path=/story/general--kitchen-sink
 //https://flaviocopes.com/react-hook-useeffect/
+//https://itnext.io/usefetch-react-custom-hook-for-fetch-api-with-suspense-and-concurrent-mode-in-mind-1d3ba9250e0
 
 // const useMediaQuery = (queryInput) => {
 //   const props = {
