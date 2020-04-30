@@ -1,14 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
-import { Tablebar, ObjectTable } from 'components';
-import { ClickableIcon, getIcon } from 'pages/utils';
+import { Tablebar, ObjectTable, IconTray } from 'components';
+import { createClass } from 'components/utils';
 import { calcValue, getPrimaryKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
 import { hasFields, matches } from './utils';
 
 import ChevronUp from 'assets/icons/ChevronUp';
 import ChevronDown from 'assets/icons/ChevronDown';
-import ExternalLink from 'assets/icons/ExternalLink';
 
 import './DataTable.css';
 
@@ -103,7 +102,7 @@ export const DataTable = ({
       case 'row_click':
         if (expandedRow === action.record_id) setExpandedRow('');
         setSelectedRow(action.record_id);
-        // setExpandedRow(expandedRow === action.record_id ? '' : action.record_id);
+        setExpandedRow(expandedRow === action.record_id ? '' : action.record_id);
         break;
       case 'row_doubleclick':
         buttonHandler({ type: 'Edit', record_id: action.record_id });
@@ -156,6 +155,7 @@ export const DataTable = ({
 
   return (
     <Fragment key="dt">
+      <pre>{JSON.stringify(selectedRow, null, 2)}</pre>
       {showTools && (
         <Tablebar
           title={title}
@@ -266,7 +266,7 @@ const DataTableRows = ({
           const id = calcValue(record, idCol);
           const key = id + '_' + index;
           const rowKey = key + '_r';
-          const isSelected = key === selectedRow;
+          const isSelected = id === selectedRow;
           if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
           const deleted = record.deleted;
           return (
@@ -396,35 +396,6 @@ export const SortIcon = ({ dir, n = -1 }) => {
           <small>{n}</small>
         </small>
       ) : null}
-    </div>
-  );
-};
-
-function createClass(name, rules) {
-  var style = document.createElement('style');
-  style.type = 'text/css';
-  document.getElementsByTagName('head')[0].appendChild(style);
-  if (!(style.sheet || {}).insertRule) (style.styleSheet || style.sheet).addRule(name, rules);
-  else style.sheet.insertRule(name + '{' + rules + '}', 0);
-}
-
-const IconTray = ({ iconList, handler, record_id, alt = false }) => {
-  if (!iconList || iconList.length === 0) return <div></div>;
-  return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(' + iconList.length + ', 1fr)',
-        justifyItems: 'flex-end',
-        alignItems: 'center',
-      }}
-    >
-      {iconList.map((a) => {
-        const alternates = a.replace('footer-', '').replace('header-', '').split('/');
-        const icon = alternates.length < 2 ? alternates[0] : alternates[alt ? 1 : 0];
-        if (icon === '' || icon === 'None') return null;
-        return <ClickableIcon icon={icon} handler={handler} record_id={record_id} />;
-      })}
     </div>
   );
 };

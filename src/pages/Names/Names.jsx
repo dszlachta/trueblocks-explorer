@@ -48,15 +48,18 @@ export const Names = () => {
       case 'cancel':
         setEditor({ showing: false, record: {} });
         break;
-
       case 'okay':
         {
           const url = 'http://localhost:8080/names';
           let query = 'editcmd=edit';
-          query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          query += '&verbose=10';
-          query += '&expand';
-          query += '&to_custom=false';
+          // query += record ? 'edit' : 'add';
+          // query += '&term=';
+          // query += "!" + (record ? record.)
+          // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
+          // query += '&verbose=10';
+          // query += '&expand';
+          // query += record ? (record.is_custom ? '&to_custom' : '') : '';
+          // query += '&to_custom=false';
           sendServerCommand(url, query).then(() => {
             // we assume the delete worked, so we don't reload the data
           });
@@ -335,16 +338,19 @@ export const namesSchema = [
     name: 'Deleted',
     selector: 'deleted',
     type: 'bool',
+    hidden: true,
   },
   {
     name: 'isCustom',
     selector: 'is_custom',
     type: 'bool',
+    hidden: true,
   },
   {
     name: 'isPrefund',
     selector: 'is_prefund',
     type: 'bool',
+    hidden: true,
   },
   {
     name: 'nAppearances',

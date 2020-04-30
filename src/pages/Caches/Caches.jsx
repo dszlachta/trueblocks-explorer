@@ -8,8 +8,8 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage, } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import './Caches.css';
@@ -31,17 +31,6 @@ export const Caches = () => {
     });
     if (record) record = record[0];
     switch (action.type.toLowerCase()) {
-      case 'add':
-        setEditor({ showing: true, record: null });
-        break;
-      case 'edit':
-        if (record) setEditor({ showing: true, name: 'Edit Cache', record: record });
-        break;
-      case 'close':
-      case 'cancel':
-      case 'okay':
-        setEditor({ showing: false, record: {} });
-        break;
       case 'set-tags':
         setTag(action.payload);
         localStorage.setItem('cachesTag', action.payload);
@@ -49,14 +38,37 @@ export const Caches = () => {
       case 'explorer':
         setEditor({ showing: true, name: 'Explore Cache', record: record });
         break;
+      case 'add':
+        setEditor({ showing: true, record: {} });
+        break;
+      case 'edit':
+        if (record) setEditor({ showing: true, name: 'Edit Cache', record: record });
+        break;
+      case 'close':
+      case 'cancel':
+        setEditor({ showing: false, record: {} });
+        break;
+      case 'okay':
+        break;
       case 'delete':
+        {
+          const url1 = 'http://localhost:8080/rm';
+          let query1 = 'verbose=10&address=' + action.record_id;
+          sendServerCommand(url1, query1).then(() => {
+            // we assume the delete worked, so we don't reload the data
+          });
+          dispatch(action);
+        }
+        break;
       case 'undelete':
-        const url1 = 'http://localhost:8080/rm';
-        let query1 = 'verbose=10&address=' + action.record_id;
-        sendServerCommand(url1, query1).then(() => {
-          // we assume the delete worked, so we don't reload the data
-        });
-        dispatch(action);
+        {
+          const url1 = 'http://localhost:8080/rm';
+          let query1 = 'verbose=10&address=' + action.record_id;
+          sendServerCommand(url1, query1).then(() => {
+            // we assume the delete worked, so we don't reload the data
+          });
+          dispatch(action);
+        }
         break;
       case 'remove':
         let url2 = 'http://localhost:8080/rm';

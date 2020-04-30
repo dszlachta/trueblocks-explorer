@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useToggles } from 'store';
 import { Settings, Discord, GitHub, Medium, Twitter } from 'assets/icons/SetSocial';
-import { ClickableIcon } from 'pages/utils';
+import { ClickableIcon } from 'components';
 import './PageFooter.css';
 
 //----------------------------------------------------------------------

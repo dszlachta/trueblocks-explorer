@@ -2,6 +2,14 @@ import React, { useEffect } from 'react';
 
 import Mousetrap from 'mousetrap';
 
+export function createClass(name, rules) {
+  var style = document.createElement('style');
+  style.type = 'text/css';
+  document.getElementsByTagName('head')[0].appendChild(style);
+  if (!(style.sheet || {}).insertRule) (style.styleSheet || style.sheet).addRule(name, rules);
+  else style.sheet.insertRule(name + '{' + rules + '}', 0);
+}
+
 export const Spacer = ({ cols = 1 }) => {
   const wids = Array(cols)
     .fill()
