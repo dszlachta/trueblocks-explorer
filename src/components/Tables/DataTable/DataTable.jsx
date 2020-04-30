@@ -167,7 +167,6 @@ export const DataTable = ({
           pagingCtx={{ ...pagingCtx, arrowsOnly: arrowsOnly }}
         />
       )}
-
       <DataTableHeader
         columns={columns}
         showHidden={showHidden}

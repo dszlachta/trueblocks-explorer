@@ -1,7 +1,7 @@
-cat ~/.quickBlocks/names/names.txt | grep -i $1 | tr '\t' '\n' | grep -v '^$'
+cat ~/.quickBlocks/names/names.txt | grep -i $1
 echo "------------------"
-ethNames --all $1  --verbose | tr '\t' '\n' | grep -v '^$'
+ethNames --all $1  --verbose --expand --fmt json
 echo "------------------------------"
 ls -l ~/.quickBlocks/names/names.txt
-ls -l /Volumes/Samsung_T4/scraper/names/names.bin
+ls -l ~/.quickBlocks/cache/names/names.bin
 date

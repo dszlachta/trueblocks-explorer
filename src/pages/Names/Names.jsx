@@ -52,7 +52,7 @@ export const Names = () => {
       case 'okay':
         {
           const url = 'http://localhost:8080/names';
-          const query = 'editcmd=edit&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F&verbose=10';
+          const query = 'editcmd=edit&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F&verbose=10&expand';
           sendServerCommand(url, query).then(() => {
             // we assume the delete worked, so we don't reload the data
           });
@@ -63,11 +63,11 @@ export const Names = () => {
       case 'delete':
         {
           let url = 'http://localhost:8080/names';
-          let query = 'editcmd=delete&terms=' + action.record_id + '&verbose=10';
+          let query = 'editcmd=delete&terms=' + action.record_id + '&verbose=10&expand';
           sendServerCommand(url, query).then(() => {
             // we assume the delete worked, so we don't reload the data
             url = 'http://localhost:8080/names';
-            query = 'verbose=10&all';
+            query = 'verbose=10&all&expand';
             refreshData(url, query, dispatch);
           });
           //          dispatch(action);
@@ -76,7 +76,7 @@ export const Names = () => {
       case 'undelete':
         {
           const url = 'http://localhost:8080/names';
-          const query = 'editcmd=undelete&terms=' + action.record_id + '&verbose=10';
+          const query = 'editcmd=undelete&terms=' + action.record_id + '&verbose=10&expand';
           sendServerCommand(url, query).then(() => {
             // we assume the delete worked, so we don't reload the data
           });
@@ -86,11 +86,11 @@ export const Names = () => {
       case 'remove':
         {
           let url = 'http://localhost:8080/names';
-          let query = 'editcmd=remove&terms=' + action.record_id + '&verbose=10';
+          let query = 'editcmd=remove&terms=' + action.record_id + '&verbose=10&expand';
           sendServerCommand(url, query).then((theData) => {
             // the command worked, but now we need to reload the data
             url = 'http://localhost:8080/names';
-            query = 'verbose=10&all';
+            query = 'verbose=10&all&expand';
             refreshData(url, query, dispatch);
           });
         }
@@ -106,7 +106,7 @@ export const Names = () => {
   };
 
   const url = 'http://localhost:8080/names';
-  let query = 'verbose=10&all';
+  let query = 'verbose=10&all&expand';
   useEffect(() => {
     refreshData(url, query, dispatch);
   }, [query, dispatch]);
