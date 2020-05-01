@@ -1,14 +1,12 @@
-#### DashBoard
+#### The dashboard...
 
-• Provides central navigation to the different components of TrueBlocks.
+• provides status information about the TrueBlocks system, and
 
-• If you get lost, return to the dashboard to reorient yourself.
-
-• The dashboard also provides status information about the system.
+• allows to you reorient yourself by returning to a known location.
 
 #### Further Help
 
-- [ReadTheDocs](/settings)
+- [ReadTheDocs](http://readthedocs/trueblblocks-explorer/dashboard)
 
 #### Related Links
 
