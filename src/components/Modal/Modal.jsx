@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 import { handleClick } from 'components/utils';
 import './Modal.css';
 
-export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children }) => {
+export const Modal = ({ showing, buttons = ['cancel', 'okay'], small = false, handler, children }) => {
   useEffect(() => {
     Mousetrap.bind(['esc'], (e) => handleClick(e, handler, { type: 'close' }));
     Mousetrap.bind(['enter'], (e) => {
@@ -17,7 +17,8 @@ export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children
   }, [showing, handler, buttons]);
 
   if (!showing) return null;
-  const backdropStyle = {
+
+  let backdropStyle = {
     position: 'fixed',
     top: 0,
     bottom: 0,
@@ -26,7 +27,7 @@ export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children
     backgroundColor: 'rgba(0,0,0,0.3)',
     padding: 20,
   };
-  const modalStyle = {
+  let modalStyle = {
     backgroundColor: '#fff',
     border: '1px solid black',
     borderRadius: 5,
@@ -35,28 +36,40 @@ export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children
     margin: '0 auto',
     padding: 10,
   };
+  if (small) {
+    backdropStyle = {};
+    modalStyle = {
+      borderRadius: 5,
+      maxWidth: 40,
+      minHeight: 40,
+      margin: '0 auto',
+      padding: 10,
+    };
+  }
 
   return (
     <div style={backdropStyle}>
       <div style={modalStyle}>
         {children}
-        <div>
-          {buttons.map((button, index) => {
-            return (
-              <Fragment>
-                <button
-                  className={index === buttons.length - 1 ? 'selected' : ''}
-                  key={button + index}
-                  onClick={(e) => {
-                    handleClick(e, handler, { type: button });
-                  }}
-                >
-                  {button}
-                </button>{' '}
-              </Fragment>
-            );
-          })}
-        </div>
+        {!small && (
+          <div>
+            {buttons.map((button, index) => {
+              return (
+                <Fragment>
+                  <button
+                    className={index === buttons.length - 1 ? 'selected' : ''}
+                    key={button + index}
+                    onClick={(e) => {
+                      handleClick(e, handler, { type: button });
+                    }}
+                  >
+                    {button}
+                  </button>{' '}
+                </Fragment>
+              );
+            })}
+          </div>
+        )}{' '}
       </div>
     </div>
   );

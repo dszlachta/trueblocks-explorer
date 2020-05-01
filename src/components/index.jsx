@@ -1,6 +1,7 @@
-import { ButtonCaddie } from './ButtonCaddie/ButtonCaddie.jsx';
-import { Card } from './Card/Card';
+import { PageCaddie } from './PageCaddie/PageCaddie';
+import { ButtonCaddie } from './ButtonCaddie/ButtonCaddie';
 import { Caddie } from './Caddie/Caddie';
+import { Card } from './Card/Card';
 import { Menu, MenuItem } from './Menu/Menu';
 import { IconTray, ClickableIcon } from './IconTray/IconTray';
 import { Modal } from './Modal/Modal';
@@ -9,9 +10,10 @@ import { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable } f
 import { Panel } from './Panel/Panel';
 
 export {
+  PageCaddie,
   ButtonCaddie,
-  Card,
   Caddie,
+  Card,
   Menu,
   MenuItem,
   Modal,

@@ -155,7 +155,7 @@ export const DataTable = ({
 
   return (
     <Fragment key="dt">
-      <pre>{JSON.stringify(selectedRow, null, 2)}</pre>
+      {/*<pre>{JSON.stringify(selectedRow, null, 2)}</pre>*/}
       {showTools && (
         <Tablebar
           title={title}
@@ -226,14 +226,7 @@ const DataTableHeader = ({
         return column.hidden || column.selector === 'icons' ? null : (
           <div
             onClick={(e) => handleClick(e, handler, { type: 'sortBy', fieldName: column.selector })}
-            style={{
-              textAlign: 'center',
-              borderRight: '1px solid #2aa198',
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-              textOverflow: 'ellipsis',
-              wordWrap: 'none',
-            }}
+            className="dt-header-cell"
           >
             <div>{cellText}</div>
           </div>

@@ -4,6 +4,7 @@ recordIcons = "editing"
 defaultSort = "tags,subtags1,subtags2"
 url = "http://localhost:8080/names"
 query = "verbose=10&tags"
+cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]
 list = [

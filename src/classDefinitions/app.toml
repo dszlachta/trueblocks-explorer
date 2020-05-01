@@ -4,7 +4,7 @@ pages = "dashboard|separator|\
     names|signatures|digests|caches|other|separator|\
     settings|support"
 
-schemas = "menu|dashboard|collections|monitors|\
+schemas = "menu|dashboard|collections|monitors|monitors-viewtxs|\
     explorer|\
     explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|\
     explorer-traces|explorer-traceActions|explorer-traceResults|\

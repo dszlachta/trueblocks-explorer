@@ -4,10 +4,13 @@ recordIcons = "viewing,editing,exploring,exporting,importing"
 defaultSort = "tags,address"
 url = "http://localhost:8080/status"
 query = "modes=monitors&details&verbose=10"
+cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]
 list = [
     { page = "monitors", subpage = "" },
     { page = "monitors", subpage = "Your Monitors", route = "yours", options = "" },
     { page = "monitors", subpage = "Shared Monitors", route = "shared", options = "" },
+    { page = "support", subpage = "Separator" },
+    { page = "monitors", subpage = "View", route = "view", options = "" },
 ]

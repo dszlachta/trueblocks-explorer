@@ -4,6 +4,7 @@ recordIcons = "editing"
 defaultSort = "blockNumber,name,date"
 url = "http://localhost:8080/when"
 query = "verbose=10&list"
+cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]
 list = [

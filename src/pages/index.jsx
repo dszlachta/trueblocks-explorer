@@ -29,6 +29,7 @@ export const thePages = {
   'monitors/': { component: <Monitors /> },
   'monitors/yours': { component: <Monitors /> },
   'monitors/shared': { component: <Monitors /> },
+  'monitors/view': { component: <Monitors /> },
   //
   'tags/': { component: <Tags /> },
   //
@@ -102,6 +103,8 @@ export const theMenu = {
       items: [
         { label: 'Your Monitors', route: 'yours' },
         { label: 'Shared Monitors', route: 'shared' },
+        { label: 'Separator' },
+        { label: 'View', route: 'view' },
       ],
     },
     {

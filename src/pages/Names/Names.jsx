@@ -7,10 +7,12 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
+// EXISTING_CODE
+// EXISTING_CODE
 
 import './Names.css';
 
@@ -23,35 +25,43 @@ export const Names = () => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('namesTag') || 'All');
   const [editor, setEditor] = useState({ showing: false, record: {} });
+  const [loading, setLoading] = useState(false);
 
-  const namesHandler = (action) => {
-    const record_id = action.record_id;
-    let record = filtered.filter((record) => {
-      return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
-    });
-    if (record) record = record[0];
-    switch (action.type.toLowerCase()) {
-      case 'set-tags':
-        setTag(action.payload);
-        localStorage.setItem('namesTag', action.payload);
-        break;
-      case 'explorer':
-        setEditor({ showing: true, name: 'Explore Name', record: record });
-        break;
-      case 'add':
-        setEditor({ showing: true, record: {} });
-        break;
-      case 'edit':
-        if (record) setEditor({ showing: true, name: 'Edit Name', record: record });
-        break;
-      case 'close':
-      case 'cancel':
-        setEditor({ showing: false, record: {} });
-        break;
-      case 'okay':
-        {
-          const url = 'http://localhost:8080/names';
-          let query = 'editcmd=edit';
+  const dataUrl = 'http://localhost:8080/names';
+  const cmdUrl = 'http://localhost:8080/names';
+
+  const dataQuery = 'verbose=10&all&expand';
+  function addendum(record) {
+    return '&verbose=10&expand' + (record ? (record.is_custom ? '&to_custom' : '') : '');
+  }
+
+  const namesHandler = useCallback(
+    (action) => {
+      const record_id = action.record_id;
+      let record = filtered.filter((record) => {
+        return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
+      });
+      if (record) record = record[0];
+      switch (action.type.toLowerCase()) {
+        case 'set-tags':
+          setTag(action.payload);
+          localStorage.setItem('namesTag', action.payload);
+          break;
+        case 'explorer':
+          setEditor({ showing: true, name: 'Explore Name', record: record });
+          break;
+        case 'add':
+          setEditor({ showing: true, record: {} });
+          break;
+        case 'edit':
+          if (record) setEditor({ showing: true, name: 'Edit Name', record: record });
+          break;
+        case 'close':
+        case 'cancel':
+          setEditor({ showing: false, record: {} });
+          break;
+        case 'okay':
+          // let query = 'editcmd=edit';
           // query += record ? 'edit' : 'add';
           // query += '&term=';
           // query += "!" + (record ? record.)
@@ -60,85 +70,72 @@ export const Names = () => {
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
-          sendServerCommand(url, query).then(() => {
-            // we assume the delete worked, so we don't reload the data
-          });
-          dispatch(action);
+          // setLoading(true);
+          // dispatch(action);
+          // sendServerCommand(url, query).then(() => {
+          //  // we assume the delete worked, so we don't reload the data
+          //  setLoading(false);
+          // });
           setEditor({ showing: false, record: {} });
-        }
-        break;
-      case 'delete':
-        {
-          //dispatch(action);
-          let url = 'http://localhost:8080/names';
-          let query = 'editcmd=delete';
-          query += '&terms=' + action.record_id;
-          query += '&verbose=10';
-          query += '&expand';
-          query += record ? (record.is_custom ? '&to_custom' : '') : '';
-          sendServerCommand(url, query).then(() => {
-            // we assume the delete worked, so we don't reload the data
-            url = 'http://localhost:8080/names';
-            query = 'verbose=10&all&expand';
-            refreshData(url, query, dispatch);
-          });
-        }
-        break;
-      case 'undelete':
-        {
-          //dispatch(action);
-          let url = 'http://localhost:8080/names';
-          let query = 'editcmd=undelete';
-          query += '&terms=' + action.record_id;
-          query += '&verbose=10';
-          query += '&expand';
-          query += record ? (record.is_custom ? '&to_custom' : '') : '';
-          sendServerCommand(url, query).then(() => {
-            // we assume the delete worked, so we don't reload the data
-            url = 'http://localhost:8080/names';
-            query = 'all&expand';
-            refreshData(url, query, dispatch);
-          });
-        }
-        break;
-      case 'remove':
-        {
-          let url = 'http://localhost:8080/names';
-          let query = 'editcmd=remove';
-          query += '&terms=' + action.record_id;
-          query += '&verbose=10';
-          query += '&expand';
-          query += record ? (record.is_custom ? '&to_custom' : '') : '';
-          sendServerCommand(url, query).then((theData) => {
-            // the command worked, but now we need to reload the data
-            url = 'http://localhost:8080/names';
-            query = 'all&expand';
-            refreshData(url, query, dispatch);
-          });
-        }
-        break;
-      case 'externallink':
-        navigate('https://etherscan.io/address/' + action.record_id, true);
-        break;
-      // EXISTING_CODE
-      // EXISTING_CODE
-      default:
-        break;
-    }
-  };
+          break;
+        case 'delete':
+          {
+            const cmdQuery = 'editcmd=delete&terms=' + action.record_id + addendum(record);
+            // const cmdQuery = 'verbose=10&address=' + action.record_id;
+            setLoading(true);
+            dispatch(action);
+            sendServerCommand(cmdUrl, cmdQuery).then(() => {
+              // we assume the delete worked, so we don't reload the data
+              setLoading(false);
+            });
+          }
+          break;
+        case 'undelete':
+          {
+            const cmdQuery = 'editcmd=undelete&terms=' + action.record_id + addendum(record);
+            // const cmdQuery = 'verbose=10&address=' + action.record_id;
+            setLoading(true);
+            dispatch(action);
+            sendServerCommand(cmdUrl, cmdQuery).then(() => {
+              // we assume the delete worked, so we don't reload the data
+              setLoading(false);
+            });
+          }
+          break;
+        case 'remove':
+          {
+            const cmdQuery = 'editcmd=remove&terms=' + action.record_id + addendum(record);
+            // const cmdQuery = 'verbose=10&address=' + action.record_id + '&yes';
+            setLoading(true);
+            sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
+              // the command worked, but now we need to reload the data
+              refreshData(dataUrl, dataQuery, dispatch);
+              setLoading(false);
+            });
+          }
+          break;
+        case 'externallink':
+          navigate('https://etherscan.io/address/' + action.record_id, true);
+          break;
+        // EXISTING_CODE
+        // EXISTING_CODE
+        default:
+          break;
+      }
+    },
+    [dispatch, filtered]
+  );
 
-  const url = 'http://localhost:8080/names';
-  let query = 'verbose=10&all&expand';
   useEffect(() => {
-    refreshData(url, query, dispatch);
-  }, [query, dispatch]);
+    refreshData(dataUrl, dataQuery, dispatch);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, namesHandler, { type: 'Add' }));
     return () => {
       Mousetrap.unbind(['plus']);
     };
-  }, []);
+  }, [namesHandler]);
 
   useMemo(() => {
     // prettier-ignore
@@ -155,13 +152,12 @@ export const Names = () => {
     setFiltered(result);
   }, [names, curTag]);
 
+  // EXISTING_CODE
+  // EXISTING_CODE
+
   return (
     <div>
-      {/*<pre>url: {url + "?" + query}</pre>*/}
-      {/* prettier-ignore */}
-      {tagList.length ? (
-        <ButtonCaddie name="Tags" buttons={tagList} current={curTag} action="set-tags" handler={namesHandler} />
-      ) : null}
+      <PageCaddie caddieName="Tags" caddieData={tagList} current={curTag} handler={namesHandler} loading={loading} />
       <DataTable
         name={'namesTable'}
         data={filtered}
@@ -173,18 +169,16 @@ export const Names = () => {
         recordIcons={recordIconList}
         buttonHandler={namesHandler}
       />
-      {editor.showing && (
-        <Modal showing={true} handler={namesHandler}>
-          {/* prettier-ignore */}
-          <ObjectTable
+      <Modal showing={editor.showing} handler={namesHandler}>
+        {/* prettier-ignore */}
+        <ObjectTable
             data={editor.record}
             columns={namesSchema}
             title={editor.name}
             editable={true}
             showHidden={true}
           />
-        </Modal>
-      )}
+      </Modal>
     </div>
   );
 };
@@ -195,6 +189,7 @@ const recordIconList = [
   'header-Add',
   'Delete/Undelete',
   'Edit/Remove',
+  'Explorer/None',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',
@@ -274,7 +269,6 @@ export const namesSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    hidden: true,
     width: 1,
     searchable: true,
     onDisplay: getFieldValue,

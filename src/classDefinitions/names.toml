@@ -1,9 +1,10 @@
 [settings]
 class = "CNames"
-recordIcons = "viewing,editing,exporting,importing"
+recordIcons = "viewing,editing,exploring,exporting,importing"
 defaultSort = "tags,address,name"
 url = "http://localhost:8080/names"
 query = "verbose=10&all"
+cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]
 list = [

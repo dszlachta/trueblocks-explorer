@@ -3,7 +3,7 @@ import React from 'react';
 import { handleClick } from 'components/utils';
 
 export const ButtonCaddie = ({ name, buttons, current, action, handler }) => {
-  if (buttons.length === 0) return <div className="warning">no buttons provided to ButtonCaddie</div>;
+  if (buttons.length === 0) return <div></div>;
   if (!handler) return <div className="warning">No handler given to ButtonCaddie</div>;
 
   return (
