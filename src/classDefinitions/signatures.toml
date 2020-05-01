@@ -4,7 +4,6 @@ recordIcons = "editing,exporting"
 defaultSort = "encoding,type,name"
 dataUrl = "http://localhost:8080/abi"
 dataQuery = "verbose=10&monitored&known"
-cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]
 list = [

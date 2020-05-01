@@ -28,7 +28,7 @@ export const Collections = () => {
   const [loading, setLoading] = useState(false);
 
   const dataUrl = 'http://localhost:8080/names';
-  const cmdUrl = 'http://localhost:8080/rm';
+  const cmdUrl = 'http://localhost:8080/names';
 
   const dataQuery = 'verbose=10&collections';
   function addendum(record, record_id) {
@@ -252,6 +252,7 @@ export const useCollections = () => {
 function getFieldValue(record, fieldName) {
   // EXISTING_CODE
   // EXISTING_CODE
+  return record[fieldName];
 }
 
 // EXISTING_CODE
@@ -269,6 +270,7 @@ export const collectionsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    hidden: true,
     searchable: true,
   },
   {

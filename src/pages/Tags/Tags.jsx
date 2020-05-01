@@ -28,7 +28,7 @@ export const Tags = () => {
   const [loading, setLoading] = useState(false);
 
   const dataUrl = 'http://localhost:8080/names';
-  const cmdUrl = 'http://localhost:8080/rm';
+  const cmdUrl = 'http://localhost:8080/names';
 
   const dataQuery = 'verbose=10&tags';
   function addendum(record, record_id) {
@@ -256,14 +256,15 @@ function getFieldValue(record, fieldName) {
       return record.tags;
     case 'tags':
       return array.length > 0 ? array[0] : '';
-    case 'substag1':
+    case 'subtags1':
       return array.length > 1 ? array[1] : '';
-    case 'substag2':
+    case 'subtags2':
       return array.length > 2 ? array[2] : '';
     default:
       break;
   }
   // EXISTING_CODE
+  return record[fieldName];
 }
 
 // EXISTING_CODE
@@ -276,6 +277,7 @@ export const tagsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    hidden: true,
     searchable: true,
     onDisplay: getFieldValue,
   },

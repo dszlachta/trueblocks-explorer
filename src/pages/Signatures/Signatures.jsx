@@ -28,7 +28,7 @@ export const Signatures = () => {
   const [loading, setLoading] = useState(false);
 
   const dataUrl = 'http://localhost:8080/abi';
-  const cmdUrl = 'http://localhost:8080/rm';
+  const cmdUrl = 'http://localhost:8080/abi';
 
   const dataQuery = 'verbose=10&monitored&known';
   function addendum(record, record_id) {
@@ -281,6 +281,7 @@ function getFieldValue(record, fieldName) {
       break;
   }
   // EXISTING_CODE
+  return record[fieldName];
 }
 
 // EXISTING_CODE

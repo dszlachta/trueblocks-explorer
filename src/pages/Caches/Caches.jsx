@@ -261,6 +261,7 @@ function getFieldValue(record, fieldName) {
       break;
   }
   // EXISTING_CODE
+  return record[fieldName];
 }
 
 // EXISTING_CODE

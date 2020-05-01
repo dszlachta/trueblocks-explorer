@@ -28,7 +28,7 @@ export const Other = () => {
   const [loading, setLoading] = useState(false);
 
   const dataUrl = 'http://localhost:8080/when';
-  const cmdUrl = 'http://localhost:8080/rm';
+  const cmdUrl = 'http://localhost:8080/when';
 
   const dataQuery = 'verbose=10&list';
   function addendum(record, record_id) {
@@ -256,6 +256,7 @@ function getFieldValue(record, fieldName) {
       break;
   }
   // EXISTING_CODE
+  return record[fieldName];
 }
 
 // EXISTING_CODE
