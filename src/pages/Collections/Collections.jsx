@@ -31,9 +31,12 @@ export const Collections = () => {
   const cmdUrl = 'http://localhost:8080/rm';
 
   const dataQuery = 'verbose=10&collections';
-  //function addendum(record) {
-  //  return '&verbose=10&expand' + (record ? (record.is_custom ? '&to_custom' : '') : '');
-  //}
+  function addendum(record, record_id) {
+    let ret = '&verbose=10';
+    // EXISTING_CODE
+    // EXISTING_CODE
+    return ret;
+  }
 
   const collectionsHandler = useCallback(
     (action) => {
@@ -61,7 +64,7 @@ export const Collections = () => {
           setEditor({ showing: false, record: {} });
           break;
         case 'okay':
-          // let query = 'editcmd=edit';
+          // let query = 'editCmd=edit';
           // query += record ? 'edit' : 'add';
           // query += '&term=';
           // query += "!" + (record ? record.)
@@ -80,8 +83,7 @@ export const Collections = () => {
           break;
         case 'delete':
           {
-            // const cmdQuery = 'editcmd=delete&terms=' + action.record_id + addendum(record);
-            const cmdQuery = 'verbose=10&address=' + action.record_id;
+            const cmdQuery = 'editCmd=delete&terms=' + action.record_id + addendum(record, action.record_id);
             setLoading(true);
             dispatch(action);
             sendServerCommand(cmdUrl, cmdQuery).then(() => {
@@ -92,8 +94,7 @@ export const Collections = () => {
           break;
         case 'undelete':
           {
-            // const cmdQuery = 'editcmd=undelete&terms=' + action.record_id + addendum(record);
-            const cmdQuery = 'verbose=10&address=' + action.record_id;
+            const cmdQuery = 'editCmd=undelete&terms=' + action.record_id + addendum(record, action.record_id);
             setLoading(true);
             dispatch(action);
             sendServerCommand(cmdUrl, cmdQuery).then(() => {
@@ -104,8 +105,7 @@ export const Collections = () => {
           break;
         case 'remove':
           {
-            // const cmdQuery = 'editcmd=remove&terms=' + action.record_id + addendum(record);
-            const cmdQuery = 'verbose=10&address=' + action.record_id + '&yes';
+            const cmdQuery = 'editCmd=remove&terms=' + action.record_id + addendum(record, action.record_id);
             setLoading(true);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
@@ -157,7 +157,14 @@ export const Collections = () => {
 
   return (
     <div>
-      <PageCaddie caddieName="Tags" caddieData={tagList} current={curTag} handler={collectionsHandler} loading={loading} />
+      {/* prettier-ignore */}
+      <PageCaddie
+        caddieName="Tags"
+        caddieData={tagList}
+        current={curTag}
+        handler={collectionsHandler}
+        loading={loading}
+      />
       <DataTable
         name={'collectionsTable'}
         data={filtered}

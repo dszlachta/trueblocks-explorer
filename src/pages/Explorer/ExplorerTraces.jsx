@@ -47,8 +47,8 @@ export const ExplorerTraces = () => {
 
   useArrowKeys(tracesHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, tracesHandler]);
 
-  let query = 'transactions=' + current + '&verbose=10';
   const url = 'http://localhost:8080/traces';
+  let query = 'transactions=' + current + '&verbose=10';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
       let result = theData.data;

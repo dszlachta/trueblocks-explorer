@@ -47,8 +47,8 @@ export const Explorer[{PROPER}] = () => {
 
   useArrowKeys([{LONG}]Handler, [dispatch, explorer.blockNumber, explorer.transactionIndex, [{LONG}]Handler]);
 
-  let query = '[{QUERY}]';
-  const url = '[{URL}]';
+  const url = '[{DATAURL}]';
+  let query = '[{DATAQUERY}]';
   useEffect(() => {
     getServerData(url, query).then((theData) => {
       let result = theData.data;

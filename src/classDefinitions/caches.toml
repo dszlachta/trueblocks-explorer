@@ -2,9 +2,9 @@
 class = "CCaches"
 recordIcons =  "editing,exporting"
 defaultSort = "path"
-url = "http://localhost:8080/status"
-query = "verbose=10&modes=abis%20caches&types=all&details&depth=1"
-cmdUrl = "http://localhost:8080/rm"
+dataUrl = "http://localhost:8080/status"
+dataQuery = "verbose=10&modes=abis%20caches&types=all&details&depth=1"
+# cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]
 list = [

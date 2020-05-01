@@ -2,8 +2,8 @@
 class = "CCollections"
 recordIcons =  "editing,exporting"
 defaultSort = "tags,name,client"
-url = "http://localhost:8080/names"
-query = "verbose=10&collections"
+dataUrl = "http://localhost:8080/names"
+dataQuery = "verbose=10&collections"
 cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]

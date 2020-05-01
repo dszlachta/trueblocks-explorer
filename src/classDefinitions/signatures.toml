@@ -2,8 +2,8 @@
 class = "CSignatures"
 recordIcons = "editing,exporting"
 defaultSort = "encoding,type,name"
-url = "http://localhost:8080/abi"
-query = "verbose=10&monitored&known"
+dataUrl = "http://localhost:8080/abi"
+dataQuery = "verbose=10&monitored&known"
 cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]
