@@ -32,21 +32,18 @@ export const Digests = () => {
   const [source] = useState(currentPage().subpage);
   const [query] = useState('modes=index&details&verbose=10');
 
-  const digestsHandler = useCallback(
-    (action) => {
-      switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('digestsTag', action.payload);
-          break;
-        // EXISTING_CODE
-        // EXISTING_CODE
-        default:
-          break;
-      }
-    },
-    []
-  );
+  const digestsHandler = useCallback((action) => {
+    switch (action.type.toLowerCase()) {
+      case 'set-tags':
+        setTag(action.payload);
+        localStorage.setItem('digestsTag', action.payload);
+        break;
+      // EXISTING_CODE
+      // EXISTING_CODE
+      default:
+        break;
+    }
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -97,14 +94,7 @@ export const Digests = () => {
     );
     //
   } else {
-    view = (
-      <GridTable
-        data={filtered}
-        columns={digestsSchema}
-        title="Grid View"
-        meta={status}
-        pagination={true}
-      />;
+    view = <GridTable data={filtered} columns={digestsSchema} title="Grid View" meta={status} pagination={true} />;
     //
   }
 
