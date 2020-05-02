@@ -1,6 +1,6 @@
-import { PageCaddie } from './PageCaddie/PageCaddie';
-import { ButtonCaddie } from './ButtonCaddie/ButtonCaddie';
-import { Caddie } from './Caddie/Caddie';
+import { PageCaddie } from './Caddies/PageCaddie/PageCaddie';
+import { ButtonCaddie } from './Caddies/ButtonCaddie/ButtonCaddie';
+import { Caddie } from './Caddies/Caddie/Caddie';
 import { Card } from './Card/Card';
 import { Menu, MenuItem } from './Menu/Menu';
 import { IconTray, ClickableIcon } from './IconTray/IconTray';

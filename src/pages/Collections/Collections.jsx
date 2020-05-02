@@ -270,7 +270,6 @@ export const collectionsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    hidden: true,
     searchable: true,
   },
   {

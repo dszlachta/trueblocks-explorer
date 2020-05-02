@@ -53,18 +53,6 @@ export const systemCheck = (data, name) => {
   return result;
 };
 
-//-----------------------------------------------------
-export function pad2(n) {
-  const str = JSON.stringify(n);
-  if (str.length >= 2) return str;
-  const fix = Array(2 - str.length)
-    .fill()
-    .map((_, idx) => idx);
-  return fix.reduce((s, i) => {
-    return '0' + s;
-  }, str);
-}
-
 /**
  *
  * stateFromStorage

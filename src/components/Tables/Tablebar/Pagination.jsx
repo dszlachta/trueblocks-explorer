@@ -26,7 +26,7 @@ export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curP
       Mousetrap.unbind(['down']);
       Mousetrap.unbind(['right']);
     };
-  }, [handler]);
+  }, [handler, pagingCtx]);
 
   if (!enabled) return <div></div>; // we need this div so spacing of title works right
   if (!handler) return <div className="warning">Pagination is enabled, but no handler given</div>;
@@ -108,8 +108,9 @@ const Selector = ({ handler, pagingCtx }) => {
 
 //-----------------------------------------------------------------
 function isDisabled(pagingCtx, which) {
+  if (which === 'up' || which === 'down') return false; // up and down (i.e. select row) are handled by the table component
   const { perPage, curPage, total } = pagingCtx;
-  if (which === 'home' || which === 'up' || which === 'left') return curPage === 0;
+  if (which === 'home' || which === 'left') return curPage === 0;
   return curPage === Math.floor(total / perPage) - !(total % perPage);
 }
 

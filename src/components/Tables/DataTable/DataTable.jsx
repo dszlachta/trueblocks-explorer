@@ -50,6 +50,7 @@ export const DataTable = ({
         const newCtx = { perPage: action.payload, curPage: 0, total: filteredData.length, arrowsOnly: arrowsOnly };
         setPaging(newCtx);
         localStorage.setItem('paging', JSON.stringify(newCtx));
+        setSelectedRow(calcValue(filteredData[0], idCol));
         break;
       case 'sortBy':
         let newSort1 = sortCtx1;
@@ -72,10 +73,12 @@ export const DataTable = ({
         localStorage.setItem(name + '_sort1', JSON.stringify(newSort1));
         localStorage.setItem(name + '_sort2', JSON.stringify(newSort2));
         setPaging({ ...pagingCtx, curPage: 0, total: filteredData.length });
+        setSelectedRow(calcValue(filteredData[0], idCol));
         break;
 
       case 'home':
         setPaging({ ...pagingCtx, curPage: 0, total: filteredData.length });
+        setSelectedRow(calcValue(filteredData[0], idCol));
         break;
       case 'end':
         setPaging({
@@ -83,20 +86,42 @@ export const DataTable = ({
           curPage: Math.floor(filteredData.length / perPage) - !(filteredData.length % perPage),
           total: filteredData.length,
         });
+        setSelectedRow(calcValue(filteredData[filteredData.length - 1], idCol));
         break;
 
       case 'right':
-        setPaging({ ...pagingCtx, curPage: curPage + 1, total: filteredData.length });
+        {
+          setPaging({ ...pagingCtx, curPage: curPage + 1, total: filteredData.length });
+          setSelectedRow(calcValue(filteredData[perPage * (curPage + 1)], idCol));
+        }
         break;
       case 'left':
         setPaging({ ...pagingCtx, curPage: curPage - 1, total: filteredData.length });
+        setSelectedRow(calcValue(filteredData[perPage * (curPage - 1)], idCol));
         break;
 
       case 'down':
-        setPaging({ ...pagingCtx, curPage: curPage + 1, total: filteredData.length });
+        {
+          let curIndex = -1;
+          filteredData.map((item, index) => {
+            if (calcValue(item, idCol) === selectedRow) {
+              curIndex = index;
+            }
+          });
+          if (curIndex < filteredData.length - 1) setSelectedRow(calcValue(filteredData[curIndex + 1], idCol));
+          if (curIndex === pagingCtx.perPage * (pagingCtx.curPage + 1) - 1) dataTableHandler({ type: 'right' });
+        }
         break;
       case 'up':
-        setPaging({ ...pagingCtx, curPage: curPage - 1, total: filteredData.length });
+        {
+          let curIndex = -1;
+          filteredData.map((item, index) => {
+            if (calcValue(item, idCol) === selectedRow) {
+              curIndex = index;
+            }
+          });
+          if (curIndex > 0) setSelectedRow(calcValue(filteredData[curIndex - 1], idCol));
+        }
         break;
 
       case 'row_click':
@@ -139,7 +164,6 @@ export const DataTable = ({
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
   const showTools = title !== '' || search || pagination;
-
   const headerIcons = recordIcons.filter((icon) => icon.includes('header-'));
   const footerIcons = recordIcons.filter((icon) => icon.includes('footer-'));
   const rowIcons = recordIcons.filter((icon) => !icon.includes('header-') && !icon.includes('footer-'));

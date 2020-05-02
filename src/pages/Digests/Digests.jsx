@@ -1,8 +1,20 @@
-import React, { useEffect, useState, useContext } from 'react';
+/*
+ * This file was generated with makeClass. Edit only those parts of the code inside
+ * of 'EXISTING_CODE' tags.
+ */
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 
-import { DataTable, GridTable, ChartTable } from 'components';
-import { currentPage, getServerData, pad2 } from 'components/utils';
 import GlobalContext, { useStatusMeta } from 'store';
+
+import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { getServerData, currentPage, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { calcValue } from 'store';
+
+import { GridTable, ChartTable } from 'components';
+
+// EXISTING_CODE
+// EXISTING_CODE
 
 import './Digests.css';
 
@@ -10,24 +22,39 @@ import './Digests.css';
 export const Digests = () => {
   const { digests, dispatch } = useDigests();
 
-  const [tableType, setTableType] = useState(localStorage.getItem('digest-table-type'));
-  const [start, setStart] = useState(0);
+  //const [filtered, setFiltered] = useState(digestsDefault);
+  const [tagList, setTagList] = useState([]);
+  const [searchFields] = useState(defaultSearch);
+  const [curTag, setTag] = useState(localStorage.getItem('digestsTag'));
+  const [loading, setLoading] = useState(false);
 
+  const [start, setStart] = useState(0);
   const [source] = useState(currentPage().subpage);
   const [query] = useState('modes=index&details&verbose=10');
 
-  const changeTableType = (newType) => {
-    localStorage.setItem('digest-table-type', newType);
-    setTableType(newType);
-  };
+  const digestsHandler = useCallback((action) => {
+    switch (action.type.toLowerCase()) {
+      case 'set-tags':
+        setTag(action.payload);
+        localStorage.setItem('digestsTag', action.payload);
+        break;
+      // EXISTING_CODE
+      // EXISTING_CODE
+      default:
+        break;
+    }
+  }, []);
 
   useEffect(() => {
-    dispatch({ type: 'loading', payload: true });
+    setLoading(true);
     getServerData('http://localhost:8080/status', query).then((theData) => {
-      dispatch({ type: 'update', payload: theData.data[0].caches[0].items });
+      dispatch({ type: 'success', payload: theData.data[0].caches[0].items });
+      setLoading(false);
     });
-    dispatch({ type: 'loading', payload: true });
   }, [source, query, dispatch]);
+
+  // EXISTING_CODE
+  // EXISTING_CODE
 
   useEffect(() => {}, [start]);
 
@@ -35,14 +62,25 @@ export const Digests = () => {
   const largest = meta.client === 'n/a' ? meta.unripe : meta.client;
   const status = { max: largest, completed: meta.finalized };
 
-  let filtered = digests;
-  if (tableType === 'graph-view') filtered = digests.filter((digest) => digest.firstAppearance >= start);
+  let filtered = curTag === 'graph-view' ? digests.filter((digest) => digest.firstAppearance >= start) : digests;
 
   let view = undefined;
-  if (tableType === 'data-view') {
-    view = <DataTable data={filtered} columns={digestsSchema} title="Table View" search={false} pagination={true} />;
+  if (curTag === 'data-view') {
+    view = (
+      <DataTable
+        name={'digestsTable'}
+        data={filtered}
+        columns={digestsSchema}
+        title="Digests"
+        search={false}
+        searchFields={searchFields}
+        pagination={true}
+        recordIcons={recordIconList}
+        buttonHandler={digestsHandler}
+      />
+    );
     //
-  } else if (tableType === 'graph-view') {
+  } else if (curTag === 'graph-view') {
     view = (
       <ChartTable
         columns={digestsSchema}
@@ -60,17 +98,33 @@ export const Digests = () => {
     //
   }
 
-  const next = (start + 3000000) % 9000000;
   return (
     <div>
-      <button onClick={() => changeTableType('grid-view')}>grid view</button>
-      <button onClick={() => changeTableType('data-view')}>table view</button>
-      <button onClick={() => changeTableType('graph-view')}>graph view</button>
-      <button onClick={() => setStart(next)}>ignore ddos</button>
+      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'grid-view' })}>grid view</button>
+      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'data-view' })}>table view</button>
+      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'graph-view' })}>graph view</button>
+      <button onClick={() => setStart((start + 3000000) % 9000000)}>ignore ddos</button>
       {view}
     </div>
   );
 };
+
+// auto-generate: page-settings
+const recordIconList = [];
+const defaultSort = [];
+const defaultSearch = [];
+// auto-generate: page-settings
+
+//----------------------------------------------------------------------
+function refreshData(url, query, dispatch) {
+  getServerData(url, query).then((theData) => {
+    let result = theData.data;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: sorted });
+  });
+}
 
 //----------------------------------------------------------------------
 export const digestsDefault = [];
@@ -78,15 +132,28 @@ export const digestsDefault = [];
 //----------------------------------------------------------------------
 export const digestsReducer = (state, action) => {
   let ret = state;
-  switch (action.type) {
-    case 'update':
+  switch (action.type.toLowerCase()) {
+    /*
+    case 'undelete':
+    case 'delete':
+      {
+        const record = ret.filter((r) => {
+          const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
+          return val === action.record_id;
+        })[0];
+        if (record) {
+          record.deleted = !record.deleted;
+          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+        }
+      }
+      break;
+    */
+    case 'success':
       ret = action.payload;
       break;
     default:
     // do nothing
   }
-  // TODO(tjayrush): this data is on the backend -- we do not store it locally
-  // localStorage.setItem('digestsState', JSON.stringify(ret));
   return ret;
 };
 
@@ -97,6 +164,7 @@ export const useDigests = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  // EXISTING_CODE
   switch (fieldName) {
     case 'id':
       return record.filename.replace('.bin', '');
@@ -136,7 +204,12 @@ function getFieldValue(record, fieldName) {
     default:
       break;
   }
+  // EXISTING_CODE
+  return record[fieldName];
 }
+
+// EXISTING_CODE
+// EXISTING_CODE
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -295,3 +368,15 @@ export const digestsSchema = [
   },
 ];
 // auto-generate: schema
+
+//-----------------------------------------------------
+export function pad2(n) {
+  const str = JSON.stringify(n);
+  if (str.length >= 2) return str;
+  const fix = Array(2 - str.length)
+    .fill()
+    .map((_, idx) => idx);
+  return fix.reduce((s, i) => {
+    return '0' + s;
+  }, str);
+}

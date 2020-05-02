@@ -162,6 +162,7 @@ export const SettingsSchemas = () => {
       <div>
         <br />
         <DataTable
+          name={'schemaTable'}
           key={matched.name + 'm'}
           title={'Schema for ' + matched.name.replace('Schema', '')}
           data={matched.schema}
@@ -188,6 +189,7 @@ export const SettingsSchemas = () => {
         <div></div>
         <div>
           <DataTable
+            name={'mocksTable'}
             key={matched.name + 'm'}
             title={''}
             data={mocks}

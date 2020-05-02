@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 
 import { DataTable, GridTable, ChartTable } from 'components';
-import { currentPage, getServerData, pad2 } from 'components/utils';
+import { currentPage, getServerData } from 'components/utils';
 import GlobalContext, { useStatusMeta } from 'store';
 
 import './Monitors.css';
@@ -114,10 +114,10 @@ function getFieldValue(record, fieldName) {
       s = s % 60;
       return (
         (d === 0 ? '' : d + 'd ') +
-        (d === 0 && h === 0 ? '' : (d === 0 ? h : pad2(h)) + 'h ') +
-        pad2(m) +
+        (d === 0 && h === 0 ? '' : (d === 0 ? h : p ad2(h)) + 'h ') +
+        p ad2(m) +
         'm ' +
-        pad2(s) +
+        p ad2(s) +
         's'
       );
     }

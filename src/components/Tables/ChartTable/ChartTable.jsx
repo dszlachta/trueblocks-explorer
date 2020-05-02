@@ -185,6 +185,7 @@ function Scatter({ data, columns, chartCtx }) {
       </div>
       <div>
         <DataTable
+          name="chartSideTable"
           style={{ justifySelf: 'center' }}
           data={data}
           columns={dtCols}
