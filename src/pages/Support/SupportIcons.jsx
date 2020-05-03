@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 
 import Add from 'assets/icons/Add';
+import AddMonitor from 'assets/icons/AddMonitor';
 import BarChart from 'assets/icons/BarChart';
 import ExternalLink from 'assets/icons/ExternalLink';
 import ChevronDown from 'assets/icons/ChevronDown';
@@ -27,6 +28,7 @@ import ToggleLeft from 'assets/icons/ToggleLeft';
 import ToggleRight from 'assets/icons/ToggleRight';
 import Twitter from 'assets/icons/Twitter';
 import Undelete from 'assets/icons/Undelete';
+import ViewMonitor from 'assets/icons/ViewMonitor';
 
 import {
   Dashboard,
@@ -43,12 +45,12 @@ import {
 } from 'assets/icons/SetMenus';
 
 export const SupportIcons = () => {
-  const size = 25;
+  const size = 23;
   const fill = 'orange';
   const color = 'black';
   const style = {
-    height: '40px',
-    width: '40px',
+    height: '38px',
+    width: '38px',
     margin: '6px',
   };
 
@@ -70,21 +72,22 @@ export const SupportIcons = () => {
       ],
     },
     {
-      group: 'Navigation / Editing',
+      group: 'Monitors',
+      items: [
+        { name: 'Add Monitor', component: <AddMonitor size={size} color={color} fill={fill} style={style} /> },
+        { name: 'View Monitor', component: <ViewMonitor size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Paused', component: <ToggleLeft size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Active', component: <ToggleRight size={size} color={color} fill={fill} style={style} /> },
+      ],
+    },
+    {
+      group: 'Editing',
       items: [
         { name: 'Add', component: <Add size={size} color={color} fill={fill} style={style} /> },
-        { name: 'Delete', component: <Delete size={size} color={color} fill={fill} style={style} /> },
         { name: 'Edit', component: <Edit size={size} color={color} fill={fill} style={style} /> },
-        { name: 'Remove', component: <Remove size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Delete', component: <Delete size={size} color={color} fill={fill} style={style} /> },
         { name: 'Undelete', component: <Undelete size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ChevronDown', component: <ChevronDown size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ChevronLeft', component: <ChevronLeft size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ChevronRight', component: <ChevronRight size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ChevronUp', component: <ChevronUp size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ChevronsDown', component: <ChevronsDown size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ChevronsLeft', component: <ChevronsLeft size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ChevronsRight', component: <ChevronsRight size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ChevronsUp', component: <ChevronsUp size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Remove', component: <Remove size={size} color={color} fill={fill} style={style} /> },
       ],
     },
     {
@@ -98,18 +101,29 @@ export const SupportIcons = () => {
       ],
     },
     {
+      group: 'Navigation',
+      items: [
+        { name: 'ChevronDown', component: <ChevronDown size={size} color={color} fill={fill} style={style} /> },
+        { name: 'ChevronLeft', component: <ChevronLeft size={size} color={color} fill={fill} style={style} /> },
+        { name: 'ChevronRight', component: <ChevronRight size={size} color={color} fill={fill} style={style} /> },
+        { name: 'ChevronUp', component: <ChevronUp size={size} color={color} fill={fill} style={style} /> },
+        { name: 'ChevronsDown', component: <ChevronsDown size={size} color={color} fill={fill} style={style} /> },
+        { name: 'ChevronsLeft', component: <ChevronsLeft size={size} color={color} fill={fill} style={style} /> },
+        { name: 'ChevronsRight', component: <ChevronsRight size={size} color={color} fill={fill} style={style} /> },
+        { name: 'ChevronsUp', component: <ChevronsUp size={size} color={color} fill={fill} style={style} /> },
+      ],
+    },
+    {
       group: 'Other Icons',
       items: [
         { name: 'BarChart', component: <BarChart size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ExternalLink', component: <ExternalLink size={size} color={color} fill={fill} style={style} /> },
+        { name: 'External', component: <ExternalLink size={size} color={color} fill={fill} style={style} /> },
         { name: 'GridIcon', component: <GridIcon size={size} color={color} fill={fill} style={style} /> },
-        { name: 'HelpCircle', component: <HelpCircle size={size} color={color} fill={fill} style={style} /> },
-        { name: 'Plus', component: <Plus size={size} color={color} fill={fill} style={style} /> },
-        { name: 'PlusCircle', component: <PlusCircle size={size} color={color} fill={fill} style={style} /> },
-        { name: 'PlusSquare', component: <PlusSquare size={size} color={color} fill={fill} style={style} /> },
-        { name: 'Settings', component: <Settings size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ToggleLeft', component: <ToggleLeft size={size} color={color} fill={fill} style={style} /> },
-        { name: 'ToggleRight', component: <ToggleRight size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Help', component: <HelpCircle size={size} color={color} fill={fill} style={style} /> },
+        // { name: 'Plus', component: <Plus size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Plus', component: <PlusCircle size={size} color={color} fill={fill} style={style} /> },
+        // { name: 'PlusSquare', component: <PlusSquare size={size} color={color} fill={fill} style={style} /> },
+        // { name: 'Settings', component: <Settings size={size} color={color} fill={fill} style={style} /> },
       ],
     },
   ];

@@ -24,8 +24,11 @@ export const Tags = () => {
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('tagsTag') || 'All');
-  const [editor, setEditor] = useState({ showing: false, record: {} });
+  const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [loading, setLoading] = useState(false);
+
+  // EXISTING_CODE
+  // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/names';
   const cmdUrl = 'http://localhost:8080/names';
@@ -50,18 +53,15 @@ export const Tags = () => {
           setTag(action.payload);
           localStorage.setItem('tagsTag', action.payload);
           break;
-        case 'explorer':
-          setEditor({ showing: true, name: 'Explore Tag', record: record });
-          break;
         case 'add':
-          setEditor({ showing: true, record: {} });
+          setEditDialog({ showing: true, record: {} });
           break;
         case 'edit':
-          if (record) setEditor({ showing: true, name: 'Edit Tag', record: record });
+          if (record) setEditDialog({ showing: true, name: 'Edit Tag', record: record });
           break;
         case 'close':
         case 'cancel':
-          setEditor({ showing: false, record: {} });
+          setEditDialog({ showing: false, record: {} });
           break;
         case 'okay':
           // let query = 'editCmd=edit';
@@ -79,7 +79,7 @@ export const Tags = () => {
           //  // we assume the delete worked, so we don't reload the data
           //  setLoading(false);
           // });
-          setEditor({ showing: false, record: {} });
+          setEditDialog({ showing: false, record: {} });
           break;
         case 'delete':
           {
@@ -152,6 +152,7 @@ export const Tags = () => {
     setFiltered(result);
   }, [tags, curTag]);
 
+  let custom = null;
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -176,16 +177,17 @@ export const Tags = () => {
         recordIcons={recordIconList}
         buttonHandler={tagsHandler}
       />
-      <Modal showing={editor.showing} handler={tagsHandler}>
+      <Modal showing={editDialog.showing} handler={tagsHandler}>
         {/* prettier-ignore */}
         <ObjectTable
-            data={editor.record}
+            data={editDialog.record}
             columns={tagsSchema}
-            title={editor.name}
+            title={editDialog.name}
             editable={true}
             showHidden={true}
           />
       </Modal>
+      {custom}
     </div>
   );
 };

@@ -16,7 +16,17 @@ import {
   Settings,
   Support,
 } from 'assets/icons/SetMenus';
-import { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink } from 'assets/icons/SetEdit';
+import {
+  ToggleLeft,
+  ToggleRight,
+  Add,
+  Edit,
+  Delete,
+  Undelete,
+  Remove,
+  ExternalLink,
+  AddMonitor,
+} from 'assets/icons/SetEdit';
 import GridIcon from 'assets/icons/GridIcon';
 
 import './Utils.css';
@@ -55,6 +65,8 @@ export function getIcon(labelIn, expanded = false, pad = false, size = 20) {
       return <ToggleRight key={'micon-' + label} size={size} className={cn} />;
     case 'add':
       return <Add key={'micon-' + label} size={size} className={cn} />;
+    case 'addmonitor':
+      return <AddMonitor key={'micon-' + label} size={size} className={cn} />;
     case 'edit':
       return <Edit key={'micon-' + label} size={size} className={cn} />;
     case 'delete':
@@ -76,6 +88,6 @@ export function getIcon(labelIn, expanded = false, pad = false, size = 20) {
     case 'import':
       return <button>{labelIn}</button>;
     default:
-      return null;
+      return <div>{'Unknown icon: ' + label}</div>;
   }
 }

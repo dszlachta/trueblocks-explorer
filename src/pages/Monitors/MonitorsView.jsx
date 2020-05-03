@@ -337,7 +337,6 @@ const recordIconList = [
   'header-Add',
   'Delete/Undelete',
   'Edit/Remove',
-  'Explorer/None',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',

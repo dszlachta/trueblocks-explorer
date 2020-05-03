@@ -32,7 +32,6 @@ export const StatusPanel = () => {
         <Fragment>
           <StatusReport />
           <StatusError error={error} errMsg={'Error: Is the API running?'} />
-          {/*<StatusError error={!systemCheck(status, 'node')} errMsg={'Error: Is the Ethereum node running?'} />*/}
         </Fragment>
       )}
     </Panel>
@@ -71,74 +70,6 @@ const StatusReport = () => {
     <div className={`${scraperOkay ? 'connected' : 'disconnected'}`}>{scraperOkay ? 'Scraping' : 'Not scraping'}</div>
   );
 
-  var final_behind = '';
-  if (client > 0) {
-    final_behind = '(';
-    final_behind += (client - finalized).toString();
-    var mins = (Math.floor(((client - finalized) * 100) / (60 / 14)) / 100).toString();
-    var x = mins + ' minutes';
-    if (mins > 120) {
-      x = fmtNum(mins / 60, 1, ' ') + ' hrs';
-    }
-    if (mins > 60 * 24) {
-      x = fmtNum(mins / (60 * 24), 1, ' ') + ' days';
-    }
-    final_behind += ' behind, ' + x;
-    final_behind += ')';
-  }
-
-  var staging_behind = '';
-  if (client > 0) {
-    staging_behind = '(' + (client - staging).toString();
-    mins = (Math.floor(((client - staging) * 100) / (60 / 14)) / 100).toString();
-    x = mins + ' minutes';
-    if (mins > 120) {
-      x = fmtNum(mins / 60, 1, ' ') + ' hrs';
-    }
-    if (mins > 60 * 24) {
-      x = fmtNum(mins / (60 * 24), 1, ' ') + ' days';
-    }
-    staging_behind += ' behind, ' + x;
-    staging_behind += ')';
-  }
-
-  var unripe_behind = '';
-  if (client > 0) {
-    unripe_behind = '(';
-    if (client - unripe > 0) {
-      unripe_behind += (client - unripe).toString();
-      unripe_behind += ' behind';
-    } else {
-      unripe_behind += 'caught up';
-    }
-    unripe_behind += ')';
-  }
-
-  const fDetails = (
-    <>
-      <br />
-      <small>
-        <i>{final_behind}</i>
-      </small>
-    </> //
-  );
-  const sDetails = (
-    <>
-      <br />
-      <small>
-        <i>{staging_behind}</i>
-      </small>
-    </> //
-  );
-  const uDetails = (
-    <>
-      <br />
-      <small>
-        <i>{unripe_behind}</i>
-      </small>
-    </> //
-  );
-
   return (
     <div>
       <div className="status-details">
@@ -154,21 +85,22 @@ const StatusReport = () => {
             name="Final"
             value={fmtNum(meta.finalized)}
             icon={getIcon('GreenLight', false, false, 20)}
-            details={fDetails}
+            details={<DetailItem value={behindText(finalized, client)} />}
           />
           <SectionItem
             name="Staging"
             value={fmtNum(meta.staging)}
             icon={getIcon('YellowLight', false, false, 20)}
-            details={sDetails}
+            details={<DetailItem value={behindText(staging, client)} />}
           />
           <SectionItem
             name="Unripe"
             value={fmtNum(meta.unripe)}
             icon={getIcon('RedLight', false, false, 20)}
-            details={uDetails}
+            details={<DetailItem value={behindText(staging, unripe, true)} />}
           />
-          <pre>{JSON.stringify(status.caches, null, 2)}</pre>
+          <SectionItem name="Monitors" value={fmtNum(meta.unripe)} />
+          <SectionItem name="Slurps" value={fmtNum(meta.unripe)} />
         </Section>
 
         <Section title="Options">
@@ -222,3 +154,42 @@ const Section = ({ title, children }) => {
     </> //
   );
 };
+
+//----------------------------------------------------------------------
+const DetailItem = ({ value }) => {
+  return (
+    <Fragment>
+      <br />
+      <small>
+        <i>{value}</i>
+      </small>
+    </Fragment> //
+  );
+};
+
+//----------------------------------------------------------------------
+function behindText(value, client, unripe = false) {
+  if (client === 0) return '';
+  let ret = '(';
+  if (unripe) {
+    if (client - client > 0) {
+      ret += (client - client).toString();
+      ret += ' behind';
+    } else {
+      ret += 'caught up';
+    }
+  } else {
+    ret += (client - value).toString();
+    let mins = (Math.floor(((client - value) * 100) / (60 / 14)) / 100).toString();
+    let x = mins + ' mins';
+    if (mins > 120) {
+      x = fmtNum(mins / 60, 1, ' ') + ' hrs';
+    }
+    if (mins > 60 * 24) {
+      x = fmtNum(mins / (60 * 24), 1, ' ') + ' days';
+    }
+    ret += ' behind, ' + x;
+  }
+  ret += ')';
+  return ret;
+}

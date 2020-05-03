@@ -36,7 +36,7 @@ export const DataTable = ({
   const [sortCtx2, setSortCtx2] = useState(stateFromStorage(name + '_sort2', { sortBy: '', sortDir: 'asc' }));
 
   const dataTableHandler = (action) => {
-    console.log(action);
+    // console.log(action);
     const { perPage, curPage } = pagingCtx;
     switch (action.type) {
       case 'update_filter':
@@ -289,7 +289,7 @@ const DataTableRows = ({
           const rowKey = key + '_r';
           const isSelected = id === selectedRow;
           if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
-          const deleted = record.deleted;
+          const deleted = record.deleted || record.monitored;
           return (
             <Fragment>
               <div
@@ -305,7 +305,6 @@ const DataTableRows = ({
                   if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) return null;
                   let type = column.type ? column.type : 'string';
                   let value = calcValue(record, column);
-                  const deleted = record.deleted;
                   value = formatFieldByType(type, value, column.decimals);
                   if (!value || value === undefined) value = type === 'spacer' ? '' : '-';
                   let cn = 'at-cell dt-cell';
@@ -334,8 +333,9 @@ const DataTableRows = ({
                       break;
                   }
                   if (column.isPill) {
-                    cn += ' at-pill center ';
-                    cn += type === 'bool' ? (record[column.selector] ? 'true' : 'false') : record[column.selector];
+                    cn += ' at-pill center';
+                    cn += ' ';
+                    cn += type === 'bool' ? (calcValue(record, column) ? 'true' : 'false') : calcValue(record, column);
                   }
                   if (column.align) {
                     cn += ' ' + column.align;

@@ -27,8 +27,11 @@ export const Monitors = () => {
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('monitorsTag') || 'All');
-  const [editor, setEditor] = useState({ showing: false, record: {} });
+  const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [loading, setLoading] = useState(false);
+
+  // EXISTING_CODE
+  // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/status';
   const cmdUrl = 'http://localhost:8080/rm';
@@ -54,18 +57,15 @@ export const Monitors = () => {
           setTag(action.payload);
           localStorage.setItem('monitorsTag', action.payload);
           break;
-        case 'explorer':
-          setEditor({ showing: true, name: 'Explore Monitor', record: record });
-          break;
         case 'add':
-          setEditor({ showing: true, record: {} });
+          setEditDialog({ showing: true, record: {} });
           break;
         case 'edit':
-          if (record) setEditor({ showing: true, name: 'Edit Monitor', record: record });
+          if (record) setEditDialog({ showing: true, name: 'Edit Monitor', record: record });
           break;
         case 'close':
         case 'cancel':
-          setEditor({ showing: false, record: {} });
+          setEditDialog({ showing: false, record: {} });
           break;
         case 'okay':
           // let query = 'editCmd=edit';
@@ -83,7 +83,7 @@ export const Monitors = () => {
           //  // we assume the delete worked, so we don't reload the data
           //  setLoading(false);
           // });
-          setEditor({ showing: false, record: {} });
+          setEditDialog({ showing: false, record: {} });
           break;
         case 'delete':
           {
@@ -122,6 +122,9 @@ export const Monitors = () => {
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
         // EXISTING_CODE
+        case 'explorer':
+          setEditDialog({ showing: true, name: 'Explore Monitor', record: record });
+          break;
         // EXISTING_CODE
         default:
           break;
@@ -156,6 +159,7 @@ export const Monitors = () => {
     setFiltered(result);
   }, [monitors, curTag]);
 
+  let custom = null;
   // EXISTING_CODE
   const subpage = currentPage().subpage;
   switch (subpage) {
@@ -187,16 +191,17 @@ export const Monitors = () => {
         recordIcons={recordIconList}
         buttonHandler={monitorsHandler}
       />
-      <Modal showing={editor.showing} handler={monitorsHandler}>
+      <Modal showing={editDialog.showing} handler={monitorsHandler}>
         {/* prettier-ignore */}
         <ObjectTable
-            data={editor.record}
+            data={editDialog.record}
             columns={monitorsSchema}
-            title={editor.name}
+            title={editDialog.name}
             editable={true}
             showHidden={true}
           />
       </Modal>
+      {custom}
     </div>
   );
 };
@@ -207,7 +212,7 @@ const recordIconList = [
   'header-Add',
   'Delete/Undelete',
   'Edit/Remove',
-  'Explorer/None',
+  'ViewMonitor/None',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',

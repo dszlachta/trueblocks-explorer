@@ -24,8 +24,11 @@ export const Other = () => {
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('otherTag') || 'All');
-  const [editor, setEditor] = useState({ showing: false, record: {} });
+  const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [loading, setLoading] = useState(false);
+
+  // EXISTING_CODE
+  // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/when';
   const cmdUrl = 'http://localhost:8080/when';
@@ -50,18 +53,15 @@ export const Other = () => {
           setTag(action.payload);
           localStorage.setItem('otherTag', action.payload);
           break;
-        case 'explorer':
-          setEditor({ showing: true, name: 'Explore Other', record: record });
-          break;
         case 'add':
-          setEditor({ showing: true, record: {} });
+          setEditDialog({ showing: true, record: {} });
           break;
         case 'edit':
-          if (record) setEditor({ showing: true, name: 'Edit Other', record: record });
+          if (record) setEditDialog({ showing: true, name: 'Edit Other', record: record });
           break;
         case 'close':
         case 'cancel':
-          setEditor({ showing: false, record: {} });
+          setEditDialog({ showing: false, record: {} });
           break;
         case 'okay':
           // let query = 'editCmd=edit';
@@ -79,7 +79,7 @@ export const Other = () => {
           //  // we assume the delete worked, so we don't reload the data
           //  setLoading(false);
           // });
-          setEditor({ showing: false, record: {} });
+          setEditDialog({ showing: false, record: {} });
           break;
         case 'delete':
           {
@@ -152,6 +152,7 @@ export const Other = () => {
     setFiltered(result);
   }, [other, curTag]);
 
+  let custom = null;
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -176,16 +177,17 @@ export const Other = () => {
         recordIcons={recordIconList}
         buttonHandler={otherHandler}
       />
-      <Modal showing={editor.showing} handler={otherHandler}>
+      <Modal showing={editDialog.showing} handler={otherHandler}>
         {/* prettier-ignore */}
         <ObjectTable
-            data={editor.record}
+            data={editDialog.record}
             columns={otherSchema}
-            title={editor.name}
+            title={editDialog.name}
             editable={true}
             showHidden={true}
           />
       </Modal>
+      {custom}
     </div>
   );
 };
