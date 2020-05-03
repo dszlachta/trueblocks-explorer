@@ -22,11 +22,11 @@ export const MonitorsView = ({ address }) => {
   const [query] = useState('modes=index&details&verbose=10');
 
   useEffect(() => {
-    dispatch({ type: 'loading', payload: true });
+    dispatch({ type: 'loadi ng', payload: true });
     getServerData('http://localhost:8080/status', query).then((theData) => {
       dispatch({ type: 'update', payload: theData.data[0].caches[0].items });
     });
-    dispatch({ type: 'loading', payload: true });
+    dispatch({ type: 'l oading', payload: true });
   }, [source, query, dispatch]);
 
   useEffect(() => {}, [start]);

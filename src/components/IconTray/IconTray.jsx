@@ -5,7 +5,7 @@ import { getIcon } from 'pages/utils';
 
 import './IconTray.css';
 
-export const IconTray = ({ iconList, handler, record_id, alt = false }) => {
+export const IconTray = ({ iconList, handler, record_id, alt = { deleted: false, monitored: false } }) => {
   if (!iconList || iconList.length === 0) return <div></div>;
   return (
     <div
@@ -17,7 +17,10 @@ export const IconTray = ({ iconList, handler, record_id, alt = false }) => {
     >
       {iconList.map((a) => {
         const alternates = a.replace('footer-', '').replace('header-', '').split('/');
-        const icon = alternates.length < 2 ? alternates[0] : alternates[alt ? 1 : 0];
+        const icon =
+          alternates.length < 2
+            ? alternates[0]
+            : alternates[alt.deleted ? 1 : alternates.length < 3 ? 0 : alt.monitored ? 2 : 0];
         if (icon === '' || icon === 'None') return null;
         return <ClickableIcon icon={icon} handler={handler} record_id={record_id} />;
       })}

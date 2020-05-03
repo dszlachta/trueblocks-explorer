@@ -13,7 +13,6 @@ export const MenuPanel = () => {
   const [selected, setSelected] = useState('');
 
   const menuHandler = (action) => {
-    console.log(action);
     switch (action.type) {
       case 'menu-clicked':
         setSelected(selected);

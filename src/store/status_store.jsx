@@ -25,7 +25,7 @@ export const statusDefault = {
 export const statusReducer = (state, action) => {
   switch (action.type) {
     case 'loading':
-      return { ...state, loading: true };
+      return { ...state, loading: action.payload };
     case 'success':
       return { ...action.payload, loading: false };
     case 'fail':
@@ -73,3 +73,6 @@ export const useMonitorMap = () => {
   }, {});
   return result;
 };
+
+export const LOADING = { type: 'loading', payload: true };
+export const NOT_LOADING = { type: 'loading', payload: false };

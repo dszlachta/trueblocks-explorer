@@ -11,24 +11,28 @@ import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'compone
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+
+import './Monitors.css';
+
 // EXISTING_CODE
 import { MonitorsView } from './MonitorsView';
 import { useStatusData } from 'store';
 import { currentPage } from 'components/utils';
 // EXISTING_CODE
 
-import './Monitors.css';
-
 //---------------------------------------------------------------------------
 export const Monitors = () => {
   const { monitors, dispatch } = useMonitors();
+  const loading = useStatus().state.loading;
+  const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(monitorsDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('monitorsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
-  const [loading, setLoading] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -77,44 +81,44 @@ export const Monitors = () => {
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
-          // setLoading(true);
+          // statusDispatch(LOADING);
           // dispatch(action);
           // sendServerCommand(url, query).then(() => {
           //  // we assume the delete worked, so we don't reload the data
-          //  setLoading(false);
+          //  statusDispatch(NOT_LOADING);
           // });
           setEditDialog({ showing: false, record: {} });
           break;
         case 'delete':
           {
             const cmdQuery = 'editCmd=delete&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             dispatch(action);
             sendServerCommand(cmdUrl, cmdQuery).then(() => {
               // we assume the delete worked, so we don't reload the data
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
         case 'undelete':
           {
             const cmdQuery = 'editCmd=undelete&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             dispatch(action);
             sendServerCommand(cmdUrl, cmdQuery).then(() => {
               // we assume the delete worked, so we don't reload the data
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
         case 'remove':
           {
             const cmdQuery = 'editCmd=remove&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
               refreshMonitorsData(dataUrl, dataQuery, dispatch);
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
@@ -122,8 +126,8 @@ export const Monitors = () => {
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
         // EXISTING_CODE
-        case 'explorer':
-          setEditDialog({ showing: true, name: 'Explore Monitor', record: record });
+        case 'viewmonitor':
+          navigate('/monitors/view/' + action.record_id, false);
           break;
         // EXISTING_CODE
         default:
@@ -310,7 +314,7 @@ export const monitorsSchema = [
     name: 'Tags',
     selector: 'tags',
     type: 'string',
-    width: 4,
+    width: 3,
     editable: true,
     searchable: true,
   },
@@ -318,14 +322,14 @@ export const monitorsSchema = [
     name: 'Address',
     selector: 'address',
     type: 'address',
-    width: 7,
+    width: 6,
     searchable: true,
   },
   {
     name: 'Name',
     selector: 'name',
     type: 'string',
-    width: 8,
+    width: 7,
     editable: true,
     searchable: true,
   },
@@ -344,7 +348,7 @@ export const monitorsSchema = [
     selector: 'source',
     type: 'string',
     hidden: true,
-    width: 8,
+    width: 4,
     editable: true,
     searchable: true,
   },
@@ -353,7 +357,7 @@ export const monitorsSchema = [
     selector: 'decimals',
     type: 'uint64',
     hidden: true,
-    width: 4,
+    width: 3,
     align: 'center',
   },
   {
@@ -383,7 +387,7 @@ export const monitorsSchema = [
     name: 'Count',
     selector: 'nAppearances',
     type: 'blknum',
-    width: 1,
+    width: 2,
   },
   {
     name: 'Last Export',

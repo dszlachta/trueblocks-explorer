@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useStatusData } from 'store';
+import { useStatus, useStatusData } from 'store';
 import { currentPage, systemCheck } from 'components/utils';
 
 import { SettingsSystems } from './SettingsSystems';
@@ -8,8 +8,9 @@ import { SettingsSkins } from './SettingsSkins';
 import { SettingsSchemas } from './SettingsSchemas';
 
 export const Settings = () => {
+  const loading = useStatus().state.loading;
   const status = useStatusData();
-  if (!systemCheck(status, 'api') || !systemCheck(status, 'node')) return <SettingsSystems />;
+  if ((!loading && !systemCheck(status, 'api')) || !systemCheck(status, 'node')) return <SettingsSystems />;
 
   const subpage = currentPage().subpage;
   switch (subpage) {

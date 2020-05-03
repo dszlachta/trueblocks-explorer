@@ -18,7 +18,7 @@ export const StatusPanel = () => {
       dispatch({ type: 'fail', error: error, payload: statusDefault });
     } else {
       if (!data) {
-        dispatch({ type: 'loading' });
+        dispatch({ type: 'loading', payload: true });
       } else {
         dispatch({ type: 'success', payload: data });
       }

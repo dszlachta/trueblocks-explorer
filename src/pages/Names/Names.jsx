@@ -11,22 +11,25 @@ import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'compone
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
-// EXISTING_CODE
-import { useMonitorMap } from 'store/status_store';
-// EXISTING_CODE
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 
 import './Names.css';
+
+// EXISTING_CODE
+// EXISTING_CODE
 
 //---------------------------------------------------------------------------
 export const Names = () => {
   const { names, dispatch } = useNames();
+  const loading = useStatus().state.loading;
+  const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(namesDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('namesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
-  const [loading, setLoading] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -45,7 +48,6 @@ export const Names = () => {
 
   const namesHandler = useCallback(
     (action) => {
-      console.log(action);
       const record_id = action.record_id;
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
@@ -76,44 +78,44 @@ export const Names = () => {
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
-          // setLoading(true);
+          // statusDispatch(LOADING);
           // dispatch(action);
           // sendServerCommand(url, query).then(() => {
           //  // we assume the delete worked, so we don't reload the data
-          //  setLoading(false);
+          //  statusDispatch(NOT_LOADING);
           // });
           setEditDialog({ showing: false, record: {} });
           break;
         case 'delete':
           {
             const cmdQuery = 'editCmd=delete&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             dispatch(action);
             sendServerCommand(cmdUrl, cmdQuery).then(() => {
               // we assume the delete worked, so we don't reload the data
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
         case 'undelete':
           {
             const cmdQuery = 'editCmd=undelete&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             dispatch(action);
             sendServerCommand(cmdUrl, cmdQuery).then(() => {
               // we assume the delete worked, so we don't reload the data
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
         case 'remove':
           {
             const cmdQuery = 'editCmd=remove&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
               refreshNamesData(dataUrl, dataQuery, dispatch);
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
@@ -121,8 +123,12 @@ export const Names = () => {
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
         // EXISTING_CODE
-        case 'explorer':
+        case 'addmonitor':
           setEditDialog({ showing: true, name: 'Add Monitor', record: record });
+          break;
+        case 'viewmonitor':
+          statusDispatch(LOADING);
+          navigate('/monitors/view/' + action.record_id, false);
           break;
         // EXISTING_CODE
         default:
@@ -204,7 +210,7 @@ const recordIconList = [
   'header-Add',
   'Delete/Undelete',
   'Edit/Remove',
-  'AddMonitor/ViewMonitor',
+  'AddMonitor/None/ViewMonitor',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',

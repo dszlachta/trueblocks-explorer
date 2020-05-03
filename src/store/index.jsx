@@ -31,6 +31,13 @@ export function getPrimaryKey(columns) {
 }
 
 //-----------------------------------------------------------------
+export function getAltIconKey(columns) {
+  const ret = columns.filter((c) => c.selector === 'monitored');
+  if (ret) return ret;
+  return columns.filter((c) => c.selector === 'deleted');
+}
+
+//-----------------------------------------------------------------
 export function calcValue(record, column) {
   if (column.onDisplay) return column.onDisplay(record, column.selector);
   if (!record || record === undefined) return '';

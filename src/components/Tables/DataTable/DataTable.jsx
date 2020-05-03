@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 
 import { Tablebar, ObjectTable, IconTray } from 'components';
 import { createClass } from 'components/utils';
-import { calcValue, getPrimaryKey } from 'store';
+import { calcValue, getPrimaryKey, getAltIconKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
 import { hasFields, matches } from './utils';
 
@@ -36,7 +36,6 @@ export const DataTable = ({
   const [sortCtx2, setSortCtx2] = useState(stateFromStorage(name + '_sort2', { sortBy: '', sortDir: 'asc' }));
 
   const dataTableHandler = (action) => {
-    // console.log(action);
     const { perPage, curPage } = pagingCtx;
     switch (action.type) {
       case 'update_filter':
@@ -162,6 +161,7 @@ export const DataTable = ({
 
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
+  const altIconCol = getAltIconKey(columns);
 
   const showTools = title !== '' || search || pagination;
   const headerIcons = recordIcons.filter((icon) => icon.includes('header-'));
@@ -177,9 +177,10 @@ export const DataTable = ({
   createClass('#whatever-' + name, str);
   createClass('#whatever-row-' + name, str);
 
+  const debug = false;
   return (
     <Fragment key="dt">
-      {/*<pre>{JSON.stringify(selectedRow, null, 2)}</pre>*/}
+      {debug && <pre>{JSON.stringify(altIconCol, null, 2)}</pre>}
       {showTools && (
         <Tablebar
           title={title}
@@ -205,6 +206,7 @@ export const DataTable = ({
         columns={columns}
         hasData={hasData}
         idCol={idCol}
+        altIconCol={altIconCol}
         handler={dataTableHandler}
         expandedRow={expandedRow}
         selectedRow={selectedRow}
@@ -259,7 +261,7 @@ const DataTableHeader = ({
           </div>
         );
       })}
-      <IconTray iconList={headerIcons} handler={handler} record_id={null} alt={false} />
+      <IconTray iconList={headerIcons} handler={handler} record_id={null} />
     </div>
   );
 };
@@ -273,14 +275,17 @@ const DataTableRows = ({
   expandedRow,
   handler,
   idCol,
+  altIconCol,
   firstInPage,
   lastInPage,
   rowIcons,
   showHidden,
   name,
 }) => {
+  const debug = false;
   return (
     <Fragment>
+      {debug && <pre>{JSON.stringify(altIconCol, null, 2)}</pre>}
       {hasData ? (
         data.map((record, index) => {
           // ...for each row
@@ -289,9 +294,12 @@ const DataTableRows = ({
           const rowKey = key + '_r';
           const isSelected = id === selectedRow;
           if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
-          const deleted = record.deleted || record.monitored;
+          const deleted = record.deleted;
+          let monitored = false;
           return (
             <Fragment>
+              {/*<pre>{JSON.stringify(altIconCol, null, 2)}</pre>*/}
+              {/*<pre>{monitored ? 'true' : 'false'}</pre>*/}
               <div
                 className={'at-row dt-row' + (isSelected ? ' selected' : '') + (deleted ? ' at-deleted' : '')}
                 id={'whatever-row-' + name}
@@ -301,7 +309,6 @@ const DataTableRows = ({
               >
                 {columns.map((column) => {
                   // ...for each column
-                  const key = id + column.name + '-' + index;
                   if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) return null;
                   let type = column.type ? column.type : 'string';
                   let value = calcValue(record, column);
@@ -340,6 +347,9 @@ const DataTableRows = ({
                   if (column.align) {
                     cn += ' ' + column.align;
                   }
+                  if (column.selector === 'monitored') {
+                    monitored = calcValue(record, column);
+                  }
                   return (
                     <div className={cn}>
                       {column.isPill && !handler && (
@@ -349,9 +359,15 @@ const DataTableRows = ({
                     </div>
                   );
                 })}
+                {/*<pre>monitored2: {monitored ? 'true' : 'false'}</pre>*/}
                 <div style={{ display: 'inline' }}>
-                  {/*<div>{deleted ? 'deleted' : 'not deleted'}</div>*/}
-                  <IconTray iconList={rowIcons} handler={handler} record_id={id} alt={deleted} />
+                  {<div>{monitored}</div>}
+                  <IconTray
+                    iconList={rowIcons}
+                    handler={handler}
+                    record_id={id}
+                    alt={{ deleted: deleted, monitored: monitored }}
+                  />
                 </div>
               </div>
               {key === expandedRow && <DataTableExpandedRow record={record} columns={columns} handler={handler} />}

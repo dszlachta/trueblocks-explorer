@@ -11,21 +11,25 @@ import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'compone
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
-// EXISTING_CODE
-// EXISTING_CODE
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 
 import './Caches.css';
+
+// EXISTING_CODE
+// EXISTING_CODE
 
 //---------------------------------------------------------------------------
 export const Caches = () => {
   const { caches, dispatch } = useCaches();
+  const loading = useStatus().state.loading;
+  const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(cachesDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('cachesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
-  const [loading, setLoading] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -73,44 +77,44 @@ export const Caches = () => {
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
-          // setLoading(true);
+          // statusDispatch(LOADING);
           // dispatch(action);
           // sendServerCommand(url, query).then(() => {
           //  // we assume the delete worked, so we don't reload the data
-          //  setLoading(false);
+          //  statusDispatch(NOT_LOADING);
           // });
           setEditDialog({ showing: false, record: {} });
           break;
         case 'delete':
           {
             const cmdQuery = 'editCmd=delete&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             dispatch(action);
             sendServerCommand(cmdUrl, cmdQuery).then(() => {
               // we assume the delete worked, so we don't reload the data
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
         case 'undelete':
           {
             const cmdQuery = 'editCmd=undelete&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             dispatch(action);
             sendServerCommand(cmdUrl, cmdQuery).then(() => {
               // we assume the delete worked, so we don't reload the data
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
         case 'remove':
           {
             const cmdQuery = 'editCmd=remove&terms=' + action.record_id + addendum(record, action.record_id);
-            setLoading(true);
+            statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
               refreshCachesData(dataUrl, dataQuery, dispatch);
-              setLoading(false);
+              statusDispatch(NOT_LOADING);
             });
           }
           break;
