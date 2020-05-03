@@ -3,72 +3,43 @@ import React, { useState } from 'react';
 import { DataTable, ObjectTable, ButtonCaddie } from 'components';
 import { stateFromStorage } from 'components/utils';
 
-import { menuSchema } from 'pages/';
-
-import { dashboardSchema } from 'pages/Dashboard/Dashboard';
-import { collectionsSchema } from 'pages/Collections/Collections';
-import { monitorsSchema } from 'pages/Monitors/Monitors';
-import { explorerSchema } from 'pages/Explorer/Explorer';
-import { blocksSchema } from 'pages/Explorer/ExplorerBlocks';
-import { transactionsSchema } from 'pages/Explorer/ExplorerTransactions';
-import { receiptsSchema } from 'pages/Explorer/ExplorerReceipts';
-import { logsSchema } from 'pages/Explorer/ExplorerLogs';
-import { tracesSchema } from 'pages/Explorer/ExplorerTraces';
-import { traceActionsSchema } from 'pages/Explorer/ExplorerTraceActions';
-import { traceResultsSchema } from 'pages/Explorer/ExplorerTraceResults';
-import { appearancesSchema } from 'pages/Explorer/ExplorerAppearances';
 import { abisSchema } from 'pages/Explorer/ExplorerAbis';
+import { appearancesSchema } from 'pages/Explorer/ExplorerAppearances';
+import { blocksSchema } from 'pages/Explorer/ExplorerBlocks';
+import { cachesSchema } from 'pages/Caches/Caches';
+import { collectionsSchema } from 'pages/Collections/Collections';
+import { dashboardSchema } from 'pages/Dashboard/Dashboard';
+import { digestsSchema } from 'pages/Digests/Digests';
+import { explorerSchema } from 'pages/Explorer/Explorer';
 import { functionsSchema } from 'pages/Explorer/ExplorerFunctions';
+import { logsSchema } from 'pages/Explorer/ExplorerLogs';
+import { menuSchema } from 'pages/index';
+import { monitorsSchema } from 'pages/Monitors/Monitors';
+import { namesSchema } from 'pages/Names/Names';
+import { otherSchema } from 'pages/Other/Other';
 import { parametersSchema } from 'pages/Explorer/ExplorerParameters';
 import { pricequotesSchema } from 'pages/Explorer/ExplorerPricequotes';
 import { pricesourcesSchema } from 'pages/Explorer/ExplorerPricesources';
-import { namesSchema } from 'pages/Names/Names';
-import { tagsSchema } from 'pages/Tags/Tags';
+import { receiptsSchema } from 'pages/Explorer/ExplorerReceipts';
 import { signaturesSchema } from 'pages/Signatures/Signatures';
-import { digestsSchema } from 'pages/Digests/Digests';
-import { cachesSchema } from 'pages/Caches/Caches';
-import { otherSchema } from 'pages/Other/Other';
 import { systemsSchema } from 'pages/Settings/SettingsSystems';
+import { tagsSchema } from 'pages/Tags/Tags';
+import { traceActionsSchema } from 'pages/Explorer/ExplorerTraceActions';
+import { traceResultsSchema } from 'pages/Explorer/ExplorerTraceResults';
+import { tracesSchema } from 'pages/Explorer/ExplorerTraces';
+import { transactionsSchema } from 'pages/Explorer/ExplorerTransactions';
+import { viewSchema } from 'pages/Monitors/MonitorsView';
 
 //------------------------------------------------------------------------------
 export const SettingsSchemas = () => {
   const [current, setCurrent] = useState(stateFromStorage('current-schema', 'systemsSchema', true));
 
-  //------------------------------------------------------------------------------
-  const schemas = [
-    { group: 'system', name: 'menuSchema', schema: menuSchema },
-    { group: 'system', name: 'systemsSchema', schema: systemsSchema },
-    { group: 'system', name: 'schemasSchema', schema: schemasSchema },
-    { group: 'pages_', name: 'dashboardSchema', schema: dashboardSchema },
-    { group: 'pages_', name: 'collectionsSchema', schema: collectionsSchema },
-    { group: 'pages_', name: 'monitorsSchema', schema: monitorsSchema },
-    { group: 'pages_', name: 'explorerSchema', schema: explorerSchema },
-    { group: 'pages_', name: 'namesSchema', schema: namesSchema },
-    { group: 'pages_', name: 'tagsSchema', schema: tagsSchema },
-    { group: 'pages_', name: 'signaturesSchema', schema: signaturesSchema },
-    { group: 'pages_', name: 'digestsSchema', schema: digestsSchema },
-    { group: 'pages_', name: 'cachesSchema', schema: cachesSchema },
-    { group: 'pages_', name: 'otherSchema', schema: otherSchema },
-    { group: 'explore', name: 'abisSchema', schema: abisSchema },
-    { group: 'explore', name: 'functionsSchema', schema: functionsSchema },
-    { group: 'explore', name: 'parametersSchema', schema: parametersSchema },
-    { group: 'explore', name: 'blocksSchema', schema: blocksSchema },
-    { group: 'explore', name: 'transactionsSchema', schema: transactionsSchema },
-    { group: 'explore', name: 'receiptsSchema', schema: receiptsSchema },
-    { group: 'explore', name: 'logsSchema', schema: logsSchema },
-    { group: 'explore', name: 'tracesSchema', schema: tracesSchema },
-    { group: 'explore', name: 'traceActionsSchema', schema: traceActionsSchema },
-    { group: 'explore', name: 'traceResultsSchema', schema: traceResultsSchema },
-    { group: 'explore', name: 'appearancesSchema', schema: appearancesSchema },
-    { group: 'explore', name: 'pricequotesSchema', schema: pricequotesSchema },
-    { group: 'explore', name: 'pricesourcesSchema', schema: pricesourcesSchema },
-  ];
-
+  const schemas = useSchemas();
   const matched = schemas.filter((item) => item.name === current)[0];
   const mocks = matched ? mockData(matched.schema) : [];
   let unknown = [];
   let known = [];
-  let x = [];
+  let classes = [];
   if (matched) {
     matched.schema
       .filter((item) => {
@@ -91,7 +62,7 @@ export const SettingsSchemas = () => {
           case 'gas':
           case 'bytes32':
           case 'double':
-            x.push(item.type);
+            classes.push(item.type);
             return false;
           case 'CAbi':
           case 'CBlock':
@@ -104,7 +75,7 @@ export const SettingsSchemas = () => {
           case 'CTraceAction':
           case 'CTraceResult':
           case 'CReceipt':
-            x.push(item.type);
+            classes.push(item.type);
             return false;
           case 'CAddressArray':
           case 'CFunctionArray':
@@ -114,7 +85,7 @@ export const SettingsSchemas = () => {
           case 'CLogEntryArray':
           case 'CTraceArray':
           case 'CTransactionArray':
-            x.push(item.type);
+            classes.push(item.type);
             return false;
           default:
             unknown.push('unhandled: ' + item.type);
@@ -141,6 +112,7 @@ export const SettingsSchemas = () => {
 
   return (
     <div>
+      {/* prettier-ignore */}
       <ButtonCaddie
         name="system"
         buttons={systemList}
@@ -148,7 +120,14 @@ export const SettingsSchemas = () => {
         action="change-schema"
         handler={changeSchema}
       />
-      <ButtonCaddie name="pages_" buttons={pagesList} current={current} action="change-schema" handler={changeSchema} />
+      {/* prettier-ignore */}
+      <ButtonCaddie
+        name="pages_"
+        buttons={pagesList}
+        current={current}
+        action="change-schema"
+        handler={changeSchema}
+      />
       <ButtonCaddie
         name="explore"
         buttons={exploreList}
@@ -157,8 +136,9 @@ export const SettingsSchemas = () => {
         handler={changeSchema}
       />
       <div className="okay">{known.join(', ')}</div>
-      <div className="caution">{x.join(', ')}</div>
+      <div className="caution">{classes.join(', ')}</div>
       <div className="warning">{unknown.join(', ')}</div>
+      {/* prettier-ignore */}
       <div>
         <br />
         <DataTable
@@ -171,51 +151,88 @@ export const SettingsSchemas = () => {
           pagination={false}
         />
       </div>
-      <h4
-        style={{
-          borderTop: '2px solid brown',
-          paddingTop: '5px',
-          marginTop: '5px',
-        }}
-      >
-        Examples:{' '}
-      </h4>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 15fr 1fr 15fr 1fr',
-        }}
-      >
-        <div></div>
-        <div>
-          <DataTable
-            name={'mocksTable'}
-            key={matched.name + 'm'}
-            title={''}
-            data={mocks}
-            columns={matched.schema}
-            search={false}
-            pagination={false}
-            showHidden={true}
-          />
-          <pre>{JSON.stringify(mocks, null, 2)}</pre>
-        </div>
-        <div></div>
-        <div>
-          <ObjectTable
-            key={matched.name + 'm'}
-            title={''}
-            data={mocks[0]}
-            columns={matched.schema}
-            search={false}
-            pagination={false}
-            showHidden={true}
-          />
-        </div>
-        <div></div>
-      </div>
+      <br />
+      <table width="100%" style={{ border: '1px solid black' }}>
+        <tr>
+          <td valign="top" align="left" width="25%" style={{ border: '1px solid black' }}>
+            <h4>JSON</h4>
+            <pre>{JSON.stringify(mocks, null, 2)}</pre>
+          </td>
+          <td valign="top" align="left" width="75%" style={{ border: '1px solid black' }}>
+            <h4>Example Tables</h4>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 30fr 1fr',
+              }}
+            >
+              <div></div>
+              <div>
+                <DataTable
+                  name={'mocksTable'}
+                  key={matched.name + 'm'}
+                  title={''}
+                  data={mocks}
+                  columns={matched.schema}
+                  search={false}
+                  pagination={false}
+                  showHidden={true}
+                />
+                <br />
+              </div>
+              <div></div>
+              <div></div>
+              <div>
+                <ObjectTable
+                  key={matched.name + 'm'}
+                  title={''}
+                  data={mocks[0]}
+                  columns={matched.schema}
+                  search={false}
+                  pagination={false}
+                  showHidden={true}
+                />
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+      {/*
+       */}
     </div>
   );
+};
+
+const useSchemas = () => {
+  return [
+    { group: 'system', name: 'menuSchema', schema: menuSchema },
+    { group: 'system', name: 'systemsSchema', schema: systemsSchema },
+    { group: 'system', name: 'schemasSchema', schema: schemasSchema },
+    { group: 'pages_', name: 'dashboardSchema', schema: dashboardSchema },
+    { group: 'pages_', name: 'collectionsSchema', schema: collectionsSchema },
+    { group: 'pages_', name: 'monitorsSchema', schema: monitorsSchema },
+    { group: 'pages_', name: 'viewSchema', schema: viewSchema },
+    { group: 'pages_', name: 'explorerSchema', schema: explorerSchema },
+    { group: 'pages_', name: 'namesSchema', schema: namesSchema },
+    { group: 'pages_', name: 'tagsSchema', schema: tagsSchema },
+    { group: 'pages_', name: 'signaturesSchema', schema: signaturesSchema },
+    { group: 'pages_', name: 'digestsSchema', schema: digestsSchema },
+    { group: 'pages_', name: 'cachesSchema', schema: cachesSchema },
+    { group: 'pages_', name: 'otherSchema', schema: otherSchema },
+    { group: 'explore', name: 'abisSchema', schema: abisSchema },
+    { group: 'explore', name: 'functionsSchema', schema: functionsSchema },
+    { group: 'explore', name: 'parametersSchema', schema: parametersSchema },
+    { group: 'explore', name: 'blocksSchema', schema: blocksSchema },
+    { group: 'explore', name: 'transactionsSchema', schema: transactionsSchema },
+    { group: 'explore', name: 'receiptsSchema', schema: receiptsSchema },
+    { group: 'explore', name: 'logsSchema', schema: logsSchema },
+    { group: 'explore', name: 'tracesSchema', schema: tracesSchema },
+    { group: 'explore', name: 'traceActionsSchema', schema: traceActionsSchema },
+    { group: 'explore', name: 'traceResultsSchema', schema: traceResultsSchema },
+    { group: 'explore', name: 'appearancesSchema', schema: appearancesSchema },
+    { group: 'explore', name: 'pricequotesSchema', schema: pricequotesSchema },
+    { group: 'explore', name: 'pricesourcesSchema', schema: pricesourcesSchema },
+  ];
 };
 
 //------------------------------------------------------------------------------
@@ -246,6 +263,7 @@ function getFieldValue(record, fieldName) {
       return record[fieldName];
   }
 }
+
 //------------------------------------------------------------------------------
 // auto-generate: schema
 export const schemasSchema = [

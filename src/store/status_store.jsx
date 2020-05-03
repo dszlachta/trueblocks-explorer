@@ -60,3 +60,16 @@ export const useStatusMeta = () => {
   if (!state || !state.data || !state.data[0] || state.error) return statusDefault.meta;
   return state.meta;
 };
+export const useMonitorMap = () => {
+  const caches = useStatusData().caches;
+  const monitorCache = caches.filter((cache) => {
+    return cache.type === 'CMonitorCache';
+  });
+  if (!monitorCache || monitorCache.length === 0) return null;
+  if (!monitorCache[0].addrs) return null;
+  const result = monitorCache[0].addrs.reduce((map, item) => {
+    map[item] = true;
+    return map;
+  }, {});
+  return result;
+};

@@ -10,10 +10,10 @@
   height: calc(100vh - calc(var(--parent-gutter) * 2) - calc(var(--parent-border) * 2) - calc(var(--this-gutter) * 2));
   min-height: calc(50px + 300px + 25px);
 
-  border: var(--border-whole-page);
+  border: ridge 3px var(--lightgrey-color);
 
-  color: var(--color-whole-page);
-  background-color: var(--bgcolor-whole-page);
+  color: var(--primary-text-color);
+  background-color: var(--primary-bg-color);
 
   display: grid;
   grid-template-rows: minmax(50px, 70px) minmax(300px, auto) minmax(25px, 60px);
@@ -25,6 +25,6 @@
 .whole-page > div {
   padding-bottom: 0px !important;
   margin: var(--gutter-whole-page) var(--gutter-whole-page) 0px var(--gutter-whole-page);
-  color: var(--color-page);
-  background-color: var(--bgcolor-page);
+  color: var(--primary-text-color);
+  background-color: var(--primary-bg-color);
 }

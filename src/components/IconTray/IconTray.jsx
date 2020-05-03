@@ -36,7 +36,7 @@ export const ClickableIcon = ({ link, icon, handler, record_id }) => {
   }
 
   return (
-    <div className="clickable-icon" onClick={(e) => handleClick(e, handler, { type: icon, record_id: record_id })}>
+    <div style={{ display: 'inline' }} onClick={(e) => handleClick(e, handler, { type: icon, record_id: record_id })}>
       {getIcon(icon, false, true, 18)}
     </div>
   );

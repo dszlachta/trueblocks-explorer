@@ -2,8 +2,8 @@
 .status {
   border-left: var(--border2-panel);
   grid-area: status;
-  background-color: var(--bgcolor2-panel);
-  color: var(--color2-panel);
+  background-color: var(--secondary-bg-color);
+  color: var(--secondary-text-color);
   overflow: hidden;
 }
 
@@ -15,11 +15,11 @@
 }
 
 .status-details .disconnected {
-  color: var(--red-color);
+  color: var(--warning-bg-color);
 }
 
 .status-details .connected {
-  color: var(--green-color);
+  color: var(--okay-bg-color);
 }
 
 .status-details .separator {
@@ -29,23 +29,20 @@
 
 .status-details .left {
   width: 30%;
-  /* padding-left: 1em; */
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--lightgrey-color);
 }
 
 .status-details .right {
   width: 70%;
-  /* padding-left: 1em; */
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--lightgrey-color);
 }
 
 .status-details .doublewide {
   width: 100%;
   font-size: 0.85em;
-  /* padding-left: 2.25em; */
   padding-left: 1em;
   text-indent: -1em;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--lightgrey-color);
 }
 
 .status-details .bold {

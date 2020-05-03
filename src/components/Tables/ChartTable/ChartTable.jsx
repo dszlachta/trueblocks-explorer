@@ -201,17 +201,15 @@ function Scatter({ data, columns, chartCtx }) {
 }
 
 const Selectors = ({ fields, chartCtx }) => {
-  const selected = { backgroundColor: 'blue', color: 'white', fontSize: '.9em', margin: '2px' };
-  const notSelected = { fontSize: '.9em', margin: '2px' };
   const getStyle = (which, field) => {
-    if (which !== 'range' && which !== 'domain') return notSelected;
+    if (which !== 'range' && which !== 'domain') return 'notSelected';
     return which === 'range'
       ? field === chartCtx.range
-        ? selected
-        : notSelected
+        ? 'selected'
+        : 'notSelected'
       : field === chartCtx.domain
-      ? selected
-      : notSelected;
+      ? 'selected'
+      : 'notSelected';
   };
   const getButton = (which, column) => {
     const key = which + '_' + (column && column.selector);
@@ -219,7 +217,7 @@ const Selectors = ({ fields, chartCtx }) => {
       return (
         <button
           key={key}
-          style={getStyle(which, column.selector)}
+          className={getStyle(which, column.selector)}
           onClick={() => chartCtx.handler('setRange', column.selector)}
         >
           {column.name + (column.onDisplay ? '*' : '')}
@@ -229,7 +227,7 @@ const Selectors = ({ fields, chartCtx }) => {
       return (
         <button
           key={key}
-          style={getStyle(which, column.selector)}
+          className={getStyle(which, column.selector)}
           onClick={() => chartCtx.handler('setDomain', column.selector)}
         >
           {column.name + (column.onDisplay ? '*' : '')}
@@ -239,7 +237,7 @@ const Selectors = ({ fields, chartCtx }) => {
       return (
         <button
           key={key}
-          style={getStyle(which, '')}
+          className={getStyle(which, '')}
           onClick={() => chartCtx.handler('setRadius', (chartCtx.radius + 1) % 8)}
         >
           radius: {chartCtx.radius}
@@ -247,7 +245,7 @@ const Selectors = ({ fields, chartCtx }) => {
       );
     } else if (which === 'flip') {
       return (
-        <button key={key} style={getStyle(which, '')} onClick={() => chartCtx.handler('flip', 0)}>
+        <button key={key} className={getStyle(which, '')} onClick={() => chartCtx.handler('flip', 0)}>
           flip
         </button>
       );

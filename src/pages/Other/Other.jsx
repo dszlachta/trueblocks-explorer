@@ -109,7 +109,7 @@ export const Other = () => {
             setLoading(true);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshData(dataUrl, dataQuery, dispatch);
+              refreshOtherData(dataUrl, dataQuery, dispatch);
               setLoading(false);
             });
           }
@@ -127,7 +127,7 @@ export const Other = () => {
   );
 
   useEffect(() => {
-    refreshData(dataUrl, dataQuery, dispatch);
+    refreshOtherData(dataUrl, dataQuery, dispatch);
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
@@ -202,7 +202,7 @@ const defaultSearch = ['blockNumber', 'name', 'date'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-function refreshData(url, query, dispatch) {
+export function refreshOtherData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE

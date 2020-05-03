@@ -29,7 +29,7 @@ export const Modal = ({ showing, buttons = ['cancel', 'okay'], small = false, ha
   };
   let modalStyle = {
     backgroundColor: '#fff',
-    border: '1px solid black',
+    border: '1px solid',
     borderRadius: 5,
     maxWidth: 800,
     minHeight: 300,

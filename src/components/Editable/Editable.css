@@ -16,14 +16,11 @@
   outline: none;
   margin-top: -2px;
   margin-left: -2px;
-  background-color: lightyellow;
+  background-color: var(--editing-bg-color);
   height: 2.5em;
   width: 98%;
 }
 
 .hidden {
   display: none;
-}
-
-.prompt {
 }

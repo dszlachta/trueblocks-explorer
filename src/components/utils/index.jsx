@@ -313,3 +313,9 @@ export const useArrowKeys = (handler, deps) => {
     };
   }, deps);
 };
+
+//----------------------------------------------------------------------
+export const dataFetcher = (url) =>
+  fetch(url).then((r) => {
+    return r.json();
+  });

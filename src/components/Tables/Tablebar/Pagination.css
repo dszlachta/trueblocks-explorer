@@ -28,6 +28,6 @@
 }
 
 .pagination-icons.disabled {
-  color: lightgrey;
+  color: var(--lightgrey-color);
   cursor: auto;
 }

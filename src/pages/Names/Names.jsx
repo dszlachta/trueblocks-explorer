@@ -8,17 +8,20 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, dataFetcher } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 // EXISTING_CODE
+import { useMonitorMap } from 'store/status_store';
 // EXISTING_CODE
 
 import './Names.css';
+import { monitorsDefault } from 'pages/Monitors/MonitorsView';
 
 //---------------------------------------------------------------------------
 export const Names = () => {
   const { names, dispatch } = useNames();
+  const monitorsMap = useMonitorMap();
 
   const [filtered, setFiltered] = useState(namesDefault);
   const [tagList, setTagList] = useState([]);
@@ -110,7 +113,7 @@ export const Names = () => {
             setLoading(true);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshData(dataUrl, dataQuery, dispatch);
+              refreshNamesData(dataUrl, dataQuery, dispatch, customCallback);
               setLoading(false);
             });
           }
@@ -128,7 +131,7 @@ export const Names = () => {
   );
 
   useEffect(() => {
-    refreshData(dataUrl, dataQuery, dispatch);
+    refreshNamesData(dataUrl, dataQuery, dispatch, customCallback);
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
@@ -154,10 +157,28 @@ export const Names = () => {
   }, [names, curTag]);
 
   // EXISTING_CODE
+  let shit = [];
+  let wasHere = false;
+  function customCallback(resultIn) {
+    wasHere = true;
+    const resultOut = resultIn.map((item) => {
+      item.isMonitored = monitorsMap[item.address];
+      //if (item.isMonitored)
+      shit.push(item);
+      return item;
+    });
+    return resultOut;
+  }
   // EXISTING_CODE
 
+  // {monitors.map((monitor) => {
+  //   return <div>{monitor.address}</div>;
+  // })}
   return (
     <div>
+      {wasHere ? 'true' : 'false'}
+      {<pre>{JSON.stringify(monitorsMap, null, 2)}</pre>}
+      {<pre>{JSON.stringify(shit, null, 2)}</pre>}
       {/* prettier-ignore */}
       <PageCaddie
         caddieName="Tags"
@@ -208,10 +229,14 @@ const defaultSearch = ['tags', 'address', 'name'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-function refreshData(url, query, dispatch) {
+export function refreshNamesData(url, query, dispatch, customCallback = null) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE
+    if (customCallback) {
+      console.log('I AM HERE');
+      result = customCallback(result);
+    }
     // EXISTING_CODE
     const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: sorted });
@@ -378,6 +403,11 @@ export const namesSchema = [
     selector: 'latestAppearance',
     type: 'blknum',
     hidden: true,
+  },
+  {
+    name: 'isMonitored',
+    selector: 'monitored',
+    type: 'bool',
   },
   {
     name: 'Path',

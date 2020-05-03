@@ -113,7 +113,7 @@ export const Monitors = () => {
             setLoading(true);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshData(dataUrl, dataQuery, dispatch);
+              refreshMonitorsData(dataUrl, dataQuery, dispatch);
               setLoading(false);
             });
           }
@@ -131,7 +131,7 @@ export const Monitors = () => {
   );
 
   useEffect(() => {
-    refreshData(dataUrl, dataQuery, dispatch);
+    refreshMonitorsData(dataUrl, dataQuery, dispatch);
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
@@ -218,7 +218,7 @@ const defaultSearch = ['tags', 'address'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-function refreshData(url, query, dispatch) {
+export function refreshMonitorsData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE
@@ -305,7 +305,7 @@ export const monitorsSchema = [
     name: 'Tags',
     selector: 'tags',
     type: 'string',
-    width: 3,
+    width: 4,
     editable: true,
     searchable: true,
   },
@@ -313,14 +313,14 @@ export const monitorsSchema = [
     name: 'Address',
     selector: 'address',
     type: 'address',
-    width: 6,
+    width: 7,
     searchable: true,
   },
   {
     name: 'Name',
     selector: 'name',
     type: 'string',
-    width: 4,
+    width: 8,
     editable: true,
     searchable: true,
   },
@@ -329,7 +329,7 @@ export const monitorsSchema = [
     selector: 'symbol',
     type: 'string',
     hidden: true,
-    width: 2,
+    width: 4,
     editable: true,
     align: 'center',
     searchable: true,
@@ -339,7 +339,7 @@ export const monitorsSchema = [
     selector: 'source',
     type: 'string',
     hidden: true,
-    width: 4,
+    width: 8,
     editable: true,
     searchable: true,
   },
@@ -348,7 +348,7 @@ export const monitorsSchema = [
     selector: 'decimals',
     type: 'uint64',
     hidden: true,
-    width: 2,
+    width: 4,
     align: 'center',
   },
   {
@@ -356,7 +356,7 @@ export const monitorsSchema = [
     selector: 'description',
     type: 'string',
     hidden: true,
-    width: 4,
+    width: 8,
     editable: true,
     searchable: true,
   },
@@ -365,49 +365,59 @@ export const monitorsSchema = [
     selector: 'is_custom',
     type: 'bool',
     hidden: true,
+    width: 2,
   },
   {
     name: 'isPrefund',
     selector: 'is_prefund',
     type: 'bool',
     hidden: true,
+    width: 2,
   },
   {
-    name: 'nAppearances',
+    name: 'Count',
     selector: 'nAppearances',
     type: 'blknum',
+    width: 1,
   },
   {
     name: 'Last Export',
     selector: 'lastExport',
     type: 'blknum',
     hidden: true,
+    width: 2,
   },
   {
-    name: 'First Appearance',
+    name: 'First Block',
     selector: 'firstAppearance',
     type: 'blknum',
+    width: 2,
   },
   {
-    name: 'Latest Appearance',
+    name: 'Last Block',
     selector: 'latestAppearance',
     type: 'blknum',
+    width: 2,
   },
   {
     name: 'Path',
     selector: 'path',
     type: 'string',
     hidden: true,
+    width: 2,
   },
   {
     name: 'File Size',
     selector: 'sizeInBytes',
     type: 'filesize',
+    width: 2,
   },
   {
     name: 'Deleted',
     selector: 'deleted',
     type: 'bool',
+    hidden: true,
+    width: 2,
   },
   {
     name: 'Icons',

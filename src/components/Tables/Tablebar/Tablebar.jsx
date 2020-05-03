@@ -59,7 +59,7 @@ const TableFooterRow = ({ searchFields, footerIcons }) => {
               .join(', ')}
         </div>
       </div>
-      <div style={{ justifySelf: 'center', color: 'white' }}></div>
+      <div style={{ justifySelf: 'center' }}></div>
       <div style={style1}>
         {footerIcons.map((a) => {
           const icon = a.replace('footer-', '').split('/')[0];

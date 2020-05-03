@@ -109,7 +109,7 @@ export const [{PROPER}] = () => {
             setLoading(true);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshData(dataUrl, dataQuery, dispatch);
+              refresh[{PROPER}]Data(dataUrl, dataQuery, dispatch);
               setLoading(false);
             });
           }
@@ -127,7 +127,7 @@ export const [{PROPER}] = () => {
   );
 
   useEffect(() => {
-    refreshData(dataUrl, dataQuery, dispatch);
+    refresh[{PROPER}]Data(dataUrl, dataQuery, dispatch);
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
@@ -194,7 +194,7 @@ export const [{PROPER}] = () => {
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-function refreshData(url, query, dispatch) {
+export function refresh[{PROPER}]Data(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE

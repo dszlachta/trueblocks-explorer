@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 
 import { useToggles } from 'store';
 import { useMenus } from 'pages';
@@ -8,12 +8,24 @@ import './MenuPanel.css';
 
 //----------------------------------------------------------------------
 export const MenuPanel = () => {
-  const expanded = useToggles().state.menu;
+  const minimized = !useToggles().state.menu;
   const items = useMenus().menu.items;
+  const [selected, setSelected] = useState('');
+
+  const menuHandler = (action) => {
+    console.log(action);
+    switch (action.type) {
+      case 'menu-clicked':
+        setSelected(selected);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
-    <Panel title="Menu" type="menu" dir="left" expanded={expanded}>
-      {<Menu menu={items} expanded={expanded} />}
+    <Panel title="Menu" type="menu" dir="left" expanded={!minimized}>
+      <Menu menu={items} minimized={minimized} selected={selected} handler={menuHandler} />
     </Panel>
   );
 };

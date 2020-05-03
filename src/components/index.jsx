@@ -7,7 +7,7 @@ import { IconTray, ClickableIcon } from './IconTray/IconTray';
 import { Modal } from './Modal/Modal';
 import { Editable } from './Editable/Editable';
 import { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable } from './Tables';
-import { Panel } from './Panel/Panel';
+import { Panel } from './Panels/Panel/Panel';
 
 export {
   PageCaddie,

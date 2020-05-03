@@ -40,30 +40,28 @@ const PageHeaderUpperRight = () => {
 
   return (
     <div className="right-top">
-      <Pill text="api" status={apiOkay} errMsg={'unavailable'} decorate={true} route="/settings/api" />
-      <Pill text="node" status={nodeOkay} errMsg={'unavailable'} decorate={true} route="/settings/node" />
-      <Pill text="scraper" status={scraperOkay} errMsg={'paused'} decorate={true} route="/settings/scraper" />
-      <Pill text="sharing" status={sharingOkay} errMsg={'paused'} decorate={true} route="/settings/sharing" />
+      <Pill text="api" status={apiOkay} errMsg={'unavailable'} route="/settings/api" />
+      <Pill text="node" status={nodeOkay} errMsg={'unavailable'} route="/settings/node" />
+      <Pill text="scraper" status={scraperOkay} errMsg={'paused'} route="/settings/scraper" />
+      <Pill text="sharing" status={sharingOkay} errMsg={'paused'} route="/settings/sharing" />
     </div>
   );
 };
 
 //-----------------------------------------------------
-const Pill = ({ text, status, errMsg = 'unavailable', decorate, route }) => {
+const Pill = ({ text, status, errMsg = 'unavailable', route }) => {
   if (route !== undefined && route !== '') {
     return (
       <Link to={route}>
-        <div className={'header-pill ' + (status ? 'okay' : 'warning') + (!status && !decorate ? ' strikeout' : '')}>
-          {text + ' ' + (decorate ? (status ? 'ok' : ' : ' + errMsg) : '')}
+        <div className={'header-pill ' + (status ? 'okay' : 'warning')}>
+          {text + ' ' + (status ? 'ok' : ' : ' + errMsg)}
         </div>
       </Link>
     );
   }
 
   return (
-    <div className={'header-pill ' + (status ? 'okay' : 'warning') + (!status && !decorate ? ' strikeout' : '')}>
-      {text + (decorate ? (status ? ' ok' : ' unavailable') : '')}
-    </div>
+    <div className={'header-pill ' + (status ? 'okay' : 'warning')}>{text + (status ? ' ok' : ' unavailable')}</div>
   );
 };
 

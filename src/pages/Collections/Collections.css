@@ -5,8 +5,3 @@
   flex-wrap: wrap;
   justify-items: center;
 }
-
-.deleted-collection {
-  color: lightcoral;
-  text-decoration: line-through;
-}

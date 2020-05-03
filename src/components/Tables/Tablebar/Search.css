@@ -24,8 +24,8 @@
   border: var(--at-border1);
   border-bottom: 0px;
   outline: none;
-  color: var(--at-color);
-  background-color: var(--at-bgcolor);
+  color: var(--at-primary-text-color);
+  background-color: var(--at-primary-bg-color);
 }
 
 .clear-button:hover {

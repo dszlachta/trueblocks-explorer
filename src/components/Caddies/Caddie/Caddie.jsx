@@ -25,7 +25,7 @@ export const Caddie = ({ cn = 'caddie', title, cards, columns, withIcons }) => {
         const id = calcValue(card, idCol);
         const title = (
           <div className="inner-card-header">
-            {withIcons ? getIcon(card.name, true, true) : null}
+            {withIcons ? getIcon(card.name, true, true, 20) : null}
             {calcValue(card, nameCol)}
           </div>
         );

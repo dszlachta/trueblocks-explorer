@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { Panel } from 'components/';
-import { fmtNum, systemCheck } from 'components/utils';
+import { fmtNum, systemCheck, dataFetcher } from 'components/utils';
 import { useStatus, useStatusMeta, useStatusData, statusDefault } from 'store';
 import { useToggles } from 'store';
 import { getIcon } from 'pages/utils';
@@ -150,9 +150,25 @@ const StatusReport = () => {
         <Section title="TrueBlocks">
           <SectionItem name="API" value={status2} />
           <SectionItem name="Scraper" value={status3} />
-          <SectionItem name="Final" value={fmtNum(meta.finalized)} icon={getIcon('GreenLight')} details={fDetails} />
-          <SectionItem name="Staging" value={fmtNum(meta.staging)} icon={getIcon('YellowLight')} details={sDetails} />
-          <SectionItem name="Unripe" value={fmtNum(meta.unripe)} icon={getIcon('RedLight')} details={uDetails} />
+          <SectionItem
+            name="Final"
+            value={fmtNum(meta.finalized)}
+            icon={getIcon('GreenLight', false, false, 20)}
+            details={fDetails}
+          />
+          <SectionItem
+            name="Staging"
+            value={fmtNum(meta.staging)}
+            icon={getIcon('YellowLight', false, false, 20)}
+            details={sDetails}
+          />
+          <SectionItem
+            name="Unripe"
+            value={fmtNum(meta.unripe)}
+            icon={getIcon('RedLight', false, false, 20)}
+            details={uDetails}
+          />
+          <pre>{JSON.stringify(status.caches, null, 2)}</pre>
         </Section>
 
         <Section title="Options">
@@ -206,9 +222,3 @@ const Section = ({ title, children }) => {
     </> //
   );
 };
-
-//----------------------------------------------------------------------
-export const dataFetcher = (url) =>
-  fetch(url).then((r) => {
-    return r.json();
-  });

@@ -91,7 +91,7 @@ export const SettingsSkins = () => {
         </Present>
       </div>
       <Present>
-        <DataTable name={'testTable'} data={testData} columns={fields} title="" />
+        <DataTable name={'testTable'} title="Data Table (dt-)" data={testData} columns={fields} />
       </Present>
       <Present>
         <GridTable data={testData} columns={fields} rowSpan={1e5} />
@@ -110,5 +110,5 @@ export const SettingsSkins = () => {
 };
 
 const Present = ({ children }) => {
-  return <div style={{ border: '1px dashed black', padding: '30px', marginTop: '10px' }}>{children}</div>;
+  return <div style={{ border: '1px dashed', padding: '30px', marginTop: '10px' }}>{children}</div>;
 };

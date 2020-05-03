@@ -3,6 +3,8 @@ import React, { Fragment } from 'react';
 import { currentPage } from 'components/utils';
 import { SupportIcons } from './SupportIcons';
 
+import './Support.css';
+
 //-----------------------------------------------------------
 export const Support = () => {
   const subpage = currentPage().subpage;
@@ -165,27 +167,26 @@ export const SupportLicensing = () => {
   *------------------------------------------------------------------------*/\n`;
 
     const style1 = { marginLeft: '2%' };
-    const style2 = { backgroundColor: 'antiquewhite', color: 'darkred', width: '700px', marginLeft: '2%' };
     return (
       <Fragment>
         <h4>Licensing notes</h4>
         <p></p>
         <h5 style={style1}>{explain1}</h5>
-        <pre style={style2}>
+        <pre className="style2">
           <small>{lic1}</small>
         </pre>
         <h5 style={style1}>{explain2}</h5>
-        <pre style={style2}>
+        <pre className="style2">
           <small>{lic2}</small>
         </pre>
         <h4>Otherwise notes</h4>
         <p></p>
         <h5 style={style1}>{explain3}</h5>
-        <pre style={style2}>
+        <pre className="style2">
           <small>{lic3}</small>
         </pre>
         <h5 style={style1}>{explain4}</h5>
-        <pre style={style2}>
+        <pre className="style2">
           <small>{lic4}</small>
         </pre>
       </Fragment>

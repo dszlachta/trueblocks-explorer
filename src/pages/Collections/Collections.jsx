@@ -109,7 +109,7 @@ export const Collections = () => {
             setLoading(true);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshData(dataUrl, dataQuery, dispatch);
+              refreshCollectionsData(dataUrl, dataQuery, dispatch);
               setLoading(false);
             });
           }
@@ -127,7 +127,7 @@ export const Collections = () => {
   );
 
   useEffect(() => {
-    refreshData(dataUrl, dataQuery, dispatch);
+    refreshCollectionsData(dataUrl, dataQuery, dispatch);
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
@@ -204,7 +204,7 @@ const defaultSearch = ['tags', 'name', 'client'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-function refreshData(url, query, dispatch) {
+export function refreshCollectionsData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE
@@ -270,6 +270,7 @@ export const collectionsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    hidden: true,
     searchable: true,
   },
   {

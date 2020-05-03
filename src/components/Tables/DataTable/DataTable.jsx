@@ -174,8 +174,8 @@ export const DataTable = ({
   widStr = widStr.replace(',', '').replace('  ', ' ').replace(' 1fr)', ', 1fr)');
 
   const str = 'grid-template-columns: ' + widStr + '; display: grid;';
-  createClass('#whatever', str);
-  createClass('#whatever-row', str);
+  createClass('#whatever-' + name, str);
+  createClass('#whatever-row-' + name, str);
 
   return (
     <Fragment key="dt">
@@ -198,6 +198,7 @@ export const DataTable = ({
         sortCtx2={sortCtx2}
         handler={dataTableHandler}
         headerIcons={headerIcons}
+        name={name}
       />
       <DataTableRows
         data={filteredData}
@@ -212,6 +213,7 @@ export const DataTable = ({
         lastInPage={lastInPage}
         rowIcons={rowIcons}
         showHidden={showHidden}
+        name={name}
       />
       {search && (
         <Tablebar
@@ -234,11 +236,12 @@ const DataTableHeader = ({
   sortCtx2 = { sortBy: '', sortDir: '' },
   handler,
   headerIcons = null,
+  name,
 }) => {
   const sortIcon1 = <SortIcon dir={sortCtx1.sortDir} n={1} />;
   const sortIcon2 = <SortIcon dir={sortCtx2.sortDir} n={2} />;
   return (
-    <div id="whatever" className="at-header-base at-header dt-header" key="dt-header">
+    <div id={'whatever-' + name} className="at-header-base at-header dt-header" key="dt-header">
       {columns.map((column, index) => {
         const cellText = (
           <div style={{ display: 'inline' }}>
@@ -274,6 +277,7 @@ const DataTableRows = ({
   lastInPage,
   rowIcons,
   showHidden,
+  name,
 }) => {
   return (
     <Fragment>
@@ -290,7 +294,7 @@ const DataTableRows = ({
             <Fragment>
               <div
                 className={'at-row dt-row' + (isSelected ? ' selected' : '') + (deleted ? ' at-deleted' : '')}
-                id="whatever-row"
+                id={'whatever-row-' + name}
                 onClick={(e) => handleClick(e, handler, { type: 'row_click', record_id: id })}
                 onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', record_id: id })}
                 key={rowKey}
@@ -366,7 +370,7 @@ const DataTableExpandedRow = ({ record, columns, handler }) => {
   const expandedStyle = {
     display: 'grid',
     gridTemplateColumns: '2fr 8fr 5fr',
-    borderBottom: '1px solid grey',
+    borderBottom: '1px solid',
     padding: '2px',
   };
 

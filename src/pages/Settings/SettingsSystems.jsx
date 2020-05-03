@@ -4,6 +4,8 @@ import { ObjectTable } from 'components';
 import { systemCheck, handleClick } from 'components/utils';
 import { useStatusData } from 'store';
 
+import './Settings.css';
+
 //------------------------------------------------------------------------
 export const SettingsSystems = () => {
   const status = useStatusData();
@@ -29,7 +31,6 @@ export const SettingsSystems = () => {
     msg += '  You will need to fix it before proceeding.';
   }
 
-  // const styleAll = { backgroundColor: 'red', display: 'grid', gridTemplateColumns: '4fr 4fr 1fr', padding: '12px' };
   const styleAll = { display: 'grid', gridTemplateColumns: '8fr 8fr 1fr', padding: '12px' };
   return (
     <Fragment>
@@ -44,7 +45,6 @@ export const SettingsSystems = () => {
 
 //------------------------------------------------------------------------
 const LeftPanel = ({ status, handler, curSubsystem }) => {
-  //  const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '12px', backgroundColor: 'palegreen' };
   const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '2px' };
   const subSystems = ['api', 'node', 'scraper', 'sharing', 'help'];
   return (
@@ -108,17 +108,16 @@ const RightPanel = ({ status, handler, subsystem }) => {
 //------------------------------------------------------------------------
 function getLogText() {
   const str =
-    "\n----------------------------------------\n1587604384 ~ <INFO>  : API calling 'chifra status '\n1587604384 ~ <INFO>  : Exiting route 'status' with OK\n----------------------------------------\n";
+    "----------------------------------------\n1587604384 ~ <INFO>  : API calling 'chifra status '\n1587604384 ~ <INFO>  : Exiting route 'status' with OK\n----------------------------------------\n";
   return str + str;
 }
 const DisplayLog = ({ subsystem }) => {
-  const styleDisp = { backgroundColor: 'black', color: 'aqua', margin: '2px', padding: '3px' };
   const text = getLogText();
   return (
     <Fragment>
       <h4>{'Log for ' + subsystem + ' subsystem'}</h4>
-      <div style={{ border: '1px solid black' }}>
-        <div style={styleDisp}>
+      <div style={{ border: '1px solid' }}>
+        <div className="system-log">
           <pre>{text}</pre>
         </div>
       </div>

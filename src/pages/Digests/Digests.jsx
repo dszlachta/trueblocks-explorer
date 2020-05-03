@@ -123,9 +123,6 @@ export const Digests = () => {
 };
 
 // auto-generate: page-settings
-const recordIconList = [];
-const defaultSort = [];
-const defaultSearch = [];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
@@ -222,6 +219,9 @@ function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
+const recordIconList = [];
+const defaultSort = [];
+const defaultSearch = [];
 // EXISTING_CODE
 
 //----------------------------------------------------------------------------

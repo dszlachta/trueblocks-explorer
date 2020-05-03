@@ -109,7 +109,7 @@ export const Signatures = () => {
             setLoading(true);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshData(dataUrl, dataQuery, dispatch);
+              refreshSignaturesData(dataUrl, dataQuery, dispatch);
               setLoading(false);
             });
           }
@@ -127,7 +127,7 @@ export const Signatures = () => {
   );
 
   useEffect(() => {
-    refreshData(dataUrl, dataQuery, dispatch);
+    refreshSignaturesData(dataUrl, dataQuery, dispatch);
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
@@ -204,7 +204,7 @@ const defaultSearch = ['encoding', 'type', 'name'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-function refreshData(url, query, dispatch) {
+export function refreshSignaturesData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE

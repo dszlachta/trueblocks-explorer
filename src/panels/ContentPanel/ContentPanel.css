@@ -6,8 +6,8 @@
 .content {
   border-left: var(--border2-panel);
   grid-area: content;
-  background-color: var(--bgcolor2-panel);
-  color: var(--color2-panel);
+  background-color: var(--secondary-bg-color);
+  color: var(--secondary-text-color);
   overflow-y: scroll;
   overflow-x: hidden;
 }

@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
-import { usePanels } from 'store';
+import { useToggles } from 'store';
 import { handleClick } from 'components/utils';
 import ChevronLeft from 'assets/icons/ChevronLeft';
 import ChevronRight from 'assets/icons/ChevronRight';
@@ -63,11 +63,10 @@ const PanelHeader = ({ title, headerClass, topIcon, type, dir, expanded, options
 
 //----------------------------------------------------------------------
 const ExpandIcon = ({ type, direction, expanded }) => {
-  const panels = usePanels();
+  const togglesDispatch = useToggles().dispatch;
   const action = { type: type };
-  const leftIcon = <ChevronLeft onClick={(e) => handleClick(e, panels.dispatch, action)} />;
-  const rightIcon = <ChevronRight onClick={(e) => handleClick(e, panels.dispatch, action)} />;
-
+  const leftIcon = <ChevronLeft onClick={(e) => handleClick(e, togglesDispatch, action)} />;
+  const rightIcon = <ChevronRight onClick={(e) => handleClick(e, togglesDispatch, action)} />;
   if (direction === 'left') return expanded ? leftIcon : rightIcon;
   return expanded ? rightIcon : leftIcon;
 };

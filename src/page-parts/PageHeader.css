@@ -12,8 +12,8 @@
 }
 .page-header > div {
   padding: var(--padding-panel);
-  background-color: var(--bgcolor-panel);
-  color: var(--color-panel);
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
 }
 
 .left-header {
@@ -61,11 +61,4 @@
   margin: 0px 4px;
   padding: 2px 8px;
   border-radius: 8px;
-}
-
-.strikeout {
-  background-color: lightyellow;
-  color: black;
-  text-decoration: line-through;
-  opacity: 90%;
 }

@@ -1,91 +1,90 @@
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
-import { currentPage } from 'components/utils';
+import { currentPage, handleClick } from 'components/utils';
 import { getIcon } from 'pages/utils';
 
 import './Menu.css';
 
 //----------------------------------------------------------------------
-export const Menu = ({ menu, parent = '', expanded }) => {
+export const Menu = ({ menu, parent = '', minimized, selected, handler }) => {
   if (!menu) return <Fragment></Fragment>;
+
   const indent = parent !== '';
-  const style = indent ? { margin: '4px 10px' } : {};
-  const sep = indent ? '~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ' : '- - - - - - - - - - - - - - - - ';
-  if (indent && !expanded) return null;
+  const cn = indent ? 'menu-indent' : '';
+
   return (
-    <>
+    <Fragment>
       {menu.map((item, index) => {
-        if (item.label.toLowerCase() === 'separator') {
+        const isSep = item.label.toLowerCase() === 'separator';
+        if (isSep) {
+          let sep = '- - - - - - - - - - - - - - - - ';
+          if (minimized) sep = sep.substr(0, 12);
           return (
-            <div key={'sep_' + index} style={style} className="menu-separator">
+            <div key={'sep_' + index} className={cn + ' menu-separator'}>
               {sep}
             </div>
           );
         }
-        const enabled = true; //(item.enableFunc ? item.enableFunc(currentPage().page, currentPage().subpage) : true) && item.enabled;
+
         const { label, exact, items } = item;
-        const icon = getIcon(label, expanded);
+        const icon = indent ? <Fragment></Fragment> : getIcon(label, !minimized, false, 20);
         const route = cleanPath(label, parent, item.route);
         return (
           <MenuItem
             key={route}
-            text={label}
+            label={label}
             icon={icon}
             indent={indent}
-            expanded={expanded}
+            minimized={minimized}
             to={route}
-            enabled={enabled}
             exact={exact}
+            parent={parent}
+            selected={selected}
+            handler={handler}
           >
-            <Menu menu={items} parent={label.toLowerCase()} exact={exact} expanded={expanded} />
+            <Menu
+              menu={minimized ? null : items}
+              parent={label.toLowerCase()}
+              exact={exact}
+              minimized={minimized}
+            />
           </MenuItem>
         );
       })}
-    </> //
+    </Fragment>
   );
 };
 
 //----------------------------------------------------------------------
-export const MenuItem = ({ text, icon, to, indent, exact, enabled, expanded, children }) => {
-  const style = indent ? { margin: '3px 10px' } : {};
+export const MenuItem = ({ label, icon, to, indent, exact, minimized, parent, selected, handler, children }) => {
+  let cn = '';
+  if (indent) cn = 'menu-indent';
+
   const { page } = currentPage();
   const active = page !== '/' && to.includes(page);
-
-  if (!enabled) {
-    return (
-      <div style={style} className="menu-disabled">
-        {icon}
-        {(expanded || !icon) && text}
-      </div>
-    );
-  }
+  const action = { type: 'menu-clicked', selected: label, parent: parent };
 
   return (
-    <>
-      <NavLink style={style} className="menu-item" activeClassName="is-active" exact={exact} to={to}>
+    <Fragment>
+      <NavLink
+        className={cn + ' menu-item'}
+        activeClassName="is-active"
+        exact={exact}
+        to={to}
+        onClick={(e) => {
+          return handler && handler(action); // Note: do not use handleClick as it won't allow a bubble up
+        }}
+      >
         {icon}
-        {(expanded || !icon) && text}
+        {(!minimized || !icon) && label}
       </NavLink>
-      {active ? children : <></>}
-    </>
+      {active && children}
+    </Fragment>
   );
 };
 
-MenuItem.propTypes = {
-  text: PropTypes.string,
-  to: PropTypes.string,
-  indent: PropTypes.bool,
-  exact: PropTypes.bool,
-  enabled: PropTypes.bool.isRequired,
-  children: PropTypes.element,
-};
-
-MenuItem.defaultProps = {
-  enabled: true,
-};
-
+//----------------------------------------------------------------------
 const cleanPath = (label, parent, pathIn) => {
   let ret = pathIn;
   if (!ret || ret === '') ret = '/' + label.toLowerCase().replace(/\.\.\./, '');

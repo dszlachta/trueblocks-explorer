@@ -3,8 +3,8 @@
   font-size: 1em;
   font-weight: 500;
   font-family: var(--at-font-family);
-  color: var(--at-color);
-  background-color: var(--at-bgcolor);
+  color: var(--at-primary-text-color);
+  background-color: var(--at-primary-bg-color);
 }
 
 .at-header {
@@ -21,12 +21,9 @@
   font-family: var(--at-font-family);
   border: var(--at-border);
   border-radius: 0px 0px var(--at-radius) var(--at-radius);
-  color: var(--at-color2);
-  background-color: var(--at-bgcolor2);
+  color: var(--at-secondary-text-color);
+  background-color: var(--at-secondary-bg-color);
 }
-/* h4 {
-  background-color: var(--at-color2);
-} */
 
 /*-----------------------------------*/
 .ct-header {
@@ -89,18 +86,17 @@
 }
 .dt-row:hover {
   cursor: pointer;
-  background-color: var(--at-color2);
-  color: var(--at-bgcolor2);
-  opacity: 70%;
+  color: var(--at-secondary-text-color);
+  opacity: 60%;
 }
 .selected {
-  background-color: var(--at-bgcolor);
-  color: var(--at-bgcolor2);
+  background-color: var(--at-primary-bg-color);
+  color: var(--at-secondary-bg-color);
   opacity: 95%;
 }
 .selected:hover {
-  background-color: var(--at-bgcolor);
-  color: var(--at-bgcolor2);
+  background-color: var(--at-primary-bg-color);
+  color: var(--at-secondary-bg-color);
   opacity: 95%;
 }
 
@@ -126,8 +122,8 @@
 }
 .gt-cell:hover {
   cursor: pointer;
-  background-color: var(--at-color2);
-  color: var(--at-bgcolor2);
+  background-color: var(--at-secondary-text-color);
+  color: var(--at-secondary-bg-color);
   opacity: 70%;
 }
 
@@ -145,7 +141,7 @@
   height: 1.2em;
   width: 80px;
   align-self: center;
-  border: 1px dashed black;
+  border: 1px dashed var(--black-color);
   border-radius: 4px;
   padding: 2px;
   text-align: center;
@@ -168,12 +164,17 @@
 }
 
 .inactive {
-  background-color: #daeeda;
-  /* var(--grey-color); */
+  background-color: var(--lightgrey-color);
 }
 
 .in-progress {
-  background: repeating-linear-gradient(-45deg, #daeeda, #daeeda 5px, white 5px, white 10px);
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--lightgrey-color),
+    var(--lightgrey-color) 5px,
+    var(--white-color) 5px,
+    var(--white-color) 10px
+  );
   background-repeat: repeat;
   border-radius: 0px 0px var(--at-radius) var(--at-radius);
 }
@@ -181,11 +182,11 @@
 .at-deleted {
   text-decoration: line-through;
   font-style: italic;
-  color: var(--deleted-color);
+  color: var(--deleted-text-color);
 }
 .at-deleted:hover {
   text-decoration: line-through;
   font-style: italic;
-  color: var(--deleted-color);
-  /* background-color: var(--at-bgcolor2); */
+  color: var(--deleted-text-color);
+  /* background-color: var(--at-secondary-bg-color); */
 }

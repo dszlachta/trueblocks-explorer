@@ -47,11 +47,9 @@ export const SupportIcons = () => {
   const fill = 'orange';
   const color = 'black';
   const style = {
-    border: '1px dashed brown',
-    backgroundColor: 'white',
     height: '40px',
     width: '40px',
-    padding: '2px',
+    margin: '6px',
   };
 
   const icons = [
@@ -124,10 +122,10 @@ export const SupportIcons = () => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
               <div>
                 <br />
-                <h4 style={{ borderBottom: '1px solid lightgrey' }}>{group.group}</h4>
+                <h4 style={{ borderBottom: '1px solid' }}>{group.group}</h4>
               </div>
               <div></div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr  1fr' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr  1fr' }}>
                 {group.items.map((item) => {
                   return (
                     <div style={{ display: 'grid', gridTempateRows: '4fr 1fr', justifyItems: 'center' }}>

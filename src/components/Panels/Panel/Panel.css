@@ -1,6 +1,6 @@
 /*------------------------------------------*/
 .panel-header {
-  color: #4c7c9c;
+  color: var(--panel-title);
   font-size: 1.4em;
   font-weight: 300;
   text-transform: capitalize;
@@ -27,8 +27,8 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-around;
-  border-top: 1px dashed darkgrey;
-  background-color: grey;
+  border-top: 1px dashed var(--lightgrey-color);
+  background-color: var(--lightgrey-color);
 }
 
 .no-dec {

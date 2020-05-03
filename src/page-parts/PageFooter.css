@@ -9,8 +9,8 @@
 .page-footer > div {
   padding: var(--padding-panel);
   padding-top: 2px !important;
-  background-color: var(--bgcolor-panel);
-  color: var(--color-panel);
+  background-color: var(--primary-bg-color);
+  color: var(--primary-text-color);
 }
 
 /*------------------------------------------*/
@@ -21,7 +21,7 @@
   flex-wrap: wrap;
   align-content: bottom;
   width: minmax(1.4em, 250px);
-  color: var(--color-panel);
+  color: var(--primary-text-color);
 }
 
 /*------------------------------------------*/
@@ -42,39 +42,38 @@
 
 .footer-links {
   text-decoration: none;
-  color: var(--color-panel);
+  color: var(--primary-text-color);
 }
 
 .footer-social {
   height: 33px;
   width: 33px;
-  color: var(--color-panel);
+  color: var(--primary-text-color);
 }
 
 /*------------------------------------------*/
 .nofill_icon_color {
-  color: var(--color-panel);
+  color: var(--primary-text-color);
   opacity: 80%;
   font-weight: 400;
 }
-
 .nofill_icon_color:hover {
-  color: var(--hover-panel);
+  color: var(--icon-hover);
   opacity: 100%;
   font-weight: 500;
 }
 
 /*------------------------------------------*/
 .icon_color {
-  color: var(--color-panel);
-  fill: var(--bgcolor-panel);
+  color: var(--primary-text-color);
+  fill: var(--primary-bg-color);
   opacity: 80%;
   font-weight: 400;
 }
 
 .icon_color:hover {
-  color: var(--hover-panel);
-  fill: var(--bgcolor-panel);
+  color: var(--icon-hover);
+  fill: var(--primary-bg-color);
   opacity: 100%;
   font-weight: 500;
 }
