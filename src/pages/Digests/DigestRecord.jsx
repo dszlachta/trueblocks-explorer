@@ -1,14 +1,14 @@
 function getFieldValue(record, fieldName) {
   switch (fieldName) {
     case 'id':
-      return record.blockNumber;
+      return record.bn + '.' + record.tx + 'record.tc';
     default:
       break;
   }
 }
 
 // auto-generate: schema
-export const appearancesSchema = [
+export const digestRecordSchema = [
   {
     name: 'ID',
     selector: 'id',

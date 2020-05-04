@@ -27,9 +27,10 @@ export const thePages = {
   'collections/': { component: <Collections /> },
   //
   'monitors/': { component: <Monitors /> },
-  'monitors/yours': { component: <Monitors /> },
-  'monitors/shared': { component: <Monitors /> },
-  'monitors/view': { component: <Monitors /> },
+  'monitors/active': { component: <Monitors /> },
+  'monitors/paused': { component: <Monitors /> },
+  'monitors/pending': { component: <Monitors /> },
+  'monitors/explore': { component: <Monitors /> },
   //
   'tags/': { component: <Tags /> },
   //
@@ -101,10 +102,11 @@ export const theMenu = {
       label: 'Monitors',
       exact: true,
       items: [
-        { label: 'Your Monitors', route: 'yours' },
-        { label: 'Shared Monitors', route: 'shared' },
+        { label: 'Active', route: 'active' },
+        { label: 'Paused', route: 'paused' },
+        { label: 'Pending', route: 'pending' },
         { label: 'Separator' },
-        { label: 'View', route: 'view' },
+        { label: 'Explore', route: 'explore' },
       ],
     },
     {

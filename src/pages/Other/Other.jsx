@@ -118,10 +118,10 @@ export const Other = () => {
             });
           }
           break;
-        case 'externallink':
-          navigate('https://etherscan.io/address/' + action.record_id, true);
-          break;
         // EXISTING_CODE
+        case 'externallink':
+          navigate('https://etherscan.io/blocks/' + action.record_id, true);
+          break;
         // EXISTING_CODE
         default:
           break;

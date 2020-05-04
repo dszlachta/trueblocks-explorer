@@ -1,6 +1,6 @@
 [settings]
 class = "CCollections"
-recordIcons =  "editing,exporting"
+recordIcons =  "editing,view,exporting"
 defaultSort = "tags,name,client"
 dataUrl = "http://localhost:8080/names"
 dataQuery = "verbose=10&collections"

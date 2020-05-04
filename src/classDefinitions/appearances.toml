@@ -1,0 +1,12 @@
+[settings]
+class = "CAppearances"
+recordIcons = "viewing,exporting,importing"
+defaultSort = "tags,address"
+dataUrl = "http://localhost:8080/export"
+dataQuery = "addrs=record.address&verbose=10"
+cmdUrl = ""
+
+[[subpages]]
+list = [
+    { page = "appearances", subpage = "" },
+]

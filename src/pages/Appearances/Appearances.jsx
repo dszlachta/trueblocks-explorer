@@ -14,30 +14,29 @@ import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 
-import './Signatures.css';
+import './Appearances.css';
 
 // EXISTING_CODE
+import { data } from './data';
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Signatures = () => {
-  const { signatures, dispatch } = useSignatures();
+export const Appearances = ({ addresses = [] }) => {
+  const { appearances, dispatch } = useAppearances();
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
 
-  const [filtered, setFiltered] = useState(signaturesDefault);
+  const [filtered, setFiltered] = useState(appearancesDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
-  const [curTag, setTag] = useState(localStorage.getItem('signaturesTag') || 'All');
+  const [curTag, setTag] = useState(localStorage.getItem('appearancesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
 
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/abi';
-  const cmdUrl = 'http://localhost:8080/abi';
-
-  const dataQuery = 'verbose=10&monitored&known';
+  const dataUrl = 'http://localhost:8080/export';
+  const dataQuery = 'addrs=0xf503017d7baf7fbc0fff7492b751025c6a78179b&verbose=10';
   function addendum(record, record_id) {
     let ret = '&verbose=10';
     // EXISTING_CODE
@@ -45,7 +44,7 @@ export const Signatures = () => {
     return ret;
   }
 
-  const signaturesHandler = useCallback(
+  const appearancesHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
       let record = filtered.filter((record) => {
@@ -55,13 +54,13 @@ export const Signatures = () => {
       switch (action.type.toLowerCase()) {
         case 'set-tags':
           setTag(action.payload);
-          localStorage.setItem('signaturesTag', action.payload);
+          localStorage.setItem('appearancesTag', action.payload);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
         case 'edit':
-          if (record) setEditDialog({ showing: true, name: 'Edit Signature', record: record });
+          if (record) setEditDialog({ showing: true, name: 'Edit Appearance', record: record });
           break;
         case 'close':
         case 'cancel':
@@ -85,40 +84,10 @@ export const Signatures = () => {
           // });
           setEditDialog({ showing: false, record: {} });
           break;
-        case 'delete':
-          {
-            const cmdQuery = 'editCmd=delete&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            dispatch(action);
-            sendServerCommand(cmdUrl, cmdQuery).then(() => {
-              // we assume the delete worked, so we don't reload the data
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
-        case 'undelete':
-          {
-            const cmdQuery = 'editCmd=undelete&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            dispatch(action);
-            sendServerCommand(cmdUrl, cmdQuery).then(() => {
-              // we assume the delete worked, so we don't reload the data
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
-        case 'remove':
-          {
-            const cmdQuery = 'editCmd=remove&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
-              // the command worked, but now we need to reload the data
-              refreshSignaturesData(dataUrl, dataQuery, dispatch);
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
         // EXISTING_CODE
+        case 'externallink':
+          navigate('https://etherscan.io/tx/' + action.record_id, true);
+          break;
         // EXISTING_CODE
         default:
           break;
@@ -128,30 +97,30 @@ export const Signatures = () => {
   );
 
   useEffect(() => {
-    refreshSignaturesData(dataUrl, dataQuery, dispatch);
+    refreshAppearancesData(dataUrl, dataQuery, dispatch);
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, signaturesHandler, { type: 'Add' }));
+    Mousetrap.bind(['plus'], (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
     return () => {
       Mousetrap.unbind(['plus']);
     };
-  }, [signaturesHandler]);
+  }, [appearancesHandler]);
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(signatures.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    let tagList = [...new Set(appearances.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
     tagList = sortStrings(tagList, true);
     tagList.unshift('All');
     setTagList(tagList);
-  }, [signatures]);
+  }, [appearances]);
 
   useMemo(() => {
-    const result = signatures.filter((item) => {
+    const result = appearances.filter((item) => {
       return curTag === 'All' || item.tags.includes(curTag);
     });
     setFiltered(result);
-  }, [signatures, curTag]);
+  }, [appearances, curTag]);
 
   let custom = null;
   // EXISTING_CODE
@@ -164,25 +133,25 @@ export const Signatures = () => {
         caddieName="Tags"
         caddieData={tagList}
         current={curTag}
-        handler={signaturesHandler}
+        handler={appearancesHandler}
         loading={loading}
       />
       <DataTable
-        name={'signaturesTable'}
+        name={'appearancesTable'}
         data={filtered}
-        columns={signaturesSchema}
-        title="Signatures"
+        columns={appearancesSchema}
+        title={'Appearances for ' + addresses[0]}
         search={true}
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={signaturesHandler}
+        buttonHandler={appearancesHandler}
       />
-      <Modal showing={editDialog.showing} handler={signaturesHandler}>
+      <Modal showing={editDialog.showing} handler={appearancesHandler}>
         {/* prettier-ignore */}
         <ObjectTable
             data={editDialog.record}
-            columns={signaturesSchema}
+            columns={appearancesSchema}
             title={editDialog.name}
             editable={true}
             showHidden={true}
@@ -195,23 +164,21 @@ export const Signatures = () => {
 
 // auto-generate: page-settings
 const recordIconList = [
-  'header-Add',
-  'Delete/Undelete',
-  'Edit/Remove',
+  'ExternalLink',
   'footer-CSV',
   'footer-TXT',
+  'footer-Import',
   //
 ];
-const defaultSort = ['encoding', 'type', 'name'];
-const defaultSearch = ['encoding', 'type', 'name'];
+const defaultSort = ['tags', 'address'];
+const defaultSearch = ['tags', 'address'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshSignaturesData(url, query, dispatch) {
+export function refreshAppearancesData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE
-    result = theData.data.filter((item) => item.type !== 'constructor');
     // EXISTING_CODE
     const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: sorted });
@@ -219,37 +186,37 @@ export function refreshSignaturesData(url, query, dispatch) {
 }
 
 //----------------------------------------------------------------------
-export const signaturesDefault = [];
+export const appearancesDefault = [];
 
 //----------------------------------------------------------------------
-export const signaturesReducer = (state, action) => {
+export const appearancesReducer = (state, action) => {
   let ret = state;
-  switch (action.type.toLowerCase()) {
-    case 'undelete':
-    case 'delete':
-      {
-        const record = ret.filter((r) => {
-          const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
-          return val === action.record_id;
-        })[0];
-        if (record) {
-          record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
-        }
-      }
-      break;
-    case 'success':
-      ret = action.payload;
-      break;
-    default:
-    // do nothing
-  }
+  // switch (action.type.toLowerCase()) {
+  //   case 'undelete':
+  //   case 'delete':
+  //     {
+  //       const record = ret.filter((r) => {
+  //         const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
+  //         return val === action.record_id;
+  //       })[0];
+  //       if (record) {
+  //         record.deleted = !record.deleted;
+  //         ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+  //       }
+  //     }
+  //     break;
+  //   case 'success':
+  //     ret = action.payload;
+  //     break;
+  //   default:
+  //   // do nothing
+  // }
   return ret;
 };
 
 //----------------------------------------------------------------------
-export const useSignatures = () => {
-  return useContext(GlobalContext).signatures;
+export const useAppearances = () => {
+  return { appearances: data, dispatch: appearancesReducer };
 };
 
 //----------------------------------------------------------------------------
@@ -257,29 +224,11 @@ function getFieldValue(record, fieldName) {
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':
-      return record.encoding;
-    case 'outputs':
-    case 'inputs': {
-      if (!record[fieldName]) return '';
-      return JSON.stringify(record[fieldName]);
-    }
-    case 'function': {
-      const value = record['inputs'];
-      if (!value || !value.length) return '';
-      let str = '';
-      const sig = record['signature'];
-      if (sig && sig !== undefined && sig.contains && sig.contains(')')) {
-        const types = record['signature'].replace(')', '').split('(')[1].split(',');
-        str = value
-          .map((item, index) => {
-            return types[index] + ' ' + item.name;
-          })
-          .join(', ');
-      } else {
-        str = sig;
-      }
-      return record.name + '(' + str + ')';
-    }
+      return record.hash;
+    case 'marker':
+      return record.blockNumber + '.' + record.transactionIndex;
+    case 'isError':
+      return record.isError ? 'error' : '';
     default:
       break;
   }
@@ -292,67 +241,217 @@ function getFieldValue(record, fieldName) {
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
-export const signaturesSchema = [
+export const appearancesSchema = [
+  {
+    name: 'Date/Block',
+    selector: 'date',
+    type: 'string',
+    width: 3,
+    onDisplay: getFieldValue,
+    underField: 'marker',
+  },
   {
     name: 'ID',
     selector: 'id',
     type: 'string',
     hidden: true,
-    width: 1,
     searchable: true,
     onDisplay: getFieldValue,
+  },
+  {
+    name: 'Marker',
+    selector: 'marker',
+    type: 'string',
+    width: 2,
+    onDisplay: getFieldValue,
+    hidden: true,
+  },
+  {
+    name: 'Block Hash',
+    selector: 'blockHash',
+    type: 'hash',
+    hidden: true,
+  },
+  {
+    name: 'Blk',
+    selector: 'blockNumber',
+    type: 'blknum',
+    hidden: true,
+    width: 1,
+  },
+  {
+    name: 'Tx',
+    selector: 'transactionIndex',
+    type: 'string',
+    hidden: true,
+    width: 1,
+  },
+  {
+    name: 'Timestamp',
+    selector: 'timestamp',
+    type: 'timestamp',
+    hidden: true,
+  },
+  {
+    name: 'From',
+    selector: 'from',
+    type: 'address',
+    width: 5,
+    searchable: true,
+    underField: 'fromName',
+  },
+  {
+    name: 'To',
+    selector: 'to',
+    type: 'address',
+    width: 5,
+    searchable: true,
+    underField: 'toName',
+  },
+  {
+    name: 'Value',
+    selector: 'value',
+    type: 'wei',
+    hidden: true,
+  },
+  {
+    name: 'Receipt',
+    selector: 'receipt',
+    type: 'CReceipt',
+    hidden: true,
+  },
+  {
+    name: 'Articulated Tx',
+    selector: 'articulatedTx',
+    type: 'CFunction',
+    hidden: true,
+    searchable: true,
+  },
+  {
+    name: 'Traces',
+    selector: 'traces',
+    type: 'CTraceArray',
+    hidden: true,
+  },
+  {
+    name: 'Ether',
+    selector: 'ether',
+    type: 'blknum',
+    width: 2,
+  },
+  {
+    name: 'Gas',
+    selector: 'gas',
+    type: 'gas',
+    hidden: true,
+    width: 2,
+  },
+  {
+    name: 'Gas Used',
+    selector: 'gasUsed',
+    type: 'gas',
+    width: 2,
+  },
+  {
+    name: 'Gas Price',
+    selector: 'gasPrice',
+    type: 'wei',
+    width: 2,
+  },
+  {
+    name: 'Gas Cost',
+    selector: 'gasCost',
+    type: 'wei',
+    width: 2,
+  },
+  {
+    name: 'Hash',
+    selector: 'hash',
+    type: 'hash',
+    width: 5,
+    searchable: true,
+  },
+  {
+    name: 'Nonce',
+    selector: 'nonce',
+    type: 'blknum',
+    hidden: true,
+  },
+  {
+    name: 'Input',
+    selector: 'input',
+    type: 'string',
+    hidden: true,
+  },
+  {
+    name: 'Compressed',
+    selector: 'compressedTx',
+    type: 'string',
+    hidden: true,
+  },
+  {
+    name: 'Finalized',
+    selector: 'finalized',
+    type: 'bool',
+    hidden: true,
+  },
+  {
+    name: 'Gas Cost',
+    selector: 'etherGasCost',
+    type: 'ether',
+    hidden: true,
+    width: 2,
+  },
+  {
+    name: 'Function',
+    selector: 'function',
+    type: 'CFunction',
+    hidden: true,
+  },
+  {
+    name: 'Events',
+    selector: 'events',
+    type: 'string',
+    hidden: true,
+    width: 3,
+  },
+  {
+    name: 'Price',
+    selector: 'price',
+    type: 'doube',
+    hidden: true,
+    width: 3,
+  },
+  {
+    name: 'Date Short',
+    selector: 'datesh',
+    type: 'string',
+    hidden: true,
+  },
+  {
+    name: 'Time',
+    selector: 'time',
+    type: 'string',
+    hidden: true,
+  },
+  {
+    name: 'Age',
+    selector: 'age',
+    type: 'number',
+    hidden: true,
   },
   {
     name: 'Encoding',
     selector: 'encoding',
     type: 'hash',
-    width: 1,
-    searchable: true,
+    hidden: true,
   },
   {
-    name: 'Type',
-    selector: 'type',
+    name: 'Error',
+    selector: 'isError',
     type: 'string',
     width: 1,
     isPill: true,
-    searchable: true,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    width: 2,
-    searchable: true,
-  },
-  {
-    name: 'Signature',
-    selector: 'signature',
-    type: 'string',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Input Names',
-    selector: 'inputs',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Output Names',
-    selector: 'outputs',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Signature',
-    selector: 'function',
-    type: 'string',
-    width: 6,
-    searchable: true,
     onDisplay: getFieldValue,
   },
   {

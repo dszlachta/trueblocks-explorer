@@ -118,9 +118,6 @@ export const Caches = () => {
             });
           }
           break;
-        case 'externallink':
-          navigate('https://etherscan.io/address/' + action.record_id, true);
-          break;
         // EXISTING_CODE
         // EXISTING_CODE
         default:

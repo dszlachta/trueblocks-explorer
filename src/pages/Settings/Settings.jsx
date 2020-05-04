@@ -41,3 +41,5 @@ export const settingsReducer = (state, action) => {
   // localStorage.setItem('otherState', JSON.stringify(ret));
   return ret;
 };
+
+export const settingsSchema = [{ name: 'Id', selector: 'id' }];

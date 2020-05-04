@@ -1,34 +1,40 @@
 import React, { useState } from 'react';
 
+import { menuSchema } from 'pages/index';
+import { systemsSchema } from 'pages/Settings/SettingsSystems';
+
 import { DataTable, ObjectTable, ButtonCaddie } from 'components';
 import { stateFromStorage } from 'components/utils';
 
 import { abisSchema } from 'pages/Explorer/ExplorerAbis';
-import { appearancesSchema } from 'pages/Explorer/ExplorerAppearances';
 import { blocksSchema } from 'pages/Explorer/ExplorerBlocks';
-import { cachesSchema } from 'pages/Caches/Caches';
-import { collectionsSchema } from 'pages/Collections/Collections';
-import { dashboardSchema } from 'pages/Dashboard/Dashboard';
-import { digestsSchema } from 'pages/Digests/Digests';
-import { explorerSchema } from 'pages/Explorer/Explorer';
 import { functionsSchema } from 'pages/Explorer/ExplorerFunctions';
 import { logsSchema } from 'pages/Explorer/ExplorerLogs';
-import { menuSchema } from 'pages/index';
-import { monitorsSchema } from 'pages/Monitors/Monitors';
-import { namesSchema } from 'pages/Names/Names';
-import { otherSchema } from 'pages/Other/Other';
 import { parametersSchema } from 'pages/Explorer/ExplorerParameters';
 import { pricequotesSchema } from 'pages/Explorer/ExplorerPricequotes';
 import { pricesourcesSchema } from 'pages/Explorer/ExplorerPricesources';
 import { receiptsSchema } from 'pages/Explorer/ExplorerReceipts';
-import { signaturesSchema } from 'pages/Signatures/Signatures';
-import { systemsSchema } from 'pages/Settings/SettingsSystems';
-import { tagsSchema } from 'pages/Tags/Tags';
 import { traceActionsSchema } from 'pages/Explorer/ExplorerTraceActions';
 import { traceResultsSchema } from 'pages/Explorer/ExplorerTraceResults';
 import { tracesSchema } from 'pages/Explorer/ExplorerTraces';
 import { transactionsSchema } from 'pages/Explorer/ExplorerTransactions';
-import { viewSchema } from 'pages/Monitors/MonitorsView';
+import { digestRecordSchema } from 'pages/Digests/DigestRecord';
+
+// auto-generate: all-schemas
+import { dashboardSchema } from 'pages/Dashboard/Dashboard';
+import { collectionsSchema } from 'pages/Collections/Collections';
+import { monitorsSchema } from 'pages/Monitors/Monitors';
+import { appearancesSchema } from 'pages/Appearances/Appearances';
+import { tagsSchema } from 'pages/Tags/Tags';
+import { explorerSchema } from 'pages/Explorer/Explorer';
+import { namesSchema } from 'pages/Names/Names';
+import { signaturesSchema } from 'pages/Signatures/Signatures';
+import { digestsSchema } from 'pages/Digests/Digests';
+import { cachesSchema } from 'pages/Caches/Caches';
+import { otherSchema } from 'pages/Other/Other';
+import { settingsSchema } from 'pages/Settings/Settings';
+import { supportSchema } from 'pages/Support/Support';
+// auto-generate: all-schemas
 
 //------------------------------------------------------------------------------
 export const SettingsSchemas = () => {
@@ -36,6 +42,10 @@ export const SettingsSchemas = () => {
 
   const schemas = useSchemas();
   const matched = schemas.filter((item) => item.name === current)[0];
+  const hasIcons =
+    matched.schema.filter((field) => {
+      return field.type === 'icons';
+    }).length > 0;
   const mocks = matched ? mockData(matched.schema) : [];
   let unknown = [];
   let known = [];
@@ -59,6 +69,7 @@ export const SettingsSchemas = () => {
           case 'uint32':
           case 'uint64':
           case 'wei':
+          case 'ether':
           case 'gas':
           case 'bytes32':
           case 'double':
@@ -110,8 +121,10 @@ export const SettingsSchemas = () => {
   const pagesList = schemas.filter((s) => s.group === 'pages_').map((schema) => schema.name);
   const exploreList = schemas.filter((s) => s.group === 'explore').map((schema) => schema.name);
 
+  let debug = false;
   return (
     <div>
+      {debug && <pre>{JSON.stringify(matched, null, 2)}</pre>}
       {/* prettier-ignore */}
       <ButtonCaddie
         name="system"
@@ -177,6 +190,7 @@ export const SettingsSchemas = () => {
                   search={false}
                   pagination={false}
                   showHidden={true}
+                  recordIcons={hasIcons ? ['Add', 'Edit'] : []}
                 />
                 <br />
               </div>
@@ -208,17 +222,24 @@ const useSchemas = () => {
     { group: 'system', name: 'menuSchema', schema: menuSchema },
     { group: 'system', name: 'systemsSchema', schema: systemsSchema },
     { group: 'system', name: 'schemasSchema', schema: schemasSchema },
+    { group: 'system', name: 'digestRecordSchema', schema: digestRecordSchema },
+    { group: 'system', name: 'appearancesSchema', schema: appearancesSchema },
+
+    // auto-generate: use-schemas
     { group: 'pages_', name: 'dashboardSchema', schema: dashboardSchema },
     { group: 'pages_', name: 'collectionsSchema', schema: collectionsSchema },
     { group: 'pages_', name: 'monitorsSchema', schema: monitorsSchema },
-    { group: 'pages_', name: 'viewSchema', schema: viewSchema },
+    { group: 'pages_', name: 'tagsSchema', schema: tagsSchema },
     { group: 'pages_', name: 'explorerSchema', schema: explorerSchema },
     { group: 'pages_', name: 'namesSchema', schema: namesSchema },
-    { group: 'pages_', name: 'tagsSchema', schema: tagsSchema },
     { group: 'pages_', name: 'signaturesSchema', schema: signaturesSchema },
     { group: 'pages_', name: 'digestsSchema', schema: digestsSchema },
     { group: 'pages_', name: 'cachesSchema', schema: cachesSchema },
     { group: 'pages_', name: 'otherSchema', schema: otherSchema },
+    { group: 'pages_', name: 'settingsSchema', schema: settingsSchema },
+    { group: 'pages_', name: 'supportSchema', schema: supportSchema },
+    // auto-generate: use-schemas
+
     { group: 'explore', name: 'abisSchema', schema: abisSchema },
     { group: 'explore', name: 'functionsSchema', schema: functionsSchema },
     { group: 'explore', name: 'parametersSchema', schema: parametersSchema },
@@ -229,7 +250,6 @@ const useSchemas = () => {
     { group: 'explore', name: 'tracesSchema', schema: tracesSchema },
     { group: 'explore', name: 'traceActionsSchema', schema: traceActionsSchema },
     { group: 'explore', name: 'traceResultsSchema', schema: traceResultsSchema },
-    { group: 'explore', name: 'appearancesSchema', schema: appearancesSchema },
     { group: 'explore', name: 'pricequotesSchema', schema: pricequotesSchema },
     { group: 'explore', name: 'pricesourcesSchema', schema: pricesourcesSchema },
   ];
@@ -244,6 +264,7 @@ function mock(columns, tag) {
     if (column.type === 'filesize') value = 1200100 + Number(tag);
     if (column.type === 'timestamp') value = 1438270144 + Number(tag);
     if (column.type === 'function') value = 'function' + Number(tag);
+    if (column.isPill) value = true;
     return (record[column.selector] = value);
   });
   return record;
@@ -251,7 +272,7 @@ function mock(columns, tag) {
 
 //------------------------------------------------------------------------------
 function mockData(columns) {
-  return [mock(columns, '1'), mock(columns, '2')];
+  return [mock(columns, '1'), mock(columns, '2'), mock(columns, '12'), mock(columns, '8')];
 }
 
 //----------------------------------------------------------------------------

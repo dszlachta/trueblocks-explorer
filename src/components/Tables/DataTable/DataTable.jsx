@@ -129,11 +129,11 @@ export const DataTable = ({
         setExpandedRow(expandedRow === action.record_id ? '' : action.record_id);
         break;
       case 'row_doubleclick':
-        buttonHandler({ type: 'Edit', record_id: action.record_id });
+        if (buttonHandler) buttonHandler({ type: 'Edit', record_id: action.record_id });
         break;
 
       default:
-        buttonHandler(action);
+        if (buttonHandler) buttonHandler(action);
         break;
     }
   };
@@ -167,11 +167,11 @@ export const DataTable = ({
   const headerIcons = recordIcons.filter((icon) => icon.includes('header-'));
   const footerIcons = recordIcons.filter((icon) => icon.includes('footer-'));
   const rowIcons = recordIcons.filter((icon) => !icon.includes('header-') && !icon.includes('footer-'));
-  const maxIcons = Math.max(Math.max(headerIcons.length, footerIcons.length), rowIcons.length);
+  const maxIcons = Math.max(headerIcons.length, rowIcons.length);
   const widArray = widthsFromColumns(columns, showHidden);
   if (maxIcons) widArray.push(' minmax(' + maxIcons * 25 + 'px, 1fr)');
   let widStr = widArray.map((a) => a + ' ').join(' ');
-  widStr = widStr.replace(',', '').replace('  ', ' ').replace(' 1fr)', ', 1fr)');
+  widStr = widStr.replace(',', '').replace('  ', ' ').replace('px', 'px, ');
 
   const str = 'grid-template-columns: ' + widStr + '; display: grid;';
   createClass('#whatever-' + name, str);
@@ -180,7 +180,7 @@ export const DataTable = ({
   const debug = false;
   return (
     <Fragment key="dt">
-      {debug && <pre>{JSON.stringify(altIconCol, null, 2)}</pre>}
+      {debug && <pre>{JSON.stringify(widStr, null, 2)}</pre>}
       {showTools && (
         <Tablebar
           title={title}
@@ -313,9 +313,30 @@ const DataTableRows = ({
                   let type = column.type ? column.type : 'string';
                   let value = calcValue(record, column);
                   value = formatFieldByType(type, value, column.decimals);
-                  if (!value || value === undefined) value = type === 'spacer' ? '' : '-';
-                  let cn = 'at-cell dt-cell';
-                  cn += ' ' + column.cn;
+                  let found = {};
+                  let underField = null;
+                  if (column.underField && column.underField !== '') {
+                    underField = column.underField;
+                    found = columns.filter((col) => {
+                      if (index === 0) console.log(col.selector, underField, col.selector === underField);
+                      return col.selector === underField;
+                    });
+                    if (found.length > 0)
+                      underField = (
+                        <div>
+                          <small>
+                            <i>
+                              <font color="red">{calcValue(record, found[0])}</font>
+                            </i>
+                          </small>
+                        </div>
+                      );
+                  }
+                  //if (columns.filter((col) => col.selector === column.underField);
+                  // underField = underField.length > 0 ? underField[0] : null;
+                  if (!value || value === undefined) value = type === 'spacer' ? '' : column.isPill ? '' : '-';
+                  let cn = 'at-cell dt-cell ';
+                  if (column.cn) cn += column.cn + ' ';
                   switch (type) {
                     case 'calc':
                     case 'uint32':
@@ -326,6 +347,7 @@ const DataTableRows = ({
                     case 'filesize':
                     case 'gas':
                     case 'wei':
+                    case 'ether':
                       cn += ' right ';
                       break;
                     case 'bool':
@@ -339,27 +361,25 @@ const DataTableRows = ({
                     default:
                       break;
                   }
-                  if (column.isPill) {
-                    cn += ' at-pill center';
-                    cn += ' ';
+                  if (column.isPill && value !== '') {
+                    cn += ' at-pill center ';
                     cn += type === 'bool' ? (calcValue(record, column) ? 'true' : 'false') : calcValue(record, column);
                   }
-                  if (column.align) {
-                    cn += ' ' + column.align;
-                  }
+                  if (column.align) cn += ' ' + (column.align && column.align);
                   if (column.selector === 'monitored') {
                     monitored = calcValue(record, column);
                   }
                   return (
                     <div className={cn}>
+                      {debug && <pre>{JSON.stringify(found, null, 2)}</pre>}
                       {column.isPill && !handler && (
                         <div className="warning">pill column '{column.selector}' does not have a handler</div>
                       )}
                       {value}
+                      {underField && <div>{underField}</div>}
                     </div>
                   );
                 })}
-                {/*<pre>monitored2: {monitored ? 'true' : 'false'}</pre>*/}
                 <div style={{ display: 'inline' }}>
                   {<div>{monitored}</div>}
                   <IconTray
@@ -414,7 +434,8 @@ export function widthsFromColumns(columns, showHidden) {
       const hidden = (column.hidden && !showHidden) || column.type === 'icons';
       if (hidden) return null;
       const width = column.width || 1;
-      //      console.log(column.name, width);
+      if (column.isPill) return 'minmax(80px, ' + (Math.floor((width / totalWidth) * 64) + 'fr) ');
+      /* this value (80px) appears in the css for .at-pill - search it */
       return Math.floor((width / totalWidth) * 64) + 'fr ';
     })
     .filter((x) => x !== null);

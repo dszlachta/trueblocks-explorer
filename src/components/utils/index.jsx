@@ -175,7 +175,6 @@ export const formatFieldByType = (type, value, decimals = 0) => {
       break;
     case 'uint32':
     case 'uint64':
-    case 'blknum':
     case 'double':
       const isZero = value === '0' || value === 0;
       value = isZero ? '-' : fmtNum(value, decimals, decimals === 0 ? '' : ' ');
@@ -187,10 +186,12 @@ export const formatFieldByType = (type, value, decimals = 0) => {
       break;
     case 'gas':
     case 'wei':
+    case 'ether':
     case 'address':
     case 'timestamp':
     case 'string':
     case 'bytes32':
+    case 'blknum':
     default:
       break;
   }

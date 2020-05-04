@@ -1,6 +1,6 @@
 [settings]
 class = "CNames"
-recordIcons = "viewing,editing,exploring,exporting,importing"
+recordIcons = "viewing,editing,follow,exporting,importing"
 defaultSort = "tags,address,name"
 dataUrl = "http://localhost:8080/names"
 dataQuery = "verbose=10&all&expand"

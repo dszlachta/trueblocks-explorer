@@ -1,17 +1,22 @@
 [settings]
-pages = "dashboard|separator|\
+# pages are the top level menu choices only. Not to be confused with the generated code from_source
+pages = "\
+    dashboard|separator|\
     collections|monitors|tags|explorer|separator|\
     names|signatures|digests|caches|other|separator|\
     settings|support"
 
-schemas = "menu|dashboard|collections|monitors|monitors-viewtxs|\
+schemas = "\
+    menu|dashboard|collections|monitors|appearances|tags|\
+    names|signatures|digests|digests-record|\
+    caches|other|settings-schemas|settings-systems|\
     explorer|\
     explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|\
     explorer-traces|explorer-traceActions|explorer-traceResults|\
     explorer-functions|explorer-parameters|explorer-abis|\
-    explorer-appearances|explorer-pricequotes|explorer-pricesources|\
-    names|tags|signatures|digests|\
-    caches|other|settings-schemas|settings-systems"
+    explorer-pricequotes|explorer-pricesources"
 
-from_source = "collections|monitors|tags|names|signatures|caches|other|\
-    explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|explorer-traces"
+from_source = "\
+    collections|monitors|appearances|tags|\
+    explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|explorer-traces|\
+    names|signatures|caches|other"

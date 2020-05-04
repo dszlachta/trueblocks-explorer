@@ -139,7 +139,7 @@
 .at-pill {
   font-size: 0.9em;
   height: 1.2em;
-  width: 80px;
+  width: 80px; /* this value (80px) appears in DataTable component - search it */
   align-self: center;
   border: 1px dashed var(--black-color);
   border-radius: 4px;

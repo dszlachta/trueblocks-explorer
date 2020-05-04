@@ -119,16 +119,16 @@ export const Names = () => {
             });
           }
           break;
+        // EXISTING_CODE
         case 'externallink':
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
-        // EXISTING_CODE
         case 'addmonitor':
           setEditDialog({ showing: true, name: 'Add Monitor', record: record });
           break;
-        case 'viewmonitor':
+        case 'view':
           statusDispatch(LOADING);
-          navigate('/monitors/view/' + action.record_id, false);
+          navigate('/monitors/explore/' + action.record_id, false);
           break;
         // EXISTING_CODE
         default:
@@ -210,7 +210,7 @@ const recordIconList = [
   'header-Add',
   'Delete/Undelete',
   'Edit/Remove',
-  'AddMonitor/None/ViewMonitor',
+  'AddMonitor/None/View',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',
@@ -285,7 +285,7 @@ function getFieldValue(record, fieldName) {
 //----------------------------------------------------------------------------
 function useFieldValue(record, fieldName) {
   const monitorMap = useMonitorMap();
-  return monitorMap[record.address];
+  return monitorMap[record.address] && !record.deleted;
 }
 // EXISTING_CODE
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ViewMonitor = (props) => {
+const View = (props) => {
   const { color, size, ...otherProps } = props;
   return (
     <svg
@@ -22,14 +22,14 @@ const ViewMonitor = (props) => {
   );
 };
 
-ViewMonitor.propTypes = {
+View.propTypes = {
   color: PropTypes.string,
   size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-ViewMonitor.defaultProps = {
+View.defaultProps = {
   color: 'currentColor',
   size: '24',
 };
 
-export default ViewMonitor;
+export default View;

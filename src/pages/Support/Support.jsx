@@ -294,3 +294,5 @@ export const SupportAbout = () => {
     </Fragment>
   );
 };
+
+export const supportSchema = [{ name: 'Id', selector: 'id' }];

@@ -30,18 +30,20 @@ const defaultData = {
   panel: defaultToggles,
   status: statusDefault,
   menu: theMenu,
+  // auto-generate: defaults
   dashboard: dashboardDefault,
   collections: collectionsDefault,
   monitors: monitorsDefault,
+  tags: tagsDefault,
   explorer: explorerDefault,
   names: namesDefault,
-  tags: tagsDefault,
   signatures: signaturesDefault,
   digests: digestsDefault,
   caches: cachesDefault,
   other: otherDefault,
   settings: settingsDefault,
   support: supportDefault,
+  // auto-generate: defaults
 };
 
 //-----------------------------------------------------

@@ -17,7 +17,7 @@ import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_sto
 import './Monitors.css';
 
 // EXISTING_CODE
-import { MonitorsView } from './MonitorsView';
+import { Appearances } from '../Appearances/Appearances';
 import { useStatusData } from 'store';
 import { currentPage } from 'components/utils';
 // EXISTING_CODE
@@ -122,12 +122,12 @@ export const Monitors = () => {
             });
           }
           break;
+        // EXISTING_CODE
         case 'externallink':
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
-        // EXISTING_CODE
-        case 'viewmonitor':
-          navigate('/monitors/view/' + action.record_id, false);
+        case 'view':
+          navigate('/monitors/explore/' + action.record_id, false);
           break;
         // EXISTING_CODE
         default:
@@ -167,8 +167,10 @@ export const Monitors = () => {
   // EXISTING_CODE
   const subpage = currentPage().subpage;
   switch (subpage) {
+    case 'explore':
+      return <Appearances addresses={['0xf503017d7baf7fbc0fff7492b751025c6a78179b']} />;
     case 'view':
-      return <MonitorsView />;
+      return <Appearances addresses={['0xf503017d7baf7fbc0fff7492b751025c6a78179b']} />;
     default:
       break;
   }
@@ -216,7 +218,7 @@ const recordIconList = [
   'header-Add',
   'Delete/Undelete',
   'Edit/Remove',
-  'ViewMonitor/None',
+  'View/None',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',

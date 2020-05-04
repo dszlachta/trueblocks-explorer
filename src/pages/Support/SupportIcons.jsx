@@ -28,7 +28,7 @@ import ToggleLeft from 'assets/icons/ToggleLeft';
 import ToggleRight from 'assets/icons/ToggleRight';
 import Twitter from 'assets/icons/Twitter';
 import Undelete from 'assets/icons/Undelete';
-import ViewMonitor from 'assets/icons/ViewMonitor';
+import View from 'assets/icons/View';
 
 import {
   Dashboard,
@@ -75,7 +75,7 @@ export const SupportIcons = () => {
       group: 'Monitors',
       items: [
         { name: 'Add Monitor', component: <AddMonitor size={size} color={color} fill={fill} style={style} /> },
-        { name: 'View Monitor', component: <ViewMonitor size={size} color={color} fill={fill} style={style} /> },
+        { name: 'View Monitor', component: <View size={size} color={color} fill={fill} style={style} /> },
         { name: 'Paused', component: <ToggleLeft size={size} color={color} fill={fill} style={style} /> },
         { name: 'Active', component: <ToggleRight size={size} color={color} fill={fill} style={style} /> },
       ],

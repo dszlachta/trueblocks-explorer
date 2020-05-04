@@ -118,9 +118,6 @@ export const Collections = () => {
             });
           }
           break;
-        case 'externallink':
-          navigate('https://etherscan.io/address/' + action.record_id, true);
-          break;
         // EXISTING_CODE
         // EXISTING_CODE
         default:
@@ -201,6 +198,7 @@ const recordIconList = [
   'header-Add',
   'Delete/Undelete',
   'Edit/Remove',
+  'View/None',
   'footer-CSV',
   'footer-TXT',
   //

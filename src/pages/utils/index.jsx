@@ -26,7 +26,7 @@ import {
   Remove,
   ExternalLink,
   AddMonitor,
-  ViewMonitor,
+  View,
 } from 'assets/icons/SetEdit';
 import GridIcon from 'assets/icons/GridIcon';
 
@@ -68,8 +68,8 @@ export function getIcon(labelIn, expanded = false, pad = false, size = 20) {
       return <Add key={'micon-' + label} size={size} className={cn} />;
     case 'addmonitor':
       return <AddMonitor key={'micon-' + label} size={size} className={cn} />;
-    case 'viewmonitor':
-      return <ViewMonitor key={'micon-' + label} size={size} className={cn} />;
+    case 'view':
+      return <View key={'micon-' + label} size={size} className={cn} />;
     case 'edit':
       return <Edit key={'micon-' + label} size={size} className={cn} />;
     case 'delete':
