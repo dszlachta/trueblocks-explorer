@@ -45,9 +45,9 @@ const TableFooterRow = ({ searchFields, footerIcons }) => {
     justifySelf: 'end',
     display: 'flex',
   };
-  const style2 = { alignSelf: 'start' };
+
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+    <div key="footer-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
       <div>
         Searching fields:{' '}
         <div style={{ display: 'inline', fontStyle: 'italic' }}>
@@ -61,9 +61,9 @@ const TableFooterRow = ({ searchFields, footerIcons }) => {
       </div>
       <div style={{ justifySelf: 'center' }}></div>
       <div style={style1}>
-        {footerIcons.map((a) => {
+        {footerIcons.map((a, index) => {
           const icon = a.replace('footer-', '').split('/')[0];
-          return getIcon(icon, false, true, 18);
+          return getIcon(index, icon, false, true, 18);
         })}
       </div>
     </div>

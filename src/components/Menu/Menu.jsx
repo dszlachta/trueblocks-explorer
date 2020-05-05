@@ -28,7 +28,7 @@ export const Menu = ({ menu, parent = '', minimized, selected, handler }) => {
         }
 
         const { label, exact, items } = item;
-        const icon = indent ? <Fragment></Fragment> : getIcon(label, !minimized, false, 20);
+        const icon = indent ? <Fragment></Fragment> : getIcon(index, label, !minimized, false, 20);
         const route = cleanPath(label, parent, item.route);
         return (
           <MenuItem
@@ -43,12 +43,7 @@ export const Menu = ({ menu, parent = '', minimized, selected, handler }) => {
             selected={selected}
             handler={handler}
           >
-            <Menu
-              menu={minimized ? null : items}
-              parent={label.toLowerCase()}
-              exact={exact}
-              minimized={minimized}
-            />
+            <Menu menu={minimized ? null : items} parent={label.toLowerCase()} exact={exact} minimized={minimized} />
           </MenuItem>
         );
       })}

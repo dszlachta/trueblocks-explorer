@@ -165,12 +165,10 @@ export const Monitors = () => {
 
   let custom = null;
   // EXISTING_CODE
-  const subpage = currentPage().subpage;
+  const { subpage, params } = currentPage();
   switch (subpage) {
     case 'explore':
-      return <Appearances addresses={['0xf503017d7baf7fbc0fff7492b751025c6a78179b']} />;
-    case 'view':
-      return <Appearances addresses={['0xf503017d7baf7fbc0fff7492b751025c6a78179b']} />;
+      return <Appearances addresses={params[0]} />;
     default:
       break;
   }

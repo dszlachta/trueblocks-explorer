@@ -9,10 +9,14 @@ export const ButtonCaddie = ({ name, buttons, current, action, handler }) => {
   return (
     <div>
       <div style={{ display: 'inline' }}>{name + ': '}</div>
-      {buttons.map((value) => {
+      {buttons.map((value, index) => {
         const cn = value === current ? 'activeButton' : '';
         return (
-          <button className={cn} key={value} onClick={(e) => handleClick(e, handler, { type: action, payload: value })}>
+          <button
+            key={'b_' + index}
+            className={cn}
+            onClick={(e) => handleClick(e, handler, { type: action, payload: value })}
+          >
             {value}
           </button>
         );

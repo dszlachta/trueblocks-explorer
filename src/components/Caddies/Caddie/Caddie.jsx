@@ -21,11 +21,11 @@ export const Caddie = ({ cn = 'caddie', title, cards, columns, withIcons }) => {
   return (
     <div className={cn}>
       <h4>{title}</h4>
-      {cards.map((card) => {
+      {cards.map((card, index) => {
         const id = calcValue(card, idCol);
         const title = (
           <div className="inner-card-header">
-            {withIcons ? getIcon(card.name, true, true, 20) : null}
+            {withIcons ? getIcon(index, card.name, true, true, 20) : null}
             {calcValue(card, nameCol)}
           </div>
         );

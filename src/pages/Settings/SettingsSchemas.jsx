@@ -376,6 +376,11 @@ export const schemasSchema = [
     align: 'center',
   },
   {
+    name: 'underField',
+    selector: 'underField',
+    type: 'string',
+  },
+  {
     name: 'onDisplay',
     selector: 'onDisplay',
     type: 'function',

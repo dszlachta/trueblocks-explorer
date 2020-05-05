@@ -84,19 +84,19 @@ const StatusReport = () => {
           <SectionItem
             name="Final"
             value={fmtNum(meta.finalized)}
-            icon={getIcon('GreenLight', false, false, 20)}
+            icon={getIcon(1001, 'GreenLight', false, false, 20)}
             details={<DetailItem value={behindText(finalized, client)} />}
           />
           <SectionItem
             name="Staging"
             value={fmtNum(meta.staging)}
-            icon={getIcon('YellowLight', false, false, 20)}
+            icon={getIcon(1002, 'YellowLight', false, false, 20)}
             details={<DetailItem value={behindText(staging, client)} />}
           />
           <SectionItem
             name="Unripe"
             value={fmtNum(meta.unripe)}
-            icon={getIcon('RedLight', false, false, 20)}
+            icon={getIcon(1003, 'RedLight', false, false, 20)}
             details={<DetailItem value={behindText(staging, unripe, true)} />}
           />
           <SectionItem name="Monitors" value={fmtNum(meta.unripe)} />

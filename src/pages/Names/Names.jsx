@@ -124,11 +124,20 @@ export const Names = () => {
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
         case 'addmonitor':
-          setEditDialog({ showing: true, name: 'Add Monitor', record: record });
+          {
+            const cmdQuery = 'addrs=' + action.record_id + '&verbose=10';
+            statusDispatch(LOADING);
+            sendServerCommand('http://localhost:8080/export/', cmdQuery).then((theData) => {
+              // the command worked, but now we need to reload the data
+              statusDispatch(NOT_LOADING);
+              navigate('/monitors/explore?addrs=' + action.record_id, false);
+            });
+          }
+          setEditDialog({ showing: true, name: 'Reload', record: record });
           break;
         case 'view':
           statusDispatch(LOADING);
-          navigate('/monitors/explore/' + action.record_id, false);
+          navigate('/monitors/explore?addrs=' + action.record_id, false);
           break;
         // EXISTING_CODE
         default:

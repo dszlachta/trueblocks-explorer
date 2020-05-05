@@ -1,9 +1,9 @@
-name      ,selector    ,type          ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,domain ,range ,searchable ,sortable ,onDisplay ,onAccept ,onValidate
-ID        ,id          ,string        ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,true       ,         ,          ,         ,
-Tags      ,tags        ,string        ,       ,      ,true     ,         ,       ,      ,   ,       ,      ,true       ,         ,          ,         ,
-Name      ,name        ,string        ,       ,      ,true     ,         ,       ,      ,   ,       ,      ,true       ,         ,          ,         ,
-Client    ,client      ,string        ,       ,      ,true     ,         ,       ,      ,   ,       ,      ,true       ,         ,          ,         ,validateUserInput
-Monitored ,monitored   ,bool          ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
-Deleted   ,deleted     ,bool          ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
-Size      ,sizeInBytes ,filesize      ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
-Addresses ,addresses   ,CAddressArray ,       ,4     ,         ,         ,       ,      ,   ,       ,      ,true       ,         ,          ,         ,
+name      ,selector    ,type          ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,domain ,range ,searchable ,sortable ,underField ,onDisplay ,onAccept ,onValidate
+ID        ,id          ,string        ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,true       ,         ,           ,          ,         ,
+Tags      ,tags        ,string        ,       ,      ,true     ,         ,       ,      ,   ,       ,      ,true       ,         ,           ,          ,         ,
+Name      ,name        ,string        ,       ,      ,true     ,         ,       ,      ,   ,       ,      ,true       ,         ,           ,          ,         ,
+Client    ,client      ,string        ,       ,      ,true     ,         ,       ,      ,   ,       ,      ,true       ,         ,           ,          ,         ,validateUserInput
+Monitored ,monitored   ,bool          ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,           ,          ,         ,
+Deleted   ,deleted     ,bool          ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,           ,          ,         ,
+Size      ,sizeInBytes ,filesize      ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,           ,          ,         ,
+Addresses ,addresses   ,CAddressArray ,       ,4     ,         ,         ,       ,      ,   ,       ,      ,true       ,         ,           ,          ,         ,

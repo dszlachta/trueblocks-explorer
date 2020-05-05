@@ -36,7 +36,7 @@ export const Appearances = ({ addresses = [] }) => {
   // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/export';
-  const dataQuery = 'addrs=0xf503017d7baf7fbc0fff7492b751025c6a78179b&verbose=10';
+  const dataQuery = 'addrs=' + addresses.value + '&verbose=10';
   function addendum(record, record_id) {
     let ret = '&verbose=10';
     // EXISTING_CODE
@@ -140,7 +140,7 @@ export const Appearances = ({ addresses = [] }) => {
         name={'appearancesTable'}
         data={filtered}
         columns={appearancesSchema}
-        title={'Appearances for ' + addresses[0]}
+        title={addresses.value}
         search={true}
         searchFields={searchFields}
         pagination={true}
@@ -229,6 +229,9 @@ function getFieldValue(record, fieldName) {
       return record.blockNumber + '.' + record.transactionIndex;
     case 'isError':
       return record.isError ? 'error' : '';
+    case 'gasCost':
+      if (record.to !== '0xf503017d7baf7fbc0fff7492b751025c6a78179b') return '';
+      return record.gasCost;
     default:
       break;
   }
@@ -350,12 +353,14 @@ export const appearancesSchema = [
     name: 'Gas Used',
     selector: 'gasUsed',
     type: 'gas',
+    hidden: true,
     width: 2,
   },
   {
     name: 'Gas Price',
     selector: 'gasPrice',
     type: 'wei',
+    hidden: true,
     width: 2,
   },
   {
@@ -363,6 +368,7 @@ export const appearancesSchema = [
     selector: 'gasCost',
     type: 'wei',
     width: 2,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Hash',

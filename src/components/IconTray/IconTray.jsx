@@ -15,14 +15,14 @@ export const IconTray = ({ iconList, handler, record_id, alt = { deleted: false,
         gridTemplateColumns: 'repeat(' + iconList.length + ', 1fr)',
       }}
     >
-      {iconList.map((a) => {
+      {iconList.map((a, index) => {
         const alternates = a.replace('footer-', '').replace('header-', '').split('/');
         const icon =
           alternates.length < 2
             ? alternates[0]
             : alternates[alt.deleted ? 1 : alternates.length < 3 ? 0 : alt.monitored ? 2 : 0];
         if (icon === '' || icon === 'None') return null;
-        return <ClickableIcon icon={icon} handler={handler} record_id={record_id} />;
+        return <ClickableIcon key={'ic_' + index} icon={icon} handler={handler} record_id={record_id} />;
       })}
     </div>
   );
@@ -40,7 +40,7 @@ export const ClickableIcon = ({ link, icon, handler, record_id }) => {
 
   return (
     <div style={{ display: 'inline' }} onClick={(e) => handleClick(e, handler, { type: icon, record_id: record_id })}>
-      {getIcon(icon, false, true, 18)}
+      {getIcon(record_id, icon, false, true, 18)}
     </div>
   );
 };

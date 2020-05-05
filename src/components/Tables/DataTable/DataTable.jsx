@@ -254,6 +254,7 @@ const DataTableHeader = ({
         );
         return column.hidden || column.selector === 'icons' ? null : (
           <div
+            key={'head_' + index}
             onClick={(e) => handleClick(e, handler, { type: 'sortBy', fieldName: column.selector })}
             className="dt-header-cell"
           >
@@ -297,7 +298,7 @@ const DataTableRows = ({
           const deleted = record.deleted;
           let monitored = false;
           return (
-            <Fragment>
+            <Fragment key={'f_' + rowKey}>
               {/*<pre>{JSON.stringify(altIconCol, null, 2)}</pre>*/}
               {/*<pre>{monitored ? 'true' : 'false'}</pre>*/}
               <div
@@ -307,8 +308,9 @@ const DataTableRows = ({
                 onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', record_id: id })}
                 key={rowKey}
               >
-                {columns.map((column) => {
+                {columns.map((column, index) => {
                   // ...for each column
+                  const colKey = rowKey + '_' + index;
                   if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) return null;
                   let type = column.type ? column.type : 'string';
                   let value = calcValue(record, column);
@@ -316,9 +318,8 @@ const DataTableRows = ({
                   let found = {};
                   let underField = null;
                   if (column.underField && column.underField !== '') {
-                    underField = column.underField;
+                    underField = column.underField; // don't remove
                     found = columns.filter((col) => {
-                      if (index === 0) console.log(col.selector, underField, col.selector === underField);
                       return col.selector === underField;
                     });
                     if (found.length > 0)
@@ -332,8 +333,6 @@ const DataTableRows = ({
                         </div>
                       );
                   }
-                  //if (columns.filter((col) => col.selector === column.underField);
-                  // underField = underField.length > 0 ? underField[0] : null;
                   if (!value || value === undefined) value = type === 'spacer' ? '' : column.isPill ? '' : '-';
                   let cn = 'at-cell dt-cell ';
                   if (column.cn) cn += column.cn + ' ';
@@ -370,7 +369,7 @@ const DataTableRows = ({
                     monitored = calcValue(record, column);
                   }
                   return (
-                    <div className={cn}>
+                    <div key={colKey} className={cn}>
                       {debug && <pre>{JSON.stringify(found, null, 2)}</pre>}
                       {column.isPill && !handler && (
                         <div className="warning">pill column '{column.selector}' does not have a handler</div>

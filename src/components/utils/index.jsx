@@ -182,7 +182,7 @@ export const formatFieldByType = (type, value, decimals = 0) => {
     case 'hash':
       if (!value) return value;
       if (value.length === 10) return value;
-      value = value ? value.substr(0, 6) + '...' + value.substr(value.length - 4, value.length - 1) : '';
+      value = value ? value.substr(0, 8) + '...' + value.substr(value.length - 6, value.length - 1) : '';
       break;
     case 'gas':
     case 'wei':

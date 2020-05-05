@@ -49,10 +49,10 @@ const LeftPanel = ({ status, handler, curSubsystem }) => {
   const subSystems = ['api', 'node', 'scraper', 'sharing', 'help'];
   return (
     <div style={styleLeft}>
-      {subSystems.map((subsystem) => {
+      {subSystems.map((subsystem, index) => {
         const filtered = getSubsystemData(status, subsystem);
         return (
-          <div style={{ display: 'grid', gridTemplateColumns: '6fr 1fr' }}>
+          <div key={'ss_' + index} style={{ display: 'grid', gridTemplateColumns: '6fr 1fr' }}>
             <div>
               <h4>{names[subsystem]}</h4>
               <ObjectTable data={filtered} columns={systemsSchema} handler={handler} />
