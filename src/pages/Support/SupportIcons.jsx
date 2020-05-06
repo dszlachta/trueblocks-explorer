@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 
 import Add from 'assets/icons/Add';
 import AddMonitor from 'assets/icons/AddMonitor';
+import AddName from 'assets/icons/AddName';
 import BarChart from 'assets/icons/BarChart';
 import ExternalLink from 'assets/icons/ExternalLink';
 import ChevronDown from 'assets/icons/ChevronDown';
@@ -75,6 +76,7 @@ export const SupportIcons = () => {
       group: 'Monitors',
       items: [
         { name: 'Add Monitor', component: <AddMonitor size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Add Name', component: <AddName size={size} color={color} fill={fill} style={style} /> },
         { name: 'View Monitor', component: <View size={size} color={color} fill={fill} style={style} /> },
         { name: 'Paused', component: <ToggleLeft size={size} color={color} fill={fill} style={style} /> },
         { name: 'Active', component: <ToggleRight size={size} color={color} fill={fill} style={style} /> },

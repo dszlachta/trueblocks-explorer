@@ -143,20 +143,25 @@ export const Other = () => {
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(other.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-    tagList = sortStrings(tagList, true);
-    tagList.unshift('All');
-    setTagList(tagList);
+    if (other) {
+      let tagList = [...new Set(other.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
+      setTagList(tagList);
+    }
   }, [other]);
 
   useMemo(() => {
-    const result = other.filter((item) => {
-      return curTag === 'All' || item.tags.includes(curTag);
-    });
-    setFiltered(result);
+    if (other) {
+      const result = other.filter((item) => {
+        return curTag === 'All' || item.tags.includes(curTag);
+      });
+      setFiltered(result);
+    }
   }, [other, curTag]);
 
   let custom = null;
+  let title = "Other";
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -174,7 +179,7 @@ export const Other = () => {
         name={'otherTable'}
         data={filtered}
         columns={otherSchema}
-        title="Other"
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}

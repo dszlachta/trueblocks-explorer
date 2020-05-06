@@ -140,20 +140,25 @@ export const Collections = () => {
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(collections.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-    tagList = sortStrings(tagList, true);
-    tagList.unshift('All');
-    setTagList(tagList);
+    if (collections) {
+      let tagList = [...new Set(collections.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
+      setTagList(tagList);
+    }
   }, [collections]);
 
   useMemo(() => {
-    const result = collections.filter((item) => {
-      return curTag === 'All' || item.tags.includes(curTag);
-    });
-    setFiltered(result);
+    if (collections) {
+      const result = collections.filter((item) => {
+        return curTag === 'All' || item.tags.includes(curTag);
+      });
+      setFiltered(result);
+    }
   }, [collections, curTag]);
 
   let custom = null;
+  let title = "Collections";
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -171,7 +176,7 @@ export const Collections = () => {
         name={'collectionsTable'}
         data={filtered}
         columns={collectionsSchema}
-        title="Collections"
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}

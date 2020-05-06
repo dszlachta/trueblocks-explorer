@@ -223,12 +223,12 @@ const useSchemas = () => {
     { group: 'system', name: 'systemsSchema', schema: systemsSchema },
     { group: 'system', name: 'schemasSchema', schema: schemasSchema },
     { group: 'system', name: 'digestRecordSchema', schema: digestRecordSchema },
-    { group: 'system', name: 'appearancesSchema', schema: appearancesSchema },
 
     // auto-generate: use-schemas
     { group: 'pages_', name: 'dashboardSchema', schema: dashboardSchema },
     { group: 'pages_', name: 'collectionsSchema', schema: collectionsSchema },
     { group: 'pages_', name: 'monitorsSchema', schema: monitorsSchema },
+    { group: 'pages_', name: 'appearancesSchema', schema: appearancesSchema },
     { group: 'pages_', name: 'tagsSchema', schema: tagsSchema },
     { group: 'pages_', name: 'explorerSchema', schema: explorerSchema },
     { group: 'pages_', name: 'namesSchema', schema: namesSchema },

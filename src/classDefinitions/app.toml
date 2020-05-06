@@ -2,7 +2,7 @@
 # pages are the top level menu choices only. Not to be confused with the generated code from_source
 pages = "\
     dashboard|separator|\
-    collections|monitors|tags|explorer|separator|\
+    collections|monitors|appearances|tags|explorer|separator|\
     names|signatures|digests|caches|other|separator|\
     settings|support"
 

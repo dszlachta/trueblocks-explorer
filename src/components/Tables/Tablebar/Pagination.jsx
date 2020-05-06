@@ -108,9 +108,9 @@ const Selector = ({ handler, pagingCtx }) => {
 
 //-----------------------------------------------------------------
 function isDisabled(pagingCtx, which) {
-  if (which === 'up' || which === 'down') return false; // up and down (i.e. select row) are handled by the table component
+  if (which !== 'left' && which !== 'right') return false; // up and down (i.e. select row) are handled by the table component
   const { perPage, curPage, total } = pagingCtx;
-  if (which === 'home' || which === 'left') return curPage === 0;
+  if (which === 'left') return curPage === 0;
   return curPage === Math.floor(total / perPage) - !(total % perPage);
 }
 

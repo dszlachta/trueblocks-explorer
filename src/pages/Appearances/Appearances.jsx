@@ -3,6 +3,7 @@
  * of 'EXISTING_CODE' tags.
  */
 import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import { Link } from 'react-dom';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
@@ -11,17 +12,22 @@ import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'compone
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
+import { getIcon } from 'pages/utils';
+import { AddName, EditName } from 'pages/Names/NamesDialogs';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 
 import './Appearances.css';
 
 // EXISTING_CODE
-import { data } from './data';
+//import { data } from './data';
+import { useNames } from 'pages/Names/Names';
+let g_focusAddr = '';
+var handler = null;
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Appearances = ({ addresses = [] }) => {
+export const Appearances = ({ addresses = [], name }) => {
   const { appearances, dispatch } = useAppearances();
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
@@ -31,14 +37,17 @@ export const Appearances = ({ addresses = [] }) => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('appearancesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
+  const [curAdd, setCurAddr] = useState('');
 
   // EXISTING_CODE
+  const { names } = useNames().names;
   // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/export';
-  const dataQuery = 'addrs=' + addresses.value + '&verbose=10';
+  const dataQuery = 'addrs=' + addresses.value + '&verbose=7&dollars&articulate';
+  g_focusAddr = addresses.value;
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '&verbose=7';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -47,6 +56,7 @@ export const Appearances = ({ addresses = [] }) => {
   const appearancesHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
+      setCurAddr(record_id);
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
       });
@@ -57,7 +67,7 @@ export const Appearances = ({ addresses = [] }) => {
           localStorage.setItem('appearancesTag', action.payload);
           break;
         case 'add':
-          setEditDialog({ showing: true, record: {} });
+          setEditDialog({ showing: true, record: { tags: 'MyTags' } });
           break;
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Appearance', record: record });
@@ -72,7 +82,7 @@ export const Appearances = ({ addresses = [] }) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
+          // query += '&verbose=7';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -109,21 +119,35 @@ export const Appearances = ({ addresses = [] }) => {
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(appearances.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-    tagList = sortStrings(tagList, true);
-    tagList.unshift('All');
-    setTagList(tagList);
+    if (appearances) {
+      // let tagList = [...new Set(appearances.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      // tagList = sortStrings(tagList, true);
+      // tagList.unshift('All');
+      let tagList = ['All', 'Balances', 'Tokens', 'Neighbors', 'Functions', 'Airdrops']
+      setTagList(tagList);
+    }
   }, [appearances]);
 
   useMemo(() => {
-    const result = appearances.filter((item) => {
-      return curTag === 'All' || item.tags.includes(curTag);
-    });
-    setFiltered(result);
+    if (appearances) {
+      const result = appearances.filter((item) => {
+        return curTag === 'All' || item.tags.includes(curTag);
+      });
+      setFiltered(result);
+    }
   }, [appearances, curTag]);
 
   let custom = null;
+  let title = 'Appearances';
   // EXISTING_CODE
+  title = addresses.value + (name ? ' (' + name.replace('%20', ' ') + ')' : '');
+  // const name =
+  //   names &&
+  //   names.filter((rec) => {
+  //     return rec.address === addresses.value;
+  //   });
+  // title += name ? ' (' + name[0] + ')' : '';
+  handler = appearancesHandler;
   // EXISTING_CODE
 
   return (
@@ -140,23 +164,14 @@ export const Appearances = ({ addresses = [] }) => {
         name={'appearancesTable'}
         data={filtered}
         columns={appearancesSchema}
-        title={addresses.value}
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
         buttonHandler={appearancesHandler}
       />
-      <Modal showing={editDialog.showing} handler={appearancesHandler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={appearancesSchema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      <AddName showing={editDialog.showing} handler={appearancesHandler} object={{ address: curAdd }} />
       {custom}
     </div>
   );
@@ -170,7 +185,7 @@ const recordIconList = [
   'footer-Import',
   //
 ];
-const defaultSort = ['tags', 'address'];
+const defaultSort = ['blockNumber', 'transactionIndex'];
 const defaultSearch = ['tags', 'address'];
 // auto-generate: page-settings
 
@@ -179,6 +194,16 @@ export function refreshAppearancesData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE
+    result = result && result.length > 0 ? result[0] : result;
+    let named = result;
+    if (result && theData.meta) {
+      named = result.map((item) => {
+        item.fromName = theData.meta.namedFrom && theData.meta.namedFrom[item.from];
+        item.toName = theData.meta.namedTo && theData.meta.namedTo[item.to];
+        return item;
+      });
+    }
+    result = named;
     // EXISTING_CODE
     const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: sorted });
@@ -191,47 +216,81 @@ export const appearancesDefault = [];
 //----------------------------------------------------------------------
 export const appearancesReducer = (state, action) => {
   let ret = state;
-  // switch (action.type.toLowerCase()) {
-  //   case 'undelete':
-  //   case 'delete':
-  //     {
-  //       const record = ret.filter((r) => {
-  //         const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
-  //         return val === action.record_id;
-  //       })[0];
-  //       if (record) {
-  //         record.deleted = !record.deleted;
-  //         ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
-  //       }
-  //     }
-  //     break;
-  //   case 'success':
-  //     ret = action.payload;
-  //     break;
-  //   default:
-  //   // do nothing
-  // }
+  switch (action.type.toLowerCase()) {
+    case 'undelete':
+    case 'delete':
+      {
+        const record = ret.filter((r) => {
+          const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
+          return val === action.record_id;
+        })[0];
+        if (record) {
+          record.deleted = !record.deleted;
+          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+        }
+      }
+      break;
+    case 'success':
+      ret = action.payload;
+      break;
+    default:
+    // do nothing
+  }
   return ret;
 };
 
 //----------------------------------------------------------------------
 export const useAppearances = () => {
-  return { appearances: data, dispatch: appearancesReducer };
+  return useContext(GlobalContext).appearances;
 };
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
   // EXISTING_CODE
+  const internal = record.from !== g_focusAddr && record.to !== g_focusAddr;
   switch (fieldName) {
     case 'id':
       return record.hash;
     case 'marker':
-      return record.blockNumber + '.' + record.transactionIndex;
+      return (
+        <Fragment>
+          {record.blockNumber + '.' + record.transactionIndex}
+          {internal ? <div className="internal">{'int'}</div> : ''}
+          {record.isError ? <div className="isError">{'error'}</div> : ''}
+        </Fragment>
+      );
     case 'isError':
       return record.isError ? 'error' : '';
     case 'gasCost':
-      if (record.to !== '0xf503017d7baf7fbc0fff7492b751025c6a78179b') return '';
+      if (record.from !== g_focusAddr) return '';
       return record.gasCost;
+    case 'internal':
+      return internal ? 'int' : '';
+    case 'from':
+      if (record.from === g_focusAddr) return <div className="focusAddr">{record.from}</div>;
+      return record.from;
+    case 'fromName':
+      return record.fromName ? (
+        record.fromName.name
+      ) : (
+        <div
+          onClick={(e) => handleClick(e, handler, { type: 'Add', record_id: record.from })}
+          style={{ color: 'green' }}
+        >
+          {getIcon(record.from, 'AddName', false, false, 12)}
+        </div>
+      );
+    case 'to':
+      if (record.to === g_focusAddr) return <div className="focusAddr">{record.to}</div>;
+      return record.to;
+    case 'toName':
+      return record.toName ? (
+        record.toName.name
+      ) : (
+        <div onClick={(e) => handleClick(e, handler, { type: 'Add', record_id: record.to })} style={{ color: 'green' }}>
+          {getIcon(record.to, 'AddName', false, false, 12)}
+        </div>
+      );
     default:
       break;
   }
@@ -250,8 +309,8 @@ export const appearancesSchema = [
     selector: 'date',
     type: 'string',
     width: 3,
-    onDisplay: getFieldValue,
     underField: 'marker',
+    onDisplay: getFieldValue,
   },
   {
     name: 'ID',
@@ -265,9 +324,9 @@ export const appearancesSchema = [
     name: 'Marker',
     selector: 'marker',
     type: 'string',
+    hidden: true,
     width: 2,
     onDisplay: getFieldValue,
-    hidden: true,
   },
   {
     name: 'Block Hash',
@@ -302,6 +361,15 @@ export const appearancesSchema = [
     width: 5,
     searchable: true,
     underField: 'fromName',
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'fromName',
+    selector: 'fromName',
+    type: 'string',
+    hidden: true,
+    searchable: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'To',
@@ -310,6 +378,15 @@ export const appearancesSchema = [
     width: 5,
     searchable: true,
     underField: 'toName',
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'toName',
+    selector: 'toName',
+    type: 'string',
+    hidden: true,
+    searchable: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Value',
@@ -367,6 +444,7 @@ export const appearancesSchema = [
     name: 'Gas Cost',
     selector: 'gasCost',
     type: 'wei',
+    hidden: true,
     width: 2,
     onDisplay: getFieldValue,
   },
@@ -374,6 +452,7 @@ export const appearancesSchema = [
     name: 'Hash',
     selector: 'hash',
     type: 'hash',
+    hidden: true,
     width: 5,
     searchable: true,
   },
@@ -411,8 +490,10 @@ export const appearancesSchema = [
   {
     name: 'Function',
     selector: 'function',
-    type: 'CFunction',
-    hidden: true,
+    type: 'string',
+    searchable: true,
+    onDisplay: getFieldValue,
+    width: 5,
   },
   {
     name: 'Events',
@@ -449,8 +530,9 @@ export const appearancesSchema = [
   {
     name: 'Encoding',
     selector: 'encoding',
-    type: 'hash',
-    hidden: true,
+    type: 'string',
+    searchable: true,
+    width: 5,
   },
   {
     name: 'Error',
@@ -458,6 +540,16 @@ export const appearancesSchema = [
     type: 'string',
     width: 1,
     isPill: true,
+    //onDisplay: getFieldValue,
+    hidden: true,
+  },
+  {
+    name: 'Internal',
+    selector: 'internal',
+    type: 'string',
+    hidden: true,
+    width: 2,
+    align: 'center',
     onDisplay: getFieldValue,
   },
   {

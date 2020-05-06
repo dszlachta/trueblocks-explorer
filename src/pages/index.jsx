@@ -32,6 +32,7 @@ export const thePages = {
   'monitors/pending': { component: <Monitors /> },
   'monitors/explore': { component: <Monitors /> },
   //
+  //
   'tags/': { component: <Tags /> },
   //
   'explorer/': { component: <Explorer /> },

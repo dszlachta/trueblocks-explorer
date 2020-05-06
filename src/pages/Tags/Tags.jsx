@@ -140,20 +140,25 @@ export const Tags = () => {
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(tags.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-    tagList = sortStrings(tagList, true);
-    tagList.unshift('All');
-    setTagList(tagList);
+    if (tags) {
+      let tagList = [...new Set(tags.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
+      setTagList(tagList);
+    }
   }, [tags]);
 
   useMemo(() => {
-    const result = tags.filter((item) => {
-      return curTag === 'All' || item.tags.includes(curTag);
-    });
-    setFiltered(result);
+    if (tags) {
+      const result = tags.filter((item) => {
+        return curTag === 'All' || item.tags.includes(curTag);
+      });
+      setFiltered(result);
+    }
   }, [tags, curTag]);
 
   let custom = null;
+  let title = "Tags";
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -171,7 +176,7 @@ export const Tags = () => {
         name={'tagsTable'}
         data={filtered}
         columns={tagsSchema}
-        title="Tags"
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}

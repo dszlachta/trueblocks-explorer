@@ -127,7 +127,8 @@ export const Monitors = () => {
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
         case 'view':
-          navigate('/monitors/explore/' + action.record_id, false);
+          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          //          navigate('/monitors/explore?addrs=' + action.record_id, false);
           break;
         // EXISTING_CODE
         default:
@@ -150,25 +151,30 @@ export const Monitors = () => {
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(monitors.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-    tagList = sortStrings(tagList, true);
-    tagList.unshift('All');
-    setTagList(tagList);
+    if (monitors) {
+      let tagList = [...new Set(monitors.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
+      setTagList(tagList);
+    }
   }, [monitors]);
 
   useMemo(() => {
-    const result = monitors.filter((item) => {
-      return curTag === 'All' || item.tags.includes(curTag);
-    });
-    setFiltered(result);
+    if (monitors) {
+      const result = monitors.filter((item) => {
+        return curTag === 'All' || item.tags.includes(curTag);
+      });
+      setFiltered(result);
+    }
   }, [monitors, curTag]);
 
   let custom = null;
+  let title = 'Monitors';
   // EXISTING_CODE
   const { subpage, params } = currentPage();
   switch (subpage) {
     case 'explore':
-      return <Appearances addresses={params[0]} />;
+      return <Appearances addresses={params[0]} name={params.length > 1 ? params[1].value : ''} />;
     default:
       break;
   }
@@ -188,7 +194,7 @@ export const Monitors = () => {
         name={'monitorsTable'}
         data={filtered}
         columns={monitorsSchema}
-        title="Monitors"
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}

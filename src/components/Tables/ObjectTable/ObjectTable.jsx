@@ -17,6 +17,7 @@ export const ObjectTable = ({
   arrowsOnly = false,
   showHidden = false,
   handler = null,
+  asForm = false,
 }) => {
   const [filterText] = useState('');
 
@@ -41,33 +42,44 @@ export const ObjectTable = ({
     <div className="ot-container">
       {tableBar}
       <div className={'ot-body at-body'}>
-        {columns.map((column, index) => {
-          if (!showHidden && column.hidden) return null;
+        <form>
+          {columns.map((column, index) => {
+            if (!showHidden && column.hidden) return null;
 
-          const value = calcValue(data, column);
-          if (!showHidden && value === '') return null;
+            const value = calcValue(data, column);
+            if (!showHidden && value === '') return null;
 
-          const fieldName = column.name || column.selector;
-          const fieldType = column.type || 'string';
-          const formatted = formatFieldByType(fieldType, value, column.decimals);
-          const key = id + '_' + column.selector;
+            const fieldName = column.name || column.selector;
+            const fieldType = column.type || 'string';
+            const formatted = formatFieldByType(fieldType, value, column.decimals);
+            const key = id + '_' + column.selector;
 
-          return (
-            <div key={key} className="at-row ot-row">
-              <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
-              <ObjectTableColumn column={column}>
-                <Editable
-                  fieldValue={formatted}
-                  editable={column.editable}
-                  fieldName={column.selector}
-                  placeholder={column.selector}
-                  onValidate={column.onValidate}
-                  onAccept={column.onAccept}
-                />
-              </ObjectTableColumn>
-            </div>
-          );
-        })}
+            return (
+              <div key={key} className="at-row ot-row">
+                <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
+                <ObjectTableColumn column={column}>
+                  {asForm ? (
+                    <input
+                      type="text"
+                      name={column.selector}
+                      value={value}
+                      size="{value ? value.length + 10 : '100%'}"
+                    ></input>
+                  ) : (
+                    <Editable
+                      fieldValue={formatted}
+                      editable={column.editable}
+                      fieldName={column.selector}
+                      placeholder={column.selector}
+                      onValidate={column.onValidate}
+                      onAccept={column.onAccept}
+                    />
+                  )}
+                </ObjectTableColumn>
+              </div>
+            );
+          })}
+        </form>
       </div>
     </div>
   );

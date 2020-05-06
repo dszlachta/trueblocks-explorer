@@ -11,6 +11,7 @@ import { stateFromStorage } from 'components/utils';
 import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/Dashboard';
 import { collectionsDefault, collectionsReducer } from 'pages/Collections/Collections';
 import { monitorsDefault, monitorsReducer } from 'pages/Monitors/Monitors';
+import { appearancesDefault, appearancesReducer } from 'pages/Appearances/Appearances';
 import { tagsDefault, tagsReducer } from 'pages/Tags/Tags';
 import { explorerDefault, explorerReducer } from 'pages/Explorer/Explorer';
 import { namesDefault, namesReducer } from 'pages/Names/Names';
@@ -34,6 +35,7 @@ const defaultData = {
   dashboard: dashboardDefault,
   collections: collectionsDefault,
   monitors: monitorsDefault,
+  appearances: appearancesDefault,
   tags: tagsDefault,
   explorer: explorerDefault,
   names: namesDefault,
@@ -55,6 +57,7 @@ function App() {
   const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, defaultData['dashboard']);
   const [collectionsState, collectionsDispatch] = useReducer(collectionsReducer, defaultData['collections']);
   const [monitorsState, monitorsDispatch] = useReducer(monitorsReducer, defaultData['monitors']);
+  const [appearancesState, appearancesDispatch] = useReducer(appearancesReducer, defaultData['appearances']);
   const [tagsState, tagsDispatch] = useReducer(tagsReducer, defaultData['tags']);
   const [explorerState, explorerDispatch] = useReducer(explorerReducer, defaultData['explorer']);
   const [namesState, namesDispatch] = useReducer(namesReducer, defaultData['names']);
@@ -74,6 +77,7 @@ function App() {
     dashboard: { dashboard: dashboardState, dispatch: dashboardDispatch },
     collections: { collections: collectionsState, dispatch: collectionsDispatch },
     monitors: { monitors: monitorsState, dispatch: monitorsDispatch },
+    appearances: { appearances: appearancesState, dispatch: appearancesDispatch },
     tags: { tags: tagsState, dispatch: tagsDispatch },
     explorer: { explorer: explorerState, dispatch: explorerDispatch },
     names: { names: namesState, dispatch: namesDispatch },

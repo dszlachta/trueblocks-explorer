@@ -1,1 +1,41 @@
 /* add custom css code for the Appearances compnent here. */
+
+.focusAddr {
+  border-radius: 5px;
+  border: 1px dotted orange;
+  background-color: lightyellow;
+  color: black;
+}
+
+.exchangeAddr {
+  background-color: lightblue;
+  color: darkblue;
+}
+
+.isError {
+  display: inline;
+  background-color: red;
+  color: yellow;
+  margin-left: 5px;
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-style: unset;
+}
+
+.internal {
+  display: inline;
+  background-color: blue;
+  color: white;
+  margin-left: 5px;
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-style: unset;
+}
+
+.underField {
+  font-size: 0.9em;
+  color: red;
+  font-style: italic;
+}

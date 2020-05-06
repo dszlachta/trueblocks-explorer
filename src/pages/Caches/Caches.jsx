@@ -140,20 +140,25 @@ export const Caches = () => {
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(caches.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-    tagList = sortStrings(tagList, true);
-    tagList.unshift('All');
-    setTagList(tagList);
+    if (caches) {
+      let tagList = [...new Set(caches.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
+      setTagList(tagList);
+    }
   }, [caches]);
 
   useMemo(() => {
-    const result = caches.filter((item) => {
-      return curTag === 'All' || item.tags.includes(curTag);
-    });
-    setFiltered(result);
+    if (caches) {
+      const result = caches.filter((item) => {
+        return curTag === 'All' || item.tags.includes(curTag);
+      });
+      setFiltered(result);
+    }
   }, [caches, curTag]);
 
   let custom = null;
+  let title = "Caches";
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -171,7 +176,7 @@ export const Caches = () => {
         name={'cachesTable'}
         data={filtered}
         columns={cachesSchema}
-        title="Caches"
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}

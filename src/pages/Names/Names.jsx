@@ -11,6 +11,7 @@ import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'compone
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
+import { AddName, EditName } from './NamesDialogs';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 
@@ -124,20 +125,25 @@ export const Names = () => {
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
         case 'addmonitor':
-          {
-            const cmdQuery = 'addrs=' + action.record_id + '&verbose=10';
-            statusDispatch(LOADING);
-            sendServerCommand('http://localhost:8080/export/', cmdQuery).then((theData) => {
-              // the command worked, but now we need to reload the data
-              statusDispatch(NOT_LOADING);
-              navigate('/monitors/explore?addrs=' + action.record_id, false);
-            });
-          }
-          setEditDialog({ showing: true, name: 'Reload', record: record });
+          // {
+          //   const cmdQuery = 'addrs=' + action.record_id + '&verbose=10&dollars';
+          //   statusDispatch(LOADING);
+          //   sendServerCommand('http://localhost:8080/export/', cmdQuery).then((theData) => {
+          //     // the command worked, but now we need to reload the data
+          //     statusDispatch(NOT_LOADING);
+          //     if (editDialog) {
+          //       // only navigate if the user hasn't shut the dialog
+          //       navigate('/monitors/explore?addrs=' + action.record_id, false);
+          //     }
+          //   });
+          // }
+          // setEditDialog({ showing: true, name: 'Reload', record: record });
+          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          //          navigate('/monitors/explore?addrs=' + action.record_id, false);
           break;
         case 'view':
           statusDispatch(LOADING);
-          navigate('/monitors/explore?addrs=' + action.record_id, false);
+          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           break;
         // EXISTING_CODE
         default:
@@ -160,20 +166,25 @@ export const Names = () => {
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(names.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-    tagList = sortStrings(tagList, true);
-    tagList.unshift('All');
-    setTagList(tagList);
+    if (names) {
+      let tagList = [...new Set(names.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
+      setTagList(tagList);
+    }
   }, [names]);
 
   useMemo(() => {
-    const result = names.filter((item) => {
-      return curTag === 'All' || item.tags.includes(curTag);
-    });
-    setFiltered(result);
+    if (names) {
+      const result = names.filter((item) => {
+        return curTag === 'All' || item.tags.includes(curTag);
+      });
+      setFiltered(result);
+    }
   }, [names, curTag]);
 
   let custom = null;
+  let title = 'Names';
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -191,23 +202,14 @@ export const Names = () => {
         name={'namesTable'}
         data={filtered}
         columns={namesSchema}
-        title="Names"
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
         buttonHandler={namesHandler}
       />
-      <Modal showing={editDialog.showing} handler={namesHandler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={namesSchema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      <AddName showing={editDialog.showing} handler={namesHandler} object={editDialog.record} />
       {custom}
     </div>
   );

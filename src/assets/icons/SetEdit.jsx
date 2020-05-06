@@ -9,7 +9,8 @@ import Undelete from 'assets/icons/Undelete';
 import Remove from 'assets/icons/Remove';
 import ExternalLink from 'assets/icons/ExternalLink';
 import AddMonitor from 'assets/icons/AddMonitor';
+import AddName from 'assets/icons/AddName';
 import View from 'assets/icons/View';
 //import View from 'assets/icons/View';
 
-export { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink, AddMonitor, View };
+export { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink, AddMonitor, AddName, View };

@@ -140,20 +140,25 @@ export const Signatures = () => {
 
   useMemo(() => {
     // prettier-ignore
-    let tagList = [...new Set(signatures.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-    tagList = sortStrings(tagList, true);
-    tagList.unshift('All');
-    setTagList(tagList);
+    if (signatures) {
+      let tagList = [...new Set(signatures.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+      tagList = sortStrings(tagList, true);
+      tagList.unshift('All');
+      setTagList(tagList);
+    }
   }, [signatures]);
 
   useMemo(() => {
-    const result = signatures.filter((item) => {
-      return curTag === 'All' || item.tags.includes(curTag);
-    });
-    setFiltered(result);
+    if (signatures) {
+      const result = signatures.filter((item) => {
+        return curTag === 'All' || item.tags.includes(curTag);
+      });
+      setFiltered(result);
+    }
   }, [signatures, curTag]);
 
   let custom = null;
+  let title = "Signatures";
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -171,7 +176,7 @@ export const Signatures = () => {
         name={'signaturesTable'}
         data={filtered}
         columns={signaturesSchema}
-        title="Signatures"
+        title={title}
         search={true}
         searchFields={searchFields}
         pagination={true}

@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import React, { Fragment, useState, useEffect } from 'react';
 
 import { Tablebar, ObjectTable, IconTray } from 'components';
@@ -180,7 +181,7 @@ export const DataTable = ({
   const debug = false;
   return (
     <Fragment key="dt">
-      {debug && <pre>{JSON.stringify(widStr, null, 2)}</pre>}
+      {debug && <pre>{JSON.stringify(filteredData.length - 1, null, 2)}</pre>}
       {showTools && (
         <Tablebar
           title={title}
@@ -322,16 +323,7 @@ const DataTableRows = ({
                     found = columns.filter((col) => {
                       return col.selector === underField;
                     });
-                    if (found.length > 0)
-                      underField = (
-                        <div>
-                          <small>
-                            <i>
-                              <font color="red">{calcValue(record, found[0])}</font>
-                            </i>
-                          </small>
-                        </div>
-                      );
+                    if (found.length > 0) underField = <div className="underField">{calcValue(record, found[0])}</div>;
                   }
                   if (!value || value === undefined) value = type === 'spacer' ? '' : column.isPill ? '' : '-';
                   let cn = 'at-cell dt-cell ';
