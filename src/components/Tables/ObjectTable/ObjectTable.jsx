@@ -59,9 +59,7 @@ export const ObjectTable = ({
             <div key={key} className="at-row ot-row">
               <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
               <ObjectTableColumn column={column}>
-                <div>
-                  {formatted}
-                </div>
+                <div>{formatted}</div>
               </ObjectTableColumn>
             </div>
           );
