@@ -181,7 +181,7 @@ export const [{PROPER}] = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={[{LONG}]Handler}
+        parentHandler={[{LONG}]Handler}
       />
       <Modal showing={editDialog.showing} handler={[{LONG}]Handler}>
         {/* prettier-ignore */}

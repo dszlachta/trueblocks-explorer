@@ -8,7 +8,7 @@
   --secondary-text-color: #265077;
   --secondary-bg-color: white;
 
-  /* styling for tables (at=all tables, ot=object, dt=data, gt=grid, ct=cart) */
+  /* styling for tables (at=all tables, ot=object, dt=data, gt=grid, ct=cart, st-sidebar table) */
   --at-primary-text-color: lightyellow;
   --at-primary-bg-color: #265077;
 

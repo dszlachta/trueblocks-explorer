@@ -158,7 +158,7 @@ export const Collections = () => {
   }, [collections, curTag]);
 
   let custom = null;
-  let title = "Collections";
+  let title = 'Collections';
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -181,7 +181,7 @@ export const Collections = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={collectionsHandler}
+        parentHandler={collectionsHandler}
       />
       <Modal showing={editDialog.showing} handler={collectionsHandler}>
         {/* prettier-ignore */}

@@ -10,7 +10,7 @@ import { ChevronsUp, ChevronUp, ChevronDown, ChevronsDown } from 'assets/icons/S
 import './Pagination.css';
 
 //-----------------------------------------------------------------
-export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curPage: 0 } }) => {
+export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curPage: 0, paginationParts: '' } }) => {
   useEffect(() => {
     Mousetrap.bind(['home'], getHandler(pagingCtx, 'home', handler));
     Mousetrap.bind(['end'], getHandler(pagingCtx, 'end', handler));
@@ -31,10 +31,11 @@ export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curP
   if (!enabled) return <div></div>; // we need this div so spacing of title works right
   if (!handler) return <div className="warning">Pagination is enabled, but no handler given</div>;
 
+  const parts = pagingCtx.paginationParts;
   return (
     <div className="pagination-container">
-      {!pagingCtx.arrowsOnly && <Selector handler={handler} pagingCtx={pagingCtx} />}
-      {!pagingCtx.arrowsOnly && <Display pagingCtx={pagingCtx} />}
+      {parts !== 'arrows-only' && <Selector handler={handler} pagingCtx={pagingCtx} />}
+      {parts !== 'arrows-only' && <Display pagingCtx={pagingCtx} />}
       {
         <Fragment>
           <PagingIcon name="home" handler={handler} pagingCtx={pagingCtx} />

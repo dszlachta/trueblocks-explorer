@@ -158,7 +158,7 @@ export const Signatures = () => {
   }, [signatures, curTag]);
 
   let custom = null;
-  let title = "Signatures";
+  let title = 'Signatures';
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -181,7 +181,7 @@ export const Signatures = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={signaturesHandler}
+        parentHandler={signaturesHandler}
       />
       <Modal showing={editDialog.showing} handler={signaturesHandler}>
         {/* prettier-ignore */}

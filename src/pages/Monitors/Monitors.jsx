@@ -199,7 +199,7 @@ export const Monitors = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={monitorsHandler}
+        parentHandler={monitorsHandler}
       />
       <Modal showing={editDialog.showing} handler={monitorsHandler}>
         {/* prettier-ignore */}

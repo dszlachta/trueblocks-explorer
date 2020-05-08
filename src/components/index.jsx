@@ -6,7 +6,7 @@ import { Menu, MenuItem } from './Menu/Menu';
 import { IconTray, ClickableIcon } from './IconTray/IconTray';
 import { Modal } from './Modal/Modal';
 import { Editable } from './Editable/Editable';
-import { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable } from './Tables';
+import { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable, SidebarTable } from './Tables';
 import { Panel } from './Panels/Panel/Panel';
 
 export {
@@ -27,4 +27,5 @@ export {
   GridTable,
   ChartTable,
   PanelTable,
+  SidebarTable,
 };

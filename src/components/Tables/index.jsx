@@ -4,4 +4,6 @@ import { GridTable } from './GridTable/GridTable';
 import { PanelTable } from './PanelTable/PanelTable';
 import { ChartTable } from './ChartTable/ChartTable';
 import { ObjectTable } from './ObjectTable/ObjectTable';
-export { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable };
+import { SidebarTable } from './SidebarTable/SidebarTable';
+
+export { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable, SidebarTable };

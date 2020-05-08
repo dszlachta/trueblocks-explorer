@@ -158,7 +158,7 @@ export const Caches = () => {
   }, [caches, curTag]);
 
   let custom = null;
-  let title = "Caches";
+  let title = 'Caches';
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -181,7 +181,7 @@ export const Caches = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={cachesHandler}
+        parentHandler={cachesHandler}
       />
       <Modal showing={editDialog.showing} handler={cachesHandler}>
         {/* prettier-ignore */}

@@ -161,7 +161,7 @@ export const Other = () => {
   }, [other, curTag]);
 
   let custom = null;
-  let title = "Other";
+  let title = 'Other';
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -184,7 +184,7 @@ export const Other = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={otherHandler}
+        parentHandler={otherHandler}
       />
       <Modal showing={editDialog.showing} handler={otherHandler}>
         {/* prettier-ignore */}

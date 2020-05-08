@@ -80,7 +80,7 @@ export const Digests = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={digestsHandler}
+        parentHandler={digestsHandler}
       />
     );
     //

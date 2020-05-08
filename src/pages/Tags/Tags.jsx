@@ -158,7 +158,7 @@ export const Tags = () => {
   }, [tags, curTag]);
 
   let custom = null;
-  let title = "Tags";
+  let title = 'Tags';
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -181,7 +181,7 @@ export const Tags = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={tagsHandler}
+        parentHandler={tagsHandler}
       />
       <Modal showing={editDialog.showing} handler={tagsHandler}>
         {/* prettier-ignore */}

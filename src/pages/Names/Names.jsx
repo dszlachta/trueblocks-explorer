@@ -207,7 +207,7 @@ export const Names = () => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={namesHandler}
+        parentHandler={namesHandler}
       />
       <AddName showing={editDialog.showing} handler={namesHandler} object={editDialog.record} />
       {custom}

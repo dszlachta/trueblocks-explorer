@@ -13,18 +13,30 @@ export const Tablebar = ({
   searchFields = [],
   filterText = '',
   pagination = false,
-  pagingCtx = { curPage: 0 },
+  pagingCtx = { curPage: 0, paginationParts: '' },
   handler = null,
   asHeader = true,
   footerIcons = null,
 }) => {
+  const parts = pagingCtx.paginationParts;
+  let searchPart = true;
+  let titlePart = true;
+  let arrowsPart = true;
+  if (typeof parts === 'string') {
+    searchPart = parts === '';
+    titlePart = parts === '';
+    arrowsPart = true;
+  }
+  const count = searchPart + titlePart + arrowsPart;
   const header = (
     <div className="tablebar-container">
-      <div style={{ display: 'grid', gridTemplateColumns: pagingCtx.arrowsOnly ? '1fr' : '3fr 7fr 3fr' }}>
-        {!pagingCtx.arrowsOnly && (
+      <div
+        style={{ display: 'grid', gridTemplateColumns: count === 1 ? '1fr' : count === 2 ? '1fr 1fr' : '3fr 7fr 3fr' }}
+      >
+        {searchPart && (
           <Search enabled={search} searchFields={searchFields} searchText={filterText} handler={handler} />
         )}
-        {!pagingCtx.arrowsOnly && <Title title={title} />}
+        {titlePart && <Title title={title} />}
         <Pagination enabled={pagination} handler={handler} pagingCtx={pagingCtx} />
       </div>
     </div>
@@ -47,7 +59,7 @@ const TableFooterRow = ({ searchFields, footerIcons }) => {
   };
 
   return (
-    <div key="footer-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+    <div key="footer-row" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 2fr' }}>
       <div>
         Searching fields:{' '}
         <div style={{ display: 'inline', fontStyle: 'italic' }}>

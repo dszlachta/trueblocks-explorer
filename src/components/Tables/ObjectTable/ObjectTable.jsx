@@ -14,7 +14,7 @@ export const ObjectTable = ({
   search = false,
   searchFields = [],
   pagination = false,
-  arrowsOnly = false,
+  paginationParts = '',
   showHidden = false,
   handler = null,
   asForm = false,
@@ -33,13 +33,15 @@ export const ObjectTable = ({
       filterText={filterText}
       searchFields={searchFields}
       pagination={pagination}
-      pagingCtx={{ curPage: 0, arrowsOnly: arrowsOnly }}
+      pagingCtx={{ curPage: 0, paginationParts: paginationParts }}
       handler={handler}
     />
   );
 
+  let debug = false;
   return (
     <div className="ot-container">
+      {debug && <pre>{JSON.stringify(columns, null, 2)}</pre>}
       {tableBar}
       <div className={'ot-body at-body'}>
         <form>
@@ -98,8 +100,11 @@ const ObjectTableSider = ({ children }) => {
 export const ObjectTableColumn = ({ column, children }) => {
   const { align, editable } = column;
   let cn = 'ot-cell' + (editable ? ' editable' : '') + (align === 'wordwrap' ? ' ' : ' nowrap');
+  if (column.cn) cn += ' ' + column.cn;
+  let debug = false;
   return (
-    <div className={cn} align="left">
+    <div style={{ overflow: 'none' }} className={cn} align="left">
+      {debug && <pre>{JSON.stringify(cn, null, 2)}</pre>}
       {children}
     </div>
   );

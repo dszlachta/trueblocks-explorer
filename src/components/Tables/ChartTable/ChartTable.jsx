@@ -192,7 +192,7 @@ function Scatter({ data, columns, chartCtx }) {
           title=""
           search={false}
           pagination={true}
-          arrowsOnly={true}
+          paginationParts="arrows-only"
         />
       </div>
       <div></div>

@@ -1,0 +1,26 @@
+.sidebar-table {
+  display: grid;
+  grid-template-columns: 5fr 3fr;
+}
+
+.st-left {
+  overflow: hidden;
+}
+
+.st-right {
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.ot-row {
+  display: grid;
+  grid-template-columns: 4fr 14fr;
+  justify-content: space-between;
+}
+
+.at-sider {
+  background-color: var(--at-bg-color);
+  color: var(--at-text-color);
+  font-size: 0.8em;
+  font-weight: 700;
+}

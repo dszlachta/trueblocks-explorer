@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { SidebarTable, DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -160,7 +160,7 @@ export const Appearances = ({ addresses = [], name }) => {
         handler={appearancesHandler}
         loading={loading}
       />
-      <DataTable
+      <SidebarTable
         name={'appearancesTable'}
         data={filtered}
         columns={appearancesSchema}
@@ -169,7 +169,7 @@ export const Appearances = ({ addresses = [], name }) => {
         searchFields={searchFields}
         pagination={true}
         recordIcons={recordIconList}
-        buttonHandler={appearancesHandler}
+        parentHandler={appearancesHandler}
       />
       <AddName showing={editDialog.showing} handler={appearancesHandler} object={{ address: curAdd }} />
       {custom}
@@ -179,7 +179,6 @@ export const Appearances = ({ addresses = [], name }) => {
 
 // auto-generate: page-settings
 const recordIconList = [
-  'ExternalLink',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',
@@ -247,6 +246,7 @@ export const useAppearances = () => {
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
   // EXISTING_CODE
+  if (!record) return '';
   const internal = record.from !== g_focusAddr && record.to !== g_focusAddr;
   switch (fieldName) {
     case 'id':
@@ -494,6 +494,7 @@ export const appearancesSchema = [
     searchable: true,
     onDisplay: getFieldValue,
     width: 5,
+    hidden: true,
   },
   {
     name: 'Events',
@@ -533,6 +534,7 @@ export const appearancesSchema = [
     type: 'string',
     searchable: true,
     width: 5,
+    hidden: true,
   },
   {
     name: 'Error',
@@ -551,11 +553,6 @@ export const appearancesSchema = [
     width: 2,
     align: 'center',
     onDisplay: getFieldValue,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
   },
 ];
 // auto-generate: schema

@@ -21,13 +21,13 @@ export const DataTable = ({
   search = false,
   searchFields = [],
   pagination = false,
-  arrowsOnly = false,
+  paginationParts = '',
   showHidden = false,
   recordIcons = [],
-  buttonHandler = null,
+  parentHandler = null,
 }) => {
   const [pagingCtx, setPaging] = useState(
-    stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0, arrowsOnly: arrowsOnly })
+    stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0, paginationParts: paginationParts })
   );
   const [expandedRow, setExpandedRow] = useState('');
   const [selectedRow, setSelectedRow] = useState('');
@@ -35,6 +35,11 @@ export const DataTable = ({
 
   const [sortCtx1, setSortCtx1] = useState(stateFromStorage(name + '_sort1', { sortBy: '', sortDir: 'asc' }));
   const [sortCtx2, setSortCtx2] = useState(stateFromStorage(name + '_sort2', { sortBy: '', sortDir: 'asc' }));
+
+  function changeRow(rowId) {
+    setSelectedRow(rowId);
+    if (parentHandler) parentHandler({ type: 'row-changed', record_id: rowId });
+  }
 
   const dataTableHandler = (action) => {
     const { perPage, curPage } = pagingCtx;
@@ -47,10 +52,15 @@ export const DataTable = ({
         break;
 
       case 'perPage':
-        const newCtx = { perPage: action.payload, curPage: 0, total: filteredData.length, arrowsOnly: arrowsOnly };
+        const newCtx = {
+          perPage: action.payload,
+          curPage: 0,
+          total: filteredData.length,
+          paginationParts: paginationParts,
+        };
         setPaging(newCtx);
         localStorage.setItem('paging', JSON.stringify(newCtx));
-        setSelectedRow(calcValue(filteredData[0], idCol));
+        changeRow(calcValue(filteredData[0], idCol));
         break;
       case 'sortBy':
         let newSort1 = sortCtx1;
@@ -73,12 +83,12 @@ export const DataTable = ({
         localStorage.setItem(name + '_sort1', JSON.stringify(newSort1));
         localStorage.setItem(name + '_sort2', JSON.stringify(newSort2));
         setPaging({ ...pagingCtx, curPage: 0, total: filteredData.length });
-        setSelectedRow(calcValue(filteredData[0], idCol));
+        changeRow(calcValue(filteredData[0], idCol));
         break;
 
       case 'home':
         setPaging({ ...pagingCtx, curPage: 0, total: filteredData.length });
-        setSelectedRow(calcValue(filteredData[0], idCol));
+        changeRow(calcValue(filteredData[0], idCol));
         break;
       case 'end':
         setPaging({
@@ -86,18 +96,18 @@ export const DataTable = ({
           curPage: Math.floor(filteredData.length / perPage) - !(filteredData.length % perPage),
           total: filteredData.length,
         });
-        setSelectedRow(calcValue(filteredData[filteredData.length - 1], idCol));
+        changeRow(calcValue(filteredData[filteredData.length - 1], idCol));
         break;
 
       case 'right':
         {
           setPaging({ ...pagingCtx, curPage: curPage + 1, total: filteredData.length });
-          setSelectedRow(calcValue(filteredData[perPage * (curPage + 1)], idCol));
+          changeRow(calcValue(filteredData[perPage * (curPage + 1)], idCol));
         }
         break;
       case 'left':
         setPaging({ ...pagingCtx, curPage: curPage - 1, total: filteredData.length });
-        setSelectedRow(calcValue(filteredData[perPage * (curPage - 1)], idCol));
+        changeRow(calcValue(filteredData[perPage * (curPage - 1)], idCol));
         break;
 
       case 'down':
@@ -108,7 +118,7 @@ export const DataTable = ({
               curIndex = index;
             }
           });
-          if (curIndex < filteredData.length - 1) setSelectedRow(calcValue(filteredData[curIndex + 1], idCol));
+          if (curIndex < filteredData.length - 1) changeRow(calcValue(filteredData[curIndex + 1], idCol));
           if (curIndex === pagingCtx.perPage * (pagingCtx.curPage + 1) - 1) dataTableHandler({ type: 'right' });
         }
         break;
@@ -120,21 +130,21 @@ export const DataTable = ({
               curIndex = index;
             }
           });
-          if (curIndex > 0) setSelectedRow(calcValue(filteredData[curIndex - 1], idCol));
+          if (curIndex > 0) changeRow(calcValue(filteredData[curIndex - 1], idCol));
         }
         break;
 
       case 'row_click':
         if (expandedRow === action.record_id) setExpandedRow('');
-        setSelectedRow(action.record_id);
+        changeRow(action.record_id);
         setExpandedRow(expandedRow === action.record_id ? '' : action.record_id);
         break;
       case 'row_doubleclick':
-        if (buttonHandler) buttonHandler({ type: 'Edit', record_id: action.record_id });
+        if (parentHandler) parentHandler({ type: 'Edit', record_id: action.record_id });
         break;
 
       default:
-        if (buttonHandler) buttonHandler(action);
+        if (parentHandler) parentHandler(action);
         break;
     }
   };
@@ -156,7 +166,7 @@ export const DataTable = ({
 
   useEffect(() => {
     setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: hasData ? filteredData.length : 0 });
-    setSelectedRow('');
+    changeRow('');
   }, [data, filterText]);
   //  }, [data, filterText, hasData, filteredData.length, pagingCtx.perPage]);
 
@@ -190,7 +200,7 @@ export const DataTable = ({
           filterText={filterText}
           searchFields={searchFields}
           pagination={pagination}
-          pagingCtx={{ ...pagingCtx, arrowsOnly: arrowsOnly }}
+          pagingCtx={{ ...pagingCtx, paginationParts: paginationParts }}
         />
       )}
       <DataTableHeader
