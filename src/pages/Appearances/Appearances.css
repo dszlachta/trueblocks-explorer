@@ -1,10 +1,19 @@
 /* add custom css code for the Appearances compnent here. */
 
-.focusAddr {
+.focusValue {
   border-radius: 5px;
-  border: 1px dotted orange;
-  background-color: lightyellow;
-  color: black;
+  padding: 2px;
+  color: var(--secondary-bg-color);
+  background-color: var(--okay-bg-color);
+}
+.nonFocusValue {
+  border-radius: 5px;
+  padding: 2px;
+  font-weight: bold;
+}
+.underField {
+  font-size: 0.8em;
+  font-style: italic;
 }
 
 .exchangeAddr {
@@ -32,10 +41,4 @@
   padding-left: 5px;
   padding-right: 5px;
   font-style: unset;
-}
-
-.underField {
-  font-size: 0.9em;
-  color: red;
-  font-style: italic;
 }

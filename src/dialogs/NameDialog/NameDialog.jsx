@@ -35,7 +35,6 @@ export const AddName = ({ showing, handler, object }) => {
             columns={editNameSchema}
             title="Add Name"
             showHidden={false}
-            asForm={true}
           />
     </Modal>
   );

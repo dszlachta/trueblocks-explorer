@@ -144,6 +144,7 @@ export const DataTable = ({
         break;
 
       default:
+        console.log('to parent: ', action);
         if (parentHandler) parentHandler(action);
         break;
     }

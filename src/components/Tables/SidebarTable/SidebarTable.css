@@ -8,19 +8,40 @@
 }
 
 .st-right {
-  margin-top: 12px;
+  margin-top: -15px;
   overflow: hidden;
 }
 
-/* .ot-row {
+.st-container {
+  padding: 2px;
+}
+
+.st-body {
+}
+
+.st-row {
   display: grid;
   grid-template-columns: 4fr 14fr;
   justify-content: space-between;
 }
 
-.at-sider {
+.st-cell {
+  padding: var(--at-padding);
+  padding-left: 4px;
+}
+
+.st-cell.editable {
+  display: block;
+  font-style: italic;
+}
+.st-cell.nowrap {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.st-sider {
   background-color: var(--at-bg-color);
   color: var(--at-text-color);
   font-size: 0.8em;
   font-weight: 700;
-} */
+}

@@ -7,9 +7,9 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { SidebarTable, DataTable, PageCaddie } from 'components';
+import { SidebarTable, PageCaddie } from 'components';
 import { getServerData, sortArray, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 import { getIcon } from 'pages/utils';
 import { useStatus } from 'store/status_store';
@@ -17,17 +17,16 @@ import { useStatus } from 'store/status_store';
 import './Appearances.css';
 
 // EXISTING_CODE
-//import { data } from './data';
 import { useNames } from 'pages/Names/Names';
-let g_focusAddr = '';
-var handler = null;
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+let g_focusValue = '';
+var g_Handler = null;
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
 export const Appearances = ({ addresses = [], name }) => {
   const { appearances, dispatch } = useAppearances();
   const loading = useStatus().state.loading;
-  const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(appearancesDefault);
   const [tagList, setTagList] = useState([]);
@@ -42,7 +41,7 @@ export const Appearances = ({ addresses = [], name }) => {
 
   const dataUrl = 'http://localhost:8080/export';
   const dataQuery = 'addrs=' + addresses.value + '&verbose=7&dollars&articulate&write_txs&write_traces';
-  g_focusAddr = addresses.value;
+  g_focusValue = addresses.value;
   function addendum(record, record_id) {
     let ret = '&verbose=7';
     // EXISTING_CODE
@@ -52,6 +51,7 @@ export const Appearances = ({ addresses = [], name }) => {
 
   const appearancesHandler = useCallback(
     (action) => {
+      console.log('appearancesHandler: ', action);
       const record_id = action.record_id;
       setCurAddr(record_id);
       let record = filtered.filter((record) => {
@@ -149,7 +149,7 @@ export const Appearances = ({ addresses = [], name }) => {
   //     return rec.address === addresses.value;
   //   });
   // title += name ? ' (' + name[0] + ')' : '';
-  handler = appearancesHandler;
+  g_Handler = appearancesHandler;
   // EXISTING_CODE
 
   return (
@@ -173,7 +173,7 @@ export const Appearances = ({ addresses = [], name }) => {
         recordIcons={recordIconList}
         parentHandler={appearancesHandler}
       />
-      {/*<AddName showing={editDialog.showing} handler={appearancesHandler} object={{ address: curAdd }} />*/}
+      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curAdd }} />
       {custom}
     </div>
   );
@@ -181,6 +181,7 @@ export const Appearances = ({ addresses = [], name }) => {
 
 // auto-generate: page-settings
 const recordIconList = [
+  'ExternalLink/None',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',
@@ -249,8 +250,10 @@ export const useAppearances = () => {
 function getFieldValue(record, fieldName) {
   // EXISTING_CODE
   if (!record) return '';
-  const internal = record.from !== g_focusAddr && record.to !== g_focusAddr;
+  const internal = record.from !== g_focusValue && record.to !== g_focusValue;
   switch (fieldName) {
+    case 'ether':
+      return record.ether;
     case 'id':
       return record.hash;
     case 'marker':
@@ -264,32 +267,39 @@ function getFieldValue(record, fieldName) {
     case 'isError':
       return record.isError ? 'error' : '';
     case 'gasCost':
-      if (record.from !== g_focusAddr) return '';
+      if (record.from !== g_focusValue) return '';
       return record.gasCost;
     case 'internal':
       return internal ? 'int' : '';
-    case 'from':
-      if (record.from === g_focusAddr) return <div className="focusAddr">{record.from}</div>;
-      return record.from;
+    case 'from': {
+      const val = record.fromName ? record.fromName.name : record.from;
+      if (record.from === g_focusValue) return <div className="focusValue">{val}</div>;
+      return <div className="nonFocusValue">{val}</div>;
+    }
+    case 'to': {
+      const val = record.toName ? record.toName.name : record.to;
+      if (record.to === g_focusValue) return <div className="focusValue">{val}</div>;
+      return <div className="nonFocusValue">{val}</div>;
+    }
     case 'fromName':
       return record.fromName ? (
-        record.fromName.name
+        record.from
       ) : (
         <div
-          onClick={(e) => handleClick(e, handler, { type: 'Add', record_id: record.from })}
+          onClick={(e) => handleClick(e, g_Handler, { type: 'Add', record_id: record.from })}
           style={{ color: 'green' }}
         >
           {getIcon(record.from, 'AddName', false, false, 12)}
         </div>
       );
-    case 'to':
-      if (record.to === g_focusAddr) return <div className="focusAddr">{record.to}</div>;
-      return record.to;
     case 'toName':
       return record.toName ? (
-        record.toName.name
+        record.to
       ) : (
-        <div onClick={(e) => handleClick(e, handler, { type: 'Add', record_id: record.to })} style={{ color: 'green' }}>
+        <div
+          onClick={(e) => handleClick(e, g_Handler, { type: 'Add', record_id: record.to })}
+          style={{ color: 'green' }}
+        >
           {getIcon(record.to, 'AddName', false, false, 12)}
         </div>
       );
@@ -420,6 +430,7 @@ export const appearancesSchema = [
     selector: 'ether',
     type: 'blknum',
     width: 2,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Gas',
@@ -555,6 +566,11 @@ export const appearancesSchema = [
     width: 2,
     align: 'center',
     onDisplay: getFieldValue,
+  },
+  {
+    name: 'Icons',
+    selector: 'icons',
+    type: 'icons',
   },
 ];
 // auto-generate: schema

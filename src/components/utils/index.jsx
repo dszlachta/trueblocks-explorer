@@ -153,7 +153,7 @@ export const currentPage = () => {
 
 //---------------------------------------------------------------
 export const formatFieldByType = (type, value, decimals = 0) => {
-  if (type[0] === 'C') return 'Unknown class: ' + type + ': ' + JSON.stringify(value, null, 2);
+  if (type[0] === 'C') return JSON.stringify(value, null, 2);
   switch (type) {
     case 'spacer':
       value = '';

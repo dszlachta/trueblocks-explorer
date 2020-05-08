@@ -37,7 +37,9 @@ export function hasFields(columns, fields) {
 export function matches(record, fields, filterText) {
   return (
     fields.reduce((sum, field) => {
-      return sum + record[field].toLowerCase().includes(filterText);
+      return sum + record[field] && typeof record[field] === 'string'
+        ? record[field].toLowerCase().includes(filterText)
+        : '';
     }, 0) > 0
   );
 }
