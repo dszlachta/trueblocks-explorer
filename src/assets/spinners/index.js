@@ -32,8 +32,9 @@ export {
   //  Ouroboro,
 };
 
-export const Spinner = ({ spinner, prompt, color, className, style, size }) => {
-  switch (spinner) {
+export const Spinner = ({ showing, which, color, className, style, size }) => {
+  if (!showing) return <Fragment></Fragment>;
+  switch (which) {
     case 'ellipsis':
       return (
         <Ellipsis color={color} className={className} style={{ textShadow: '2px 2px red', ...style }} size={size} />

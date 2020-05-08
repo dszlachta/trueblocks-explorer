@@ -12,7 +12,7 @@
   overflow: hidden;
 }
 
-.ot-row {
+/* .ot-row {
   display: grid;
   grid-template-columns: 4fr 14fr;
   justify-content: space-between;
@@ -23,4 +23,4 @@
   color: var(--at-text-color);
   font-size: 0.8em;
   font-weight: 700;
-}
+} */

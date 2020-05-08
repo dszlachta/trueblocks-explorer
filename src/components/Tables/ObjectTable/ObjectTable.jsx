@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 
-import { Editable, Tablebar } from 'components';
+import { Tablebar } from 'components';
 import { formatFieldByType, handleClick } from 'components/utils';
 import { calcValue, getPrimaryKey } from 'store';
 
@@ -44,44 +44,28 @@ export const ObjectTable = ({
       {debug && <pre>{JSON.stringify(columns, null, 2)}</pre>}
       {tableBar}
       <div className={'ot-body at-body'}>
-        <form>
-          {columns.map((column, index) => {
-            if (!showHidden && column.hidden) return null;
+        {columns.map((column, index) => {
+          if (!showHidden && column.hidden) return null;
 
-            const value = calcValue(data, column);
-            if (!showHidden && value === '') return null;
+          const value = calcValue(data, column);
+          if (!showHidden && value === '') return null;
 
-            const fieldName = column.name || column.selector;
-            const fieldType = column.type || 'string';
-            const formatted = formatFieldByType(fieldType, value, column.decimals);
-            const key = id + '_' + column.selector;
+          const fieldName = column.name || column.selector;
+          const fieldType = column.type || 'string';
+          const formatted = formatFieldByType(fieldType, value, column.decimals);
+          const key = id + '_' + column.selector;
 
-            return (
-              <div key={key} className="at-row ot-row">
-                <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
-                <ObjectTableColumn column={column}>
-                  {asForm ? (
-                    <input
-                      type="text"
-                      name={column.selector}
-                      value={value}
-                      size="{value ? value.length + 10 : '100%'}"
-                    ></input>
-                  ) : (
-                    <Editable
-                      fieldValue={formatted}
-                      editable={column.editable}
-                      fieldName={column.selector}
-                      placeholder={column.selector}
-                      onValidate={column.onValidate}
-                      onAccept={column.onAccept}
-                    />
-                  )}
-                </ObjectTableColumn>
-              </div>
-            );
-          })}
-        </form>
+          return (
+            <div key={key} className="at-row ot-row">
+              <ObjectTableSider>{fieldName + ':'}</ObjectTableSider>
+              <ObjectTableColumn column={column}>
+                <div>
+                  {formatted}
+                </div>
+              </ObjectTableColumn>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -101,10 +85,8 @@ export const ObjectTableColumn = ({ column, children }) => {
   const { align, editable } = column;
   let cn = 'ot-cell' + (editable ? ' editable' : '') + (align === 'wordwrap' ? ' ' : ' nowrap');
   if (column.cn) cn += ' ' + column.cn;
-  let debug = false;
   return (
     <div style={{ overflow: 'none' }} className={cn} align="left">
-      {debug && <pre>{JSON.stringify(cn, null, 2)}</pre>}
       {children}
     </div>
   );
