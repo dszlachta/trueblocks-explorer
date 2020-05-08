@@ -3,19 +3,16 @@
  * of 'EXISTING_CODE' tags.
  */
 import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
-import { Link } from 'react-dom';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { SidebarTable, DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { SidebarTable, DataTable, PageCaddie } from 'components';
+import { getServerData, sortArray, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 import { getIcon } from 'pages/utils';
-import { AddName, EditName } from 'pages/Names/NamesDialogs';
-
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { useStatus } from 'store/status_store';
 
 import './Appearances.css';
 
@@ -44,7 +41,7 @@ export const Appearances = ({ addresses = [], name }) => {
   // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/export';
-  const dataQuery = 'addrs=' + addresses.value + '&verbose=7&dollars&articulate';
+  const dataQuery = 'addrs=' + addresses.value + '&verbose=7&dollars&articulate&write_txs&write_traces';
   g_focusAddr = addresses.value;
   function addendum(record, record_id) {
     let ret = '&verbose=7';
@@ -123,7 +120,7 @@ export const Appearances = ({ addresses = [], name }) => {
       // let tagList = [...new Set(appearances.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       // tagList = sortStrings(tagList, true);
       // tagList.unshift('All');
-      let tagList = ['All', 'Balances', 'Tokens', 'Neighbors', 'Functions', 'Airdrops']
+      let tagList = ['All', 'Balances', 'Tokens', 'Neighbors', 'Functions', 'Events', 'Airdrops']
       setTagList(tagList);
     }
   }, [appearances]);
@@ -131,7 +128,7 @@ export const Appearances = ({ addresses = [], name }) => {
   useMemo(() => {
     if (appearances) {
       const result = appearances.filter((item) => {
-        return curTag === 'All' || item.tags.includes(curTag);
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
@@ -140,7 +137,12 @@ export const Appearances = ({ addresses = [], name }) => {
   let custom = null;
   let title = 'Appearances';
   // EXISTING_CODE
-  title = addresses.value + (name ? ' (' + name.replace('%20', ' ') + ')' : '');
+  title =
+    addresses.value &&
+    addresses.value.substr(0, 10) +
+      '...' +
+      addresses.value.substr(addresses.value.length - 6, addresses.value.length - 1) +
+      (name ? ' (' + name.replace('%20', ' ') + ')' : '');
   // const name =
   //   names &&
   //   names.filter((rec) => {
@@ -171,7 +173,7 @@ export const Appearances = ({ addresses = [], name }) => {
         recordIcons={recordIconList}
         parentHandler={appearancesHandler}
       />
-      <AddName showing={editDialog.showing} handler={appearancesHandler} object={{ address: curAdd }} />
+      {/*<AddName showing={editDialog.showing} handler={appearancesHandler} object={{ address: curAdd }} />*/}
       {custom}
     </div>
   );

@@ -7,11 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
-import { AddName, EditName } from './NamesDialogs';
+//import { AddName, EditName } from '../../dialogs/NameDialog/NameDialog';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 
@@ -139,7 +139,6 @@ export const Names = () => {
           // }
           // setEditDialog({ showing: true, name: 'Reload', record: record });
           navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
-          //          navigate('/monitors/explore?addrs=' + action.record_id, false);
           break;
         case 'view':
           statusDispatch(LOADING);
@@ -209,7 +208,7 @@ export const Names = () => {
         recordIcons={recordIconList}
         parentHandler={namesHandler}
       />
-      <AddName showing={editDialog.showing} handler={namesHandler} object={editDialog.record} />
+      {/*<AddName showing={editDialog.showing} handler={namesHandler} object={editDialog.record} />*/}
       {custom}
     </div>
   );

@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 import { handleClick } from 'components/utils';
 import './Modal.css';
 
-export const Modal = ({ showing, buttons = ['cancel', 'okay'], small = false, handler, children }) => {
+export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children }) => {
   useEffect(() => {
     Mousetrap.bind(['esc'], (e) => handleClick(e, handler, { type: 'close' }));
     Mousetrap.bind(['enter'], (e) => {
@@ -36,40 +36,28 @@ export const Modal = ({ showing, buttons = ['cancel', 'okay'], small = false, ha
     margin: '0 auto',
     padding: 10,
   };
-  if (small) {
-    backdropStyle = {};
-    modalStyle = {
-      borderRadius: 5,
-      maxWidth: 40,
-      minHeight: 40,
-      margin: '0 auto',
-      padding: 10,
-    };
-  }
 
   return (
     <div style={backdropStyle}>
       <div style={modalStyle}>
         {children}
-        {!small && (
-          <div>
-            {buttons.map((button, index) => {
-              return (
-                <Fragment>
-                  <button
-                    className={index === buttons.length - 1 ? 'selected' : ''}
-                    key={button + index}
-                    onClick={(e) => {
-                      handleClick(e, handler, { type: button });
-                    }}
-                  >
-                    {button}
-                  </button>{' '}
-                </Fragment>
-              );
-            })}
-          </div>
-        )}{' '}
+        <div>
+          {buttons.map((button, index) => {
+            return (
+              <Fragment>
+                <button
+                  className={index === buttons.length - 1 ? 'selected' : ''}
+                  key={button + index}
+                  onClick={(e) => {
+                    handleClick(e, handler, { type: button });
+                  }}
+                >
+                  {button}
+                </button>{' '}
+              </Fragment>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

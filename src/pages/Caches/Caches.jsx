@@ -265,6 +265,8 @@ function getFieldValue(record, fieldName) {
       return record.path;
     case 'bytesPerFile':
       return record.nFiles ? record.sizeInBytes / record.nFiles : 0;
+    case 'perFolder':
+      return record.nFolders ? record.nFiles / record.nFolders : 0;
     default:
       break;
   }
@@ -323,6 +325,13 @@ export const cachesSchema = [
     name: 'Average Size',
     selector: 'bytesPerFile',
     type: 'filesize',
+    width: 1,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'perFolder',
+    selector: 'perFolder',
+    type: 'double',
     width: 1,
     onDisplay: getFieldValue,
   },
