@@ -124,6 +124,7 @@ export const Monitors = () => {
           break;
         // EXISTING_CODE
         case 'externallink':
+          navigate('https://bloxy.info/address/' + action.record_id, true);
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
         case 'view':

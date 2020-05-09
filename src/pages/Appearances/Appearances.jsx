@@ -93,6 +93,7 @@ export const Appearances = ({ addresses = [], name }) => {
           break;
         // EXISTING_CODE
         case 'externallink':
+          navigate('https://bloxy.info/address/' + action.record_id, true);
           navigate('https://etherscan.io/tx/' + action.record_id, true);
           break;
         // EXISTING_CODE
