@@ -27,7 +27,7 @@ export const SettingsSystems = () => {
   let msg = working ? 'All subsystems go...' : 'One or more of the TrueBlocks components is not working properly.';
   if (!working && status.is_testing) {
     msg += ' It appears that the API is in test mode. Wait until the test is finished and then reload.';
-  } else {
+  } else if (!working) {
     msg += '  You will need to fix it before proceeding.';
   }
 

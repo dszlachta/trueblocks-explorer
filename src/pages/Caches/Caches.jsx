@@ -124,7 +124,7 @@ export const Caches = () => {
           break;
       }
     },
-    [dispatch, filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -140,8 +140,8 @@ export const Caches = () => {
 
   useMemo(() => {
     // prettier-ignore
-    if (caches) {
-      let tagList = [...new Set(caches.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if (caches && caches.data) {
+      let tagList = [...new Set(caches.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       tagList = sortStrings(tagList, true);
       tagList.unshift('All');
       setTagList(tagList);
@@ -149,8 +149,8 @@ export const Caches = () => {
   }, [caches]);
 
   useMemo(() => {
-    if (caches) {
-      const result = caches.filter((item) => {
+    if (caches && caches.data) {
+      const result = caches.data.filter((item) => {
         return curTag === 'All' || item.tags.includes(curTag);
       });
       setFiltered(result);
@@ -214,12 +214,14 @@ const defaultSearch = ['path'];
 //----------------------------------------------------------------------
 export function refreshCachesData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let caches = theData.data;
     // EXISTING_CODE
-    result = theData.data[0].caches;
+    if (caches)
+    	caches = caches[0].caches
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    if (caches)
+        theData.data = sortArray(caches, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -228,28 +230,28 @@ export const cachesDefault = [];
 
 //----------------------------------------------------------------------
 export const cachesReducer = (state, action) => {
-  let ret = state;
+  let caches = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = caches.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          caches.data = replaceRecord(caches.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      caches = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return caches;
 };
 
 //----------------------------------------------------------------------

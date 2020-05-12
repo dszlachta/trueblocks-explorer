@@ -124,7 +124,7 @@ export const [{PROPER}] = () => {
           break;
       }
     },
-    [dispatch, filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -140,8 +140,8 @@ export const [{PROPER}] = () => {
 
   useMemo(() => {
     // prettier-ignore
-    if ([{LONG}]) {
-      let tagList = [...new Set([{LONG}].map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if ([{LONG}] && [{LONG}].data) {
+      let tagList = [...new Set([{LONG}].data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       tagList = sortStrings(tagList, true);
       tagList.unshift('All');
       setTagList(tagList);
@@ -149,8 +149,8 @@ export const [{PROPER}] = () => {
   }, [[{LONG}]]);
 
   useMemo(() => {
-    if ([{LONG}]) {
-      const result = [{LONG}].filter((item) => {
+    if ([{LONG}] && [{LONG}].data) {
+      const result = [{LONG}].data.filter((item) => {
         return curTag === 'All' || item.tags.includes(curTag);
       });
       setFiltered(result);
@@ -158,7 +158,7 @@ export const [{PROPER}] = () => {
   }, [[{LONG}], curTag]);
 
   let custom = null;
-  let title = "[{PROPER}]";
+  let title = '[{PROPER}]';
   // EXISTING_CODE
   // EXISTING_CODE
 
@@ -204,11 +204,11 @@ export const [{PROPER}] = () => {
 //----------------------------------------------------------------------
 export function refresh[{PROPER}]Data(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let [{LONG}] = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    theData.data = sortArray([{LONG}], defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -217,28 +217,28 @@ export const [{LONG}]Default = [];
 
 //----------------------------------------------------------------------
 export const [{LONG}]Reducer = (state, action) => {
-  let ret = state;
+  let [{LONG}] = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = [{LONG}].data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          [{LONG}].data = replaceRecord([{LONG}].data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      [{LONG}] = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return [{LONG}];
 };
 
 //----------------------------------------------------------------------

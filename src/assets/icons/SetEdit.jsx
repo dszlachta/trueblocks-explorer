@@ -11,6 +11,6 @@ import ExternalLink from 'assets/icons/ExternalLink';
 import AddMonitor from 'assets/icons/AddMonitor';
 import AddName from 'assets/icons/AddName';
 import View from 'assets/icons/View';
-//import View from 'assets/icons/View';
+import Copy from 'assets/icons/Copy';
 
-export { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink, AddMonitor, AddName, View };
+export { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink, AddMonitor, AddName, View, Copy };

@@ -124,7 +124,7 @@ export const Signatures = () => {
           break;
       }
     },
-    [dispatch, filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -140,8 +140,8 @@ export const Signatures = () => {
 
   useMemo(() => {
     // prettier-ignore
-    if (signatures) {
-      let tagList = [...new Set(signatures.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if (signatures && signatures.data) {
+      let tagList = [...new Set(signatures.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       tagList = sortStrings(tagList, true);
       tagList.unshift('All');
       setTagList(tagList);
@@ -149,8 +149,8 @@ export const Signatures = () => {
   }, [signatures]);
 
   useMemo(() => {
-    if (signatures) {
-      const result = signatures.filter((item) => {
+    if (signatures && signatures.data) {
+      const result = signatures.data.filter((item) => {
         return curTag === 'All' || item.tags.includes(curTag);
       });
       setFiltered(result);
@@ -214,12 +214,12 @@ const defaultSearch = ['encoding', 'type', 'name'];
 //----------------------------------------------------------------------
 export function refreshSignaturesData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let signatures = theData.data;
     // EXISTING_CODE
-    result = theData.data.filter((item) => item.type !== 'constructor');
+    signatures = signatures.filter((item) => item.type !== 'constructor');
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    theData.data = sortArray(signatures, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -228,28 +228,28 @@ export const signaturesDefault = [];
 
 //----------------------------------------------------------------------
 export const signaturesReducer = (state, action) => {
-  let ret = state;
+  let signatures = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = signatures.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          signatures.data = replaceRecord(signatures.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      signatures = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return signatures;
 };
 
 //----------------------------------------------------------------------
@@ -313,6 +313,7 @@ export const signaturesSchema = [
     type: 'hash',
     width: 1,
     searchable: true,
+    copyable: true,
   },
   {
     name: 'Type',

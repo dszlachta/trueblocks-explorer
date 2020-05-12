@@ -38,6 +38,7 @@ export const traceActionsSchema = [
     selector: 'from',
     type: 'address',
     searchable: true,
+    copyable: true,
   },
   {
     name: 'Gas',
@@ -65,6 +66,7 @@ export const traceActionsSchema = [
     selector: 'to',
     type: 'address',
     searchable: true,
+    copyable: true,
   },
   {
     name: 'Value',

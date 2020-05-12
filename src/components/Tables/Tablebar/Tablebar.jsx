@@ -5,6 +5,7 @@ import { Search } from './Search';
 import { getIcon } from 'pages/utils';
 
 import './Tablebar.css';
+import { handleClick } from 'components/utils';
 
 //-----------------------------------------------------------------------
 export const Tablebar = ({
@@ -41,7 +42,7 @@ export const Tablebar = ({
       </div>
     </div>
   );
-  const footer = <TableFooterRow searchFields={searchFields} footerIcons={footerIcons} />;
+  const footer = <TableFooterRow searchFields={searchFields} footerIcons={footerIcons} handler={handler} />;
   return asHeader ? header : footer;
 };
 
@@ -51,7 +52,7 @@ const Title = ({ title }) => {
 };
 
 //-----------------------------------------------------------------
-const TableFooterRow = ({ searchFields, footerIcons }) => {
+const TableFooterRow = ({ searchFields, footerIcons, handler }) => {
   const style1 = {
     alignSelf: 'start',
     justifySelf: 'end',
@@ -74,8 +75,19 @@ const TableFooterRow = ({ searchFields, footerIcons }) => {
       <div style={{ justifySelf: 'center' }}></div>
       <div style={style1}>
         {footerIcons.map((a, index) => {
-          const icon = a.replace('footer-', '').split('/')[0];
-          return getIcon(index, icon, false, true, 18);
+          const value = a.replace('footer-', '').split('/')[0];
+          switch (value.toLowerCase()) {
+            case 'csv':
+            case 'txt':
+            case 'import':
+              return (
+                <button onClick={(e) => handleClick(e, handler, { type: 'download', fmt: value })} key={value}>
+                  {value}
+                </button>
+              );
+            default:
+              return getIcon(index, value, false, true, 18);
+          }
         })}
       </div>
     </div>

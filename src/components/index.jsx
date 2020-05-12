@@ -7,6 +7,7 @@ import { IconTray, ClickableIcon } from './IconTray/IconTray';
 import { Modal } from './Modal/Modal';
 import { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable, SidebarTable } from './Tables';
 import { Panel } from './Panels/Panel/Panel';
+import { Copyable } from './CopyIcon/CopyIcon';
 
 export {
   PageCaddie,
@@ -26,4 +27,5 @@ export {
   ChartTable,
   PanelTable,
   SidebarTable,
+  Copyable,
 };

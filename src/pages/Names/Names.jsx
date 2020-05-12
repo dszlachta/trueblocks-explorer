@@ -122,7 +122,6 @@ export const Names = () => {
           break;
         // EXISTING_CODE
         case 'externallink':
-          navigate('https://bloxy.info/address/' + action.record_id, true);
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
         case 'addmonitor':
@@ -141,6 +140,7 @@ export const Names = () => {
           // setEditDialog({ showing: true, name: 'Reload', record: record });
           navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           break;
+        case 'row_doubleclick':
         case 'view':
           statusDispatch(LOADING);
           navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
@@ -150,7 +150,7 @@ export const Names = () => {
           break;
       }
     },
-    [dispatch, filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -166,8 +166,8 @@ export const Names = () => {
 
   useMemo(() => {
     // prettier-ignore
-    if (names) {
-      let tagList = [...new Set(names.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if (names && names.data) {
+      let tagList = [...new Set(names.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       tagList = sortStrings(tagList, true);
       tagList.unshift('All');
       setTagList(tagList);
@@ -175,8 +175,8 @@ export const Names = () => {
   }, [names]);
 
   useMemo(() => {
-    if (names) {
-      const result = names.filter((item) => {
+    if (names && names.data) {
+      const result = names.data.filter((item) => {
         return curTag === 'All' || item.tags.includes(curTag);
       });
       setFiltered(result);
@@ -234,11 +234,11 @@ const defaultSearch = ['tags', 'address', 'name'];
 //----------------------------------------------------------------------
 export function refreshNamesData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let names = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    theData.data = sortArray(names, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -247,28 +247,28 @@ export const namesDefault = [];
 
 //----------------------------------------------------------------------
 export const namesReducer = (state, action) => {
-  let ret = state;
+  let names = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = names.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          names.data = replaceRecord(names.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      names = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return names;
 };
 
 //----------------------------------------------------------------------
@@ -325,6 +325,7 @@ export const namesSchema = [
     type: 'address',
     width: 6,
     searchable: true,
+    copyable: true,
   },
   {
     name: 'Name',

@@ -32,11 +32,11 @@ export const ExplorerTransactions = () => {
           break;
         case 'up':
         case 'left':
-          setCurrent(getFieldValue(explorer, "id") + '.prev');
+          setCurrent(getFieldValue(explorer, 'id') + '.prev');
           break;
         case 'down':
         case 'right':
-          setCurrent(getFieldValue(explorer, "id") + '.next');
+          setCurrent(getFieldValue(explorer, 'id') + '.next');
           break;
         default:
           break;
@@ -142,12 +142,14 @@ export const transactionsSchema = [
     selector: 'from',
     type: 'address',
     searchable: true,
+    copyable: true,
   },
   {
     name: 'To',
     selector: 'to',
     type: 'address',
     searchable: true,
+    copyable: true,
   },
   {
     name: 'Value',

@@ -42,3 +42,6 @@
   padding-right: 5px;
   font-style: unset;
 }
+.outflow {
+  color: var(--warning-bg-color);
+}

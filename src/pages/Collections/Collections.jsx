@@ -124,7 +124,7 @@ export const Collections = () => {
           break;
       }
     },
-    [dispatch, filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -140,8 +140,8 @@ export const Collections = () => {
 
   useMemo(() => {
     // prettier-ignore
-    if (collections) {
-      let tagList = [...new Set(collections.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if (collections && collections.data) {
+      let tagList = [...new Set(collections.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       tagList = sortStrings(tagList, true);
       tagList.unshift('All');
       setTagList(tagList);
@@ -149,8 +149,8 @@ export const Collections = () => {
   }, [collections]);
 
   useMemo(() => {
-    if (collections) {
-      const result = collections.filter((item) => {
+    if (collections && collections.data) {
+      const result = collections.data.filter((item) => {
         return curTag === 'All' || item.tags.includes(curTag);
       });
       setFiltered(result);
@@ -215,11 +215,11 @@ const defaultSearch = ['tags', 'name', 'client'];
 //----------------------------------------------------------------------
 export function refreshCollectionsData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let collections = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    theData.data = sortArray(collections, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -228,28 +228,28 @@ export const collectionsDefault = [];
 
 //----------------------------------------------------------------------
 export const collectionsReducer = (state, action) => {
-  let ret = state;
+  let collections = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = collections.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          collections.data = replaceRecord(collections.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      collections = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return collections;
 };
 
 //----------------------------------------------------------------------

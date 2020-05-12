@@ -10,7 +10,7 @@
     "prettify": "node_modules/.bin/prettier '{src,test,mocks}/**/*.js' --write",
     "lint": "eslint '{src,test,mocks}/**/*.js'",
     "document": "documentation build src/components/**/[A-Zi]*.{js,jsx,ts,tsx} -f html -o docs/components ; open docs/components/index.html",
-    "generate": "makeClass -jarv"
+    "generate": "cd src ; makeClass -jarv ; cd -"
   },
   "dependencies": {
     "axios": "^0.19.2",

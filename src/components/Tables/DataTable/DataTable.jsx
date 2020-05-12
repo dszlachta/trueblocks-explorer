@@ -1,7 +1,7 @@
 /* eslint-disable no-lone-blocks */
 import React, { Fragment, useState, useEffect } from 'react';
 
-import { Tablebar, ObjectTable, IconTray } from 'components';
+import { Tablebar, ObjectTable, IconTray, Copyable } from 'components';
 import { createClass } from 'components/utils';
 import { calcValue, getPrimaryKey, getAltIconKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
@@ -42,6 +42,7 @@ export const DataTable = ({
   }
 
   const dataTableHandler = (action) => {
+    //console.log(action);
     const { perPage, curPage } = pagingCtx;
     switch (action.type) {
       case 'update_filter':
@@ -140,11 +141,32 @@ export const DataTable = ({
         setExpandedRow(expandedRow === action.record_id ? '' : action.record_id);
         break;
       case 'row_doubleclick':
-        if (parentHandler) parentHandler({ type: 'Edit', record_id: action.record_id });
+        if (parentHandler) parentHandler({ type: 'row_doubleclick', record_id: action.record_id });
         break;
-
+      case 'download':
+        const asCSV = action.fmt === 'CSV';
+        const exportFields = columns.filter((column) => {
+          return column.selector === 'compressedTx' || column.selector === 'value' || !column.hidden;
+        });
+        const download = data.map((record, index) => {
+          const row = exportFields
+            .map((column) => {
+              return record[column.selector];
+            })
+            .join(asCSV ? ',' : '\t');
+          return row + '\n';
+        });
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/' + (asCSV ? 'csv' : 'text') + ';charset=utf-8,' + encodeURI(download);
+        hiddenElement.target = '_blank';
+        hiddenElement.download = 'download.' + (asCSV ? 'csv' : 'txt');
+        hiddenElement.click();
+        break;
+      case 'copied':
+      case 'not-copied':
+        setSelectedRow('');
+        break;
       default:
-        console.log('to parent: ', action);
         if (parentHandler) parentHandler(action);
         break;
     }
@@ -259,7 +281,7 @@ const DataTableHeader = ({
       {columns.map((column, index) => {
         const cellText = (
           <div style={{ display: 'inline' }}>
-            {column.name}
+            {column.name || column.selector}
             {column.selector === sortCtx1.sortBy && sortIcon1}
             {column.selector === sortCtx2.sortBy && sortIcon2}
           </div>
@@ -325,6 +347,7 @@ const DataTableRows = ({
                   const colKey = rowKey + '_' + index;
                   if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) return null;
                   let type = column.type ? column.type : 'string';
+                  let rawValue = record[column.selector];
                   let value = calcValue(record, column);
                   value = formatFieldByType(type, value, column.decimals);
                   let found = {};
@@ -377,7 +400,7 @@ const DataTableRows = ({
                       {column.isPill && !handler && (
                         <div className="warning">pill column '{column.selector}' does not have a handler</div>
                       )}
-                      {value}
+                      <Copyable display={value} copyable={column.copyable ? rawValue : null} handler={handler} />
                       {underField && <div>{underField}</div>}
                     </div>
                   );
@@ -392,7 +415,7 @@ const DataTableRows = ({
                   />
                 </div>
               </div>
-              {key === expandedRow && <DataTableExpandedRow record={record} columns={columns} handler={handler} />}
+              {false && isSelected && <DataTableExpandedRow data={record} columns={columns} handler={handler} />}
             </Fragment>
           );
         })
@@ -404,7 +427,7 @@ const DataTableRows = ({
 };
 
 //-----------------------------------------------------------------
-const DataTableExpandedRow = ({ record, columns, handler }) => {
+const DataTableExpandedRow = ({ data, columns, handler }) => {
   const expandedStyle = {
     display: 'grid',
     gridTemplateColumns: '2fr 8fr 5fr',
@@ -415,7 +438,7 @@ const DataTableExpandedRow = ({ record, columns, handler }) => {
   return (
     <div style={expandedStyle}>
       <div></div>
-      <ObjectTable data={record} columns={columns} showHidden={true} handler={handler} />
+      <ObjectTable data={data} columns={columns} showHidden={true} handler={handler} />
       <div></div>
       <div></div>
     </div>
@@ -461,22 +484,14 @@ export const SortIcon = ({ dir, n = -1 }) => {
 };
 
 /*
-export to CSV
-let someData;
-let asText = false;
-function onDownload(action) {
   const var = action.type;
-  var csv = data.map((record) => {
-    return (
-      [record.group, record.address, record.name].join(asText ? '\t' : ',') + '\n';
-    );
-  })
-  var hiddenElement = document.createElement('a');
-  hiddenElement.href = 'data:text/' + (asText ? 'text' : 'csv') + ';charset=utf-8,' + encodeURI(csv);
-  hiddenElement.target = '_blank';
-  hiddenElement.download = 'download.' + (asText ? 'text' : 'csv');
-  hiddenElement.click();
 }
+}
+  case 'csv':
+    case 'txt':
+      return <button key={key}>{labelIn}</button>;
+    case 'import':
+      return <button key={key}>{labelIn}</button>;
 
 function onDownload1() {
   asText = true;

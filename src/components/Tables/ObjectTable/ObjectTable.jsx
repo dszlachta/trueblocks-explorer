@@ -3,7 +3,7 @@ import React, { Fragment, useState } from 'react';
 import { Tablebar } from 'components';
 import { formatFieldByType, handleClick } from 'components/utils';
 import { calcValue, getPrimaryKey } from 'store';
-
+import { Copyable } from 'components';
 import './ObjectTable.css';
 
 //-----------------------------------------------------------------
@@ -48,18 +48,19 @@ export const ObjectTable = ({
           if (!showHidden && column.hidden) return null;
 
           const value = calcValue(data, column);
+          const rawValue = data && data[column.selector];
           if (!showHidden && value === '') return null;
 
           const fieldName = column.selector; //column.name || column.selector;
           const fieldType = column.type || 'string';
-          const formatted = formatFieldByType(fieldType, value, column.decimals);
+          const formatted = formatFieldByType(fieldType, value, column.decimals) || '';
           const key = id + '_' + column.selector;
 
           return (
             <div key={key} className={'at-row ' + (cn ? cn : 'ot') + '-row'}>
               <ObjectTableSider cn={cn}>{fieldName + ':'}</ObjectTableSider>
               <ObjectTableColumn cn={cn} column={column}>
-                <div>{formatted}</div>
+                <Copyable display={formatted} copyable={column.copyable ? rawValue : null} handler={handler} />
               </ObjectTableColumn>
             </div>
           );

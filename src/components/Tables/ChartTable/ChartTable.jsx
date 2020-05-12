@@ -64,7 +64,7 @@ export const ChartTable = ({
   const theTitle = title !== '' ? title : chartCtx2.domainCol.name + ' as a function of ' + chartCtx2.rangeCol.name;
   return (
     <div style={{ display: 'inline' }}>
-      <Tablebar title={theTitle} search={false} pagination={false} />
+      <Tablebar title={theTitle} search={false} pagination={false} handler={chartHandler} />
       <ChartHeader />
       <ChartBody data={data} columns={columns} chartCtx={chartCtx2} />
     </div>

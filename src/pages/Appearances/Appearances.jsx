@@ -7,18 +7,19 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { SidebarTable, PageCaddie } from 'components';
+import { ObjectTable, SidebarTable, PageCaddie } from 'components';
 import { getServerData, sortArray, handleClick } from 'components/utils';
-import { navigate, replaceRecord } from 'components/utils';
+import { navigate, replaceRecord, fmtNum } from 'components/utils';
 import { calcValue } from 'store';
 import { getIcon } from 'pages/utils';
-import { useStatus } from 'store/status_store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 
 import './Appearances.css';
 
 // EXISTING_CODE
 import { useNames } from 'pages/Names/Names';
 import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { axisRight } from 'd3';
 let g_focusValue = '';
 var g_Handler = null;
 // EXISTING_CODE
@@ -26,7 +27,9 @@ var g_Handler = null;
 //---------------------------------------------------------------------------
 export const Appearances = ({ addresses = [], name }) => {
   const { appearances, dispatch } = useAppearances();
+  const appearancesDispatch = dispatch;
   const loading = useStatus().state.loading;
+  const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(appearancesDefault);
   const [tagList, setTagList] = useState([]);
@@ -51,7 +54,7 @@ export const Appearances = ({ addresses = [], name }) => {
 
   const appearancesHandler = useCallback(
     (action) => {
-      console.log('appearancesHandler: ', action);
+      //console.log(action);
       const record_id = action.record_id;
       setCurAddr(record_id);
       let record = filtered.filter((record) => {
@@ -84,7 +87,7 @@ export const Appearances = ({ addresses = [], name }) => {
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
           // statusDispatch(LOADING);
-          // dispatch(action);
+          // appearancesDispatch(action);
           // sendServerCommand(url, query).then(() => {
           //  // we assume the delete worked, so we don't reload the data
           //  statusDispatch(NOT_LOADING);
@@ -92,8 +95,10 @@ export const Appearances = ({ addresses = [], name }) => {
           setEditDialog({ showing: false, record: {} });
           break;
         // EXISTING_CODE
+        case 'row-changed':
+          console.log('row-changed: ', action);
+          break;
         case 'externallink':
-          navigate('https://bloxy.info/address/' + action.record_id, true);
           navigate('https://etherscan.io/tx/' + action.record_id, true);
           break;
         // EXISTING_CODE
@@ -101,12 +106,14 @@ export const Appearances = ({ addresses = [], name }) => {
           break;
       }
     },
-    [dispatch, filtered]
+    [filtered]
   );
 
   useEffect(() => {
-    refreshAppearancesData(dataUrl, dataQuery, dispatch);
-  }, [dataQuery, dispatch]);
+    statusDispatch(LOADING);
+    refreshAppearancesData(dataUrl, dataQuery, appearancesDispatch);
+    statusDispatch(NOT_LOADING);
+  }, [dataQuery, appearancesDispatch, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
@@ -117,23 +124,44 @@ export const Appearances = ({ addresses = [], name }) => {
 
   useMemo(() => {
     // prettier-ignore
-    if (appearances) {
-      // let tagList = [...new Set(appearances.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if (appearances.data) {
+      // let tagList = [...new Set(appearances.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       // tagList = sortStrings(tagList, true);
       // tagList.unshift('All');
-      let tagList = ['All', 'Balances', 'Tokens', 'Neighbors', 'Functions', 'Events', 'Airdrops']
+      let tagList = ['All', '|', 'Tokens', 'Grants', 'Airdrops', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', "SelfDestructs"]
       setTagList(tagList);
     }
-  }, [appearances]);
+  }, [appearances.data]);
 
   useMemo(() => {
-    if (appearances) {
-      const result = appearances.filter((item) => {
-        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
+    if (appearances.data) {
+      const result = appearances.data.filter((item) => {
+        switch (curTag) {
+          case 'Airdrops':
+            return item['toName'] && item['toName'].name.includes('Airdrop');
+          case 'Grants':
+            return (
+              (item['toName'] && item['toName'].name.includes('Gitcoin')) ||
+              (item['fromName'] && item['fromName'].name.includes('Gitcoin'))
+            );
+          case 'Tokens':
+            if (!item['articulatedTx']) return false;
+            const art = item['articulatedTx'];
+            return art.name === 'transfer' || art.name === 'approve' || art.name === 'transferFrom';
+          case 'Balances':
+          case 'Neighbors':
+          case 'Functions':
+          case 'Events':
+            return false;
+          case 'All':
+          default:
+            return true;
+        }
+        //        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [appearances, curTag]);
+  }, [appearances.data, curTag]);
 
   let custom = null;
   let title = 'Appearances';
@@ -153,16 +181,9 @@ export const Appearances = ({ addresses = [], name }) => {
   g_Handler = appearancesHandler;
   // EXISTING_CODE
 
-  return (
-    <div>
-      {/* prettier-ignore */}
-      <PageCaddie
-        caddieName="Tags"
-        caddieData={tagList}
-        current={curTag}
-        handler={appearancesHandler}
-        loading={loading}
-      />
+  let table = <div>The Table</div>;
+  if (curTag !== 'Neighbors') {
+    table = (
       <SidebarTable
         name={'appearancesTable'}
         data={filtered}
@@ -174,6 +195,67 @@ export const Appearances = ({ addresses = [], name }) => {
         recordIcons={recordIconList}
         parentHandler={appearancesHandler}
       />
+    );
+  } else {
+    const metaSchema = [
+      {
+        name: 'ID',
+        selector: 'id',
+        type: 'string',
+        hidden: true,
+      },
+      {
+        selector: 'namedFromAndTo',
+        onDisplay: getFieldValue,
+      },
+      {
+        selector: 'unNamedFromAndTo',
+        onDisplay: getFieldValue,
+      },
+      {
+        selector: 'namedFrom',
+        onDisplay: getFieldValue,
+      },
+      {
+        selector: 'unNamedFrom',
+        onDisplay: getFieldValue,
+      },
+      {
+        selector: 'namedTo',
+        onDisplay: getFieldValue,
+      },
+      {
+        selector: 'unNamedTo',
+        onDisplay: getFieldValue,
+      },
+    ];
+
+    table = (
+      <Fragment>
+        {/*<pre>{JSON.stringify(appearances.meta, null, 2)}</pre>*/}
+        <ObjectTable data={appearances.meta} columns={metaSchema} />
+      </Fragment>
+    );
+  }
+
+  const debug = false;
+  return (
+    <div>
+      {debug && (
+        <a target="_blank" rel="noopener noreferrer" href={dataUrl + '?' + dataQuery}>
+          {dataUrl + '?' + dataQuery}
+        </a>
+      )}
+      {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}
+      {/* prettier-ignore */}
+      <PageCaddie
+        caddieName="Tags"
+        caddieData={tagList}
+        current={curTag}
+        handler={appearancesHandler}
+        loading={loading}
+      />
+      {table}
       <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curAdd }} />
       {custom}
     </div>
@@ -193,7 +275,7 @@ const defaultSearch = ['tags', 'address'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(url, query, dispatch) {
+export function refreshAppearancesData(url, query, appearancesDispatch) {
   getServerData(url, query).then((theData) => {
     let result = theData.data;
     // EXISTING_CODE
@@ -201,15 +283,19 @@ export function refreshAppearancesData(url, query, dispatch) {
     let named = result;
     if (result && theData.meta) {
       named = result.map((item) => {
-        item.fromName = theData.meta.namedFrom && theData.meta.namedFrom[item.from];
-        item.toName = theData.meta.namedTo && theData.meta.namedTo[item.to];
+        if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.from])
+          item.fromName = theData.meta.namedFromAndTo[item.from];
+        else item.fromName = theData.meta.namedFrom && theData.meta.namedFrom[item.from];
+        if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.to])
+          item.toName = theData.meta.namedFromAndTo[item.to];
+        else item.toName = theData.meta.namedTo && theData.meta.namedTo[item.to];
         return item;
       });
     }
     result = named;
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    theData.data = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
+    appearancesDispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -251,10 +337,27 @@ export const useAppearances = () => {
 function getFieldValue(record, fieldName) {
   // EXISTING_CODE
   if (!record) return '';
+  switch (fieldName) {
+    case 'namedFromAndTo':
+    case 'unNamedFromAndTo':
+    case 'namedFrom':
+    case 'unNamedFrom':
+    case 'namedTo':
+    case 'unNamedTo':
+      return <pre>{JSON.stringify(record[fieldName], null, 2)}</pre>;
+    default:
+      break;
+  }
   const internal = record.from !== g_focusValue && record.to !== g_focusValue;
   switch (fieldName) {
-    case 'ether':
-      return record.ether;
+    case 'inflow':
+      if (record.ether === 0) return '';
+      if (record.to !== g_focusValue) return '';
+      return <div className="inflow">{record.ether}</div>;
+    case 'outflow':
+      if (record.ether === 0) return '';
+      if (record.from !== g_focusValue) return '';
+      return <div className="outflow">({record.ether})</div>;
     case 'id':
       return record.hash;
     case 'marker':
@@ -304,6 +407,16 @@ function getFieldValue(record, fieldName) {
           {getIcon(record.to, 'AddName', false, false, 12)}
         </div>
       );
+    case 'compressedTx':
+      if (!record['compressedTx']) return;
+      let arr = record.compressedTx.replace('(', ',').split(',');
+      return (
+        <div>
+          {arr.map((item) => {
+            return <div key={item}>{item}</div>;
+          })}
+        </div>
+      );
     default:
       break;
   }
@@ -332,6 +445,7 @@ export const appearancesSchema = [
     hidden: true,
     searchable: true,
     onDisplay: getFieldValue,
+    copyable: true,
   },
   {
     name: 'Marker',
@@ -375,6 +489,7 @@ export const appearancesSchema = [
     searchable: true,
     underField: 'fromName',
     onDisplay: getFieldValue,
+    copyable: true,
   },
   {
     name: 'fromName',
@@ -392,6 +507,7 @@ export const appearancesSchema = [
     searchable: true,
     underField: 'toName',
     onDisplay: getFieldValue,
+    copyable: true,
   },
   {
     name: 'toName',
@@ -421,6 +537,13 @@ export const appearancesSchema = [
     searchable: true,
   },
   {
+    name: 'Compressed',
+    selector: 'compressedTx',
+    type: 'string',
+    hidden: true,
+    onDisplay: getFieldValue,
+  },
+  {
     name: 'Traces',
     selector: 'traces',
     type: 'CTraceArray',
@@ -429,6 +552,20 @@ export const appearancesSchema = [
   {
     name: 'Ether',
     selector: 'ether',
+    type: 'blknum',
+    width: 2,
+    hidden: true,
+  },
+  {
+    name: 'Inflow',
+    selector: 'inflow',
+    type: 'blknum',
+    width: 2,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Outflow',
+    selector: 'outflow',
     type: 'blknum',
     width: 2,
     onDisplay: getFieldValue,
@@ -479,12 +616,6 @@ export const appearancesSchema = [
   {
     name: 'Input',
     selector: 'input',
-    type: 'string',
-    hidden: true,
-  },
-  {
-    name: 'Compressed',
-    selector: 'compressedTx',
     type: 'string',
     hidden: true,
   },

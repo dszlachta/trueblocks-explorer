@@ -120,7 +120,6 @@ export const Other = () => {
           break;
         // EXISTING_CODE
         case 'externallink':
-          navigate('https://bloxy.info/address/' + action.record_id, true);
           navigate('https://etherscan.io/blocks/' + action.record_id, true);
           break;
         // EXISTING_CODE
@@ -128,7 +127,7 @@ export const Other = () => {
           break;
       }
     },
-    [dispatch, filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -144,8 +143,8 @@ export const Other = () => {
 
   useMemo(() => {
     // prettier-ignore
-    if (other) {
-      let tagList = [...new Set(other.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if (other && other.data) {
+      let tagList = [...new Set(other.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       tagList = sortStrings(tagList, true);
       tagList.unshift('All');
       setTagList(tagList);
@@ -153,8 +152,8 @@ export const Other = () => {
   }, [other]);
 
   useMemo(() => {
-    if (other) {
-      const result = other.filter((item) => {
+    if (other && other.data) {
+      const result = other.data.filter((item) => {
         return curTag === 'All' || item.tags.includes(curTag);
       });
       setFiltered(result);
@@ -216,11 +215,11 @@ const defaultSearch = ['blockNumber', 'name', 'date'];
 //----------------------------------------------------------------------
 export function refreshOtherData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let other = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    theData.data = sortArray(other, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -229,28 +228,28 @@ export const otherDefault = [];
 
 //----------------------------------------------------------------------
 export const otherReducer = (state, action) => {
-  let ret = state;
+  let other = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = other.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          other.data = replaceRecord(other.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      other = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return other;
 };
 
 //----------------------------------------------------------------------

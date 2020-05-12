@@ -22,7 +22,7 @@ export const SidebarTable = ({
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
 
   const sidebarHandler = (action) => {
-    console.log('sidebarHandler: ', action);
+    //console.log('sidebarHandler: ', action);
     const record_id = action.record_id;
     let record = data.filter((record) => {
       return record_id && calcValue(record, idCol) === record_id;
@@ -31,9 +31,9 @@ export const SidebarTable = ({
     switch (action.type) {
       case 'row-changed':
         if (record) setSelectedRow(record);
+        if (parentHandler) parentHandler(action);
         return;
       default:
-        console.log('to parent: ', action);
         if (parentHandler) parentHandler(action);
         break;
     }

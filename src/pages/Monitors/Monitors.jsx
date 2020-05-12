@@ -124,9 +124,9 @@ export const Monitors = () => {
           break;
         // EXISTING_CODE
         case 'externallink':
-          navigate('https://bloxy.info/address/' + action.record_id, true);
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
+        case 'row_doubleclick':
         case 'view':
           navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           //          navigate('/monitors/explore?addrs=' + action.record_id, false);
@@ -136,7 +136,7 @@ export const Monitors = () => {
           break;
       }
     },
-    [dispatch, filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -299,9 +299,9 @@ function getFieldValue(record, fieldName) {
 /*
     case 'update':
       record[action.fieldName] = action.value;
-      console.log('record: ', record);
+      // console.log('record: ', record);
       ret = replaceRecord(ret, record, action.id);
-      console.log('ret: ', ret.find((p) => p.id === action.id));
+      // console.log('ret: ', ret.find((p) => p.id === action.id));
 */
 // EXISTING_CODE
 

@@ -112,6 +112,7 @@ export const replaceRecord = (array, record, id, calc, get) => {
 
 //----------------------------------------------------------------------------
 export async function getServerData(route, query) {
+  console.log(route, query);
   const url = route + '?' + query;
   const response = await fetch(url);
   const data = await response.json();

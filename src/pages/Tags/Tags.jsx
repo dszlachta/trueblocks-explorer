@@ -124,7 +124,7 @@ export const Tags = () => {
           break;
       }
     },
-    [dispatch, filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -140,8 +140,8 @@ export const Tags = () => {
 
   useMemo(() => {
     // prettier-ignore
-    if (tags) {
-      let tagList = [...new Set(tags.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if (tags && tags.data) {
+      let tagList = [...new Set(tags.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       tagList = sortStrings(tagList, true);
       tagList.unshift('All');
       setTagList(tagList);
@@ -149,8 +149,8 @@ export const Tags = () => {
   }, [tags]);
 
   useMemo(() => {
-    if (tags) {
-      const result = tags.filter((item) => {
+    if (tags && tags.data) {
+      const result = tags.data.filter((item) => {
         return curTag === 'All' || item.tags.includes(curTag);
       });
       setFiltered(result);
@@ -212,11 +212,11 @@ const defaultSearch = ['tags', 'subtags1', 'subtags2'];
 //----------------------------------------------------------------------
 export function refreshTagsData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let tags = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    theData.data = sortArray(tags, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -225,28 +225,28 @@ export const tagsDefault = [];
 
 //----------------------------------------------------------------------
 export const tagsReducer = (state, action) => {
-  let ret = state;
+  let tags = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = tags.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          tags.data = replaceRecord(tags.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      tags = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return tags;
 };
 
 //----------------------------------------------------------------------

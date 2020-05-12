@@ -28,6 +28,7 @@ import {
   AddMonitor,
   AddName,
   View,
+  Copy,
 } from 'assets/icons/SetEdit';
 import GridIcon from 'assets/icons/GridIcon';
 
@@ -68,6 +69,8 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
       return <ToggleRight key={key} size={size} className={cn} />;
     case 'add':
       return <Add key={key} size={size} className={cn} />;
+    case 'copy':
+      return <Copy key={key} size={size} className={cn} />;
     case 'addmonitor':
       return <AddMonitor key={key} size={size} className={cn} />;
     case 'addname':
@@ -90,10 +93,6 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
       return <GridIcon key={key} fill="yellow" color="#333" size="15px" />;
     case 'redlight':
       return <GridIcon key={key} fill="red" color="#333" size="15px" />;
-    case 'csv':
-    case 'txt':
-    case 'import':
-      return <button key={key}>{labelIn}</button>;
     default:
       return <div key={key}>{'Unknown icon: ' + label}</div>;
   }

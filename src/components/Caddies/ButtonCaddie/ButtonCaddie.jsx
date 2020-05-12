@@ -11,6 +11,7 @@ export const ButtonCaddie = ({ name, buttons, current, action, handler }) => {
       <div style={{ display: 'inline' }}>{name + ': '}</div>
       {buttons.map((value, index) => {
         const cn = value === current ? 'activeButton' : '';
+        if (value === 'Separator' || value === '|') return ' | ';
         return (
           <button
             key={'b_' + index}

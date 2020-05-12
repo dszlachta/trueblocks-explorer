@@ -6,8 +6,7 @@ import './NameDialog.css';
 export const NameDialog = ({ showing, handler, object }) => {
   const { register, handleSubmit, watch, errors } = useForm();
   const onSubmit = (data) => console.log(data);
-  console.log(watch('example')); // watch input value by passing the name of it
-
+  //(watch('example')); // watch input value by passing the name of it
   if (!showing) return <Fragment></Fragment>;
   return (
     <Modal showing={true} handler={handler} onSubmit={handleSubmit(onSubmit)}>
