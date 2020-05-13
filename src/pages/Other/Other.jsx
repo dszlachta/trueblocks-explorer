@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -186,16 +186,15 @@ export const Other = () => {
         recordIcons={recordIconList}
         parentHandler={otherHandler}
       />
-      <Modal showing={editDialog.showing} handler={otherHandler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={otherSchema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      {/* prettier-ignore */}
+      {/*<AddName
+        showing={editDialog.showing}
+        handler={otherHandler}
+        columns={otherSchema}
+        data={editDialog.record}
+        title={editDialog.name}
+        showHidden={true}
+      />*/}
       {custom}
     </div>
   );
@@ -218,7 +217,7 @@ export function refreshOtherData(url, query, dispatch) {
     let other = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    theData.data = sortArray(other, defaultSort, ['asc', 'asc', 'asc']);
+    if (other) theData.data = sortArray(other, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });
 }

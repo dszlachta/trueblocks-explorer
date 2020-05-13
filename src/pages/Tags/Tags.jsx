@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -183,16 +183,15 @@ export const Tags = () => {
         recordIcons={recordIconList}
         parentHandler={tagsHandler}
       />
-      <Modal showing={editDialog.showing} handler={tagsHandler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={tagsSchema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      {/* prettier-ignore */}
+      {/*<AddName
+        showing={editDialog.showing}
+        handler={tagsHandler}
+        columns={tagsSchema}
+        data={editDialog.record}
+        title={editDialog.name}
+        showHidden={true}
+      />*/}
       {custom}
     </div>
   );
@@ -215,7 +214,7 @@ export function refreshTagsData(url, query, dispatch) {
     let tags = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    theData.data = sortArray(tags, defaultSort, ['asc', 'asc', 'asc']);
+    if (tags) theData.data = sortArray(tags, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });
 }

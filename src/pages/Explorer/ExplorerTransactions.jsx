@@ -141,15 +141,15 @@ export const transactionsSchema = [
     name: 'From',
     selector: 'from',
     type: 'address',
-    searchable: true,
     copyable: true,
+    searchable: true,
   },
   {
     name: 'To',
     selector: 'to',
     type: 'address',
-    searchable: true,
     copyable: true,
+    searchable: true,
   },
   {
     name: 'Value',

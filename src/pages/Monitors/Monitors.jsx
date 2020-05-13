@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -152,8 +152,8 @@ export const Monitors = () => {
 
   useMemo(() => {
     // prettier-ignore
-    if (monitors) {
-      let tagList = [...new Set(monitors.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
+    if (monitors && monitors.data) {
+      let tagList = [...new Set(monitors.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       tagList = sortStrings(tagList, true);
       tagList.unshift('All');
       setTagList(tagList);
@@ -161,8 +161,8 @@ export const Monitors = () => {
   }, [monitors]);
 
   useMemo(() => {
-    if (monitors) {
-      const result = monitors.filter((item) => {
+    if (monitors && monitors.data) {
+      const result = monitors.data.filter((item) => {
         return curTag === 'All' || item.tags.includes(curTag);
       });
       setFiltered(result);
@@ -202,16 +202,15 @@ export const Monitors = () => {
         recordIcons={recordIconList}
         parentHandler={monitorsHandler}
       />
-      <Modal showing={editDialog.showing} handler={monitorsHandler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={monitorsSchema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      {/* prettier-ignore */}
+      {/*<AddName
+        showing={editDialog.showing}
+        handler={monitorsHandler}
+        columns={monitorsSchema}
+        data={editDialog.record}
+        title={editDialog.name}
+        showHidden={true}
+      />*/}
       {custom}
     </div>
   );
@@ -236,12 +235,12 @@ const defaultSearch = ['tags', 'address'];
 //----------------------------------------------------------------------
 export function refreshMonitorsData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let monitors = theData.data;
     // EXISTING_CODE
-    result = theData.data[0].caches[0].items;
+    monitors = theData.data[0].caches[0].items;
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    if (monitors) theData.data = sortArray(monitors, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -250,28 +249,28 @@ export const monitorsDefault = [];
 
 //----------------------------------------------------------------------
 export const monitorsReducer = (state, action) => {
-  let ret = state;
+  let monitors = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = monitors.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          monitors.data = replaceRecord(monitors.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      monitors = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return monitors;
 };
 
 //----------------------------------------------------------------------

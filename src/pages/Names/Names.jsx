@@ -11,7 +11,6 @@ import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
-//import { AddName, EditName } from '../../dialogs/NameDialog/NameDialog';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 
@@ -209,7 +208,15 @@ export const Names = () => {
         recordIcons={recordIconList}
         parentHandler={namesHandler}
       />
-      {/*<AddName showing={editDialog.showing} handler={namesHandler} object={editDialog.record} />*/}
+      {/* prettier-ignore */}
+      {/*<AddName
+        showing={editDialog.showing}
+        handler={namesHandler}
+        columns={namesSchema}
+        data={editDialog.record}
+        title={editDialog.name}
+        showHidden={true}
+      />*/}
       {custom}
     </div>
   );
@@ -237,7 +244,7 @@ export function refreshNamesData(url, query, dispatch) {
     let names = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    theData.data = sortArray(names, defaultSort, ['asc', 'asc', 'asc']);
+    if (names) theData.data = sortArray(names, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });
 }
@@ -324,8 +331,8 @@ export const namesSchema = [
     selector: 'address',
     type: 'address',
     width: 6,
-    searchable: true,
     copyable: true,
+    searchable: true,
   },
   {
     name: 'Name',

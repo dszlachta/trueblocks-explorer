@@ -7,19 +7,22 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { ObjectTable, SidebarTable, PageCaddie } from 'components';
-import { getServerData, sortArray, handleClick } from 'components/utils';
-import { navigate, replaceRecord, fmtNum } from 'components/utils';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
-import { getIcon } from 'pages/utils';
-import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 
 import './Appearances.css';
 
 // EXISTING_CODE
+import { SidebarTable } from 'components';
 import { useNames } from 'pages/Names/Names';
 import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { fmtNum } from 'components/utils';
 import { axisRight } from 'd3';
+import { getIcon } from 'pages/utils';
 let g_focusValue = '';
 var g_Handler = null;
 // EXISTING_CODE
@@ -27,7 +30,6 @@ var g_Handler = null;
 //---------------------------------------------------------------------------
 export const Appearances = ({ addresses = [], name }) => {
   const { appearances, dispatch } = useAppearances();
-  const appearancesDispatch = dispatch;
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
 
@@ -36,17 +38,20 @@ export const Appearances = ({ addresses = [], name }) => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('appearancesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
-  const [curAdd, setCurAddr] = useState('');
 
   // EXISTING_CODE
+  const [curAdd, setCurAddr] = useState('');
+  const appearancesDispatch = dispatch;
   const { names } = useNames().names;
+  g_focusValue = addresses.value;
   // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/export';
+  const cmdUrl = 'http://localhost:8080/export';
+
   const dataQuery = 'addrs=' + addresses.value + '&verbose=7&dollars&articulate&write_txs&write_traces';
-  g_focusValue = addresses.value;
   function addendum(record, record_id) {
-    let ret = '&verbose=7';
+    let ret = '&verbose=10';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -54,7 +59,6 @@ export const Appearances = ({ addresses = [], name }) => {
 
   const appearancesHandler = useCallback(
     (action) => {
-      //console.log(action);
       const record_id = action.record_id;
       setCurAddr(record_id);
       let record = filtered.filter((record) => {
@@ -82,7 +86,7 @@ export const Appearances = ({ addresses = [], name }) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=7';
+          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -106,7 +110,7 @@ export const Appearances = ({ addresses = [], name }) => {
           break;
       }
     },
-    [filtered]
+    [dispatch, filtered, statusDispatch]
   );
 
   useEffect(() => {
@@ -124,17 +128,17 @@ export const Appearances = ({ addresses = [], name }) => {
 
   useMemo(() => {
     // prettier-ignore
-    if (appearances.data) {
+    if (appearances && appearances.data) {
       // let tagList = [...new Set(appearances.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
       // tagList = sortStrings(tagList, true);
       // tagList.unshift('All');
       let tagList = ['All', '|', 'Tokens', 'Grants', 'Airdrops', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', "SelfDestructs"]
       setTagList(tagList);
     }
-  }, [appearances.data]);
+  }, [appearances]);
 
   useMemo(() => {
-    if (appearances.data) {
+    if (appearances && appearances.data) {
       const result = appearances.data.filter((item) => {
         switch (curTag) {
           case 'Airdrops':
@@ -161,7 +165,7 @@ export const Appearances = ({ addresses = [], name }) => {
       });
       setFiltered(result);
     }
-  }, [appearances.data, curTag]);
+  }, [appearances, curTag]);
 
   let custom = null;
   let title = 'Appearances';
@@ -373,6 +377,9 @@ function getFieldValue(record, fieldName) {
     case 'gasCost':
       if (record.from !== g_focusValue) return '';
       return record.gasCost;
+    case 'etherGasCost':
+      if (record.from !== g_focusValue) return '';
+      return record.etherGasCost;
     case 'internal':
       return internal ? 'int' : '';
     case 'from': {
@@ -409,11 +416,11 @@ function getFieldValue(record, fieldName) {
       );
     case 'compressedTx':
       if (!record['compressedTx']) return;
-      let arr = record.compressedTx.replace('(', ',').split(',');
+      let arr = record.compressedTx.replace(')', '').replace('(', ',').split(',');
       return (
         <div>
-          {arr.map((item) => {
-            return <div key={item}>{item}</div>;
+          {arr.map((item, index) => {
+            return <div key={item}>{index === 0 ? <b>{item}</b> : '-' + item}</div>;
           })}
         </div>
       );
@@ -439,57 +446,14 @@ export const appearancesSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-    onDisplay: getFieldValue,
-    copyable: true,
-  },
-  {
-    name: 'Marker',
-    selector: 'marker',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Block Hash',
-    selector: 'blockHash',
-    type: 'hash',
-    hidden: true,
-  },
-  {
-    name: 'Blk',
-    selector: 'blockNumber',
-    type: 'blknum',
-    hidden: true,
-    width: 1,
-  },
-  {
-    name: 'Tx',
-    selector: 'transactionIndex',
-    type: 'string',
-    hidden: true,
-    width: 1,
-  },
-  {
-    name: 'Timestamp',
-    selector: 'timestamp',
-    type: 'timestamp',
-    hidden: true,
-  },
-  {
     name: 'From',
     selector: 'from',
     type: 'address',
     width: 5,
+    copyable: true,
     searchable: true,
     underField: 'fromName',
     onDisplay: getFieldValue,
-    copyable: true,
   },
   {
     name: 'fromName',
@@ -504,10 +468,10 @@ export const appearancesSchema = [
     selector: 'to',
     type: 'address',
     width: 5,
+    copyable: true,
     searchable: true,
     underField: 'toName',
     onDisplay: getFieldValue,
-    copyable: true,
   },
   {
     name: 'toName',
@@ -524,37 +488,11 @@ export const appearancesSchema = [
     hidden: true,
   },
   {
-    name: 'Receipt',
-    selector: 'receipt',
-    type: 'CReceipt',
-    hidden: true,
-  },
-  {
-    name: 'Articulated Tx',
-    selector: 'articulatedTx',
-    type: 'CFunction',
-    hidden: true,
-    searchable: true,
-  },
-  {
-    name: 'Compressed',
-    selector: 'compressedTx',
-    type: 'string',
-    hidden: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Traces',
-    selector: 'traces',
-    type: 'CTraceArray',
-    hidden: true,
-  },
-  {
     name: 'Ether',
     selector: 'ether',
     type: 'blknum',
-    width: 2,
     hidden: true,
+    width: 2,
   },
   {
     name: 'Inflow',
@@ -600,6 +538,94 @@ export const appearancesSchema = [
     onDisplay: getFieldValue,
   },
   {
+    name: 'Compressed',
+    selector: 'compressedTx',
+    type: 'string',
+    hidden: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Gas Cost (Eth)',
+    selector: 'etherGasCost',
+    type: 'ether',
+    width: 2,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Age',
+    selector: 'age',
+    type: 'number',
+    hidden: true,
+  },
+  {
+    name: 'Encoding',
+    selector: 'encoding',
+    type: 'hash',
+    hidden: true,
+    copyable: true,
+  },
+  {
+    name: 'Receipt',
+    selector: 'receipt',
+    type: 'CReceipt',
+    hidden: true,
+  },
+  {
+    name: 'Articulated Tx',
+    selector: 'articulatedTx',
+    type: 'CFunction',
+    hidden: true,
+    searchable: true,
+  },
+  {
+    name: 'Traces',
+    selector: 'traces',
+    type: 'CTraceArray',
+    hidden: true,
+  },
+  {
+    name: 'ID',
+    selector: 'id',
+    type: 'string',
+    hidden: true,
+    searchable: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Marker',
+    selector: 'marker',
+    type: 'string',
+    hidden: true,
+    width: 2,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Block Hash',
+    selector: 'blockHash',
+    type: 'hash',
+    hidden: true,
+  },
+  {
+    name: 'Blk',
+    selector: 'blockNumber',
+    type: 'blknum',
+    hidden: true,
+    width: 1,
+  },
+  {
+    name: 'Tx',
+    selector: 'transactionIndex',
+    type: 'string',
+    hidden: true,
+    width: 1,
+  },
+  {
+    name: 'Timestamp',
+    selector: 'timestamp',
+    type: 'timestamp',
+    hidden: true,
+  },
+  {
     name: 'Hash',
     selector: 'hash',
     type: 'hash',
@@ -626,20 +652,13 @@ export const appearancesSchema = [
     hidden: true,
   },
   {
-    name: 'Gas Cost',
-    selector: 'etherGasCost',
-    type: 'ether',
-    hidden: true,
-    width: 2,
-  },
-  {
     name: 'Function',
     selector: 'function',
     type: 'string',
+    hidden: true,
+    width: 5,
     searchable: true,
     onDisplay: getFieldValue,
-    width: 5,
-    hidden: true,
   },
   {
     name: 'Events',
@@ -668,27 +687,12 @@ export const appearancesSchema = [
     hidden: true,
   },
   {
-    name: 'Age',
-    selector: 'age',
-    type: 'number',
-    hidden: true,
-  },
-  {
-    name: 'Encoding',
-    selector: 'encoding',
-    type: 'string',
-    searchable: true,
-    width: 5,
-    hidden: true,
-  },
-  {
     name: 'Error',
     selector: 'isError',
     type: 'string',
+    hidden: true,
     width: 1,
     isPill: true,
-    //onDisplay: getFieldValue,
-    hidden: true,
   },
   {
     name: 'Internal',

@@ -121,6 +121,7 @@ export const receiptsSchema = [
     name: 'Contract Address',
     selector: 'contractAddress',
     type: 'address',
+    copyable: true,
     searchable: true,
   },
   {
@@ -132,8 +133,8 @@ export const receiptsSchema = [
     name: 'From',
     selector: 'from',
     type: 'address',
-    searchable: true,
     copyable: true,
+    searchable: true,
   },
   {
     name: 'Gas Used',
@@ -165,8 +166,8 @@ export const receiptsSchema = [
     name: 'To',
     selector: 'to',
     type: 'address',
-    searchable: true,
     copyable: true,
+    searchable: true,
   },
   {
     name: 'Transaction Hash',

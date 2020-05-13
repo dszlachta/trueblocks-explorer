@@ -54,6 +54,7 @@ export const functionsSchema = [
     name: 'Encoding',
     selector: 'encoding',
     type: 'string',
+    copyable: true,
     searchable: true,
   },
   {
@@ -75,6 +76,7 @@ export const functionsSchema = [
     name: 'Address',
     selector: 'address',
     type: 'address',
+    copyable: true,
     searchable: true,
   },
 ];

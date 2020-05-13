@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -183,16 +183,15 @@ export const Caches = () => {
         recordIcons={recordIconList}
         parentHandler={cachesHandler}
       />
-      <Modal showing={editDialog.showing} handler={cachesHandler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={cachesSchema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      {/* prettier-ignore */}
+      {/*<AddName
+        showing={editDialog.showing}
+        handler={cachesHandler}
+        columns={cachesSchema}
+        data={editDialog.record}
+        title={editDialog.name}
+        showHidden={true}
+      />*/}
       {custom}
     </div>
   );
@@ -217,10 +216,9 @@ export function refreshCachesData(url, query, dispatch) {
     let caches = theData.data;
     // EXISTING_CODE
     if (caches)
-    	caches = caches[0].caches
+      caches = caches[0].caches
     // EXISTING_CODE
-    if (caches)
-        theData.data = sortArray(caches, defaultSort, ['asc', 'asc', 'asc']);
+    if (caches) theData.data = sortArray(caches, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });
 }

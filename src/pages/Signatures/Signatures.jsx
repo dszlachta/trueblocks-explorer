@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -183,16 +183,15 @@ export const Signatures = () => {
         recordIcons={recordIconList}
         parentHandler={signaturesHandler}
       />
-      <Modal showing={editDialog.showing} handler={signaturesHandler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={signaturesSchema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      {/* prettier-ignore */}
+      {/*<AddName
+        showing={editDialog.showing}
+        handler={signaturesHandler}
+        columns={signaturesSchema}
+        data={editDialog.record}
+        title={editDialog.name}
+        showHidden={true}
+      />*/}
       {custom}
     </div>
   );
@@ -218,7 +217,7 @@ export function refreshSignaturesData(url, query, dispatch) {
     // EXISTING_CODE
     signatures = signatures.filter((item) => item.type !== 'constructor');
     // EXISTING_CODE
-    theData.data = sortArray(signatures, defaultSort, ['asc', 'asc', 'asc']);
+    if (signatures) theData.data = sortArray(signatures, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });
 }
@@ -312,8 +311,8 @@ export const signaturesSchema = [
     selector: 'encoding',
     type: 'hash',
     width: 1,
-    searchable: true,
     copyable: true,
+    searchable: true,
   },
   {
     name: 'Type',

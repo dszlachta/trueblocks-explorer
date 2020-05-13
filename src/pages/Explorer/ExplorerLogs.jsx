@@ -109,6 +109,7 @@ export const logsSchema = [
     name: 'Address',
     selector: 'address',
     type: 'address',
+    copyable: true,
     searchable: true,
   },
   {

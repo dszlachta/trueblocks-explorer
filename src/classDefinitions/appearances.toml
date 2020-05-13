@@ -4,7 +4,7 @@ noPage = true
 recordIcons = "viewing,exporting,importing"
 defaultSort = "tags,address"
 dataUrl = "http://localhost:8080/export"
-dataQuery = "addrs=record.address&verbose=10&dollars"
+dataQuery = "addrs=' + addresses.value + '&verbose=7&dollars&articulate&write_txs&write_traces"
 cmdUrl = ""
 
 [[subpages]]

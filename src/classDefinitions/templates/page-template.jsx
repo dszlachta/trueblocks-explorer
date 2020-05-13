@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -183,16 +183,15 @@ export const [{PROPER}] = () => {
         recordIcons={recordIconList}
         parentHandler={[{LONG}]Handler}
       />
-      <Modal showing={editDialog.showing} handler={[{LONG}]Handler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={[{LONG}]Schema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      {/* prettier-ignore */}
+      {/*<AddName
+        showing={editDialog.showing}
+        handler={[{LONG}]Handler}
+        columns={[{LONG}]Schema}
+        data={editDialog.record}
+        title={editDialog.name}
+        showHidden={true}
+      />*/}
       {custom}
     </div>
   );
@@ -207,7 +206,7 @@ export function refresh[{PROPER}]Data(url, query, dispatch) {
     let [{LONG}] = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    theData.data = sortArray([{LONG}], defaultSort, ['asc', 'asc', 'asc']);
+    if ([{LONG}]) theData.data = sortArray([{LONG}], defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });
 }

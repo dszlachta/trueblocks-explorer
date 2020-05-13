@@ -142,6 +142,7 @@ export const blocksSchema = [
     name: 'Miner',
     selector: 'miner',
     type: 'address',
+    copyable: true,
     searchable: true,
   },
   {

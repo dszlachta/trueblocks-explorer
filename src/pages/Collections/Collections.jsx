@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -183,16 +183,15 @@ export const Collections = () => {
         recordIcons={recordIconList}
         parentHandler={collectionsHandler}
       />
-      <Modal showing={editDialog.showing} handler={collectionsHandler}>
-        {/* prettier-ignore */}
-        <ObjectTable
-            data={editDialog.record}
-            columns={collectionsSchema}
-            title={editDialog.name}
-            editable={true}
-            showHidden={true}
-          />
-      </Modal>
+      {/* prettier-ignore */}
+      {/*<AddName
+        showing={editDialog.showing}
+        handler={collectionsHandler}
+        columns={collectionsSchema}
+        data={editDialog.record}
+        title={editDialog.name}
+        showHidden={true}
+      />*/}
       {custom}
     </div>
   );
@@ -218,7 +217,7 @@ export function refreshCollectionsData(url, query, dispatch) {
     let collections = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    theData.data = sortArray(collections, defaultSort, ['asc', 'asc', 'asc']);
+    if (collections) theData.data = sortArray(collections, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });
 }
