@@ -20,7 +20,7 @@ import './Collections.css';
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Collections = () => {
+export const Collections = (props) => {
   const { collections, dispatch } = useCollections();
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
@@ -30,6 +30,7 @@ export const Collections = () => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('collectionsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
+  const [curRecordId, setCurRecordId] = useState('');
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -48,6 +49,7 @@ export const Collections = () => {
   const collectionsHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
+      setCurRecordId(record_id);
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
       });
@@ -128,8 +130,10 @@ export const Collections = () => {
   );
 
   useEffect(() => {
+    statusDispatch(LOADING);
     refreshCollectionsData(dataUrl, dataQuery, dispatch);
-  }, [dataQuery, dispatch]);
+    statusDispatch(NOT_LOADING);
+  }, [dataQuery, dispatch, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, collectionsHandler, { type: 'Add' }));

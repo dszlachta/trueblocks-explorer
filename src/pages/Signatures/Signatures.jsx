@@ -20,7 +20,7 @@ import './Signatures.css';
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Signatures = () => {
+export const Signatures = (props) => {
   const { signatures, dispatch } = useSignatures();
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
@@ -30,6 +30,7 @@ export const Signatures = () => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('signaturesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
+  const [curRecordId, setCurRecordId] = useState('');
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -48,6 +49,7 @@ export const Signatures = () => {
   const signaturesHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
+      setCurRecordId(record_id);
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
       });
@@ -128,8 +130,10 @@ export const Signatures = () => {
   );
 
   useEffect(() => {
+    statusDispatch(LOADING);
     refreshSignaturesData(dataUrl, dataQuery, dispatch);
-  }, [dataQuery, dispatch]);
+    statusDispatch(NOT_LOADING);
+  }, [dataQuery, dispatch, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, signaturesHandler, { type: 'Add' }));

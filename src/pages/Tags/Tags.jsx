@@ -20,7 +20,7 @@ import './Tags.css';
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Tags = () => {
+export const Tags = (props) => {
   const { tags, dispatch } = useTags();
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
@@ -30,6 +30,7 @@ export const Tags = () => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('tagsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
+  const [curRecordId, setCurRecordId] = useState('');
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -48,6 +49,7 @@ export const Tags = () => {
   const tagsHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
+      setCurRecordId(record_id);
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
       });
@@ -128,8 +130,10 @@ export const Tags = () => {
   );
 
   useEffect(() => {
+    statusDispatch(LOADING);
     refreshTagsData(dataUrl, dataQuery, dispatch);
-  }, [dataQuery, dispatch]);
+    statusDispatch(NOT_LOADING);
+  }, [dataQuery, dispatch, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, tagsHandler, { type: 'Add' }));

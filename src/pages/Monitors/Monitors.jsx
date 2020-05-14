@@ -23,7 +23,7 @@ import { currentPage } from 'components/utils';
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Monitors = () => {
+export const Monitors = (props) => {
   const { monitors, dispatch } = useMonitors();
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
@@ -33,6 +33,7 @@ export const Monitors = () => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('monitorsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
+  const [curRecordId, setCurRecordId] = useState('');
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -52,6 +53,7 @@ export const Monitors = () => {
   const monitorsHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
+      setCurRecordId(record_id);
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
       });
@@ -140,8 +142,10 @@ export const Monitors = () => {
   );
 
   useEffect(() => {
+    statusDispatch(LOADING);
     refreshMonitorsData(dataUrl, dataQuery, dispatch);
-  }, [dataQuery, dispatch]);
+    statusDispatch(NOT_LOADING);
+  }, [dataQuery, dispatch, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, monitorsHandler, { type: 'Add' }));

@@ -20,7 +20,7 @@ import './[{PROPER}].css';
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const [{PROPER}] = () => {
+export const [{PROPER}] = (props) => {
   const { [{LONG}], dispatch } = use[{PROPER}]();
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
@@ -30,6 +30,7 @@ export const [{PROPER}] = () => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('[{LONG}]Tag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
+  const [curRecordId, setCurRecordId] = useState('');
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -48,6 +49,7 @@ export const [{PROPER}] = () => {
   const [{LONG}]Handler = useCallback(
     (action) => {
       const record_id = action.record_id;
+      setCurRecordId(record_id);
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
       });
@@ -128,8 +130,10 @@ export const [{PROPER}] = () => {
   );
 
   useEffect(() => {
+    statusDispatch(LOADING);
     refresh[{PROPER}]Data(dataUrl, dataQuery, dispatch);
-  }, [dataQuery, dispatch]);
+    statusDispatch(NOT_LOADING);
+  }, [dataQuery, dispatch, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, [{LONG}]Handler, { type: 'Add' }));

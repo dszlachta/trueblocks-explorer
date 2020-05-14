@@ -28,7 +28,7 @@ var g_Handler = null;
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Appearances = ({ addresses = [], name }) => {
+export const Appearances = (props) => {
   const { appearances, dispatch } = useAppearances();
   const loading = useStatus().state.loading;
   const statusDispatch = useStatus().dispatch;
@@ -38,10 +38,11 @@ export const Appearances = ({ addresses = [], name }) => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('appearancesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
+  const [curRecordId, setCurRecordId] = useState('');
 
   // EXISTING_CODE
-  const [curAdd, setCurAddr] = useState('');
-  const appearancesDispatch = dispatch;
+  const addresses = props.addresses;
+  const name = props.name;
   const { names } = useNames().names;
   g_focusValue = addresses.value;
   // EXISTING_CODE
@@ -60,7 +61,7 @@ export const Appearances = ({ addresses = [], name }) => {
   const appearancesHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
-      setCurAddr(record_id);
+      setCurRecordId(record_id);
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
       });
@@ -71,7 +72,7 @@ export const Appearances = ({ addresses = [], name }) => {
           localStorage.setItem('appearancesTag', action.payload);
           break;
         case 'add':
-          setEditDialog({ showing: true, record: { tags: 'MyTags' } });
+          setEditDialog({ showing: true, record: {} });
           break;
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Appearance', record: record });
@@ -91,7 +92,7 @@ export const Appearances = ({ addresses = [], name }) => {
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
           // statusDispatch(LOADING);
-          // appearancesDispatch(action);
+          // dispatch(action);
           // sendServerCommand(url, query).then(() => {
           //  // we assume the delete worked, so we don't reload the data
           //  statusDispatch(NOT_LOADING);
@@ -115,9 +116,9 @@ export const Appearances = ({ addresses = [], name }) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshAppearancesData(dataUrl, dataQuery, appearancesDispatch);
+    refreshAppearancesData(dataUrl, dataQuery, dispatch);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, appearancesDispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
@@ -260,7 +261,7 @@ export const Appearances = ({ addresses = [], name }) => {
         loading={loading}
       />
       {table}
-      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curAdd }} />
+      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curRecordId }} />
       {custom}
     </div>
   );
@@ -268,25 +269,25 @@ export const Appearances = ({ addresses = [], name }) => {
 
 // auto-generate: page-settings
 const recordIconList = [
-  'ExternalLink/None',
+  'ExternalLink',
   'footer-CSV',
   'footer-TXT',
   'footer-Import',
   //
 ];
 const defaultSort = ['blockNumber', 'transactionIndex'];
-const defaultSearch = ['tags', 'address'];
+const defaultSearch = ['blockNumber', 'transactionIndex'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(url, query, appearancesDispatch) {
+export function refreshAppearancesData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let appearances = theData.data;
     // EXISTING_CODE
-    result = result && result.length > 0 ? result[0] : result;
-    let named = result;
-    if (result && theData.meta) {
-      named = result.map((item) => {
+    appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
+    let named = appearances;
+    if (appearances && theData.meta) {
+      named = appearances.map((item) => {
         if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.from])
           item.fromName = theData.meta.namedFromAndTo[item.from];
         else item.fromName = theData.meta.namedFrom && theData.meta.namedFrom[item.from];
@@ -296,10 +297,10 @@ export function refreshAppearancesData(url, query, appearancesDispatch) {
         return item;
       });
     }
-    result = named;
+    appearances = named;
     // EXISTING_CODE
-    theData.data = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    appearancesDispatch({ type: 'success', payload: theData });
+    if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
   });
 }
 
@@ -308,28 +309,28 @@ export const appearancesDefault = [];
 
 //----------------------------------------------------------------------
 export const appearancesReducer = (state, action) => {
-  let ret = state;
+  let appearances = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = ret.filter((r) => {
+        const record = appearances.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          ret = replaceRecord(ret, record, action.record_id, calcValue, getFieldValue);
+          appearances = replaceRecord(appearances, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      ret = action.payload;
+      appearances = action.payload;
       break;
     default:
     // do nothing
   }
-  return ret;
+  return appearances;
 };
 
 //----------------------------------------------------------------------

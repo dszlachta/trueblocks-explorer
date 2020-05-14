@@ -2,7 +2,7 @@
 class = "CAppearances"
 noPage = true
 recordIcons = "viewing,exporting,importing"
-defaultSort = "tags,address"
+defaultSort = "blockNumber,transactionIndex"
 dataUrl = "http://localhost:8080/export"
 dataQuery = "addrs=' + addresses.value + '&verbose=7&dollars&articulate&write_txs&write_traces"
 cmdUrl = ""
