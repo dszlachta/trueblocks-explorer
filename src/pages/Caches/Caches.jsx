@@ -13,6 +13,7 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Caches.css';
 
@@ -23,6 +24,7 @@ import './Caches.css';
 export const Caches = (props) => {
   const { caches, dispatch } = useCaches();
   const loading = useStatus().state.loading;
+  const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(cachesDefault);
@@ -31,6 +33,7 @@ export const Caches = (props) => {
   const [curTag, setTag] = useState(localStorage.getItem('cachesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
+  const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -56,8 +59,16 @@ export const Caches = (props) => {
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
         case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('cachesTag', action.payload);
+          let tag = action.payload;
+          if (action.payload === 'Debug') {
+            setDebug(!debug);
+            tag = 'All';
+          } else if (action.payload === 'MockData') {
+            statusDispatch({type: 'mocked', payload: !mocked});
+            tag = 'All';
+          }
+          setTag(tag);
+          localStorage.setItem('cachesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -120,6 +131,7 @@ export const Caches = (props) => {
             });
           }
           break;
+
         // EXISTING_CODE
         // EXISTING_CODE
         default:
@@ -131,9 +143,9 @@ export const Caches = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshCachesData(dataUrl, dataQuery, dispatch);
+    refreshCachesData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, cachesHandler, { type: 'Add' }));
@@ -145,27 +157,22 @@ export const Caches = (props) => {
   useMemo(() => {
     // prettier-ignore
     if (caches && caches.data) {
-      let tagList = [...new Set(caches.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
-    }
-  }, [caches]);
-
-  useMemo(() => {
-    if (caches && caches.data) {
+      setTagList(getTagList(caches));
       const result = caches.data.filter((item) => {
-        return curTag === 'All' || item.tags.includes(curTag);
+        // EXISTING_CODE
+        // EXISTING_CODE
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [caches, curTag]);
+  }, [caches, curTag, debug, mocked]);
 
   let custom = null;
   let title = 'Caches';
   // EXISTING_CODE
   // EXISTING_CODE
 
+  const table = getInnerTable(caches, curTag, filtered, title, searchFields, recordIconList, cachesHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -176,28 +183,44 @@ export const Caches = (props) => {
         handler={cachesHandler}
         loading={loading}
       />
-      <DataTable
-        name={'cachesTable'}
-        data={filtered}
-        columns={cachesSchema}
-        title={title}
-        search={true}
-        searchFields={searchFields}
-        pagination={true}
-        recordIcons={recordIconList}
-        parentHandler={cachesHandler}
-      />
+      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {debug && <pre>{JSON.stringify(caches, null, 2)}</pre>}
+      {table}
       {/* prettier-ignore */}
-      {/*<AddName
-        showing={editDialog.showing}
-        handler={cachesHandler}
-        columns={cachesSchema}
-        data={editDialog.record}
-        title={editDialog.name}
-        showHidden={true}
-      />*/}
+      <NameDialog showing={editDialog.showing} handler={cachesHandler} object={{ address: curRecordId }} />
       {custom}
     </div>
+  );
+};
+
+//----------------------------------------------------------------------
+const getTagList = (caches) => {
+  // prettier-ignore
+  let tagList = sortStrings([...new Set(caches.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))], true);
+  tagList.unshift('|');
+  tagList.unshift('All');
+  tagList.push('|');
+  tagList.push('Debug');
+  tagList.push('MockData');
+  return tagList;
+};
+
+//----------------------------------------------------------------------
+const getInnerTable = (caches, curTag, filtered, title, searchFields, recordIconList, cachesHandler) => {
+  // EXISTING_CODE
+  // EXISTING_CODE
+  return (
+    <DataTable
+      tableName={'cachesTable'}
+      data={filtered}
+      columns={cachesSchema}
+      title={title}
+      search={true}
+      searchFields={searchFields}
+      pagination={true}
+      recordIcons={recordIconList}
+      parentHandler={cachesHandler}
+    />
   );
 };
 
@@ -215,8 +238,8 @@ const defaultSearch = ['path'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshCachesData(url, query, dispatch) {
-  getServerData(url, query).then((theData) => {
+export function refreshCachesData(url, query, dispatch, mocked) {
+  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let caches = theData.data;
     // EXISTING_CODE
     if (caches)

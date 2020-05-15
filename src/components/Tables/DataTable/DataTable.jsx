@@ -17,7 +17,7 @@ export const DataTable = ({
   data,
   columns,
   title = 'Data Table (dt-)',
-  name = '',
+  tableName = '',
   search = false,
   searchFields = [],
   pagination = false,
@@ -26,24 +26,36 @@ export const DataTable = ({
   recordIcons = [],
   parentHandler = null,
 }) => {
-  const [pagingCtx, setPaging] = useState(
-    stateFromStorage('paging', { perPage: 10, curPage: 0, total: 0, paginationParts: paginationParts })
-  );
+  const defPaging = {
+    curPage: 0,
+    curRecord: 0,
+    firstInPage: 0,
+    nRecords: 0,
+    maxPage: 0,
+    perPage: 10,
+    paginationParts: paginationParts,
+  };
+  const [pagingCtx, setPaging] = useState(stateFromStorage('paging', defPaging));
   const [expandedRow, setExpandedRow] = useState('');
   const [selectedRow, setSelectedRow] = useState('');
   const [filterText, setFilterText] = useState('');
 
-  const [sortCtx1, setSortCtx1] = useState(stateFromStorage(name + '_sort1', { sortBy: '', sortDir: 'asc' }));
-  const [sortCtx2, setSortCtx2] = useState(stateFromStorage(name + '_sort2', { sortBy: '', sortDir: 'asc' }));
+  const [sortCtx1, setSortCtx1] = useState(stateFromStorage(tableName + '_sort1', { sortBy: '', sortDir: 'asc' }));
+  const [sortCtx2, setSortCtx2] = useState(stateFromStorage(tableName + '_sort2', { sortBy: '', sortDir: 'asc' }));
 
   function changeRow(rowId) {
     setSelectedRow(rowId);
     if (parentHandler) parentHandler({ type: 'row-changed', record_id: rowId });
   }
 
+  const goToRecord = (n) => {
+    setPaging({ ...pagingCtx, curPage: n, curIndex: n });
+    changeRow(calcValue(filteredData[n], idCol));
+  };
+
   const dataTableHandler = (action) => {
     //console.log(action);
-    const { perPage, curPage } = pagingCtx;
+    const { curPage, curIndex, firstInPage, perPage } = pagingCtx;
     switch (action.type) {
       case 'update_filter':
         setFilterText(action.payload);
@@ -52,17 +64,6 @@ export const DataTable = ({
         setFilterText('');
         break;
 
-      case 'perPage':
-        const newCtx = {
-          perPage: action.payload,
-          curPage: 0,
-          total: filteredData.length,
-          paginationParts: paginationParts,
-        };
-        setPaging(newCtx);
-        localStorage.setItem('paging', JSON.stringify(newCtx));
-        changeRow(calcValue(filteredData[0], idCol));
-        break;
       case 'sortBy':
         let newSort1 = sortCtx1;
         let newSort2 = sortCtx2;
@@ -81,33 +82,47 @@ export const DataTable = ({
         }
         setSortCtx1(newSort1);
         setSortCtx2(newSort2);
-        localStorage.setItem(name + '_sort1', JSON.stringify(newSort1));
-        localStorage.setItem(name + '_sort2', JSON.stringify(newSort2));
-        setPaging({ ...pagingCtx, curPage: 0, total: filteredData.length });
-        changeRow(calcValue(filteredData[0], idCol));
+        localStorage.setItem(tableName + '_sort1', JSON.stringify(newSort1));
+        localStorage.setItem(tableName + '_sort2', JSON.stringify(newSort2));
+        goToRecord(0);
+        break;
+
+      case 'perPage':
+        const newCtx = {
+          ...pagingCtx,
+          curPage: 0,
+          maxPage: Math.floor(filteredData.length / action.payload),
+          perPage: action.payload,
+        };
+        goToRecord(0);
+        setPaging(newCtx);
+        localStorage.setItem('paging', JSON.stringify(newCtx));
         break;
 
       case 'home':
-        setPaging({ ...pagingCtx, curPage: 0, total: filteredData.length });
+        setPaging({ ...pagingCtx, curPage: 0 });
         changeRow(calcValue(filteredData[0], idCol));
         break;
+
       case 'end':
-        setPaging({
-          ...pagingCtx,
-          curPage: Math.floor(filteredData.length / perPage) - !(filteredData.length % perPage),
-          total: filteredData.length,
-        });
+        // prettier-ignore
+        setPaging({ ...pagingCtx, curPage: Math.floor(filteredData.length / perPage) - !(filteredData.length % perPage), });
         changeRow(calcValue(filteredData[filteredData.length - 1], idCol));
         break;
 
+      case 'pagedown':
       case 'right':
         {
-          setPaging({ ...pagingCtx, curPage: curPage + 1, total: filteredData.length });
+          // prettier-ignore
+          setPaging({ ...pagingCtx, curPage: curPage + 1, });
           changeRow(calcValue(filteredData[perPage * (curPage + 1)], idCol));
         }
         break;
+
+      case 'pageup':
       case 'left':
-        setPaging({ ...pagingCtx, curPage: curPage - 1, total: filteredData.length });
+        // prettier-ignore
+        setPaging({ ...pagingCtx, curPage: curPage - 1, });
         changeRow(calcValue(filteredData[perPage * (curPage - 1)], idCol));
         break;
 
@@ -118,11 +133,13 @@ export const DataTable = ({
             if (calcValue(item, idCol) === selectedRow) {
               curIndex = index;
             }
+            return true;
           });
-          if (curIndex < filteredData.length - 1) changeRow(calcValue(filteredData[curIndex + 1], idCol));
-          if (curIndex === pagingCtx.perPage * (pagingCtx.curPage + 1) - 1) dataTableHandler({ type: 'right' });
+          if (curIndex < pagingCtx.nRecords - 1) changeRow(calcValue(filteredData[curIndex + 1], idCol));
+          if (curIndex === pagingCtx.perPage * (pagingCtx.curPage + 1) - 1) dataTableHandler({ type: 'pagedown' });
         }
         break;
+
       case 'up':
         {
           let curIndex = -1;
@@ -136,13 +153,14 @@ export const DataTable = ({
         break;
 
       case 'row_click':
-        if (expandedRow === action.record_id) setExpandedRow('');
         changeRow(action.record_id);
         setExpandedRow(expandedRow === action.record_id ? '' : action.record_id);
         break;
+
       case 'row_doubleclick':
         if (parentHandler) parentHandler({ type: 'row_doubleclick', record_id: action.record_id });
         break;
+
       case 'download':
         const asCSV = action.fmt === 'CSV';
         const exportFields = columns.filter((column) => {
@@ -162,10 +180,12 @@ export const DataTable = ({
         hiddenElement.download = 'download.' + (asCSV ? 'csv' : 'txt');
         hiddenElement.click();
         break;
+
       case 'copied':
       case 'not-copied':
         setSelectedRow('');
         break;
+
       default:
         if (parentHandler) parentHandler(action);
         break;
@@ -188,14 +208,18 @@ export const DataTable = ({
   const lastInPage = Math.min(Number(firstInPage) + Number(pagingCtx.perPage), hasData ? filteredData.length : 0);
 
   useEffect(() => {
-    setPaging({ perPage: pagingCtx.perPage, curPage: 0, total: hasData ? filteredData.length : 0 });
+    setPaging({
+      ...pagingCtx,
+      curPage: 0,
+      nRecords: hasData ? filteredData.length : 0,
+      maxPage: Math.floor(filteredData.length / pagingCtx.perPage),
+    });
     changeRow('');
   }, [data, filterText]);
-  //  }, [data, filterText, hasData, filteredData.length, pagingCtx.perPage]);
 
+  const altIconCol = getAltIconKey(columns);
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
-  const altIconCol = getAltIconKey(columns);
 
   const showTools = title !== '' || search || pagination;
   const headerIcons = recordIcons.filter((icon) => icon.includes('header-'));
@@ -208,13 +232,13 @@ export const DataTable = ({
   widStr = widStr.replace(',', '').replace('  ', ' ').replace('px', 'px, ');
 
   const str = 'grid-template-columns: ' + widStr + '; display: grid;';
-  createClass('#whatever-' + name, str);
-  createClass('#whatever-row-' + name, str);
+  createClass('#whatever-' + tableName, str);
+  createClass('#whatever-row-' + tableName, str);
 
-  const debug = false;
+  const debug = true;
   return (
     <Fragment key="dt">
-      {debug && <pre>{JSON.stringify(filteredData.length - 1, null, 2)}</pre>}
+      {debug && <pre>{JSON.stringify(pagingCtx)}</pre>}
       {showTools && (
         <Tablebar
           title={title}
@@ -223,7 +247,7 @@ export const DataTable = ({
           filterText={filterText}
           searchFields={searchFields}
           pagination={pagination}
-          pagingCtx={{ ...pagingCtx, paginationParts: paginationParts }}
+          pagingCtx={{ ...pagingCtx }}
         />
       )}
       <DataTableHeader
@@ -233,7 +257,7 @@ export const DataTable = ({
         sortCtx2={sortCtx2}
         handler={dataTableHandler}
         headerIcons={headerIcons}
-        name={name}
+        tableName={tableName}
       />
       <DataTableRows
         data={filteredData}
@@ -244,12 +268,11 @@ export const DataTable = ({
         handler={dataTableHandler}
         expandedRow={expandedRow}
         selectedRow={selectedRow}
-        // key={key}
         firstInPage={firstInPage}
         lastInPage={lastInPage}
         rowIcons={rowIcons}
         showHidden={showHidden}
-        name={name}
+        tableName={tableName}
       />
       {search && (
         <Tablebar
@@ -272,16 +295,16 @@ const DataTableHeader = ({
   sortCtx2 = { sortBy: '', sortDir: '' },
   handler,
   headerIcons = null,
-  name,
+  tableName,
 }) => {
   const sortIcon1 = <SortIcon dir={sortCtx1.sortDir} n={1} />;
   const sortIcon2 = <SortIcon dir={sortCtx2.sortDir} n={2} />;
   return (
-    <div id={'whatever-' + name} className="at-header-base at-header dt-header" key="dt-header">
+    <div id={'whatever-' + tableName} className="at-header-base at-header dt-header" key="dt-header">
       {columns.map((column, index) => {
         const cellText = (
           <div style={{ display: 'inline' }}>
-            {column.name || column.selector}
+            {column.tableName || column.selector}
             {column.selector === sortCtx1.sortBy && sortIcon1}
             {column.selector === sortCtx2.sortBy && sortIcon2}
           </div>
@@ -315,7 +338,7 @@ const DataTableRows = ({
   lastInPage,
   rowIcons,
   showHidden,
-  name,
+  tableName,
 }) => {
   const debug = false;
   return (
@@ -328,7 +351,7 @@ const DataTableRows = ({
           const key = id + '_' + index;
           const rowKey = key + '_r';
           const isSelected = id === selectedRow;
-          if (index < firstInPage || index >= lastInPage) return <Fragment key={key}></Fragment>;
+          if (index < firstInPage || index >= lastInPage) return null;
           const deleted = record.deleted;
           let monitored = false;
           return (
@@ -337,7 +360,7 @@ const DataTableRows = ({
               {/*<pre>{monitored ? 'true' : 'false'}</pre>*/}
               <div
                 className={'at-row dt-row' + (isSelected ? ' selected' : '') + (deleted ? ' at-deleted' : '')}
-                id={'whatever-row-' + name}
+                id={'whatever-row-' + tableName}
                 onClick={(e) => handleClick(e, handler, { type: 'row_click', record_id: id })}
                 onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', record_id: id })}
                 key={rowKey}

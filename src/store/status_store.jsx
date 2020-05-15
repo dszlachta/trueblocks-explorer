@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 
 import GlobalContext from 'store';
+import { stateFromStorage } from 'components/utils';
 
 //----------------------------------------------------------------------
 export const statusDefault = {
@@ -19,17 +20,21 @@ export const statusDefault = {
     client: 0,
   },
   loading: true,
+  mocked: stateFromStorage('mocked', false),
 };
 
 //----------------------------------------------------------------------
 export const statusReducer = (state, action) => {
   switch (action.type) {
+    case 'mocked':
+      localStorage.setItem('mocked', action.payload);
+      return { ...state, mocked: action.payload };
     case 'loading':
       return { ...state, loading: action.payload };
     case 'success':
-      return { ...action.payload, loading: false };
+      return { ...action.payload, loading: false, mocked: state.mocked };
     case 'fail':
-      return { ...statusDefault, loading: false };
+      return { ...statusDefault, loading: false, mocked: state.mocked };
     default:
       return state;
   }

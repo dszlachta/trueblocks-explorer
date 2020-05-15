@@ -13,6 +13,7 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Monitors.css';
 
@@ -26,6 +27,7 @@ import { currentPage } from 'components/utils';
 export const Monitors = (props) => {
   const { monitors, dispatch } = useMonitors();
   const loading = useStatus().state.loading;
+  const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(monitorsDefault);
@@ -34,6 +36,7 @@ export const Monitors = (props) => {
   const [curTag, setTag] = useState(localStorage.getItem('monitorsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
+  const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -60,8 +63,16 @@ export const Monitors = (props) => {
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
         case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('monitorsTag', action.payload);
+          let tag = action.payload;
+          if (action.payload === 'Debug') {
+            setDebug(!debug);
+            tag = 'All';
+          } else if (action.payload === 'MockData') {
+            statusDispatch({ type: 'mocked', payload: !mocked });
+            tag = 'All';
+          }
+          setTag(tag);
+          localStorage.setItem('monitorsTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -124,6 +135,7 @@ export const Monitors = (props) => {
             });
           }
           break;
+
         // EXISTING_CODE
         case 'externallink':
           navigate('https://etherscan.io/address/' + action.record_id, true);
@@ -143,9 +155,9 @@ export const Monitors = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshMonitorsData(dataUrl, dataQuery, dispatch);
+    refreshMonitorsData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, monitorsHandler, { type: 'Add' }));
@@ -157,21 +169,15 @@ export const Monitors = (props) => {
   useMemo(() => {
     // prettier-ignore
     if (monitors && monitors.data) {
-      let tagList = [...new Set(monitors.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
-    }
-  }, [monitors]);
-
-  useMemo(() => {
-    if (monitors && monitors.data) {
+      setTagList(getTagList(monitors));
       const result = monitors.data.filter((item) => {
-        return curTag === 'All' || item.tags.includes(curTag);
+        // EXISTING_CODE
+        // EXISTING_CODE
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [monitors, curTag]);
+  }, [monitors, curTag, debug, mocked]);
 
   let custom = null;
   let title = 'Monitors';
@@ -185,6 +191,7 @@ export const Monitors = (props) => {
   }
   // EXISTING_CODE
 
+  const table = getInnerTable(monitors, curTag, filtered, title, searchFields, recordIconList, monitorsHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -195,28 +202,48 @@ export const Monitors = (props) => {
         handler={monitorsHandler}
         loading={loading}
       />
-      <DataTable
-        name={'monitorsTable'}
-        data={filtered}
-        columns={monitorsSchema}
-        title={title}
-        search={true}
-        searchFields={searchFields}
-        pagination={true}
-        recordIcons={recordIconList}
-        parentHandler={monitorsHandler}
-      />
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
+      {debug && <pre>{JSON.stringify(monitors, null, 2)}</pre>}
+      {table}
       {/* prettier-ignore */}
-      {/*<AddName
-        showing={editDialog.showing}
-        handler={monitorsHandler}
-        columns={monitorsSchema}
-        data={editDialog.record}
-        title={editDialog.name}
-        showHidden={true}
-      />*/}
+      <NameDialog showing={editDialog.showing} handler={monitorsHandler} object={{ address: curRecordId }} />
       {custom}
     </div>
+  );
+};
+
+//----------------------------------------------------------------------
+const getTagList = (monitors) => {
+  // prettier-ignore
+  let tagList = sortStrings([...new Set(monitors.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))], true);
+  tagList.unshift('|');
+  tagList.unshift('All');
+  tagList.push('|');
+  tagList.push('Debug');
+  tagList.push('MockData');
+  return tagList;
+};
+
+//----------------------------------------------------------------------
+const getInnerTable = (monitors, curTag, filtered, title, searchFields, recordIconList, monitorsHandler) => {
+  // EXISTING_CODE
+  // EXISTING_CODE
+  return (
+    <DataTable
+      tableName={'monitorsTable'}
+      data={filtered}
+      columns={monitorsSchema}
+      title={title}
+      search={true}
+      searchFields={searchFields}
+      pagination={true}
+      recordIcons={recordIconList}
+      parentHandler={monitorsHandler}
+    />
   );
 };
 
@@ -233,15 +260,15 @@ const recordIconList = [
   //
 ];
 const defaultSort = ['tags', 'address'];
-const defaultSearch = ['tags', 'address'];
+const defaultSearch = ['tags', 'address', 'name'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshMonitorsData(url, query, dispatch) {
-  getServerData(url, query).then((theData) => {
+export function refreshMonitorsData(url, query, dispatch, mocked) {
+  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let monitors = theData.data;
     // EXISTING_CODE
-    monitors = theData.data[0].caches[0].items;
+    if (!mocked) monitors = theData.data[0].caches[0].items;
     // EXISTING_CODE
     if (monitors) theData.data = sortArray(monitors, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });

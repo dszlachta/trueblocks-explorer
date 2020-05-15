@@ -305,6 +305,8 @@ export const useArrowKeys = (handler, deps) => {
     Mousetrap.bind(['left'], (e) => handleClick(e, handler, { type: 'left' }));
     Mousetrap.bind(['down'], (e) => handleClick(e, handler, { type: 'down' }));
     Mousetrap.bind(['right'], (e) => handleClick(e, handler, { type: 'right' }));
+    Mousetrap.bind(['pagedown'], (e) => handleClick(e, handler, { type: 'pagedown' }));
+    Mousetrap.bind(['pageup'], (e) => handleClick(e, handler, { type: 'pageup' }));
     return () => {
       Mousetrap.unbind(['home']);
       Mousetrap.unbind(['end']);
@@ -312,8 +314,10 @@ export const useArrowKeys = (handler, deps) => {
       Mousetrap.unbind(['left']);
       Mousetrap.unbind(['down']);
       Mousetrap.unbind(['right']);
+      Mousetrap.unbind(['pagedown']);
+      Mousetrap.unbind(['pageup']);
     };
-  }, deps);
+  }, [handler, deps]);
 };
 
 //----------------------------------------------------------------------

@@ -13,13 +13,13 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Appearances.css';
 
 // EXISTING_CODE
 import { SidebarTable } from 'components';
 import { useNames } from 'pages/Names/Names';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 import { fmtNum } from 'components/utils';
 import { axisRight } from 'd3';
 import { getIcon } from 'pages/utils';
@@ -31,6 +31,7 @@ var g_Handler = null;
 export const Appearances = (props) => {
   const { appearances, dispatch } = useAppearances();
   const loading = useStatus().state.loading;
+  const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(appearancesDefault);
@@ -39,16 +40,16 @@ export const Appearances = (props) => {
   const [curTag, setTag] = useState(localStorage.getItem('appearancesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
+  const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
   const addresses = props.addresses;
   const name = props.name;
   const { names } = useNames().names;
-  g_focusValue = addresses.value;
+  g_focusValue = addresses.value.toLowerCase();
   // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/export';
-  const cmdUrl = 'http://localhost:8080/export';
 
   const dataQuery = 'addrs=' + addresses.value + '&verbose=7&dollars&articulate&write_txs&write_traces';
   function addendum(record, record_id) {
@@ -68,8 +69,16 @@ export const Appearances = (props) => {
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
         case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('appearancesTag', action.payload);
+          let tag = action.payload;
+          if (action.payload === 'Debug') {
+            setDebug(!debug);
+            tag = 'All';
+          } else if (action.payload === 'MockData') {
+            statusDispatch({ type: 'mocked', payload: !mocked });
+            tag = 'All';
+          }
+          setTag(tag);
+          localStorage.setItem('appearancesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -99,6 +108,7 @@ export const Appearances = (props) => {
           // });
           setEditDialog({ showing: false, record: {} });
           break;
+
         // EXISTING_CODE
         case 'row-changed':
           console.log('row-changed: ', action);
@@ -116,9 +126,9 @@ export const Appearances = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshAppearancesData(dataUrl, dataQuery, dispatch);
+    refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
@@ -130,17 +140,9 @@ export const Appearances = (props) => {
   useMemo(() => {
     // prettier-ignore
     if (appearances && appearances.data) {
-      // let tagList = [...new Set(appearances.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      // tagList = sortStrings(tagList, true);
-      // tagList.unshift('All');
-      let tagList = ['All', '|', 'Tokens', 'Grants', 'Airdrops', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', "SelfDestructs"]
-      setTagList(tagList);
-    }
-  }, [appearances]);
-
-  useMemo(() => {
-    if (appearances && appearances.data) {
+      setTagList(getTagList(appearances));
       const result = appearances.data.filter((item) => {
+        // EXISTING_CODE
         switch (curTag) {
           case 'Airdrops':
             return item['toName'] && item['toName'].name.includes('Airdrop');
@@ -162,11 +164,12 @@ export const Appearances = (props) => {
           default:
             return true;
         }
-        //        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
+        // EXISTING_CODE
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [appearances, curTag]);
+  }, [appearances, curTag, debug, mocked]);
 
   let custom = null;
   let title = 'Appearances';
@@ -177,18 +180,51 @@ export const Appearances = (props) => {
       '...' +
       addresses.value.substr(addresses.value.length - 6, addresses.value.length - 1) +
       (name ? ' (' + name.replace('%20', ' ') + ')' : '');
-  // const name =
-  //   names &&
-  //   names.filter((rec) => {
-  //     return rec.address === addresses.value;
-  //   });
-  // title += name ? ' (' + name[0] + ')' : '';
   g_Handler = appearancesHandler;
   // EXISTING_CODE
 
-  let table = <div>The Table</div>;
+  const table = getInnerTable(appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler);
+  return (
+    <div>
+      {/* prettier-ignore */}
+      <PageCaddie
+        caddieName="Tags"
+        caddieData={tagList}
+        current={curTag}
+        handler={appearancesHandler}
+        loading={loading}
+      />
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
+      {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}
+      {table}
+      {/* prettier-ignore */}
+      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curRecordId }} />
+      {custom}
+    </div>
+  );
+};
+
+//----------------------------------------------------------------------
+const getTagList = (appearances) => {
+  // prettier-ignore
+  let tagList = ['Tokens', 'Grants', 'Airdrops', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
+  tagList.unshift('|');
+  tagList.unshift('All');
+  tagList.push('|');
+  tagList.push('Debug');
+  tagList.push('MockData');
+  return tagList;
+};
+
+//----------------------------------------------------------------------
+const getInnerTable = (appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler) => {
+  // EXISTING_CODE
   if (curTag !== 'Neighbors') {
-    table = (
+    return (
       <SidebarTable
         name={'appearancesTable'}
         data={filtered}
@@ -234,36 +270,26 @@ export const Appearances = (props) => {
         onDisplay: getFieldValue,
       },
     ];
-
-    table = (
+    return (
       <Fragment>
         {/*<pre>{JSON.stringify(appearances.meta, null, 2)}</pre>*/}
         <ObjectTable data={appearances.meta} columns={metaSchema} />
       </Fragment>
     );
   }
-
-  const debug = false;
+  // EXISTING_CODE
   return (
-    <div>
-      {debug && (
-        <a target="_blank" rel="noopener noreferrer" href={dataUrl + '?' + dataQuery}>
-          {dataUrl + '?' + dataQuery}
-        </a>
-      )}
-      {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}
-      {/* prettier-ignore */}
-      <PageCaddie
-        caddieName="Tags"
-        caddieData={tagList}
-        current={curTag}
-        handler={appearancesHandler}
-        loading={loading}
-      />
-      {table}
-      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curRecordId }} />
-      {custom}
-    </div>
+    <DataTable
+      tableName={'appearancesTable'}
+      data={filtered}
+      columns={appearancesSchema}
+      title={title}
+      search={true}
+      searchFields={searchFields}
+      pagination={true}
+      recordIcons={recordIconList}
+      parentHandler={appearancesHandler}
+    />
   );
 };
 
@@ -280,13 +306,13 @@ const defaultSearch = ['blockNumber', 'transactionIndex'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(url, query, dispatch) {
-  getServerData(url, query).then((theData) => {
+export function refreshAppearancesData(url, query, dispatch, mocked) {
+  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let appearances = theData.data;
     // EXISTING_CODE
-    appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
+    if (!mocked) appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
     let named = appearances;
-    if (appearances && theData.meta) {
+    if (!mocked && appearances && theData.meta) {
       named = appearances.map((item) => {
         if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.from])
           item.fromName = theData.meta.namedFromAndTo[item.from];
@@ -314,13 +340,13 @@ export const appearancesReducer = (state, action) => {
     case 'undelete':
     case 'delete':
       {
-        const record = appearances.filter((r) => {
+        const record = appearances.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          appearances = replaceRecord(appearances, record, action.record_id, calcValue, getFieldValue);
+          appearances.data = replaceRecord(appearances.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
@@ -385,12 +411,12 @@ function getFieldValue(record, fieldName) {
       return internal ? 'int' : '';
     case 'from': {
       const val = record.fromName ? record.fromName.name : record.from;
-      if (record.from === g_focusValue) return <div className="focusValue">{val}</div>;
+      if (record.from === g_focusValue.toLowerCase()) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'to': {
       const val = record.toName ? record.toName.name : record.to;
-      if (record.to === g_focusValue) return <div className="focusValue">{val}</div>;
+      if (record.to === g_focusValue.toLowerCase()) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'fromName':

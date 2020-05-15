@@ -11,6 +11,7 @@ import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
 import { getServerData, sortArray, sortStrings, handleClick, useArrowKeys, notEmpty } from 'components/utils';
 import { calcValue } from 'store';
 
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { useExplorer } from './Explorer';
 
 // auto-generate: page-settings
@@ -20,6 +21,7 @@ import { useExplorer } from './Explorer';
 export const ExplorerReceipts = () => {
   const { explorer, dispatch } = useExplorer();
   const [current, setCurrent] = useState('latest');
+  const mocked = useStatus().state.mocked;
 
   const receiptsHandler = useCallback(
     (action) => {
@@ -50,7 +52,7 @@ export const ExplorerReceipts = () => {
   const url = 'http://localhost:8080/receipts';
   let query = 'transactions=' + current + '&verbose=10';
   useEffect(() => {
-    getServerData(url, query).then((theData) => {
+    getServerData(url, query + (mocked ? "&mockData" : "")).then((theData) => {
       let result = theData.data;
       // EXISTING_CODE
       // EXISTING_CODE
@@ -63,12 +65,15 @@ export const ExplorerReceipts = () => {
     explorer &&
     explorer.map((item) => {
       return (
-        <ObjectTable
-          columns={receiptsSchema}
-          data={item}
-          title={'Receipt ' + getFieldValue(item, 'id')}
-          search={false}
-        />
+        <Fragment>
+          {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+          <ObjectTable
+            columns={receiptsSchema}
+            data={item}
+            title={'Receipt ' + getFieldValue(item, 'id')}
+            search={false}
+          />
+        </Fragment>
       );
     });
 

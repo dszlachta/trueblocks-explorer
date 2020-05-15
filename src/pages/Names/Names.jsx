@@ -13,6 +13,7 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Names.css';
 
@@ -23,6 +24,7 @@ import './Names.css';
 export const Names = (props) => {
   const { names, dispatch } = useNames();
   const loading = useStatus().state.loading;
+  const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(namesDefault);
@@ -31,6 +33,7 @@ export const Names = (props) => {
   const [curTag, setTag] = useState(localStorage.getItem('namesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
+  const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -57,8 +60,16 @@ export const Names = (props) => {
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
         case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('namesTag', action.payload);
+          let tag = action.payload;
+          if (action.payload === 'Debug') {
+            setDebug(!debug);
+            tag = 'All';
+          } else if (action.payload === 'MockData') {
+            statusDispatch({type: 'mocked', payload: !mocked});
+            tag = 'All';
+          }
+          setTag(tag);
+          localStorage.setItem('namesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -121,6 +132,7 @@ export const Names = (props) => {
             });
           }
           break;
+
         // EXISTING_CODE
         case 'externallink':
           navigate('https://etherscan.io/address/' + action.record_id, true);
@@ -156,9 +168,9 @@ export const Names = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshNamesData(dataUrl, dataQuery, dispatch);
+    refreshNamesData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, namesHandler, { type: 'Add' }));
@@ -170,27 +182,22 @@ export const Names = (props) => {
   useMemo(() => {
     // prettier-ignore
     if (names && names.data) {
-      let tagList = [...new Set(names.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
-    }
-  }, [names]);
-
-  useMemo(() => {
-    if (names && names.data) {
+      setTagList(getTagList(names));
       const result = names.data.filter((item) => {
-        return curTag === 'All' || item.tags.includes(curTag);
+        // EXISTING_CODE
+        // EXISTING_CODE
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [names, curTag]);
+  }, [names, curTag, debug, mocked]);
 
   let custom = null;
   let title = 'Names';
   // EXISTING_CODE
   // EXISTING_CODE
 
+  const table = getInnerTable(names, curTag, filtered, title, searchFields, recordIconList, namesHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -201,28 +208,44 @@ export const Names = (props) => {
         handler={namesHandler}
         loading={loading}
       />
-      <DataTable
-        name={'namesTable'}
-        data={filtered}
-        columns={namesSchema}
-        title={title}
-        search={true}
-        searchFields={searchFields}
-        pagination={true}
-        recordIcons={recordIconList}
-        parentHandler={namesHandler}
-      />
+      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {debug && <pre>{JSON.stringify(names, null, 2)}</pre>}
+      {table}
       {/* prettier-ignore */}
-      {/*<AddName
-        showing={editDialog.showing}
-        handler={namesHandler}
-        columns={namesSchema}
-        data={editDialog.record}
-        title={editDialog.name}
-        showHidden={true}
-      />*/}
+      <NameDialog showing={editDialog.showing} handler={namesHandler} object={{ address: curRecordId }} />
       {custom}
     </div>
+  );
+};
+
+//----------------------------------------------------------------------
+const getTagList = (names) => {
+  // prettier-ignore
+  let tagList = sortStrings([...new Set(names.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))], true);
+  tagList.unshift('|');
+  tagList.unshift('All');
+  tagList.push('|');
+  tagList.push('Debug');
+  tagList.push('MockData');
+  return tagList;
+};
+
+//----------------------------------------------------------------------
+const getInnerTable = (names, curTag, filtered, title, searchFields, recordIconList, namesHandler) => {
+  // EXISTING_CODE
+  // EXISTING_CODE
+  return (
+    <DataTable
+      tableName={'namesTable'}
+      data={filtered}
+      columns={namesSchema}
+      title={title}
+      search={true}
+      searchFields={searchFields}
+      pagination={true}
+      recordIcons={recordIconList}
+      parentHandler={namesHandler}
+    />
   );
 };
 
@@ -243,8 +266,8 @@ const defaultSearch = ['tags', 'address', 'name'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshNamesData(url, query, dispatch) {
-  getServerData(url, query).then((theData) => {
+export function refreshNamesData(url, query, dispatch, mocked) {
+  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let names = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE

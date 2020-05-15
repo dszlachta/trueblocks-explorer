@@ -13,6 +13,7 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Collections.css';
 
@@ -23,6 +24,7 @@ import './Collections.css';
 export const Collections = (props) => {
   const { collections, dispatch } = useCollections();
   const loading = useStatus().state.loading;
+  const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(collectionsDefault);
@@ -31,6 +33,7 @@ export const Collections = (props) => {
   const [curTag, setTag] = useState(localStorage.getItem('collectionsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
+  const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -56,8 +59,16 @@ export const Collections = (props) => {
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
         case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('collectionsTag', action.payload);
+          let tag = action.payload;
+          if (action.payload === 'Debug') {
+            setDebug(!debug);
+            tag = 'All';
+          } else if (action.payload === 'MockData') {
+            statusDispatch({type: 'mocked', payload: !mocked});
+            tag = 'All';
+          }
+          setTag(tag);
+          localStorage.setItem('collectionsTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -120,6 +131,7 @@ export const Collections = (props) => {
             });
           }
           break;
+
         // EXISTING_CODE
         // EXISTING_CODE
         default:
@@ -131,9 +143,9 @@ export const Collections = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshCollectionsData(dataUrl, dataQuery, dispatch);
+    refreshCollectionsData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, collectionsHandler, { type: 'Add' }));
@@ -145,27 +157,22 @@ export const Collections = (props) => {
   useMemo(() => {
     // prettier-ignore
     if (collections && collections.data) {
-      let tagList = [...new Set(collections.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
-    }
-  }, [collections]);
-
-  useMemo(() => {
-    if (collections && collections.data) {
+      setTagList(getTagList(collections));
       const result = collections.data.filter((item) => {
-        return curTag === 'All' || item.tags.includes(curTag);
+        // EXISTING_CODE
+        // EXISTING_CODE
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [collections, curTag]);
+  }, [collections, curTag, debug, mocked]);
 
   let custom = null;
   let title = 'Collections';
   // EXISTING_CODE
   // EXISTING_CODE
 
+  const table = getInnerTable(collections, curTag, filtered, title, searchFields, recordIconList, collectionsHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -176,28 +183,44 @@ export const Collections = (props) => {
         handler={collectionsHandler}
         loading={loading}
       />
-      <DataTable
-        name={'collectionsTable'}
-        data={filtered}
-        columns={collectionsSchema}
-        title={title}
-        search={true}
-        searchFields={searchFields}
-        pagination={true}
-        recordIcons={recordIconList}
-        parentHandler={collectionsHandler}
-      />
+      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {debug && <pre>{JSON.stringify(collections, null, 2)}</pre>}
+      {table}
       {/* prettier-ignore */}
-      {/*<AddName
-        showing={editDialog.showing}
-        handler={collectionsHandler}
-        columns={collectionsSchema}
-        data={editDialog.record}
-        title={editDialog.name}
-        showHidden={true}
-      />*/}
+      <NameDialog showing={editDialog.showing} handler={collectionsHandler} object={{ address: curRecordId }} />
       {custom}
     </div>
+  );
+};
+
+//----------------------------------------------------------------------
+const getTagList = (collections) => {
+  // prettier-ignore
+  let tagList = sortStrings([...new Set(collections.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))], true);
+  tagList.unshift('|');
+  tagList.unshift('All');
+  tagList.push('|');
+  tagList.push('Debug');
+  tagList.push('MockData');
+  return tagList;
+};
+
+//----------------------------------------------------------------------
+const getInnerTable = (collections, curTag, filtered, title, searchFields, recordIconList, collectionsHandler) => {
+  // EXISTING_CODE
+  // EXISTING_CODE
+  return (
+    <DataTable
+      tableName={'collectionsTable'}
+      data={filtered}
+      columns={collectionsSchema}
+      title={title}
+      search={true}
+      searchFields={searchFields}
+      pagination={true}
+      recordIcons={recordIconList}
+      parentHandler={collectionsHandler}
+    />
   );
 };
 
@@ -216,8 +239,8 @@ const defaultSearch = ['tags', 'name', 'client'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshCollectionsData(url, query, dispatch) {
-  getServerData(url, query).then((theData) => {
+export function refreshCollectionsData(url, query, dispatch, mocked) {
+  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let collections = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE

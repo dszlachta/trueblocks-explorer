@@ -13,6 +13,7 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Tags.css';
 
@@ -23,6 +24,7 @@ import './Tags.css';
 export const Tags = (props) => {
   const { tags, dispatch } = useTags();
   const loading = useStatus().state.loading;
+  const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(tagsDefault);
@@ -31,6 +33,7 @@ export const Tags = (props) => {
   const [curTag, setTag] = useState(localStorage.getItem('tagsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
+  const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -56,8 +59,16 @@ export const Tags = (props) => {
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
         case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('tagsTag', action.payload);
+          let tag = action.payload;
+          if (action.payload === 'Debug') {
+            setDebug(!debug);
+            tag = 'All';
+          } else if (action.payload === 'MockData') {
+            statusDispatch({type: 'mocked', payload: !mocked});
+            tag = 'All';
+          }
+          setTag(tag);
+          localStorage.setItem('tagsTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -120,6 +131,7 @@ export const Tags = (props) => {
             });
           }
           break;
+
         // EXISTING_CODE
         // EXISTING_CODE
         default:
@@ -131,9 +143,9 @@ export const Tags = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshTagsData(dataUrl, dataQuery, dispatch);
+    refreshTagsData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, tagsHandler, { type: 'Add' }));
@@ -145,27 +157,22 @@ export const Tags = (props) => {
   useMemo(() => {
     // prettier-ignore
     if (tags && tags.data) {
-      let tagList = [...new Set(tags.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
-    }
-  }, [tags]);
-
-  useMemo(() => {
-    if (tags && tags.data) {
+      setTagList(getTagList(tags));
       const result = tags.data.filter((item) => {
-        return curTag === 'All' || item.tags.includes(curTag);
+        // EXISTING_CODE
+        // EXISTING_CODE
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [tags, curTag]);
+  }, [tags, curTag, debug, mocked]);
 
   let custom = null;
   let title = 'Tags';
   // EXISTING_CODE
   // EXISTING_CODE
 
+  const table = getInnerTable(tags, curTag, filtered, title, searchFields, recordIconList, tagsHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -176,28 +183,44 @@ export const Tags = (props) => {
         handler={tagsHandler}
         loading={loading}
       />
-      <DataTable
-        name={'tagsTable'}
-        data={filtered}
-        columns={tagsSchema}
-        title={title}
-        search={true}
-        searchFields={searchFields}
-        pagination={true}
-        recordIcons={recordIconList}
-        parentHandler={tagsHandler}
-      />
+      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {debug && <pre>{JSON.stringify(tags, null, 2)}</pre>}
+      {table}
       {/* prettier-ignore */}
-      {/*<AddName
-        showing={editDialog.showing}
-        handler={tagsHandler}
-        columns={tagsSchema}
-        data={editDialog.record}
-        title={editDialog.name}
-        showHidden={true}
-      />*/}
+      <NameDialog showing={editDialog.showing} handler={tagsHandler} object={{ address: curRecordId }} />
       {custom}
     </div>
+  );
+};
+
+//----------------------------------------------------------------------
+const getTagList = (tags) => {
+  // prettier-ignore
+  let tagList = sortStrings([...new Set(tags.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))], true);
+  tagList.unshift('|');
+  tagList.unshift('All');
+  tagList.push('|');
+  tagList.push('Debug');
+  tagList.push('MockData');
+  return tagList;
+};
+
+//----------------------------------------------------------------------
+const getInnerTable = (tags, curTag, filtered, title, searchFields, recordIconList, tagsHandler) => {
+  // EXISTING_CODE
+  // EXISTING_CODE
+  return (
+    <DataTable
+      tableName={'tagsTable'}
+      data={filtered}
+      columns={tagsSchema}
+      title={title}
+      search={true}
+      searchFields={searchFields}
+      pagination={true}
+      recordIcons={recordIconList}
+      parentHandler={tagsHandler}
+    />
   );
 };
 
@@ -213,8 +236,8 @@ const defaultSearch = ['tags', 'subtags1', 'subtags2'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshTagsData(url, query, dispatch) {
-  getServerData(url, query).then((theData) => {
+export function refreshTagsData(url, query, dispatch, mocked) {
+  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let tags = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE

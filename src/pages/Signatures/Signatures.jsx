@@ -13,6 +13,7 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Signatures.css';
 
@@ -23,6 +24,7 @@ import './Signatures.css';
 export const Signatures = (props) => {
   const { signatures, dispatch } = useSignatures();
   const loading = useStatus().state.loading;
+  const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState(signaturesDefault);
@@ -31,6 +33,7 @@ export const Signatures = (props) => {
   const [curTag, setTag] = useState(localStorage.getItem('signaturesTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
+  const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -56,8 +59,16 @@ export const Signatures = (props) => {
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
         case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('signaturesTag', action.payload);
+          let tag = action.payload;
+          if (action.payload === 'Debug') {
+            setDebug(!debug);
+            tag = 'All';
+          } else if (action.payload === 'MockData') {
+            statusDispatch({type: 'mocked', payload: !mocked});
+            tag = 'All';
+          }
+          setTag(tag);
+          localStorage.setItem('signaturesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -120,6 +131,7 @@ export const Signatures = (props) => {
             });
           }
           break;
+
         // EXISTING_CODE
         // EXISTING_CODE
         default:
@@ -131,9 +143,9 @@ export const Signatures = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshSignaturesData(dataUrl, dataQuery, dispatch);
+    refreshSignaturesData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, signaturesHandler, { type: 'Add' }));
@@ -145,27 +157,22 @@ export const Signatures = (props) => {
   useMemo(() => {
     // prettier-ignore
     if (signatures && signatures.data) {
-      let tagList = [...new Set(signatures.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
-    }
-  }, [signatures]);
-
-  useMemo(() => {
-    if (signatures && signatures.data) {
+      setTagList(getTagList(signatures));
       const result = signatures.data.filter((item) => {
-        return curTag === 'All' || item.tags.includes(curTag);
+        // EXISTING_CODE
+        // EXISTING_CODE
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [signatures, curTag]);
+  }, [signatures, curTag, debug, mocked]);
 
   let custom = null;
   let title = 'Signatures';
   // EXISTING_CODE
   // EXISTING_CODE
 
+  const table = getInnerTable(signatures, curTag, filtered, title, searchFields, recordIconList, signaturesHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -176,28 +183,44 @@ export const Signatures = (props) => {
         handler={signaturesHandler}
         loading={loading}
       />
-      <DataTable
-        name={'signaturesTable'}
-        data={filtered}
-        columns={signaturesSchema}
-        title={title}
-        search={true}
-        searchFields={searchFields}
-        pagination={true}
-        recordIcons={recordIconList}
-        parentHandler={signaturesHandler}
-      />
+      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {debug && <pre>{JSON.stringify(signatures, null, 2)}</pre>}
+      {table}
       {/* prettier-ignore */}
-      {/*<AddName
-        showing={editDialog.showing}
-        handler={signaturesHandler}
-        columns={signaturesSchema}
-        data={editDialog.record}
-        title={editDialog.name}
-        showHidden={true}
-      />*/}
+      <NameDialog showing={editDialog.showing} handler={signaturesHandler} object={{ address: curRecordId }} />
       {custom}
     </div>
+  );
+};
+
+//----------------------------------------------------------------------
+const getTagList = (signatures) => {
+  // prettier-ignore
+  let tagList = ['Functions', 'Events', 'Constructors', '|', 'Known', 'Monitored', '|', 'Names Only', 'Signatures Only', 'Cross'];
+  tagList.unshift('|');
+  tagList.unshift('All');
+  tagList.push('|');
+  tagList.push('Debug');
+  tagList.push('MockData');
+  return tagList;
+};
+
+//----------------------------------------------------------------------
+const getInnerTable = (signatures, curTag, filtered, title, searchFields, recordIconList, signaturesHandler) => {
+  // EXISTING_CODE
+  // EXISTING_CODE
+  return (
+    <DataTable
+      tableName={'signaturesTable'}
+      data={filtered}
+      columns={signaturesSchema}
+      title={title}
+      search={true}
+      searchFields={searchFields}
+      pagination={true}
+      recordIcons={recordIconList}
+      parentHandler={signaturesHandler}
+    />
   );
 };
 
@@ -215,8 +238,8 @@ const defaultSearch = ['encoding', 'type', 'name'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshSignaturesData(url, query, dispatch) {
-  getServerData(url, query).then((theData) => {
+export function refreshSignaturesData(url, query, dispatch, mocked) {
+  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let signatures = theData.data;
     // EXISTING_CODE
     signatures = signatures.filter((item) => item.type !== 'constructor');

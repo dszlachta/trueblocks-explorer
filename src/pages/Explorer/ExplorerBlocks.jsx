@@ -11,6 +11,7 @@ import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
 import { getServerData, sortArray, sortStrings, handleClick, useArrowKeys, notEmpty } from 'components/utils';
 import { calcValue } from 'store';
 
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { useExplorer } from './Explorer';
 
 // auto-generate: page-settings
@@ -20,6 +21,7 @@ import { useExplorer } from './Explorer';
 export const ExplorerBlocks = () => {
   const { explorer, dispatch } = useExplorer();
   const [current, setCurrent] = useState('latest');
+  const mocked = useStatus().state.mocked;
 
   const blocksHandler = useCallback(
     (action) => {
@@ -50,7 +52,7 @@ export const ExplorerBlocks = () => {
   const url = 'http://localhost:8080/blocks';
   let query = 'blocks=' + current + '&hashes_only&verbose=10';
   useEffect(() => {
-    getServerData(url, query).then((theData) => {
+    getServerData(url, query + (mocked ? "&mockData" : "")).then((theData) => {
       let result = theData.data;
       // EXISTING_CODE
       // EXISTING_CODE
@@ -63,12 +65,15 @@ export const ExplorerBlocks = () => {
     explorer &&
     explorer.map((item) => {
       return (
-        <ObjectTable
-          columns={blocksSchema}
-          data={item}
-          title={'Block ' + getFieldValue(item, 'id')}
-          search={false}
-        />
+        <Fragment>
+          {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+          <ObjectTable
+            columns={blocksSchema}
+            data={item}
+            title={'Block ' + getFieldValue(item, 'id')}
+            search={false}
+          />
+        </Fragment>
       );
     });
 

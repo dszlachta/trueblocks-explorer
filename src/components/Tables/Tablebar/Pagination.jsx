@@ -18,6 +18,8 @@ export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curP
     Mousetrap.bind(['left'], getHandler(pagingCtx, 'left', handler));
     Mousetrap.bind(['down'], getHandler(pagingCtx, 'down', handler));
     Mousetrap.bind(['right'], getHandler(pagingCtx, 'right', handler));
+    Mousetrap.bind(['pagedown'], getHandler(pagingCtx, 'pagedown', handler));
+    Mousetrap.bind(['pageup'], getHandler(pagingCtx, 'pageup', handler));
     return () => {
       Mousetrap.unbind(['home']);
       Mousetrap.unbind(['end']);
@@ -25,6 +27,8 @@ export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curP
       Mousetrap.unbind(['left']);
       Mousetrap.unbind(['down']);
       Mousetrap.unbind(['right']);
+      Mousetrap.unbind(['pagedown']);
+      Mousetrap.unbind(['pageup']);
     };
   }, [handler, pagingCtx]);
 
@@ -50,13 +54,13 @@ export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curP
 
 //-----------------------------------------------------------------
 const Display = ({ pagingCtx }) => {
-  const { perPage, curPage, total } = pagingCtx;
-  const start = Math.min(perPage * curPage + 1, pagingCtx.total);
-  const end = Math.min(perPage * (curPage + 1), pagingCtx.total);
+  const { curPage, nRecords, perPage } = pagingCtx;
+  const start = Math.min(perPage * curPage + 1, pagingCtx.nRecords);
+  const end = Math.min(perPage * (curPage + 1), pagingCtx.nRecords);
 
   return (
     <Fragment>
-      {start}-{end} of {total}
+      {start}-{end} of {nRecords}
     </Fragment>
   );
 };
@@ -66,7 +70,7 @@ const Selector = ({ handler, pagingCtx }) => {
   const [expanded, setExpanded] = useState(false);
   let extra = false;
   const perPageOptions = [2, 5, 10, 15, 20, 30, 50, 75, 100].filter((val) => {
-    if (val < pagingCtx.total) return true;
+    if (val < pagingCtx.nRecords) return true;
     if (extra) return false;
     extra = true;
     return true;
@@ -110,9 +114,9 @@ const Selector = ({ handler, pagingCtx }) => {
 //-----------------------------------------------------------------
 function isDisabled(pagingCtx, which) {
   if (which !== 'left' && which !== 'right') return false; // up and down (i.e. select row) are handled by the table component
-  const { perPage, curPage, total } = pagingCtx;
+  const { curPage, nRecords, perPage } = pagingCtx;
   if (which === 'left') return curPage === 0;
-  return curPage === Math.floor(total / perPage) - !(total % perPage);
+  return curPage === Math.floor(nRecords / perPage) - !(nRecords % perPage);
 }
 
 //-----------------------------------------------------------------

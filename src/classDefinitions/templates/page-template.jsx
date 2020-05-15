@@ -13,6 +13,7 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './[{PROPER}].css';
 
@@ -23,6 +24,7 @@ import './[{PROPER}].css';
 export const [{PROPER}] = (props) => {
   const { [{LONG}], dispatch } = use[{PROPER}]();
   const loading = useStatus().state.loading;
+  const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [filtered, setFiltered] = useState([{LONG}]Default);
@@ -31,12 +33,12 @@ export const [{PROPER}] = (props) => {
   const [curTag, setTag] = useState(localStorage.getItem('[{LONG}]Tag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
+  const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = '[{DATAURL}]';
-  const cmdUrl = '[{CMDURL}]';
+  const dataUrl = '[{DATAURL}]';[{CMDURL}]
 
   const dataQuery = '[{DATAQUERY}]';
   function addendum(record, record_id) {
@@ -56,8 +58,16 @@ export const [{PROPER}] = (props) => {
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
         case 'set-tags':
-          setTag(action.payload);
-          localStorage.setItem('[{LONG}]Tag', action.payload);
+          let tag = action.payload;
+          if (action.payload === 'Debug') {
+            setDebug(!debug);
+            tag = 'All';
+          } else if (action.payload === 'MockData') {
+            statusDispatch({type: 'mocked', payload: !mocked});
+            tag = 'All';
+          }
+          setTag(tag);
+          localStorage.setItem('[{LONG}]Tag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -87,39 +97,7 @@ export const [{PROPER}] = (props) => {
           // });
           setEditDialog({ showing: false, record: {} });
           break;
-        case 'delete':
-          {
-            const cmdQuery = 'editCmd=delete&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            dispatch(action);
-            sendServerCommand(cmdUrl, cmdQuery).then(() => {
-              // we assume the delete worked, so we don't reload the data
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
-        case 'undelete':
-          {
-            const cmdQuery = 'editCmd=undelete&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            dispatch(action);
-            sendServerCommand(cmdUrl, cmdQuery).then(() => {
-              // we assume the delete worked, so we don't reload the data
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
-        case 'remove':
-          {
-            const cmdQuery = 'editCmd=remove&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
-              // the command worked, but now we need to reload the data
-              refresh[{PROPER}]Data(dataUrl, dataQuery, dispatch);
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
+[{DELETE_CMD}]
         // EXISTING_CODE
         // EXISTING_CODE
         default:
@@ -131,9 +109,9 @@ export const [{PROPER}] = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refresh[{PROPER}]Data(dataUrl, dataQuery, dispatch);
+    refresh[{PROPER}]Data(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch]);
+  }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind(['plus'], (e) => handleClick(e, [{LONG}]Handler, { type: 'Add' }));
@@ -145,27 +123,22 @@ export const [{PROPER}] = (props) => {
   useMemo(() => {
     // prettier-ignore
     if ([{LONG}] && [{LONG}].data) {
-      let tagList = [...new Set([{LONG}].data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))];
-      tagList = sortStrings(tagList, true);
-      tagList.unshift('All');
-      setTagList(tagList);
-    }
-  }, [[{LONG}]]);
-
-  useMemo(() => {
-    if ([{LONG}] && [{LONG}].data) {
+      setTagList(getTagList([{LONG}]));
       const result = [{LONG}].data.filter((item) => {
-        return curTag === 'All' || item.tags.includes(curTag);
+        // EXISTING_CODE
+        // EXISTING_CODE
+        return curTag === 'All' || (item.tags && item.tags.includes(curTag));
       });
       setFiltered(result);
     }
-  }, [[{LONG}], curTag]);
+  }, [[{LONG}], curTag, debug, mocked]);
 
   let custom = null;
   let title = '[{PROPER}]';
   // EXISTING_CODE
   // EXISTING_CODE
 
+  const table = getInnerTable([{LONG}], curTag, filtered, title, searchFields, recordIconList, [{LONG}]Handler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -176,28 +149,44 @@ export const [{PROPER}] = (props) => {
         handler={[{LONG}]Handler}
         loading={loading}
       />
-      <DataTable
-        name={'[{LONG}]Table'}
-        data={filtered}
-        columns={[{LONG}]Schema}
-        title={title}
-        search={true}
-        searchFields={searchFields}
-        pagination={true}
-        recordIcons={recordIconList}
-        parentHandler={[{LONG}]Handler}
-      />
+      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {debug && <pre>{JSON.stringify([{LONG}], null, 2)}</pre>}
+      {table}
       {/* prettier-ignore */}
-      {/*<AddName
-        showing={editDialog.showing}
-        handler={[{LONG}]Handler}
-        columns={[{LONG}]Schema}
-        data={editDialog.record}
-        title={editDialog.name}
-        showHidden={true}
-      />*/}
+      <NameDialog showing={editDialog.showing} handler={[{LONG}]Handler} object={{ address: curRecordId }} />
       {custom}
     </div>
+  );
+};
+
+//----------------------------------------------------------------------
+const getTagList = ([{LONG}]) => {
+  // prettier-ignore
+  let tagList = [{DEFAULT_TAGS}];
+  tagList.unshift('|');
+  tagList.unshift('All');
+  tagList.push('|');
+  tagList.push('Debug');
+  tagList.push('MockData');
+  return tagList;
+};
+
+//----------------------------------------------------------------------
+const getInnerTable = ([{LONG}], curTag, filtered, title, searchFields, recordIconList, [{LONG}]Handler) => {
+  // EXISTING_CODE
+  // EXISTING_CODE
+  return (
+    <DataTable
+      tableName={'[{LONG}]Table'}
+      data={filtered}
+      columns={[{LONG}]Schema}
+      title={title}
+      search={true}
+      searchFields={searchFields}
+      pagination={true}
+      recordIcons={recordIconList}
+      parentHandler={[{LONG}]Handler}
+    />
   );
 };
 
@@ -205,8 +194,8 @@ export const [{PROPER}] = (props) => {
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refresh[{PROPER}]Data(url, query, dispatch) {
-  getServerData(url, query).then((theData) => {
+export function refresh[{PROPER}]Data(url, query, dispatch, mocked) {
+  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let [{LONG}] = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
