@@ -66,9 +66,6 @@ export const thePages = {
   'caches/abis': { component: <Caches /> },
   //
   'other/': { component: <Other /> },
-  'other/yours': { component: <Other /> },
-  'other/known': { component: <Other /> },
-  'other/dated': { component: <Other /> },
   //
   'settings/': { component: <Settings /> },
   'settings/status': { component: <Settings /> },
@@ -169,11 +166,6 @@ export const theMenu = {
     {
       label: 'Other',
       exact: true,
-      items: [
-        { label: 'Your Blocks', route: 'yours' },
-        { label: 'Known Blocks', route: 'known' },
-        { label: 'Dated Blocks', route: 'dated' },
-      ],
     },
     { label: 'Separator' },
     {

@@ -55,7 +55,7 @@ export const DataTable = ({
 
   const dataTableHandler = (action) => {
     //console.log(action);
-    const { curPage, curIndex, firstInPage, perPage } = pagingCtx;
+    const { curPage, perPage } = pagingCtx;
     switch (action.type) {
       case 'update_filter':
         setFilterText(action.payload);
@@ -213,6 +213,7 @@ export const DataTable = ({
       curPage: 0,
       nRecords: hasData ? filteredData.length : 0,
       maxPage: Math.floor(filteredData.length / pagingCtx.perPage),
+      paginationParts: paginationParts,
     });
     changeRow('');
   }, [data, filterText]);

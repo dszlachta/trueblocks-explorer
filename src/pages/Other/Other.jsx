@@ -64,7 +64,7 @@ export const Other = (props) => {
             setDebug(!debug);
             tag = 'All';
           } else if (action.payload === 'MockData') {
-            statusDispatch({type: 'mocked', payload: !mocked});
+            statusDispatch({ type: 'mocked', payload: !mocked });
             tag = 'All';
           }
           setTag(tag);
@@ -199,7 +199,7 @@ export const Other = (props) => {
 //----------------------------------------------------------------------
 const getTagList = (other) => {
   // prettier-ignore
-  let tagList = sortStrings([...new Set(other.data.map((item) => calcValue(item, { selector: 'tags', onDisplay: getFieldValue })))], true);
+  let tagList = ['Yours', 'Known', 'Dated'];
   tagList.unshift('|');
   tagList.unshift('All');
   tagList.push('|');

@@ -194,11 +194,7 @@ export const Appearances = (props) => {
         handler={appearancesHandler}
         loading={loading}
       />
-      {mocked && (
-        <span className="warning">
-          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
-        </span>
-      )}
+      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}

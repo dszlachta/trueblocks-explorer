@@ -64,7 +64,7 @@ export const Caches = (props) => {
             setDebug(!debug);
             tag = 'All';
           } else if (action.payload === 'MockData') {
-            statusDispatch({type: 'mocked', payload: !mocked});
+            statusDispatch({ type: 'mocked', payload: !mocked });
             tag = 'All';
           }
           setTag(tag);

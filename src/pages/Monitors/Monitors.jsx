@@ -202,11 +202,7 @@ export const Monitors = (props) => {
         handler={monitorsHandler}
         loading={loading}
       />
-      {mocked && (
-        <span className="warning">
-          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
-        </span>
-      )}
+      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(monitors, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
