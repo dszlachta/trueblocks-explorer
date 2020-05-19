@@ -10,7 +10,9 @@
     "prettify": "node_modules/.bin/prettier '{src,test,mocks}/**/*.js' --write",
     "lint": "eslint '{src,test,mocks}/**/*.js'",
     "document": "documentation build src/components/**/[A-Zi]*.{js,jsx,ts,tsx} -f html -o docs/components ; open docs/components/index.html",
-    "generate": "makeClass -jarv"
+    "generate": "makeClass -jarv",
+    "electron-dev": "ELECTRON_UI_URL=http://localhost:3002 electron electron/main.js",
+    "electron-app-dev": "nf start"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -49,6 +51,9 @@
     ]
   },
   "devDependencies": {
+    "electron": "^8.2.5",
+    "electron-is-dev": "^1.2.0",
+    "electron-store": "^5.1.1",
     "husky": "^4.2.3",
     "prettier": "^2.0.2"
   }
