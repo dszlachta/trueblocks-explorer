@@ -173,9 +173,9 @@ export const Names = (props) => {
   }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, namesHandler, { type: 'Add' }));
+    Mousetrap.bind('plus', (e) => handleClick(e, namesHandler, { type: 'Add' }));
     return () => {
-      Mousetrap.unbind(['plus']);
+      Mousetrap.unbind('plus');
     };
   }, [namesHandler]);
 

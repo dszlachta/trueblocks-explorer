@@ -148,9 +148,9 @@ export const Signatures = (props) => {
   }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, signaturesHandler, { type: 'Add' }));
+    Mousetrap.bind('plus', (e) => handleClick(e, signaturesHandler, { type: 'Add' }));
     return () => {
-      Mousetrap.unbind(['plus']);
+      Mousetrap.unbind('plus');
     };
   }, [signaturesHandler]);
 

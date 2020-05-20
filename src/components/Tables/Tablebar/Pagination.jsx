@@ -8,30 +8,11 @@ import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'assets/i
 import { ChevronsUp, ChevronUp, ChevronDown, ChevronsDown } from 'assets/icons/SetChevrons.jsx';
 
 import './Pagination.css';
+import { useArrowKeys } from 'components/utils';
 
 //-----------------------------------------------------------------
 export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curPage: 0, paginationParts: '' } }) => {
-  useEffect(() => {
-    Mousetrap.bind(['home'], getHandler(pagingCtx, 'home', handler));
-    Mousetrap.bind(['end'], getHandler(pagingCtx, 'end', handler));
-    Mousetrap.bind(['up'], getHandler(pagingCtx, 'up', handler));
-    Mousetrap.bind(['left'], getHandler(pagingCtx, 'left', handler));
-    Mousetrap.bind(['down'], getHandler(pagingCtx, 'down', handler));
-    Mousetrap.bind(['right'], getHandler(pagingCtx, 'right', handler));
-    Mousetrap.bind(['pagedown'], getHandler(pagingCtx, 'pagedown', handler));
-    Mousetrap.bind(['pageup'], getHandler(pagingCtx, 'pageup', handler));
-    return () => {
-      Mousetrap.unbind(['home']);
-      Mousetrap.unbind(['end']);
-      Mousetrap.unbind(['up']);
-      Mousetrap.unbind(['left']);
-      Mousetrap.unbind(['down']);
-      Mousetrap.unbind(['right']);
-      Mousetrap.unbind(['pagedown']);
-      Mousetrap.unbind(['pageup']);
-    };
-  }, [handler, pagingCtx]);
-
+  useArrowKeys(handler, [handler, pagingCtx]);
   if (!enabled) return <div></div>; // we need this div so spacing of title works right
   if (!handler) return <div className="warning">Pagination is enabled, but no handler given</div>;
 

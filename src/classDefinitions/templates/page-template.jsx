@@ -114,9 +114,9 @@ export const [{PROPER}] = (props) => {
   }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, [{LONG}]Handler, { type: 'Add' }));
+    Mousetrap.bind('plus', (e) => handleClick(e, [{LONG}]Handler, { type: 'Add' }));
     return () => {
-      Mousetrap.unbind(['plus']);
+      Mousetrap.unbind('plus');
     };
   }, [[{LONG}]Handler]);
 

@@ -6,13 +6,13 @@ import './Modal.css';
 
 export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children }) => {
   useEffect(() => {
-    Mousetrap.bind(['esc'], (e) => handleClick(e, handler, { type: 'close' }));
-    Mousetrap.bind(['enter'], (e) => {
+    Mousetrap.bind('esc', (e) => handleClick(e, handler, { type: 'close' }));
+    Mousetrap.bind('enter', (e) => {
       handleClick(e, handler, { type: buttons[buttons.length - 1] });
     });
     return () => {
-      Mousetrap.unbind(['esc']);
-      Mousetrap.unbind(['enter']);
+      Mousetrap.unbind('esc');
+      Mousetrap.unbind('enter');
     };
   }, [showing, handler, buttons]);
 

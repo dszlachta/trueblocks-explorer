@@ -148,9 +148,9 @@ export const Caches = (props) => {
   }, [dataQuery, dispatch, statusDispatch, mocked]);
 
   useEffect(() => {
-    Mousetrap.bind(['plus'], (e) => handleClick(e, cachesHandler, { type: 'Add' }));
+    Mousetrap.bind('plus', (e) => handleClick(e, cachesHandler, { type: 'Add' }));
     return () => {
-      Mousetrap.unbind(['plus']);
+      Mousetrap.unbind('plus');
     };
   }, [cachesHandler]);
 

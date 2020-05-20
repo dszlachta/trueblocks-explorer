@@ -106,73 +106,73 @@ export default App;
 
 //------------------------------------------------------
 const mapHotKeys = (panelDispatch) => {
-  Mousetrap.bind(['s d'], function () {
+  Mousetrap.bind('s d', function () {
     window.location = '/dashboard';
   });
-  Mousetrap.bind(['s c'], function () {
+  Mousetrap.bind('s c', function () {
     window.location = '/collections';
   });
-  Mousetrap.bind(['s m'], function () {
+  Mousetrap.bind('s m', function () {
     window.location = '/monitors';
   });
-  Mousetrap.bind(['s e'], function () {
+  Mousetrap.bind('s e', function () {
     window.location = '/explorer';
   });
-  Mousetrap.bind(['s n'], function () {
+  Mousetrap.bind('s n', function () {
     window.location = '/names';
   });
-  Mousetrap.bind(['s t'], function () {
+  Mousetrap.bind('s t', function () {
     window.location = '/tags';
   });
-  Mousetrap.bind(['s g'], function () {
+  Mousetrap.bind('s g', function () {
     window.location = '/signatures';
   });
-  Mousetrap.bind(['s i'], function () {
+  Mousetrap.bind('s i', function () {
     window.location = '/digests';
   });
-  Mousetrap.bind(['s h'], function () {
+  Mousetrap.bind('s h', function () {
     window.location = '/caches';
   });
-  Mousetrap.bind(['s o'], function () {
+  Mousetrap.bind('s o', function () {
     window.location = '/other';
   });
-  Mousetrap.bind(['s s'], function () {
+  Mousetrap.bind('s s', function () {
     window.location = '/settings';
   });
-  Mousetrap.bind(['s u'], function () {
+  Mousetrap.bind('s u', function () {
     window.location = '/support';
   });
-  Mousetrap.bind(['e b'], function () {
+  Mousetrap.bind('e b', function () {
     window.location = '/explorer/blocks';
   });
-  Mousetrap.bind(['e t'], function () {
+  Mousetrap.bind('e t', function () {
     window.location = '/explorer/transactions';
   });
-  Mousetrap.bind(['e r'], function () {
+  Mousetrap.bind('e r', function () {
     window.location = '/explorer/receipts';
   });
-  Mousetrap.bind(['e l'], function () {
+  Mousetrap.bind('e l', function () {
     window.location = '/explorer/logs';
   });
-  Mousetrap.bind(['e c'], function () {
+  Mousetrap.bind('e c', function () {
     window.location = '/explorer/traces';
   });
-  Mousetrap.bind(['q l'], function () {
+  Mousetrap.bind('q l', function () {
     panelDispatch({ type: 'collapse' });
   });
-  Mousetrap.bind(['q a'], function () {
+  Mousetrap.bind('q a', function () {
     panelDispatch({ type: 'expand' });
   });
-  Mousetrap.bind(['q h'], function () {
+  Mousetrap.bind('q h', function () {
     panelDispatch({ type: 'help' });
   });
-  Mousetrap.bind(['q m'], function () {
+  Mousetrap.bind('q m', function () {
     panelDispatch({ type: 'menu' });
   });
-  Mousetrap.bind(['q c'], function () {
+  Mousetrap.bind('q c', function () {
     panelDispatch({ type: 'content' });
   });
-  Mousetrap.bind(['q s'], function () {
+  Mousetrap.bind('q s', function () {
     panelDispatch({ type: 'status' });
   });
 };

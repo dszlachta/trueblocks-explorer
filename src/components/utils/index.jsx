@@ -299,23 +299,23 @@ TESTING
 
 export const useArrowKeys = (handler, deps) => {
   useEffect(() => {
-    Mousetrap.bind(['home'], (e) => handleClick(e, handler, { type: 'home' }));
-    Mousetrap.bind(['end'], (e) => handleClick(e, handler, { type: 'end' }));
-    Mousetrap.bind(['up'], (e) => handleClick(e, handler, { type: 'up' }));
-    Mousetrap.bind(['left'], (e) => handleClick(e, handler, { type: 'left' }));
-    Mousetrap.bind(['down'], (e) => handleClick(e, handler, { type: 'down' }));
-    Mousetrap.bind(['right'], (e) => handleClick(e, handler, { type: 'right' }));
-    Mousetrap.bind(['pagedown'], (e) => handleClick(e, handler, { type: 'pagedown' }));
-    Mousetrap.bind(['pageup'], (e) => handleClick(e, handler, { type: 'pageup' }));
+    Mousetrap.bind('home', (e) => handleClick(e, handler, { type: 'home' }));
+    Mousetrap.bind('end', (e) => handleClick(e, handler, { type: 'end' }));
+    Mousetrap.bind('up', (e) => handleClick(e, handler, { type: 'up' }));
+    Mousetrap.bind('left', (e) => handleClick(e, handler, { type: 'left' }));
+    Mousetrap.bind('down', (e) => handleClick(e, handler, { type: 'down' }));
+    Mousetrap.bind('right', (e) => handleClick(e, handler, { type: 'right' }));
+    Mousetrap.bind('pagedown', (e) => handleClick(e, handler, { type: 'pagedown' }));
+    Mousetrap.bind('pageup', (e) => handleClick(e, handler, { type: 'pageup' }));
     return () => {
-      Mousetrap.unbind(['home']);
-      Mousetrap.unbind(['end']);
-      Mousetrap.unbind(['up']);
-      Mousetrap.unbind(['left']);
-      Mousetrap.unbind(['down']);
-      Mousetrap.unbind(['right']);
-      Mousetrap.unbind(['pagedown']);
-      Mousetrap.unbind(['pageup']);
+      Mousetrap.unbind('home');
+      Mousetrap.unbind('end');
+      Mousetrap.unbind('up');
+      Mousetrap.unbind('left');
+      Mousetrap.unbind('down');
+      Mousetrap.unbind('right');
+      Mousetrap.unbind('pagedown');
+      Mousetrap.unbind('pageup');
     };
   }, [handler, deps]);
 };
