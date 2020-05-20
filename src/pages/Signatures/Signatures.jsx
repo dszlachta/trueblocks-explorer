@@ -144,7 +144,7 @@ export const Signatures = (props) => {
     statusDispatch(LOADING);
     refreshSignaturesData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, signaturesHandler, { type: 'Add' }));
@@ -181,7 +181,11 @@ export const Signatures = (props) => {
         current={curTag}
         handler={signaturesHandler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify(signatures, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
@@ -283,6 +287,7 @@ export const useSignatures = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':

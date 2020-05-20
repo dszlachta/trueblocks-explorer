@@ -152,9 +152,9 @@ export const Names = (props) => {
           // setEditDialog({ showing: true, name: 'Reload', record: record });
           navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           break;
+        case 'enter':
         case 'row_doubleclick':
         case 'view':
-          statusDispatch(LOADING);
           navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           break;
         // EXISTING_CODE
@@ -169,7 +169,7 @@ export const Names = (props) => {
     statusDispatch(LOADING);
     refreshNamesData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, namesHandler, { type: 'Add' }));
@@ -206,7 +206,11 @@ export const Names = (props) => {
         current={curTag}
         handler={namesHandler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify(names, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
@@ -310,6 +314,7 @@ export const useNames = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':

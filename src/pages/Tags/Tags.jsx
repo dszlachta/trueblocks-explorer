@@ -144,7 +144,7 @@ export const Tags = (props) => {
     statusDispatch(LOADING);
     refreshTagsData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, tagsHandler, { type: 'Add' }));
@@ -181,7 +181,11 @@ export const Tags = (props) => {
         current={curTag}
         handler={tagsHandler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify(tags, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
@@ -280,6 +284,7 @@ export const useTags = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   if (!record.tags) return '';
   const array = record.tags.split(':');

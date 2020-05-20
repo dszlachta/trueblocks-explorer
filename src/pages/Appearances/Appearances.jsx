@@ -9,7 +9,7 @@ import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage, currentPage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
@@ -42,8 +42,9 @@ export const Appearances = (props) => {
   const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
-  const addresses = props.addresses;
-  const name = props.name;
+  const { params } = currentPage();
+  const addresses = params[0];
+  const name = params.length > 1 ? params[1].value : '';
   const { names } = useNames().names;
   g_focusValue = addresses.value.toLowerCase();
   // EXISTING_CODE
@@ -110,7 +111,6 @@ export const Appearances = (props) => {
 
         // EXISTING_CODE
         case 'row-changed':
-          console.log('row-changed: ', action);
           break;
         case 'externallink':
           navigate('https://etherscan.io/tx/' + action.record_id, true);
@@ -124,10 +124,10 @@ export const Appearances = (props) => {
   );
 
   useEffect(() => {
-    statusDispatch(LOADING);
+    // statusDispatch(LOADING);
     refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked);
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+    // statusDispatch(NOT_LOADING);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
@@ -192,7 +192,11 @@ export const Appearances = (props) => {
         current={curTag}
         handler={appearancesHandler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
@@ -360,8 +364,8 @@ export const useAppearances = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
-  // EXISTING_CODE
   if (!record) return '';
+  // EXISTING_CODE
   switch (fieldName) {
     case 'namedFromAndTo':
     case 'unNamedFromAndTo':

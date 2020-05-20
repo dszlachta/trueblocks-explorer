@@ -144,7 +144,7 @@ export const Collections = (props) => {
     statusDispatch(LOADING);
     refreshCollectionsData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, collectionsHandler, { type: 'Add' }));
@@ -181,7 +181,11 @@ export const Collections = (props) => {
         current={curTag}
         handler={collectionsHandler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify(collections, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
@@ -283,6 +287,7 @@ export const useCollections = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   // EXISTING_CODE
   return record[fieldName];

@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
+import { Appearances } from './Appearances/Appearances';
 // auto-generate: imports
 import { Dashboard } from './Dashboard/Dashboard';
 import { Collections } from './Collections/Collections';
@@ -30,7 +31,7 @@ export const thePages = {
   'monitors/active': { component: <Monitors /> },
   'monitors/paused': { component: <Monitors /> },
   'monitors/pending': { component: <Monitors /> },
-  'monitors/explore': { component: <Monitors /> },
+  'monitors/explore': { component: <Appearances /> },
   //
   //
   'tags/': { component: <Tags /> },

@@ -139,6 +139,7 @@ export const Monitors = (props) => {
         case 'externallink':
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
+        case 'enter':
         case 'row_doubleclick':
         case 'view':
           navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
@@ -156,7 +157,7 @@ export const Monitors = (props) => {
     statusDispatch(LOADING);
     refreshMonitorsData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, monitorsHandler, { type: 'Add' }));
@@ -181,13 +182,6 @@ export const Monitors = (props) => {
   let custom = null;
   let title = 'Monitors';
   // EXISTING_CODE
-  const { subpage, params } = currentPage();
-  switch (subpage) {
-    case 'explore':
-      return <Appearances addresses={params[0]} name={params.length > 1 ? params[1].value : ''} />;
-    default:
-      break;
-  }
   // EXISTING_CODE
 
   const table = getInnerTable(monitors, curTag, filtered, title, searchFields, recordIconList, monitorsHandler);
@@ -200,7 +194,11 @@ export const Monitors = (props) => {
         current={curTag}
         handler={monitorsHandler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify(monitors, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
@@ -305,6 +303,7 @@ export const useMonitors = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':

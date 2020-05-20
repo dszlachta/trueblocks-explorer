@@ -144,7 +144,7 @@ export const Caches = (props) => {
     statusDispatch(LOADING);
     refreshCachesData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, cachesHandler, { type: 'Add' }));
@@ -181,7 +181,11 @@ export const Caches = (props) => {
         current={curTag}
         handler={cachesHandler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify(caches, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
@@ -240,8 +244,7 @@ export function refreshCachesData(url, query, dispatch, mocked) {
   getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
     let caches = theData.data;
     // EXISTING_CODE
-    if (caches)
-      caches = caches[0].caches
+    if (caches) caches = caches[0].caches;
     // EXISTING_CODE
     if (caches) theData.data = sortArray(caches, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
@@ -284,6 +287,7 @@ export const useCaches = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':

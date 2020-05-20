@@ -147,7 +147,7 @@ export const Other = (props) => {
     statusDispatch(LOADING);
     refreshOtherData(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, otherHandler, { type: 'Add' }));
@@ -184,7 +184,11 @@ export const Other = (props) => {
         current={curTag}
         handler={otherHandler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify(other, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
@@ -283,6 +287,7 @@ export const useOther = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':
