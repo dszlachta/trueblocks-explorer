@@ -23,7 +23,6 @@ import './Collections.css';
 //---------------------------------------------------------------------------
 export const Collections = (props) => {
   const { collections, dispatch } = useCollections();
-  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -181,7 +180,6 @@ export const Collections = (props) => {
         caddieData={tagList}
         current={curTag}
         handler={collectionsHandler}
-        loading={loading}
       />
       {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(collections, null, 2)}</pre>}

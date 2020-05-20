@@ -23,7 +23,6 @@ import './Signatures.css';
 //---------------------------------------------------------------------------
 export const Signatures = (props) => {
   const { signatures, dispatch } = useSignatures();
-  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -181,7 +180,6 @@ export const Signatures = (props) => {
         caddieData={tagList}
         current={curTag}
         handler={signaturesHandler}
-        loading={loading}
       />
       {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(signatures, null, 2)}</pre>}

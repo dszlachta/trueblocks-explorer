@@ -30,7 +30,6 @@ var g_Handler = null;
 //---------------------------------------------------------------------------
 export const Appearances = (props) => {
   const { appearances, dispatch } = useAppearances();
-  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -192,7 +191,6 @@ export const Appearances = (props) => {
         caddieData={tagList}
         current={curTag}
         handler={appearancesHandler}
-        loading={loading}
       />
       {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}

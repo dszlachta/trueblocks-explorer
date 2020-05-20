@@ -26,7 +26,6 @@ import { currentPage } from 'components/utils';
 //---------------------------------------------------------------------------
 export const Monitors = (props) => {
   const { monitors, dispatch } = useMonitors();
-  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -200,7 +199,6 @@ export const Monitors = (props) => {
         caddieData={tagList}
         current={curTag}
         handler={monitorsHandler}
-        loading={loading}
       />
       {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(monitors, null, 2)}</pre>}

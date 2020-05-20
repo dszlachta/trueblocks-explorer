@@ -8,7 +8,7 @@ import { SettingsSkins } from './SettingsSkins';
 import { SettingsSchemas } from './SettingsSchemas';
 
 export const Settings = () => {
-  const loading = useStatus().state.loading;
+  const loading = false;
   const status = useStatusData();
   if ((!loading && !systemCheck(status, 'api')) || !systemCheck(status, 'node')) return <SettingsSystems />;
 

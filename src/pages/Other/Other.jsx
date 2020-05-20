@@ -23,7 +23,6 @@ import './Other.css';
 //---------------------------------------------------------------------------
 export const Other = (props) => {
   const { other, dispatch } = useOther();
-  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -184,7 +183,6 @@ export const Other = (props) => {
         caddieData={tagList}
         current={curTag}
         handler={otherHandler}
-        loading={loading}
       />
       {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(other, null, 2)}</pre>}

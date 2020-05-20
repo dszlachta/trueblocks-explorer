@@ -23,7 +23,6 @@ import './Names.css';
 //---------------------------------------------------------------------------
 export const Names = (props) => {
   const { names, dispatch } = useNames();
-  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -206,7 +205,6 @@ export const Names = (props) => {
         caddieData={tagList}
         current={curTag}
         handler={namesHandler}
-        loading={loading}
       />
       {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(names, null, 2)}</pre>}

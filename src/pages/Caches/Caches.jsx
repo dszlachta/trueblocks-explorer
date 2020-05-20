@@ -23,7 +23,6 @@ import './Caches.css';
 //---------------------------------------------------------------------------
 export const Caches = (props) => {
   const { caches, dispatch } = useCaches();
-  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -181,7 +180,6 @@ export const Caches = (props) => {
         caddieData={tagList}
         current={curTag}
         handler={cachesHandler}
-        loading={loading}
       />
       {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
       {debug && <pre>{JSON.stringify(caches, null, 2)}</pre>}
