@@ -110,10 +110,31 @@ export const Appearances = (props) => {
           break;
 
         // EXISTING_CODE
+        case 'addmonitor':
+          // {
+          //   const cmdQuery = 'addrs=' + action.record_id + '&verbose=10&dollars';
+          //   statusDispatch(LOADING);
+          //   sendServerCommand('http://localhost:8080/export/', cmdQuery).then((theData) => {
+          //     // the command worked, but now we need to reload the data
+          //     statusDispatch(NOT_LOADING);
+          //     if (editDialog) {
+          //       // only navigate if the user hasn't shut the dialog
+          //       navigate('/monitors/explore?addrs=' + action.record_id, false);
+          //     }
+          //   });
+          // }
+          // setEditDialog({ showing: true, name: 'Reload', record: record });
+          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          break;
+        case 'view':
+          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          break;
         case 'row-changed':
           break;
         case 'externallink':
           navigate('https://etherscan.io/tx/' + action.record_id, true);
+          break;
+        case 'enter':
           break;
         // EXISTING_CODE
         default:
@@ -221,63 +242,16 @@ const getTagList = (appearances) => {
 //----------------------------------------------------------------------
 const getInnerTable = (appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler) => {
   // EXISTING_CODE
-  if (curTag !== 'Neighbors') {
-    return (
-      <SidebarTable
-        name={'appearancesTable'}
-        data={filtered}
-        columns={appearancesSchema}
-        title={title}
-        search={true}
-        searchFields={searchFields}
-        pagination={true}
-        recordIcons={recordIconList}
-        parentHandler={appearancesHandler}
-      />
-    );
-  } else {
-    const metaSchema = [
-      {
-        name: 'ID',
-        selector: 'id',
-        type: 'string',
-        hidden: true,
-      },
-      {
-        selector: 'namedFromAndTo',
-        onDisplay: getFieldValue,
-      },
-      {
-        selector: 'unNamedFromAndTo',
-        onDisplay: getFieldValue,
-      },
-      {
-        selector: 'namedFrom',
-        onDisplay: getFieldValue,
-      },
-      {
-        selector: 'unNamedFrom',
-        onDisplay: getFieldValue,
-      },
-      {
-        selector: 'namedTo',
-        onDisplay: getFieldValue,
-      },
-      {
-        selector: 'unNamedTo',
-        onDisplay: getFieldValue,
-      },
-    ];
+  if (curTag === 'Neighbors') {
     return (
       <Fragment>
-        {/*<pre>{JSON.stringify(appearances.meta, null, 2)}</pre>*/}
         <ObjectTable data={appearances.meta} columns={metaSchema} />
       </Fragment>
     );
   }
   // EXISTING_CODE
   return (
-    <DataTable
+    <SidebarTable
       tableName={'appearancesTable'}
       data={filtered}
       columns={appearancesSchema}
@@ -440,12 +414,34 @@ function getFieldValue(record, fieldName) {
         </div>
       );
     case 'compressedTx':
-      if (!record['compressedTx']) return;
+      if (!record['compressedTx']) return null;
       let arr = record.compressedTx.replace(')', '').replace('(', ',').split(',');
       return (
         <div>
           {arr.map((item, index) => {
-            return <div key={item}>{index === 0 ? <b>{item}</b> : '-' + item}</div>;
+            if (index === 0) {
+              return <div key={item}>{<b>{item}</b>}</div>;
+            } else {
+              let s = item.split(':');
+              const ofInterest = s[1] && JSON.stringify(s[1]).includes(g_focusValue);
+              if (s[1] && ofInterest) {
+                return (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr' }}>
+                    <div key={item + '_a'}>{index + ' ' + s[0] + ':'}</div>
+                    <div key={item + '_b'} className="focusValue">
+                      {typeof s[1]}
+                    </div>
+                  </div>
+                );
+              } else {
+                return (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr' }}>
+                    <div key={item + '_a'}>{index + ' ' + s[0] + ':'}</div>
+                    <div key={item + '_b'}>{(ofInterest ? 'true' : 'false') + ' ' + typeof s[1]}</div>
+                  </div>
+                );
+              }
+            }
           })}
         </div>
       );
@@ -457,6 +453,38 @@ function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
+const metaSchema = [
+  {
+    name: 'ID',
+    selector: 'id',
+    type: 'string',
+    hidden: true,
+  },
+  {
+    selector: 'unNamedTo',
+    onDisplay: getFieldValue,
+  },
+  {
+    selector: 'namedTo',
+    onDisplay: getFieldValue,
+  },
+  {
+    selector: 'unNamedFrom',
+    onDisplay: getFieldValue,
+  },
+  {
+    selector: 'namedFrom',
+    onDisplay: getFieldValue,
+  },
+  {
+    selector: 'unNamedFromAndTo',
+    onDisplay: getFieldValue,
+  },
+  {
+    selector: 'namedFromAndTo',
+    onDisplay: getFieldValue,
+  },
+];
 // EXISTING_CODE
 
 //----------------------------------------------------------------------------

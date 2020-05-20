@@ -11,6 +11,7 @@ import { getServerData, currentPage, sendServerCommand, sortArray, sortStrings, 
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { GridTable, ChartTable } from 'components';
 
 // EXISTING_CODE
@@ -26,7 +27,8 @@ export const Digests = () => {
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('digestsTag'));
-  const [loading, setLoading] = useState(false);
+  const mocked = useStatus().state.mocked;
+  const statusDispatch = useStatus().dispatch;
 
   const [start, setStart] = useState(0);
   const [source] = useState(currentPage().subpage);
@@ -50,10 +52,10 @@ export const Digests = () => {
   );
 
   useEffect(() => {
-    setLoading(true);
+    statusDispatch(LOADING);
     getServerData('http://localhost:8080/status', query).then((theData) => {
       dispatch({ type: 'success', payload: theData.data[0].caches[0].items });
-      setLoading(false);
+      statusDispatch(NOT_LOADING);
     });
   }, [source, query, dispatch]);
 
@@ -174,6 +176,7 @@ export const useDigests = () => {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':
@@ -247,6 +250,8 @@ export const digestsSchema = [
     type: 'string',
     hidden: true,
     align: 'center',
+    domain: true,
+    range: true,
     onDisplay: getFieldValue,
   },
   {

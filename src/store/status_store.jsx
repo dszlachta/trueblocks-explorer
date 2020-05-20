@@ -67,9 +67,12 @@ export const useStatusMeta = () => {
 };
 export const useMonitorMap = () => {
   const caches = useStatusData().caches;
-  const monitorCache = caches.filter((cache) => {
-    return cache.type === 'CMonitorCache';
-  });
+  const monitorCache =
+    caches &&
+    caches.filter &&
+    caches.filter((cache) => {
+      return cache.type === 'CMonitorCache';
+    });
   if (!monitorCache || monitorCache.length === 0) return null;
   if (!monitorCache[0].addrs) return null;
   const result = monitorCache[0].addrs.reduce((map, item) => {
@@ -81,3 +84,32 @@ export const useMonitorMap = () => {
 
 export const LOADING = { type: 'loading', payload: true };
 export const NOT_LOADING = { type: 'loading', payload: false };
+
+//----------------------------------------------------------------------
+export const useSystemCheck = (name) => {
+  // Hooks forces us to 'use' non-conditionally
+  const loading = useStatus().state.loading;
+  const data = useStatusData();
+
+  if (loading) return true;
+  if (!data) return false;
+
+  const apiOkay = !data.is_testing && data.trueblocks_version !== '';
+  const nodeOkay = data.client_version !== '' && data.client_version !== 'Not running';
+  const scraperOkay = data.is_scraping;
+  const sharingOkay = false;
+  switch (name) {
+    case 'api':
+      return apiOkay;
+    case 'node':
+      return nodeOkay;
+    case 'scraper':
+      return scraperOkay;
+    case 'sharing':
+      return sharingOkay;
+    case 'system':
+      return apiOkay && nodeOkay;
+    default:
+      return false;
+  }
+};

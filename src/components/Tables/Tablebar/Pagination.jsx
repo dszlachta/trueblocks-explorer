@@ -94,16 +94,10 @@ const Selector = ({ handler, pagingCtx }) => {
 
 //-----------------------------------------------------------------
 function isDisabled(pagingCtx, which) {
-  if (which !== 'left' && which !== 'right') return false; // up and down (i.e. select row) are handled by the table component
+  if (which !== 'pageup' && which !== 'left' && which !== 'pagedown' && which !== 'right') return false; // up and down (i.e. select row) are handled by the table component
   const { curPage, nRecords, perPage } = pagingCtx;
-  if (which === 'left') return curPage === 0;
+  if (which === 'pageup' || which === 'left') return curPage === 0;
   return curPage === Math.floor(nRecords / perPage) - !(nRecords % perPage);
-}
-
-//-----------------------------------------------------------------
-function getHandler(pagingCtx, which, handler) {
-  if (isDisabled(pagingCtx, which)) return () => {}; // noop
-  return (e) => handleClick(e, handler, { type: which });
 }
 
 //-----------------------------------------------------------------
@@ -117,7 +111,7 @@ const PagingIcon = ({ name, handler, pagingCtx }) => {
 
   const size = 18;
   const filled = false;
-  const func = getHandler(pagingCtx, name, handler);
+  const func = isDisabled(pagingCtx, name) ? () => {} : (e) => handleClick(e, handler, { type: name });
 
   switch (name) {
     case 'home':

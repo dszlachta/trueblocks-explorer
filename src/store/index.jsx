@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { defaultToggles, togglesReducer, useToggles } from './panel_store';
-import { statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta } from './status_store';
+import { statusDefault, statusReducer, useStatus, useStatusData, useStatusMeta, useSystemCheck } from './status_store';
 
 //----------------------------------------------------------------------
 const GlobalContext = React.createContext({});
@@ -16,6 +16,7 @@ export {
   useStatus,
   useStatusData,
   useStatusMeta,
+  useSystemCheck,
 };
 
 //----------------------------------------------------------------------

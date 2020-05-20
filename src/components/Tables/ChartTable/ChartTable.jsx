@@ -151,17 +151,11 @@ function Scatter({ data, columns, chartCtx }) {
     hidden: true,
     onDisplay: (record, fieldName) => '12',
   };
-  let dtCols = [
-    idCol,
-    chartCtx.rangeCol,
-    { selector: 'spacer', type: 'spacer', name: '', width: 1 },
-    chartCtx.domainCol,
-  ];
+  let dtCols = [idCol, chartCtx.rangeCol, chartCtx.domainCol];
   dtCols[1].hidden = false;
-  dtCols[1].width = 12;
+  dtCols[1].width = 1;
   dtCols[2].hidden = false;
-  dtCols[2].width = 12;
-  dtCols[2].align = 'center';
+  dtCols[2].width = 1;
 
   return (
     <div

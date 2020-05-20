@@ -1,17 +1,16 @@
 import React from 'react';
 
-import { useStatus, useStatusData } from 'store';
-import { currentPage, systemCheck } from 'components/utils';
+import { useSystemCheck } from 'store';
+import { currentPage } from 'components/utils';
 
 import { SettingsSystems } from './SettingsSystems';
 import { SettingsSkins } from './SettingsSkins';
 import { SettingsSchemas } from './SettingsSchemas';
 
 export const Settings = () => {
-  const loading = false;
-  const status = useStatusData();
-  if ((!loading && !systemCheck(status, 'api')) || !systemCheck(status, 'node')) return <SettingsSystems />;
-
+  const apiOkay = useSystemCheck('api');
+  const nodeOkay = useSystemCheck('node');
+  if (!apiOkay || !nodeOkay) return <SettingsSystems />;
   const subpage = currentPage().subpage;
   switch (subpage) {
     case 'schemas':

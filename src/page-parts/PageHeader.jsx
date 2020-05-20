@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-import { useStatusData, useStatusMeta } from 'store';
-import { fmtNum, systemCheck } from 'components/utils';
+import { useStatusData, useStatusMeta, useSystemCheck } from 'store';
+import { fmtNum } from 'components/utils';
 
 import logo from 'assets/img/logo.png';
 import './PageHeader.css';
@@ -32,11 +32,10 @@ const PageHeaderLeft = () => {
 
 //-----------------------------------------------------
 const PageHeaderUpperRight = () => {
-  const data = useStatusData();
-  const apiOkay = systemCheck(data, 'api');
-  const nodeOkay = systemCheck(data, 'node');
-  const scraperOkay = systemCheck(data, 'scraper');
-  const sharingOkay = systemCheck(data, 'sharing');
+  const apiOkay = useSystemCheck('api');
+  const nodeOkay = useSystemCheck('node');
+  const scraperOkay = useSystemCheck('scraper');
+  const sharingOkay = useSystemCheck('sharing');
 
   return (
     <div className="right-top">

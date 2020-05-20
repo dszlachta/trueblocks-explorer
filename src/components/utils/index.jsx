@@ -28,31 +28,6 @@ export const Spacer = ({ cols = 1 }) => {
   );
 };
 
-export const systemCheck = (data, name) => {
-  if (!data || data.loading) return false;
-  let result = false;
-  switch (name) {
-    case 'api':
-      result = !data.is_testing && data.trueblocks_version !== '';
-      break;
-    case 'node':
-      result = data.client_version !== '' && data.client_version !== 'Not running';
-      break;
-    case 'scraper':
-      result = data.is_scraping;
-      break;
-    case 'sharing':
-      result = false;
-      break;
-    case 'system':
-      result = systemCheck(data, 'api') && systemCheck(data, 'node');
-      break;
-    default:
-      break;
-  }
-  return result;
-};
-
 /**
  *
  * stateFromStorage
@@ -112,7 +87,6 @@ export const replaceRecord = (array, record, id, calc, get) => {
 
 //----------------------------------------------------------------------------
 export async function getServerData(route, query) {
-  console.log(route, query);
   const url = route + '?' + query;
   const response = await fetch(url);
   const data = await response.json();
@@ -307,6 +281,8 @@ export const useArrowKeys = (handler, deps) => {
     Mousetrap.bind('right', (e) => handleClick(e, handler, { type: 'right' }));
     Mousetrap.bind('pagedown', (e) => handleClick(e, handler, { type: 'pagedown' }));
     Mousetrap.bind('pageup', (e) => handleClick(e, handler, { type: 'pageup' }));
+    Mousetrap.bind('del', (e) => handleClick(e, handler, { type: 'delete' }));
+    Mousetrap.bind('enter', (e) => handleClick(e, handler, { type: 'enter' }));
     return () => {
       Mousetrap.unbind('home');
       Mousetrap.unbind('end');
@@ -316,6 +292,8 @@ export const useArrowKeys = (handler, deps) => {
       Mousetrap.unbind('right');
       Mousetrap.unbind('pagedown');
       Mousetrap.unbind('pageup');
+      Mousetrap.unbind('del');
+      Mousetrap.unbind('enter');
     };
   }, [handler, deps]);
 };

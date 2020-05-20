@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { useStatusData } from 'store';
+import { useSystemCheck } from 'store';
 
 import { useToggles } from 'store';
 import { thePages } from 'pages';
 import { Settings } from 'pages/Settings/Settings';
 import { Panel } from 'components/';
-import { currentPage, systemCheck } from 'components/utils';
+import { currentPage } from 'components/utils';
 
 import './ContentPanel.css';
 
@@ -28,9 +28,7 @@ export const ContentPanel = () => {
 
 //----------------------------------------------------------------------
 export const InnerContent = () => {
-  const status = useStatusData();
-  //  if (!status.loading && (!systemCheck(status, 'api') || !systemCheck(status, 'node'))) return <Settings />;
-  if (!systemCheck(status, 'api')) return <Settings />;
+  if (!useSystemCheck('api')) return <Settings />;
 
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];

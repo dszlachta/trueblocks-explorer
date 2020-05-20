@@ -2,8 +2,8 @@ import React, { Fragment, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { Panel } from 'components/';
-import { fmtNum, systemCheck, dataFetcher } from 'components/utils';
-import { useStatus, useStatusMeta, useStatusData, statusDefault } from 'store';
+import { fmtNum, dataFetcher } from 'components/utils';
+import { useStatus, useStatusMeta, useStatusData, statusDefault, useSystemCheck } from 'store';
 import { useToggles } from 'store';
 import { getIcon } from 'pages/utils';
 import './StatusPanel.css';
@@ -53,9 +53,9 @@ const StatusReport = () => {
   const unripe = meta.unripe;
 
   const data = useStatusData();
-  const apiOkay = systemCheck(data, 'api');
-  const nodeOkay = systemCheck(data, 'node');
-  const scraperOkay = systemCheck(data, 'scraper');
+  const apiOkay = useSystemCheck('api');
+  const nodeOkay = useSystemCheck('node');
+  const scraperOkay = useSystemCheck('scraper');
   const isTesting = data.is_testing;
 
   var status1 = (

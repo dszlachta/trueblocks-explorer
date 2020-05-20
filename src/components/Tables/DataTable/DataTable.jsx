@@ -1,4 +1,3 @@
-/* eslint-disable no-lone-blocks */
 import React, { Fragment, useState, useEffect } from 'react';
 
 import { Tablebar, ObjectTable, IconTray, Copyable } from 'components';
@@ -28,38 +27,35 @@ export const DataTable = ({
 }) => {
   const defPaging = {
     curPage: 0,
-    curRecord: 0,
-    firstInPage: 0,
+    curIndex: -1,
     nRecords: 0,
-    maxPage: 0,
     perPage: 10,
     paginationParts: paginationParts,
   };
-  const [pagingCtx, setPaging] = useState(stateFromStorage('paging', defPaging));
-  const [expandedRow, setExpandedRow] = useState('');
-  const [selectedRow, setSelectedRow] = useState('');
+  const [pagingCtx, setPaging] = useState({ ...stateFromStorage('paging', defPaging), curIndex: -1 });
   const [filterText, setFilterText] = useState('');
+  const [firstLoad, setFirstLoad] = useState(true);
 
   const [sortCtx1, setSortCtx1] = useState(stateFromStorage(tableName + '_sort1', { sortBy: '', sortDir: 'asc' }));
   const [sortCtx2, setSortCtx2] = useState(stateFromStorage(tableName + '_sort2', { sortBy: '', sortDir: 'asc' }));
 
   function changeRow(rowId) {
-    setSelectedRow(rowId);
     if (parentHandler) parentHandler({ type: 'row-changed', record_id: rowId });
   }
 
   const goToRecord = (n) => {
-    setPaging({ ...pagingCtx, curPage: n, curIndex: n });
+    n = Math.min(filteredData.length - 1, Math.max(0, n));
+    const page = Math.floor(n / pagingCtx.perPage);
+    setPaging({ ...pagingCtx, curPage: page, curIndex: n });
     changeRow(calcValue(filteredData[n], idCol));
   };
 
   const dataTableHandler = (action) => {
-    //console.log(action);
-    const { curPage, perPage } = pagingCtx;
     switch (action.type) {
       case 'update_filter':
         setFilterText(action.payload);
         break;
+
       case 'clear_filter':
         setFilterText('');
         break;
@@ -91,8 +87,7 @@ export const DataTable = ({
         const newCtx = {
           ...pagingCtx,
           curPage: 0,
-          maxPage: Math.floor(filteredData.length / action.payload),
-          perPage: action.payload,
+          perPage: Number(action.payload),
         };
         goToRecord(0);
         setPaging(newCtx);
@@ -100,61 +95,42 @@ export const DataTable = ({
         break;
 
       case 'home':
-        setPaging({ ...pagingCtx, curPage: 0 });
-        changeRow(calcValue(filteredData[0], idCol));
+        goToRecord(0);
         break;
 
       case 'end':
-        // prettier-ignore
-        setPaging({ ...pagingCtx, curPage: Math.floor(filteredData.length / perPage) - !(filteredData.length % perPage), });
-        changeRow(calcValue(filteredData[filteredData.length - 1], idCol));
+        goToRecord(filteredData.length - 1);
         break;
 
       case 'pagedown':
       case 'right':
-        {
-          // prettier-ignore
-          setPaging({ ...pagingCtx, curPage: curPage + 1, });
-          changeRow(calcValue(filteredData[perPage * (curPage + 1)], idCol));
-        }
+        goToRecord(pagingCtx.curIndex + Number(pagingCtx.perPage));
         break;
 
       case 'pageup':
       case 'left':
-        // prettier-ignore
-        setPaging({ ...pagingCtx, curPage: curPage - 1, });
-        changeRow(calcValue(filteredData[perPage * (curPage - 1)], idCol));
+        goToRecord(pagingCtx.curIndex - Number(pagingCtx.perPage));
         break;
 
       case 'down':
-        {
-          let curIndex = -1;
-          filteredData.map((item, index) => {
-            if (calcValue(item, idCol) === selectedRow) {
-              curIndex = index;
-            }
-            return true;
-          });
-          if (curIndex < pagingCtx.nRecords - 1) changeRow(calcValue(filteredData[curIndex + 1], idCol));
-          if (curIndex === pagingCtx.perPage * (pagingCtx.curPage + 1) - 1) dataTableHandler({ type: 'pagedown' });
-        }
+        goToRecord(pagingCtx.curIndex + 1);
         break;
 
       case 'up':
-        {
-          let curIndex = -1;
-          filteredData.map((item, index) => {
-            if (calcValue(item, idCol) === selectedRow) {
-              curIndex = index;
-            }
-          });
-          if (curIndex > 0) changeRow(calcValue(filteredData[curIndex - 1], idCol));
-        }
+        goToRecord(pagingCtx.curIndex - 1);
         break;
 
       case 'row_click':
-        changeRow(action.record_id);
-        setExpandedRow(expandedRow === action.record_id ? '' : action.record_id);
+        {
+          let idx = -1;
+          filteredData.map((item, index) => {
+            if (calcValue(item, idCol) === action.record_id) {
+              idx = index;
+            }
+            return true;
+          });
+          if (idx >= 0) goToRecord(idx);
+        }
         break;
 
       case 'row_doubleclick':
@@ -183,11 +159,17 @@ export const DataTable = ({
 
       case 'copied':
       case 'not-copied':
-        setSelectedRow('');
         break;
 
       default:
-        if (parentHandler) parentHandler(action);
+        if (parentHandler) {
+          if (action.record_id) {
+            parentHandler(action);
+          } else if (pagingCtx.curIndex !== -1) {
+            action = { ...action, record_id: calcValue(filteredData[pagingCtx.curIndex], idCol) };
+            parentHandler(action);
+          }
+        }
         break;
     }
   };
@@ -212,10 +194,14 @@ export const DataTable = ({
       ...pagingCtx,
       curPage: 0,
       nRecords: hasData ? filteredData.length : 0,
-      maxPage: Math.floor(filteredData.length / pagingCtx.perPage),
       paginationParts: paginationParts,
     });
-    changeRow('');
+    if (firstLoad) {
+      goToRecord(0);
+      setFirstLoad(false);
+    } else {
+      goToRecord(pagingCtx.curIndex);
+    }
   }, [data, filterText]);
 
   const altIconCol = getAltIconKey(columns);
@@ -236,7 +222,7 @@ export const DataTable = ({
   createClass('#whatever-' + tableName, str);
   createClass('#whatever-row-' + tableName, str);
 
-  const debug = true;
+  const debug = false;
   return (
     <Fragment key="dt">
       {debug && <pre>{JSON.stringify(pagingCtx)}</pre>}
@@ -267,13 +253,12 @@ export const DataTable = ({
         idCol={idCol}
         altIconCol={altIconCol}
         handler={dataTableHandler}
-        expandedRow={expandedRow}
-        selectedRow={selectedRow}
         firstInPage={firstInPage}
         lastInPage={lastInPage}
         rowIcons={rowIcons}
         showHidden={showHidden}
         tableName={tableName}
+        curIndex={pagingCtx.curIndex}
       />
       {search && (
         <Tablebar
@@ -330,8 +315,6 @@ const DataTableRows = ({
   data,
   columns,
   hasData,
-  selectedRow,
-  expandedRow,
   handler,
   idCol,
   altIconCol,
@@ -340,19 +323,19 @@ const DataTableRows = ({
   rowIcons,
   showHidden,
   tableName,
+  curIndex,
 }) => {
   const debug = false;
   return (
     <Fragment>
       {debug && <pre>{JSON.stringify(altIconCol, null, 2)}</pre>}
       {hasData ? (
-        data.map((record, index) => {
+        data.map((record, recordIndex) => {
           // ...for each row
           const id = calcValue(record, idCol);
-          const key = id + '_' + index;
+          const key = id + '_' + recordIndex;
           const rowKey = key + '_r';
-          const isSelected = id === selectedRow;
-          if (index < firstInPage || index >= lastInPage) return null;
+          if (recordIndex < firstInPage || recordIndex >= lastInPage) return null;
           const deleted = record.deleted;
           let monitored = false;
           return (
@@ -360,15 +343,17 @@ const DataTableRows = ({
               {/*<pre>{JSON.stringify(altIconCol, null, 2)}</pre>*/}
               {/*<pre>{monitored ? 'true' : 'false'}</pre>*/}
               <div
-                className={'at-row dt-row' + (isSelected ? ' selected' : '') + (deleted ? ' at-deleted' : '')}
+                className={
+                  'at-row dt-row' + (curIndex === recordIndex ? ' selected' : '') + (deleted ? ' at-deleted' : '')
+                }
                 id={'whatever-row-' + tableName}
                 onClick={(e) => handleClick(e, handler, { type: 'row_click', record_id: id })}
                 onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', record_id: id })}
                 key={rowKey}
               >
-                {columns.map((column, index) => {
+                {columns.map((column, colIndex) => {
                   // ...for each column
-                  const colKey = rowKey + '_' + index;
+                  const colKey = rowKey + '_' + colIndex;
                   if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) return null;
                   let type = column.type ? column.type : 'string';
                   let rawValue = record[column.selector];
@@ -424,13 +409,17 @@ const DataTableRows = ({
                       {column.isPill && !handler && (
                         <div className="warning">pill column '{column.selector}' does not have a handler</div>
                       )}
-                      <Copyable display={value} copyable={column.copyable ? rawValue : null} handler={handler} />
+                      <Copyable
+                        display={value}
+                        copyable={column.copyable ? rawValue : null}
+                        viewable={column.type === 'address' ? rawValue : null}
+                        handler={handler}
+                      />
                       {underField && <div>{underField}</div>}
                     </div>
                   );
                 })}
                 <div style={{ display: 'inline' }}>
-                  {<div>{monitored}</div>}
                   <IconTray
                     iconList={rowIcons}
                     handler={handler}
@@ -439,7 +428,6 @@ const DataTableRows = ({
                   />
                 </div>
               </div>
-              {false && isSelected && <DataTableExpandedRow data={record} columns={columns} handler={handler} />}
             </Fragment>
           );
         })
@@ -447,25 +435,6 @@ const DataTableRows = ({
         <div>Loading...</div>
       )}
     </Fragment>
-  );
-};
-
-//-----------------------------------------------------------------
-const DataTableExpandedRow = ({ data, columns, handler }) => {
-  const expandedStyle = {
-    display: 'grid',
-    gridTemplateColumns: '2fr 8fr 5fr',
-    borderBottom: '1px solid',
-    padding: '2px',
-  };
-
-  return (
-    <div style={expandedStyle}>
-      <div></div>
-      <ObjectTable data={data} columns={columns} showHidden={true} handler={handler} />
-      <div></div>
-      <div></div>
-    </div>
   );
 };
 
@@ -506,24 +475,3 @@ export const SortIcon = ({ dir, n = -1 }) => {
     </div>
   );
 };
-
-/*
-  const var = action.type;
-}
-}
-  case 'csv':
-    case 'txt':
-      return <button key={key}>{labelIn}</button>;
-    case 'import':
-      return <button key={key}>{labelIn}</button>;
-
-function onDownload1() {
-  asText = true;
-  return onDownload();
-}
-
-function onDownload2() {
-  asText = false;
-  return onDownload();
-}
-*/

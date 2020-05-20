@@ -43,13 +43,13 @@ export const SidebarTable = ({
     <div className="sidebar-table">
       <div className="st-left">
         <DataTable
-          name={'appearancesTable'}
+          name={name}
           data={data}
           columns={columns}
-          title={'Account: '}
-          search={true}
+          title={title}
+          search={search}
           searchFields={searchFields}
-          pagination={true}
+          pagination={pagination}
           paginationParts="title arrows"
           recordIcons={recordIcons}
           parentHandler={sidebarHandler}
@@ -59,7 +59,7 @@ export const SidebarTable = ({
         <div className="at-title" style={{ textAlign: 'center' }}>
           Transaction Detail
         </div>
-        <ObjectTable cn="st" data={selectedRow} columns={columns} showHidden={true} />
+        <ObjectTable name={name} cn="st" data={selectedRow} columns={columns} showHidden={true} />
       </div>
     </div>
   );

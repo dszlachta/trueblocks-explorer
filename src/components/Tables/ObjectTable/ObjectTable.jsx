@@ -60,7 +60,12 @@ export const ObjectTable = ({
             <div key={key} className={'at-row ' + (cn ? cn : 'ot') + '-row'}>
               <ObjectTableSider cn={cn}>{fieldName + ':'}</ObjectTableSider>
               <ObjectTableColumn cn={cn} column={column}>
-                <Copyable display={formatted} copyable={column.copyable ? rawValue : null} handler={handler} />
+                <Copyable
+                  display={formatted} 
+                  copyable={column.copyable ? rawValue : null}
+                  viewable={column.type === 'address' ? rawValue : null}
+                  handler={handler}
+                />
               </ObjectTableColumn>
             </div>
           );

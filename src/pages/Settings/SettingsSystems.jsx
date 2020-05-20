@@ -1,8 +1,8 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
 import { ObjectTable } from 'components';
-import { systemCheck, handleClick } from 'components/utils';
-import { useStatusData } from 'store';
+import { handleClick } from 'components/utils';
+import { useStatusData, useSystemCheck } from 'store';
 
 import './Settings.css';
 
@@ -23,7 +23,7 @@ export const SettingsSystems = () => {
     }
   };
 
-  const working = systemCheck(status, 'system');
+  const working = useSystemCheck('system');
   let msg = working ? 'All subsystems go...' : 'One or more of the TrueBlocks components is not working properly.';
   if (!working && status.is_testing) {
     msg += ' It appears that the API is in test mode. Wait until the test is finished and then reload.';
@@ -47,10 +47,18 @@ export const SettingsSystems = () => {
 const LeftPanel = ({ status, handler, curSubsystem }) => {
   const styleLeft = { display: 'grid', gridAutoFlow: 'row', padding: '2px' };
   const subSystems = ['api', 'node', 'scraper', 'sharing', 'help'];
+  // React hooks won't let use use a hook inside of a map, thus this construct
+  const results = [];
+  results['api'] = useSubsystemData(status, 'api');
+  results['node'] = useSubsystemData(status, 'node');
+  results['scraper'] = useSubsystemData(status, 'scraper');
+  results['sharing'] = useSubsystemData(status, 'sharing');
+  results['help'] = useSubsystemData(status, 'help');
   return (
     <div style={styleLeft}>
       {subSystems.map((subsystem, index) => {
-        const filtered = getSubsystemData(status, subsystem);
+        const myData = results[subsystem];
+        const filtered = myData;
         return (
           <div key={'ss_' + index} style={{ display: 'grid', gridTemplateColumns: '6fr 1fr' }}>
             <div>
@@ -84,6 +92,7 @@ const LeftPanel = ({ status, handler, curSubsystem }) => {
 
 //------------------------------------------------------------------------
 const RightPanel = ({ status, handler, subsystem }) => {
+  const myData = useSubsystemData(status, subsystem);
   if (subsystem === '') return null;
   const styleRight = { padding: '2px' };
   return (
@@ -92,7 +101,7 @@ const RightPanel = ({ status, handler, subsystem }) => {
         <h4>Editing {subsystem} Configuration</h4>
         <div>
           <ObjectTable
-            data={getSubsystemData(status, subsystem)}
+            data={myData}
             columns={systemsSchema}
             showHidden={true}
             handler={handler}
@@ -126,9 +135,9 @@ const DisplayLog = ({ subsystem }) => {
 };
 
 //------------------------------------------------------------------------
-function getSubsystemData(status, subsystem) {
+const useSubsystemData = (status, subsystem) => {
   const isOptional = subsystem === 'scraper' || subsystem === 'sharing' || subsystem === 'help';
-  const working = systemCheck(status, subsystem);
+  const working = useSystemCheck(subsystem);
   let cn = working ? 'okay' : 'warning';
   if (isOptional && !working) cn = 'caution';
   const statusStr = (
@@ -159,7 +168,7 @@ function getSubsystemData(status, subsystem) {
     indexPath: subsystem === 'scraper' ? status.index_path : '',
     version: version,
   };
-}
+};
 
 //------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
