@@ -14,12 +14,7 @@ export const Copyable = ({ display, copyable = null, viewable = null, handler })
     <div style={{ display: 'flex' }}>
       {display}
       {copyable && <CopyIcon text={copyable} handler={handler} />}
-      {viewable &&
-        (monitorMap[viewable] ? (
-          <ViewIcon text={viewable} handler={handler} />
-        ) : (
-          <AddMonitorIcon text={viewable} handler={handler} />
-        ))}
+      {viewable && monitorMap[viewable] && <ViewIcon text={viewable} handler={handler} />}
     </div>
   );
 };

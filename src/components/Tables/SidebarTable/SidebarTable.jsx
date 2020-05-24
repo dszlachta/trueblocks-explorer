@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 import { DataTable, ObjectTable } from 'components';
+import { stateFromStorage } from 'components/utils';
 import { getPrimaryKey, calcValue } from 'store';
 
 import './SidebarTable.css';
+import { handleClick } from 'components/utils';
 
 export const SidebarTable = ({
   name,
@@ -17,6 +19,7 @@ export const SidebarTable = ({
   parentHandler,
 }) => {
   const [selectedRow, setSelectedRow] = useState({});
+  const [showHidden, setShowHidden] = useState(Number(stateFromStorage('sideTableDetail', 0)));
 
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
@@ -33,6 +36,10 @@ export const SidebarTable = ({
         if (record) setSelectedRow(record);
         if (parentHandler) parentHandler(action);
         return;
+      case 'toggle-detail':
+        setShowHidden(!showHidden);
+        localStorage.setItem('sideTableDetail', showHidden ? 0 : 1);
+        break;
       default:
         if (parentHandler) parentHandler(action);
         break;
@@ -50,16 +57,29 @@ export const SidebarTable = ({
           search={search}
           searchFields={searchFields}
           pagination={pagination}
-          paginationParts="title arrows"
+          paginationParts=""
           recordIcons={recordIcons}
           parentHandler={sidebarHandler}
         />
       </div>
       <div className="st-right">
-        <div className="at-title" style={{ textAlign: 'center' }}>
-          Transaction Detail
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 5fr 1fr' }}>
+          <div></div>
+          <div className="at-title" style={{ textAlign: 'center' }}>
+            Transaction Detail
+          </div>
+          <div onClick={(e) => handleClick(e, sidebarHandler, { type: 'toggle-detail' })}>
+            {'detail: ' + (showHidden ? 'shown' : 'hidden')}
+          </div>
         </div>
-        <ObjectTable name={name} cn="st" data={selectedRow} columns={columns} showHidden={true} />
+        <ObjectTable
+          name={name}
+          cn="st"
+          data={selectedRow}
+          columns={columns}
+          showDetail={true}
+          showHidden={showHidden}
+        />
       </div>
     </div>
   );

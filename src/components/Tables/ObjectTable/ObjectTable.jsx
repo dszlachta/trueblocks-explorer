@@ -16,6 +16,7 @@ export const ObjectTable = ({
   pagination = false,
   paginationParts = '',
   showHidden = false,
+  showDetail = false,
   handler = null,
   cn = null,
 }) => {
@@ -45,23 +46,43 @@ export const ObjectTable = ({
       {tableBar}
       <div className={'at-body ' + (cn ? cn : 'ot') + '-body'}>
         {columns.map((column, index) => {
-          if (!showHidden && column.hidden) return null;
-
           const value = calcValue(data, column);
           const rawValue = data && data[column.selector];
-          if (!showHidden && value === '') return null;
+
+          let showing = (!column.hidden || showHidden) && value !== '';
+          let detail = column.detail && showDetail;
+          if (!detail && !showing) return null;
 
           const fieldName = column.selector; //column.name || column.selector;
           const fieldType = column.type || 'string';
           const formatted = formatFieldByType(fieldType, value, column.decimals) || '';
           const key = id + '_' + column.selector;
 
+          if (column.type === 'separator') {
+            return (
+              <div key={key} className={'at-row ' + (cn ? cn : 'ot') + '-row'}>
+                <div
+                  className={'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider'}
+                  style={{ backgroundColor: 'lightgrey' }}
+                >
+                  {' '}
+                </div>
+                <div
+                  className={'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider'}
+                  style={{ backgroundColor: 'lightgrey' }}
+                >
+                  {' '}
+                </div>
+              </div>
+            );
+          }
+
           return (
             <div key={key} className={'at-row ' + (cn ? cn : 'ot') + '-row'}>
               <ObjectTableSider cn={cn}>{fieldName + ':'}</ObjectTableSider>
               <ObjectTableColumn cn={cn} column={column}>
                 <Copyable
-                  display={formatted} 
+                  display={formatted}
                   copyable={column.copyable ? rawValue : null}
                   viewable={column.type === 'address' ? rawValue : null}
                   handler={handler}
@@ -77,11 +98,7 @@ export const ObjectTable = ({
 
 //-----------------------------------------------------------------
 const ObjectTableSider = ({ cn, children }) => {
-  return (
-    <Fragment>
-      <div className={'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider'}>{children}</div>
-    </Fragment>
-  );
+  return <div className={'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider'}>{children}</div>;
 };
 
 //-----------------------------------------------------------------

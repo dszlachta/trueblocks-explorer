@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react';
 
-import { Tablebar, ObjectTable, IconTray, Copyable } from 'components';
+import { Tablebar, IconTray, Copyable } from 'components';
 import { createClass } from 'components/utils';
 import { calcValue, getPrimaryKey, getAltIconKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
@@ -32,10 +32,9 @@ export const DataTable = ({
     perPage: 10,
     paginationParts: paginationParts,
   };
-  const [pagingCtx, setPaging] = useState({ ...stateFromStorage('paging', defPaging), curIndex: -1 });
+  const [pagingCtx, setPaging] = useState({ ...defPaging, perPage: stateFromStorage('perPage', 10) });
   const [filterText, setFilterText] = useState('');
   const [firstLoad, setFirstLoad] = useState(true);
-
   const [sortCtx1, setSortCtx1] = useState(stateFromStorage(tableName + '_sort1', { sortBy: '', sortDir: 'asc' }));
   const [sortCtx2, setSortCtx2] = useState(stateFromStorage(tableName + '_sort2', { sortBy: '', sortDir: 'asc' }));
 
@@ -46,7 +45,7 @@ export const DataTable = ({
   const goToRecord = (n) => {
     n = Math.min(filteredData.length - 1, Math.max(0, n));
     const page = Math.floor(n / pagingCtx.perPage);
-    setPaging({ ...pagingCtx, curPage: page, curIndex: n });
+    setPaging({ ...pagingCtx, curPage: page, curIndex: n, nRecords: filteredData ? filteredData.length : 0 });
     changeRow(calcValue(filteredData[n], idCol));
   };
 
@@ -91,7 +90,7 @@ export const DataTable = ({
         };
         goToRecord(0);
         setPaging(newCtx);
-        localStorage.setItem('paging', JSON.stringify(newCtx));
+        localStorage.setItem('perPage', JSON.stringify(action.payload));
         break;
 
       case 'home':
@@ -187,13 +186,13 @@ export const DataTable = ({
 
   const hasData = filteredData ? filteredData.length > 0 : false;
   const firstInPage = Number(pagingCtx.perPage) * Number(pagingCtx.curPage);
-  const lastInPage = Math.min(Number(firstInPage) + Number(pagingCtx.perPage), hasData ? filteredData.length : 0);
+  const lastInPage = Math.min(Number(firstInPage) + Number(pagingCtx.perPage), filteredData ? filteredData.length : 0);
 
   useEffect(() => {
     setPaging({
       ...pagingCtx,
       curPage: 0,
-      nRecords: hasData ? filteredData.length : 0,
+      nRecords: Number(filteredData ? filteredData.length : 0),
       paginationParts: paginationParts,
     });
     if (firstLoad) {
@@ -204,9 +203,10 @@ export const DataTable = ({
     }
   }, [data, filterText]);
 
-  const altIconCol = getAltIconKey(columns);
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
+
+  const altIconCol = getAltIconKey(columns);
 
   const showTools = title !== '' || search || pagination;
   const headerIcons = recordIcons.filter((icon) => icon.includes('header-'));
@@ -249,7 +249,6 @@ export const DataTable = ({
       <DataTableRows
         data={filteredData}
         columns={columns}
-        hasData={hasData}
         idCol={idCol}
         altIconCol={altIconCol}
         handler={dataTableHandler}
@@ -314,7 +313,6 @@ const DataTableHeader = ({
 const DataTableRows = ({
   data,
   columns,
-  hasData,
   handler,
   idCol,
   altIconCol,
@@ -325,115 +323,112 @@ const DataTableRows = ({
   tableName,
   curIndex,
 }) => {
+  if (!data || data.length === 0) return <div>Loading...</div>;
   const debug = false;
   return (
     <Fragment>
       {debug && <pre>{JSON.stringify(altIconCol, null, 2)}</pre>}
-      {hasData ? (
-        data.map((record, recordIndex) => {
-          // ...for each row
-          const id = calcValue(record, idCol);
-          const key = id + '_' + recordIndex;
-          const rowKey = key + '_r';
-          if (recordIndex < firstInPage || recordIndex >= lastInPage) return null;
-          const deleted = record.deleted;
-          let monitored = false;
-          return (
-            <Fragment key={'f_' + rowKey}>
-              {/*<pre>{JSON.stringify(altIconCol, null, 2)}</pre>*/}
-              {/*<pre>{monitored ? 'true' : 'false'}</pre>*/}
-              <div
-                className={
-                  'at-row dt-row' + (curIndex === recordIndex ? ' selected' : '') + (deleted ? ' at-deleted' : '')
+      {data.map((record, recordIndex) => {
+        // ...for each row
+        const id = calcValue(record, idCol);
+        const key = id + '_' + recordIndex;
+        const rowKey = key + '_r';
+        if (recordIndex < firstInPage || recordIndex >= lastInPage) return null;
+        const deleted = record.deleted;
+        let monitored = false;
+        return (
+          <Fragment key={'f_' + rowKey}>
+            {/*<pre>{JSON.stringify(altIconCol, null, 2)}</pre>*/}
+            {/*<pre>{monitored ? 'true' : 'false'}</pre>*/}
+            <div
+              className={
+                'at-row dt-row' + (curIndex === recordIndex ? ' selected' : '') + (deleted ? ' at-deleted' : '')
+              }
+              id={'whatever-row-' + tableName}
+              onClick={(e) => handleClick(e, handler, { type: 'row_click', record_id: id })}
+              onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', record_id: id })}
+              key={rowKey}
+            >
+              {columns.map((column, colIndex) => {
+                // ...for each column
+                const colKey = rowKey + '_' + colIndex;
+                if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) return null;
+                let type = column.type ? column.type : 'string';
+                let rawValue = record[column.selector];
+                let value = calcValue(record, column);
+                value = formatFieldByType(type, value, column.decimals);
+                let found = {};
+                let underField = null;
+                if (column.underField && column.underField !== '') {
+                  underField = column.underField; // don't remove
+                  found = columns.filter((col) => {
+                    return col.selector === underField;
+                  });
+                  if (found.length > 0) underField = <div className="underField">{calcValue(record, found[0])}</div>;
                 }
-                id={'whatever-row-' + tableName}
-                onClick={(e) => handleClick(e, handler, { type: 'row_click', record_id: id })}
-                onDoubleClick={(e) => handleClick(e, handler, { type: 'row_doubleclick', record_id: id })}
-                key={rowKey}
-              >
-                {columns.map((column, colIndex) => {
-                  // ...for each column
-                  const colKey = rowKey + '_' + colIndex;
-                  if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) return null;
-                  let type = column.type ? column.type : 'string';
-                  let rawValue = record[column.selector];
-                  let value = calcValue(record, column);
-                  value = formatFieldByType(type, value, column.decimals);
-                  let found = {};
-                  let underField = null;
-                  if (column.underField && column.underField !== '') {
-                    underField = column.underField; // don't remove
-                    found = columns.filter((col) => {
-                      return col.selector === underField;
-                    });
-                    if (found.length > 0) underField = <div className="underField">{calcValue(record, found[0])}</div>;
-                  }
-                  if (!value || value === undefined) value = type === 'spacer' ? '' : column.isPill ? '' : '-';
-                  let cn = 'at-cell dt-cell ';
-                  if (column.cn) cn += column.cn + ' ';
-                  switch (type) {
-                    case 'calc':
-                    case 'uint32':
-                    case 'uint64':
-                    case 'blknum':
-                    case 'double':
-                    case 'timestamp':
-                    case 'filesize':
-                    case 'gas':
-                    case 'wei':
-                    case 'ether':
-                      cn += ' right ';
-                      break;
-                    case 'bool':
-                      cn += ' center ';
-                      break;
-                    case 'hash':
-                    case 'address':
-                    case 'bytes32':
-                    case 'function':
-                    case 'string':
-                    default:
-                      break;
-                  }
-                  if (column.isPill && value !== '') {
-                    cn += ' at-pill center ';
-                    cn += type === 'bool' ? (calcValue(record, column) ? 'true' : 'false') : calcValue(record, column);
-                  }
-                  if (column.align) cn += ' ' + (column.align && column.align);
-                  if (column.selector === 'monitored') {
-                    monitored = calcValue(record, column);
-                  }
-                  return (
-                    <div key={colKey} className={cn}>
-                      {debug && <pre>{JSON.stringify(found, null, 2)}</pre>}
-                      {column.isPill && !handler && (
-                        <div className="warning">pill column '{column.selector}' does not have a handler</div>
-                      )}
-                      <Copyable
-                        display={value}
-                        copyable={column.copyable ? rawValue : null}
-                        viewable={column.type === 'address' ? rawValue : null}
-                        handler={handler}
-                      />
-                      {underField && <div>{underField}</div>}
-                    </div>
-                  );
-                })}
-                <div style={{ display: 'inline' }}>
-                  <IconTray
-                    iconList={rowIcons}
-                    handler={handler}
-                    record_id={id}
-                    alt={{ deleted: deleted, monitored: monitored }}
-                  />
-                </div>
+                if (!value || value === undefined) value = type === 'spacer' ? '' : column.isPill ? '' : '-';
+                let cn = 'at-cell dt-cell ';
+                if (column.cn) cn += column.cn + ' ';
+                switch (type) {
+                  case 'calc':
+                  case 'uint32':
+                  case 'uint64':
+                  case 'blknum':
+                  case 'double':
+                  case 'timestamp':
+                  case 'filesize':
+                  case 'gas':
+                  case 'wei':
+                  case 'ether':
+                    cn += ' right ';
+                    break;
+                  case 'bool':
+                    cn += ' center ';
+                    break;
+                  case 'hash':
+                  case 'address':
+                  case 'bytes32':
+                  case 'function':
+                  case 'string':
+                  default:
+                    break;
+                }
+                if (column.isPill && value !== '') {
+                  cn += ' at-pill center ';
+                  cn += type === 'bool' ? (calcValue(record, column) ? 'true' : 'false') : calcValue(record, column);
+                }
+                if (column.align) cn += ' ' + (column.align && column.align);
+                if (column.selector === 'monitored') {
+                  monitored = calcValue(record, column);
+                }
+                return (
+                  <div key={colKey} className={cn}>
+                    {debug && <pre>{JSON.stringify(found, null, 2)}</pre>}
+                    {column.isPill && !handler && (
+                      <div className="warning">pill column '{column.selector}' does not have a handler</div>
+                    )}
+                    <Copyable
+                      display={value}
+                      copyable={column.copyable ? rawValue : null}
+                      viewable={column.type === 'address' ? rawValue : null}
+                      handler={handler}
+                    />
+                    {underField && <div>{underField}</div>}
+                  </div>
+                );
+              })}
+              <div style={{ display: 'inline' }}>
+                <IconTray
+                  iconList={rowIcons}
+                  handler={handler}
+                  record_id={id}
+                  alt={{ deleted: deleted, monitored: monitored }}
+                />
               </div>
-            </Fragment>
-          );
-        })
-      ) : (
-        <div>Loading...</div>
-      )}
+            </div>
+          </Fragment>
+        );
+      })}
     </Fragment>
   );
 };

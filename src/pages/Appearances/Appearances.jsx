@@ -91,6 +91,7 @@ export const Appearances = (props) => {
           setEditDialog({ showing: false, record: {} });
           break;
         case 'okay':
+          console.log(record);
           // let query = 'editCmd=edit';
           // query += record ? 'edit' : 'add';
           // query += '&term=';
@@ -146,7 +147,9 @@ export const Appearances = (props) => {
 
   useEffect(() => {
     // statusDispatch(LOADING);
-    refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked);
+    const nRecords = 3370;
+    const stepSize = stateFromStorage('perPage', 10) * 5; // start with five pages, double each time
+    refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked, nRecords, stepSize);
     // statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 
@@ -194,12 +197,13 @@ export const Appearances = (props) => {
   let custom = null;
   let title = 'Appearances';
   // EXISTING_CODE
-  title =
-    addresses.value &&
-    addresses.value.substr(0, 10) +
+  title = name
+    ? decodeURIComponent(name.replace(/\+/g, '%20'))
+    : addresses.value
+    ? addresses.value.substr(0, 10) +
       '...' +
-      addresses.value.substr(addresses.value.length - 6, addresses.value.length - 1) +
-      (name ? ' (' + name.replace('%20', ' ') + ')' : '');
+      addresses.value.substr(addresses.value.length - 6, addresses.value.length - 1)
+    : 'No Name';
   g_Handler = appearancesHandler;
   // EXISTING_CODE
 
@@ -278,8 +282,11 @@ const defaultSearch = ['blockNumber', 'transactionIndex'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+export function refreshAppearancesData(url, query, dispatch, mocked, nRecords, stepSize) {
+  getServerData(
+    url,
+    query + (mocked ? '&mockData' : '') + (stepSize !== -1 ? '&first_record=0&max_records=' + stepSize : '')
+  ).then((theData) => {
     let appearances = theData.data;
     // EXISTING_CODE
     if (!mocked) appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
@@ -299,6 +306,7 @@ export function refreshAppearancesData(url, query, dispatch, mocked) {
     // EXISTING_CODE
     if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
+    if (stepSize < nRecords) refreshAppearancesData(url, query, dispatch, mocked, nRecords, stepSize * 2);
   });
 }
 
@@ -423,24 +431,23 @@ function getFieldValue(record, fieldName) {
               return <div key={item}>{<b>{item}</b>}</div>;
             } else {
               let s = item.split(':');
-              const ofInterest = s[1] && JSON.stringify(s[1]).includes(g_focusValue);
-              if (s[1] && ofInterest) {
-                return (
+              if (!s) {
+                s[0] = s[1] = '';
+              } else if (!s[1]) {
+                s[1] = '';
+              }
+              s[1] = s[1].trim();
+              const ofInterest = s[1].includes(g_focusValue);
+              return (
+                <>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr' }}>
                     <div key={item + '_a'}>{index + ' ' + s[0] + ':'}</div>
-                    <div key={item + '_b'} className="focusValue">
-                      {typeof s[1]}
+                    <div className={ofInterest ? 'focusValue' : ''} key={item + '_b'}>
+                      {s[1] + '-' + JSON.stringify(s[1].length)}
                     </div>
                   </div>
-                );
-              } else {
-                return (
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr' }}>
-                    <div key={item + '_a'}>{index + ' ' + s[0] + ':'}</div>
-                    <div key={item + '_b'}>{(ofInterest ? 'true' : 'false') + ' ' + typeof s[1]}</div>
-                  </div>
-                );
-              }
+                </>
+              );
             }
           })}
         </div>
@@ -548,11 +555,19 @@ export const appearancesSchema = [
     width: 2,
   },
   {
+    name: 'Sep1',
+    selector: 'separator1',
+    type: 'separator',
+    hidden: true,
+    detail: true,
+  },
+  {
     name: 'Inflow',
     selector: 'inflow',
     type: 'blknum',
     width: 2,
     onDisplay: getFieldValue,
+    detail: true,
   },
   {
     name: 'Outflow',
@@ -560,6 +575,7 @@ export const appearancesSchema = [
     type: 'blknum',
     width: 2,
     onDisplay: getFieldValue,
+    detail: true,
   },
   {
     name: 'Gas',
@@ -591,18 +607,27 @@ export const appearancesSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'Compressed',
-    selector: 'compressedTx',
-    type: 'string',
-    hidden: true,
-    onDisplay: getFieldValue,
-  },
-  {
     name: 'Gas Cost (Eth)',
     selector: 'etherGasCost',
     type: 'ether',
     width: 2,
     onDisplay: getFieldValue,
+    detail: true,
+  },
+  {
+    name: 'Sep2',
+    selector: 'separator2',
+    type: 'separator',
+    hidden: true,
+    detail: true,
+  },
+  {
+    name: 'Compressed',
+    selector: 'compressedTx',
+    type: 'string',
+    hidden: true,
+    onDisplay: getFieldValue,
+    detail: true,
   },
   {
     name: 'Age',
@@ -760,6 +785,7 @@ export const appearancesSchema = [
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
+    hidden: true,
   },
 ];
 // auto-generate: schema

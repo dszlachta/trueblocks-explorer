@@ -1,5 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
-import Mousetrap from 'mousetrap';
+import React, { Fragment, useState } from 'react';
 
 import { handleClick } from 'components/utils';
 
@@ -36,12 +35,12 @@ export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curP
 //-----------------------------------------------------------------
 const Display = ({ pagingCtx }) => {
   const { curPage, nRecords, perPage } = pagingCtx;
-  const start = Math.min(perPage * curPage + 1, pagingCtx.nRecords);
-  const end = Math.min(perPage * (curPage + 1), pagingCtx.nRecords);
+  const firstInPage = Math.min(perPage * curPage + 1, pagingCtx.nRecords);
+  const lastInPage = Math.min(perPage * (curPage + 1), pagingCtx.nRecords);
 
   return (
     <Fragment>
-      {start}-{end} of {nRecords}
+      {firstInPage}-{lastInPage} of {nRecords}
     </Fragment>
   );
 };
@@ -95,8 +94,11 @@ const Selector = ({ handler, pagingCtx }) => {
 //-----------------------------------------------------------------
 function isDisabled(pagingCtx, which) {
   if (which !== 'pageup' && which !== 'left' && which !== 'pagedown' && which !== 'right') return false; // up and down (i.e. select row) are handled by the table component
-  const { curPage, nRecords, perPage } = pagingCtx;
+
+  const { curPage } = pagingCtx;
   if (which === 'pageup' || which === 'left') return curPage === 0;
+
+  const { nRecords, perPage } = pagingCtx;
   return curPage === Math.floor(nRecords / perPage) - !(nRecords % perPage);
 }
 

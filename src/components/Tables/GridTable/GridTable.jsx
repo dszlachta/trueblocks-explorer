@@ -52,7 +52,7 @@ export const GridTable = ({
           );
         })}
       </div>
-      <DetailTable data={data} columns={columns} idCol={idCol} start={selected} cellSpan={rowSpan / 10} />{' '}
+      <DetailTable data={data} columns={columns} idCol={idCol} cellStart={selected} cellSpan={rowSpan / 10} />{' '}
     </Fragment>
   );
 };
@@ -98,8 +98,8 @@ const GridHeader = ({ cols, rowSpan }) => {
 };
 
 //-----------------------------------------------------------------
-export const DetailTable = ({ data, columns, title, idCol, start, cellSpan }) => {
-  if (start === undefined) {
+export const DetailTable = ({ data, columns, title, idCol, cellStart, cellSpan }) => {
+  if (cellStart === undefined) {
     return (
       <div
         style={{
@@ -123,7 +123,7 @@ export const DetailTable = ({ data, columns, title, idCol, start, cellSpan }) =>
     );
   }
 
-  const range = { start: start, end: start + cellSpan };
+  const range = { start: cellStart, end: cellStart + cellSpan };
   const filteredData = data.filter(
     (item) => (item.firstAppearance >= range.start) & (item.firstAppearance < range.end)
   );
@@ -189,7 +189,7 @@ export const DetailTable = ({ data, columns, title, idCol, start, cellSpan }) =>
               return (
                 <PanelTable
                   style={{ margin: '0px !important', padding: '0px !important' }}
-                  key={calcValue(record, idCol) + record.start}
+                  key={calcValue(record, idCol)}
                   data={record}
                   columns={columns}
                   title={record.filename}

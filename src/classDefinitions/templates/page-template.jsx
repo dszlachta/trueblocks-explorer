@@ -110,7 +110,7 @@ export const [{PROPER}] = (props) => {
     statusDispatch(LOADING);
     refresh[{PROPER}]Data(dataUrl, dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, statusDispatch, mocked]);
+  }, [dataQuery, dispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, [{LONG}]Handler, { type: 'Add' }));
@@ -147,7 +147,11 @@ export const [{PROPER}] = (props) => {
         current={curTag}
         handler={[{LONG}]Handler}
       />
-      {mocked && <span className="warning"><b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b></span>}
+      {mocked && (
+        <span className="warning">
+          <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
+        </span>
+      )}
       {debug && <pre>{JSON.stringify([{LONG}], null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
