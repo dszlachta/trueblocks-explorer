@@ -14,5 +14,5 @@ list = [
     { page = "monitors", subpage = "Paused", route = "paused", options = "" },
     { page = "monitors", subpage = "Pending", route = "pending", options = "" },
     { page = "support", subpage = "Separator" },
-    { page = "monitors", subpage = "Explore", route = "explore", options = "" },
+    { page = "monitors", subpage = "Explore", route = "explore", options = "", component = "<Appearances />" },
 ]

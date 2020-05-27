@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { DataTable, ObjectTable } from 'components';
 import { stateFromStorage } from 'components/utils';
 import { getPrimaryKey, calcValue } from 'store';
+import { getIcon } from 'pages/utils';
 
 import './SidebarTable.css';
 import { handleClick } from 'components/utils';
 
 export const SidebarTable = ({
-  name,
+  tableName,
   data,
   columns,
   title,
@@ -46,11 +47,12 @@ export const SidebarTable = ({
     }
   };
 
+  const detailIcon = getIcon('x', showHidden ? 'toggleright' : 'toggleleft', true, true, 24);
   return (
     <div className="sidebar-table">
       <div className="st-left">
         <DataTable
-          name={name}
+          tableName={tableName}
           data={data}
           columns={columns}
           title={title}
@@ -63,17 +65,20 @@ export const SidebarTable = ({
         />
       </div>
       <div className="st-right">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 5fr 1fr' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 5fr 1fr', alignItems: 'end' }}>
           <div></div>
           <div className="at-title" style={{ textAlign: 'center' }}>
             Transaction Detail
           </div>
-          <div onClick={(e) => handleClick(e, sidebarHandler, { type: 'toggle-detail' })}>
-            {'detail: ' + (showHidden ? 'shown' : 'hidden')}
+          <div
+            style={{ textAlign: 'right', paddingRight: '8px', alignItems: 'end' }}
+            onClick={(e) => handleClick(e, sidebarHandler, { type: 'toggle-detail' })}
+          >
+            <div>detail: {detailIcon}</div>
           </div>
         </div>
         <ObjectTable
-          name={name}
+          tableName={tableName}
           cn="st"
           data={selectedRow}
           columns={columns}

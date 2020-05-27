@@ -1,7 +1,7 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Tablebar } from 'components';
-import { formatFieldByType, handleClick } from 'components/utils';
+import { formatFieldByType } from 'components/utils';
 import { calcValue, getPrimaryKey } from 'store';
 import { Copyable } from 'components';
 import './ObjectTable.css';
@@ -19,6 +19,7 @@ export const ObjectTable = ({
   showDetail = false,
   handler = null,
   cn = null,
+  tight = '',
 }) => {
   const [filterText] = useState('');
 

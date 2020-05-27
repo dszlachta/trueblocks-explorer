@@ -1,8 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 
 import { getIcon } from 'pages/utils';
 import { handleClick } from 'components/utils';
-import { ClickableIcon } from 'components';
 import { useMonitorMap } from 'store/status_store';
 
 //--------------------------------------------------------------
@@ -25,19 +24,6 @@ const ViewIcon = ({ text, handler }) => {
   return (
     <div style={{ paddingLeft: '5px' }} onClick={(e) => handleClick(e, handler, { type: 'View', record_id: text })}>
       {getIcon(index, 'View', false, false, 12)}
-    </div>
-  );
-};
-
-//--------------------------------------------------------------
-const AddMonitorIcon = ({ text, handler }) => {
-  const index = text;
-  return (
-    <div
-      style={{ paddingLeft: '5px' }}
-      onClick={(e) => handleClick(e, handler, { type: 'AddMonitor', record_id: text })}
-    >
-      {getIcon(index, 'AddMonitor', false, false, 12)}
     </div>
   );
 };

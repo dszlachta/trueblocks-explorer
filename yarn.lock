@@ -10843,6 +10843,11 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
+ss-search@^1.5.20:
+  version "1.5.20"
+  resolved "https://registry.yarnpkg.com/ss-search/-/ss-search-1.5.20.tgz#4f0dcd6c0dac17316a054fca23e583f052e91672"
+  integrity sha512-4e0Me/mPS0fGZ2j0X9SzvZT0hPNc7jhqdv1V5LtPlfmn7BMPuIdSDeqXFuJISmS2VD7zTo+I3hL9W4dA1fiOhw==
+
 sshpk@^1.7.0:
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/sshpk/-/sshpk-1.16.1.tgz#fb661c0bef29b39db40769ee39fa70093d6f6877"

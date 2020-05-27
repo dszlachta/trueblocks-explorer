@@ -62,6 +62,7 @@ export const SettingsSchemas = () => {
           case 'timestamp':
           case 'array':
           case 'filesize':
+          case 'icons':
             known.push(item.type);
             return false;
           case 'blknum':
@@ -73,6 +74,8 @@ export const SettingsSchemas = () => {
           case 'gas':
           case 'bytes32':
           case 'double':
+          case 'value':
+          case 'separator':
             classes.push(item.type);
             return false;
           case 'CAbi':
@@ -99,7 +102,7 @@ export const SettingsSchemas = () => {
             classes.push(item.type);
             return false;
           default:
-            unknown.push('unhandled: ' + item.type);
+            unknown.push(item.type);
             return true;
         }
       })
@@ -124,7 +127,7 @@ export const SettingsSchemas = () => {
   let debug = false;
   return (
     <div>
-      {debug && <pre>{JSON.stringify(matched, null, 2)}</pre>}
+      {debug && <pre>{JSON.stringify(schemasSchema, null, 2)}</pre>}
       {/* prettier-ignore */}
       <ButtonCaddie
         name="system"
@@ -155,7 +158,7 @@ export const SettingsSchemas = () => {
       <div>
         <br />
         <DataTable
-          name={'schemaTable'}
+          tableName={'schemaTable'}
           key={matched.name + 'm'}
           title={'Schema for ' + matched.name.replace('Schema', '')}
           data={matched.schema}
@@ -182,7 +185,7 @@ export const SettingsSchemas = () => {
               <div></div>
               <div>
                 <DataTable
-                  name={'mocksTable'}
+                  tableName={'mocksTable'}
                   key={matched.name + 'm'}
                   title={''}
                   data={mocks}

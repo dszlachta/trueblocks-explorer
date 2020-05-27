@@ -91,7 +91,7 @@ export const SettingsSkins = () => {
         </Present>
       </div>
       <Present>
-        <DataTable name={'testTable'} title="Data Table (dt-)" data={testData} columns={fields} />
+        <DataTable tableName={'testTable'} title="Data Table (dt-)" data={testData} columns={fields} />
       </Present>
       <Present>
         <GridTable data={testData} columns={fields} rowSpan={1e5} />

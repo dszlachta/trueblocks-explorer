@@ -1,7 +1,5 @@
 import React from 'react';
 
-import { handleClick } from 'components/utils';
-
 import {
   Dashboard,
   Collections,
@@ -29,6 +27,9 @@ import {
   AddName,
   View,
   Copy,
+  CheckCircle,
+  CheckCircleYellow,
+  XCircle,
 } from 'assets/icons/SetEdit';
 import GridIcon from 'assets/icons/GridIcon';
 
@@ -73,6 +74,12 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
       return <Copy key={key} size={size} className={cn} />;
     case 'addmonitor':
       return <AddMonitor key={key} size={size} className={cn} />;
+    case 'checkcircle':
+      return <CheckCircle key={key} size={size} className={cn} color={'green'} />;
+    case 'checkcircleyellow':
+      return <CheckCircleYellow key={key} size={size} className={cn} color={'black'} />;
+    case 'xcircle':
+      return <XCircle key={key} size={size} className={cn} color={'red'} />;
     case 'addname':
       return <AddName key={key} size={size} className={cn} />;
     case 'view':

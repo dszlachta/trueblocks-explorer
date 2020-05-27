@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-// import Mousetrap from 'mousetrap';
+import React, { useContext } from 'react';
 
 import GlobalContext from 'store';
 import { currentPage } from 'components/utils';

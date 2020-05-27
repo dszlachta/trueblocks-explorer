@@ -1,4 +1,4 @@
-name         ,selector     ,type              ,hidden ,width ,editable ,decimals ,isPill ,align    ,cn ,domain ,range ,searchable ,copyable ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
+name         ,selector     ,type              ,hidden ,width ,editable ,decimals ,isPill ,align    ,cn ,domain ,range ,searchable ,detail ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
 ID           ,id           ,string            ,       ,      ,         ,         ,       ,         ,   ,       ,      ,true       ,         ,         ,           ,getFieldValue ,         ,
 Block Number ,blockNumber  ,blknum            ,       ,      ,         ,         ,       ,         ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
 Hash         ,hash         ,hash              ,       ,      ,         ,         ,       ,         ,   ,       ,      ,true       ,         ,         ,           ,              ,         ,
@@ -6,7 +6,7 @@ Parent Hash  ,parentHash   ,hash              ,       ,      ,         ,        
 Timestamp    ,timestamp    ,timestamp         ,       ,      ,         ,         ,       ,         ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
 Transactions ,transactions ,CTransactionArray ,       ,      ,         ,         ,       ,wordwrap ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
 Difficulty   ,difficulty   ,uint64            ,       ,      ,         ,         ,       ,         ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
-Miner        ,miner        ,address           ,       ,      ,         ,         ,       ,         ,   ,       ,      ,true       ,true     ,         ,           ,              ,         ,
+Miner        ,miner        ,address           ,       ,      ,         ,         ,       ,         ,   ,       ,      ,true       ,         ,         ,           ,              ,         ,
 Gas Limit    ,gasLimit     ,gas               ,       ,      ,         ,         ,       ,         ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
 Gas Used     ,gasUsed      ,gas               ,       ,      ,         ,         ,       ,         ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
 Finalized    ,finalized    ,bool              ,       ,      ,         ,         ,       ,         ,   ,       ,      ,           ,         ,         ,           ,              ,         ,

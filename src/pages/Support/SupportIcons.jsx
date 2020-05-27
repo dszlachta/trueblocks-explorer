@@ -5,6 +5,9 @@ import AddMonitor from 'assets/icons/AddMonitor';
 import AddName from 'assets/icons/AddName';
 import BarChart from 'assets/icons/BarChart';
 import ExternalLink from 'assets/icons/ExternalLink';
+import Check from 'assets/icons/Check';
+import CheckCircle from 'assets/icons/CheckCircle';
+import CheckCircleYellow from 'assets/icons/CheckCircleYellow';
 import ChevronDown from 'assets/icons/ChevronDown';
 import ChevronLeft from 'assets/icons/ChevronLeft';
 import ChevronRight from 'assets/icons/ChevronRight';
@@ -30,6 +33,8 @@ import ToggleRight from 'assets/icons/ToggleRight';
 import Twitter from 'assets/icons/Twitter';
 import Undelete from 'assets/icons/Undelete';
 import View from 'assets/icons/View';
+import X from 'assets/icons/X';
+import XCircle from 'assets/icons/XCircle';
 
 import {
   Dashboard,
@@ -122,10 +127,18 @@ export const SupportIcons = () => {
         { name: 'External', component: <ExternalLink size={size} color={color} fill={fill} style={style} /> },
         { name: 'GridIcon', component: <GridIcon size={size} color={color} fill={fill} style={style} /> },
         { name: 'Help', component: <HelpCircle size={size} color={color} fill={fill} style={style} /> },
-        // { name: 'Plus', component: <Plus size={size} color={color} fill={fill} style={style} /> },
         { name: 'Plus', component: <PlusCircle size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Check', component: <CheckCircle size={size} color={color} fill={fill} style={style} /> },
+        {
+          name: 'CheckYellow',
+          component: <CheckCircleYellow size={size} color={color} fill={'yellow'} style={style} />,
+        },
+        { name: 'X', component: <XCircle size={size} color={color} fill={fill} style={style} /> },
+        // { name: 'Plus', component: <Plus size={size} color={color} fill={fill} style={style} /> },
         // { name: 'PlusSquare', component: <PlusSquare size={size} color={color} fill={fill} style={style} /> },
         // { name: 'Settings', component: <Settings size={size} color={color} fill={fill} style={style} /> },
+        // { name: 'X', component: <X size={size} color={color} fill={fill} style={style} /> },
+        // { name: 'Check', component: <Check size={size} color={color} fill={fill} style={style} /> },
       ],
     },
   ];

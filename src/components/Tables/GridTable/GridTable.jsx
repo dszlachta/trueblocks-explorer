@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment } from 'react';
 
 import { Tablebar, PanelTable } from 'components';
 import { fmtNum, handleClick } from 'components/utils';

@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
+import { DataTable, ObjectTable, PageCaddie } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
 import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -361,6 +361,7 @@ export const collectionsSchema = [
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
+    hidden: true,
   },
 ];
 // auto-generate: schema

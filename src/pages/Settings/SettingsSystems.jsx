@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 
 import { ObjectTable } from 'components';
 import { handleClick } from 'components/utils';
@@ -100,12 +100,7 @@ const RightPanel = ({ status, handler, subsystem }) => {
       <div>
         <h4>Editing {subsystem} Configuration</h4>
         <div>
-          <ObjectTable
-            data={myData}
-            columns={systemsSchema}
-            showHidden={true}
-            handler={handler}
-          />
+          <ObjectTable data={myData} columns={systemsSchema} showHidden={true} handler={handler} />
         </div>
         <br />
       </div>

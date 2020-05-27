@@ -2,17 +2,17 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, handleClick } from 'components/utils';
+import { navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Other.css';
@@ -348,6 +348,7 @@ export const otherSchema = [
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
+    hidden: true,
   },
 ];
 // auto-generate: schema

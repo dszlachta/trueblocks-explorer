@@ -2,16 +2,14 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 
 import GlobalContext, { useStatusMeta } from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal, PageCaddie } from 'components';
-import { getServerData, currentPage, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
-import { calcValue } from 'store';
+import { DataTable } from 'components';
+import { getServerData, currentPage, sortArray } from 'components/utils';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 import { GridTable, ChartTable } from 'components';
 
 // EXISTING_CODE
@@ -24,10 +22,10 @@ export const Digests = () => {
   const { digests, dispatch } = useDigests();
 
   //const [filtered, setFiltered] = useState(digestsDefault);
-  const [tagList, setTagList] = useState([]);
+  //const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('digestsTag'));
-  const mocked = useStatus().state.mocked;
+  //const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
   const [start, setStart] = useState(0);
@@ -74,7 +72,7 @@ export const Digests = () => {
   if (curTag === 'data-view') {
     view = (
       <DataTable
-        name={'digestsTable'}
+        tableName={'digestsTable'}
         data={filtered}
         columns={digestsSchema}
         title="Digests"

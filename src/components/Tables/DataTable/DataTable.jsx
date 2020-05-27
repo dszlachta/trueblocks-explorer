@@ -1,10 +1,11 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import { search as theSearch } from 'ss-search';
 
 import { Tablebar, IconTray, Copyable } from 'components';
 import { createClass } from 'components/utils';
 import { calcValue, getPrimaryKey, getAltIconKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
-import { hasFields, matches } from './utils';
+import { hasFields } from './utils';
 
 import ChevronUp from 'assets/icons/ChevronUp';
 import ChevronDown from 'assets/icons/ChevronDown';
@@ -139,18 +140,17 @@ export const DataTable = ({
       case 'download':
         const asCSV = action.fmt === 'CSV';
         const exportFields = columns.filter((column) => {
-          return column.selector === 'compressedTx' || column.selector === 'value' || !column.hidden;
+          return column.selector === 'compressedTx' || !column.hidden;
         });
         const download = data.map((record, index) => {
-          const row = exportFields
-            .map((column) => {
-              return record[column.selector];
-            })
-            .join(asCSV ? ',' : '\t');
-          return row + '\n';
+          const row = exportFields.map((column) => {
+            return calcValue(record, column);
+          });
+          return row.join(asCSV ? ',' : '\t');
         });
         var hiddenElement = document.createElement('a');
-        hiddenElement.href = 'data:text/' + (asCSV ? 'csv' : 'text') + ';charset=utf-8,' + encodeURI(download);
+        hiddenElement.href =
+          'data:text/' + (asCSV ? 'csv' : 'text') + ';charset=utf-8,' + encodeURI(download.join('\n'));
         hiddenElement.target = '_blank';
         hiddenElement.download = 'download.' + (asCSV ? 'csv' : 'txt');
         hiddenElement.click();
@@ -179,12 +179,9 @@ export const DataTable = ({
       : data;
 
   if (filterText !== '' && hasFields(columns, searchFields)) {
-    filteredData = data.filter((record) => {
-      return matches(record, searchFields, filterText.toLowerCase());
-    });
+    filteredData = theSearch(data, searchFields, filterText);
   }
 
-  const hasData = filteredData ? filteredData.length > 0 : false;
   const firstInPage = Number(pagingCtx.perPage) * Number(pagingCtx.curPage);
   const lastInPage = Math.min(Number(firstInPage) + Number(pagingCtx.perPage), filteredData ? filteredData.length : 0);
 
@@ -225,7 +222,7 @@ export const DataTable = ({
   const debug = false;
   return (
     <Fragment key="dt">
-      {debug && <pre>{JSON.stringify(pagingCtx)}</pre>}
+      {debug && <pre>{JSON.stringify(tableName + '|' + str)}</pre>}
       {showTools && (
         <Tablebar
           title={title}
@@ -289,7 +286,7 @@ const DataTableHeader = ({
       {columns.map((column, index) => {
         const cellText = (
           <div style={{ display: 'inline' }}>
-            {column.tableName || column.selector}
+            {column.name || column.selector}
             {column.selector === sortCtx1.sortBy && sortIcon1}
             {column.selector === sortCtx2.sortBy && sortIcon2}
           </div>
@@ -380,6 +377,7 @@ const DataTableRows = ({
                   case 'gas':
                   case 'wei':
                   case 'ether':
+                  case 'value':
                     cn += ' right ';
                     break;
                   case 'bool':
@@ -409,7 +407,7 @@ const DataTableRows = ({
                     )}
                     <Copyable
                       display={value}
-                      copyable={column.copyable ? rawValue : null}
+                      copyable={column.type === 'address' || column.type.includes('hash') ? rawValue : null}
                       viewable={column.type === 'address' ? rawValue : null}
                       handler={handler}
                     />

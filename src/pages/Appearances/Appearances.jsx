@@ -7,21 +7,20 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage, currentPage } from 'components/utils';
+import { ObjectTable, PageCaddie } from 'components';
+import { getServerData, sortArray, handleClick } from 'components/utils';
+import { navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { useStatus } from 'store/status_store';
 import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Appearances.css';
 
 // EXISTING_CODE
+import { currentPage } from 'components/utils';
 import { SidebarTable } from 'components';
 import { useNames } from 'pages/Names/Names';
-import { fmtNum } from 'components/utils';
-import { axisRight } from 'd3';
 import { getIcon } from 'pages/utils';
 let g_focusValue = '';
 var g_Handler = null;
@@ -45,13 +44,12 @@ export const Appearances = (props) => {
   const { params } = currentPage();
   const addresses = params[0];
   const name = params.length > 1 ? params[1].value : '';
-  const { names } = useNames().names;
   g_focusValue = addresses.value.toLowerCase();
   // EXISTING_CODE
 
   const dataUrl = 'http://localhost:8080/export';
 
-  const dataQuery = 'addrs=' + addresses.value + '&verbose=7&dollars&articulate&write_txs&write_traces';
+  const dataQuery = 'accounting&ether&addrs=' + addresses.value + '&verbose=7&articulate&write_txs&write_traces';
   function addendum(record, record_id) {
     let ret = '&verbose=10';
     // EXISTING_CODE
@@ -91,7 +89,6 @@ export const Appearances = (props) => {
           setEditDialog({ showing: false, record: {} });
           break;
         case 'okay':
-          console.log(record);
           // let query = 'editCmd=edit';
           // query += record ? 'edit' : 'add';
           // query += '&term=';
@@ -146,11 +143,13 @@ export const Appearances = (props) => {
   );
 
   useEffect(() => {
-    // statusDispatch(LOADING);
-    const nRecords = 3370;
-    const stepSize = stateFromStorage('perPage', 10) * 5; // start with five pages, double each time
-    refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked, nRecords, stepSize);
-    // statusDispatch(NOT_LOADING);
+    const qqq = 'count&addrs=' + addresses.value + '&verbose=7' + (mocked ? '&mockData' : '');
+    getServerData(dataUrl, qqq).then((theData) => {
+      let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
+      const stepSize = stateFromStorage('perPage', 10) * 2; // start with five pages, double each time
+      refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked, nRecords, stepSize);
+      // statusDispatch(NOT_LOADING);
+    });
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
@@ -178,6 +177,15 @@ export const Appearances = (props) => {
             if (!item['articulatedTx']) return false;
             const art = item['articulatedTx'];
             return art.name === 'transfer' || art.name === 'approve' || art.name === 'transferFrom';
+          case 'Reconciled':
+            if (!item['statement'] || !item.statement['reconciled']) return false;
+            return item.statement['reconcilationType'] === '';
+          case 'Partial':
+            if (!item['statement'] || !item.statement['reconciled']) return false;
+            return item.statement['reconcilationType'].includes('partial');
+          case 'Unreconciled':
+            if (!item['statement'] || !item.statement['reconciled']) return false;
+            return !item.statement['reconciled'];
           case 'Balances':
           case 'Neighbors':
           case 'Functions':
@@ -234,7 +242,7 @@ export const Appearances = (props) => {
 //----------------------------------------------------------------------
 const getTagList = (appearances) => {
   // prettier-ignore
-  let tagList = ['Tokens', 'Grants', 'Airdrops', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
+  let tagList = ['Tokens', 'Grants', 'Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
   tagList.unshift('|');
   tagList.unshift('All');
   tagList.push('|');
@@ -359,16 +367,25 @@ function getFieldValue(record, fieldName) {
     default:
       break;
   }
+
+  if (fieldName && fieldName.includes('statement.')) {
+    let fn = fieldName.replace('statement.', '');
+    if (fn === 'begBalDiff' && record && record.statement && record.statement[fn] === 0) return '';
+    if (fn === 'endBalDiff' && record && record.statement && record.statement[fn] === 0) return '';
+    if (record && record.statement && fn === 'reconciled')
+      return getIcon(
+        'reconciled',
+        record.statement[fn]
+          ? record.statement['reconcilationType'] === ''
+            ? 'CheckCircle'
+            : 'CheckCircleYellow'
+          : 'XCircle'
+      );
+    if (record && record.statement) return record.statement[fn];
+  }
+
   const internal = record.from !== g_focusValue && record.to !== g_focusValue;
   switch (fieldName) {
-    case 'inflow':
-      if (record.ether === 0) return '';
-      if (record.to !== g_focusValue) return '';
-      return <div className="inflow">{record.ether}</div>;
-    case 'outflow':
-      if (record.ether === 0) return '';
-      if (record.from !== g_focusValue) return '';
-      return <div className="outflow">({record.ether})</div>;
     case 'id':
       return record.hash;
     case 'marker':
@@ -381,12 +398,6 @@ function getFieldValue(record, fieldName) {
       );
     case 'isError':
       return record.isError ? 'error' : '';
-    case 'gasCost':
-      if (record.from !== g_focusValue) return '';
-      return record.gasCost;
-    case 'etherGasCost':
-      if (record.from !== g_focusValue) return '';
-      return record.etherGasCost;
     case 'internal':
       return internal ? 'int' : '';
     case 'from': {
@@ -423,6 +434,7 @@ function getFieldValue(record, fieldName) {
       );
     case 'compressedTx':
       if (!record['compressedTx']) return null;
+      if (record['compressedTx'] === '0x ( )') return <div key={'xxx'}>{<b>{'0x'}</b>}</div>;
       let arr = record.compressedTx.replace(')', '').replace('(', ',').split(',');
       return (
         <div>
@@ -441,7 +453,7 @@ function getFieldValue(record, fieldName) {
               return (
                 <>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr' }}>
-                    <div key={item + '_a'}>{index + ' ' + s[0] + ':'}</div>
+                    <div key={item + '_a'}>{index + ' ' + (s[0] === ' stub' ? '0x' : s[0] + ':')}</div>
                     <div className={ofInterest ? 'focusValue' : ''} key={item + '_b'}>
                       {s[1] + '-' + JSON.stringify(s[1].length)}
                     </div>
@@ -498,6 +510,14 @@ const metaSchema = [
 // auto-generate: schema
 export const appearancesSchema = [
   {
+    name: 'ID',
+    selector: 'id',
+    type: 'string',
+    hidden: true,
+    searchable: true,
+    onDisplay: getFieldValue,
+  },
+  {
     name: 'Date/Block',
     selector: 'date',
     type: 'string',
@@ -506,11 +526,19 @@ export const appearancesSchema = [
     onDisplay: getFieldValue,
   },
   {
+    name: 'Marker',
+    selector: 'marker',
+    type: 'string',
+    hidden: true,
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
     name: 'From',
     selector: 'from',
     type: 'address',
     width: 5,
-    copyable: true,
     searchable: true,
     underField: 'fromName',
     onDisplay: getFieldValue,
@@ -528,7 +556,6 @@ export const appearancesSchema = [
     selector: 'to',
     type: 'address',
     width: 5,
-    copyable: true,
     searchable: true,
     underField: 'toName',
     onDisplay: getFieldValue,
@@ -562,20 +589,130 @@ export const appearancesSchema = [
     detail: true,
   },
   {
-    name: 'Inflow',
-    selector: 'inflow',
-    type: 'blknum',
+    name: 'Asset',
+    selector: 'statement.asset',
+    type: 'string',
     width: 2,
-    onDisplay: getFieldValue,
+    align: 'center',
     detail: true,
+    onDisplay: getFieldValue,
   },
   {
-    name: 'Outflow',
-    selector: 'outflow',
-    type: 'blknum',
+    name: 'Beg',
+    selector: 'statement.begBal',
+    type: 'value',
     width: 2,
-    onDisplay: getFieldValue,
     detail: true,
+    underField: 'statement.begBalDiff',
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Beg Diff',
+    selector: 'statement.begBalDiff',
+    type: 'value',
+    hidden: true,
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Income',
+    selector: 'statement.inflow',
+    type: 'value',
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'I-Income',
+    selector: 'statement.intInflow',
+    type: 'value',
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'S-Income',
+    selector: 'statement.suicideInflow',
+    type: 'value',
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Spending',
+    selector: 'statement.outflow',
+    type: 'value',
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'I-Spending',
+    selector: 'statement.intOutflow',
+    type: 'value',
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'S-Spending',
+    selector: 'statement.suicideOutflow',
+    type: 'value',
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Gas Cost',
+    selector: 'statement.weiGasCost',
+    type: 'value',
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Ending',
+    selector: 'statement.endBal',
+    type: 'value',
+    width: 2,
+    detail: true,
+    underField: 'statement.endBalDiff',
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Calc',
+    selector: 'statement.endBalCalc',
+    type: 'value',
+    hidden: true,
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'End Diff',
+    selector: 'statement.endBalDiff',
+    type: 'value',
+    hidden: true,
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Type',
+    selector: 'statement.reconcilationType',
+    type: 'string',
+    width: 2,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Okay',
+    selector: 'statement.reconciled',
+    type: 'string',
+    align: 'center',
+    detail: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Gas',
@@ -599,20 +736,11 @@ export const appearancesSchema = [
     width: 2,
   },
   {
-    name: 'Gas Cost',
-    selector: 'gasCost',
-    type: 'wei',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
-  },
-  {
     name: 'Gas Cost (Eth)',
     selector: 'etherGasCost',
     type: 'ether',
+    hidden: true,
     width: 2,
-    onDisplay: getFieldValue,
-    detail: true,
   },
   {
     name: 'Sep2',
@@ -626,13 +754,20 @@ export const appearancesSchema = [
     selector: 'compressedTx',
     type: 'string',
     hidden: true,
+    detail: true,
     onDisplay: getFieldValue,
+  },
+  {
+    name: 'Sep3',
+    selector: 'separator3',
+    type: 'separator',
+    hidden: true,
     detail: true,
   },
   {
     name: 'Age',
     selector: 'age',
-    type: 'number',
+    type: 'blknum',
     hidden: true,
   },
   {
@@ -640,7 +775,6 @@ export const appearancesSchema = [
     selector: 'encoding',
     type: 'hash',
     hidden: true,
-    copyable: true,
   },
   {
     name: 'Receipt',
@@ -660,22 +794,6 @@ export const appearancesSchema = [
     selector: 'traces',
     type: 'CTraceArray',
     hidden: true,
-  },
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Marker',
-    selector: 'marker',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
   },
   {
     name: 'Block Hash',
@@ -748,7 +866,7 @@ export const appearancesSchema = [
   {
     name: 'Price',
     selector: 'price',
-    type: 'doube',
+    type: 'double',
     hidden: true,
     width: 3,
   },

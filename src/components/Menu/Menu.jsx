@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { currentPage, handleClick } from 'components/utils';
+import { currentPage } from 'components/utils';
 import { getIcon } from 'pages/utils';
 
 import './Menu.css';

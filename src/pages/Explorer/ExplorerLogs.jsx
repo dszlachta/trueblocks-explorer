@@ -7,9 +7,8 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ButtonCaddie, Modal } from 'components';
-import { getServerData, sortArray, sortStrings, handleClick, useArrowKeys, notEmpty } from 'components/utils';
-import { calcValue } from 'store';
+import { ObjectTable } from 'components';
+import { getServerData, useArrowKeys } from 'components/utils';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { useExplorer } from './Explorer';
@@ -114,7 +113,6 @@ export const logsSchema = [
     name: 'Address',
     selector: 'address',
     type: 'address',
-    copyable: true,
     searchable: true,
   },
   {

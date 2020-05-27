@@ -31,6 +31,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.0",
     "shortid": "^2.2.15",
+    "ss-search": "^1.5.20",
     "swr": "^0.1.18",
     "yarn.lock": "^0.0.1-security"
   },

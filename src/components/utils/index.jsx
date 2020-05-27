@@ -162,6 +162,7 @@ export const formatFieldByType = (type, value, decimals = 0) => {
     case 'gas':
     case 'wei':
     case 'ether':
+    case 'value':
     case 'address':
     case 'timestamp':
     case 'string':

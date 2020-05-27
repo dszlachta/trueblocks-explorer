@@ -1,7 +1,7 @@
-name           ,selector         ,type      ,hidden ,width ,editable ,decimals ,isPill ,align  ,cn     ,domain ,range ,searchable ,copyable ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
+name           ,selector         ,type      ,hidden ,width ,editable ,decimals ,isPill ,align  ,cn     ,domain ,range ,searchable ,detail ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
 ID             ,id               ,string    ,true   ,      ,         ,         ,       ,       ,       ,       ,      ,true       ,         ,         ,           ,getFieldValue ,         ,
 Cache Type     ,type             ,string    ,true   ,      ,         ,         ,       ,       ,       ,       ,      ,           ,         ,         ,           ,              ,         ,
-Block Range    ,blockRange       ,string    ,true   ,      ,         ,         ,       ,center ,       ,       ,      ,           ,         ,         ,           ,getFieldValue ,         ,
+Block Range    ,blockRange       ,string    ,true   ,      ,         ,         ,       ,center ,       ,true   ,true  ,           ,         ,         ,           ,getFieldValue ,         ,
 Block Span     ,blockSpan        ,uint64    ,       ,      ,         ,         ,       ,       ,       ,true   ,true  ,           ,         ,         ,           ,getFieldValue ,         ,
 Duration       ,duration         ,uint64    ,       ,      ,         ,         ,       ,       ,       ,       ,      ,           ,         ,         ,           ,getFieldValue ,         ,
 Seconds        ,seconds          ,uint64    ,true   ,      ,         ,         ,       ,       ,       ,true   ,true  ,           ,         ,         ,           ,getFieldValue ,         ,

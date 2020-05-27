@@ -12,5 +12,28 @@ import AddMonitor from 'assets/icons/AddMonitor';
 import AddName from 'assets/icons/AddName';
 import View from 'assets/icons/View';
 import Copy from 'assets/icons/Copy';
+import X from 'assets/icons/X';
+import XCircle from 'assets/icons/XCircle';
+import Check from 'assets/icons/Check';
+import CheckCircle from 'assets/icons/CheckCircle';
+import CheckCircleYellow from 'assets/icons/CheckCircleYellow';
 
-export { ToggleLeft, ToggleRight, Add, Edit, Delete, Undelete, Remove, ExternalLink, AddMonitor, AddName, View, Copy };
+export {
+  ToggleLeft,
+  ToggleRight,
+  Add,
+  Edit,
+  Delete,
+  Undelete,
+  Remove,
+  ExternalLink,
+  AddMonitor,
+  AddName,
+  View,
+  Copy,
+  X,
+  XCircle,
+  Check,
+  CheckCircle,
+  CheckCircleYellow,
+};

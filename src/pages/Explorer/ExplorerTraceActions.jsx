@@ -20,7 +20,6 @@ export const traceActionsSchema = [
     name: 'Address',
     selector: 'address',
     type: 'address',
-    copyable: true,
     searchable: true,
   },
   {

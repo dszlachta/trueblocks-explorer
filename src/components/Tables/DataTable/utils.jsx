@@ -27,19 +27,19 @@ export function hasFields(columns, fields) {
   );
 }
 
-/**
- * matches - returns true if the object matches filterText on any field in fields
- *
- * @param {object} record - the data object to search
- * @param {array} fields - the list of fields to search (assumes hasFields returns true)
- * @param {string} filterText - the text to search for
- */
-export function matches(record, fields, filterText) {
-  return (
-    fields.reduce((sum, field) => {
-      return sum + record[field] && typeof record[field] === 'string'
-        ? record[field].toLowerCase().includes(filterText)
-        : '';
-    }, 0) > 0
-  );
-}
+// /**
+//  * matches - returns true if the object matches filterText on any field in fields
+//  *
+//  * @param {object} record - the data object to search
+//  * @param {array} fields - the list of fields to search (assumes hasFields returns true)
+//  * @param {string} filterText - the text to search for
+//  */
+// export function matches(record, fields, filterText) {
+//   return (
+//     fields.reduce((sum, field) => {
+//       return sum + record[field] && typeof record[field] === 'string'
+//         ? record[field].toLowerCase().includes(filterText)
+//         : '';
+//     }, 0) > 0
+//   );
+// }

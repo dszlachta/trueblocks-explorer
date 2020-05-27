@@ -3,10 +3,10 @@ class = "CAppearances"
 noPage = true
 recordIcons = "viewing,exporting,importing"
 defaultSort = "blockNumber,transactionIndex"
-defaultTags = "['Tokens', 'Grants', 'Airdrops', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs']"
+defaultTags = "['Tokens', 'Grants', 'Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs']"
 
 dataUrl = "http://localhost:8080/export"
-dataQuery = "addrs=' + addresses.value + '&verbose=7&dollars&articulate&write_txs&write_traces"
+dataQuery = "accounting&ether&addrs=' + addresses.value + '&verbose=7&articulate&write_txs&write_traces"
 cmdUrl = "none"
 
 [[subpages]]
