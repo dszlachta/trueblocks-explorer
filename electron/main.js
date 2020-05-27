@@ -5,7 +5,12 @@ const Store = require('electron-store');
 const path = require('path');
 const url = require('url');
 
+const boot = require('./boot');
 const getUiUrl = require('./get_ui_url').getUiUrl;
+const detectApi = require('./detect_api').detectApi;
+
+const apiPort = 8080;
+
 const store = new Store();
 
 function onDevelopmentMode(win) {
@@ -35,6 +40,13 @@ function createWindow () {
   if (developmentMode) {
     onDevelopmentMode(win);
   }
+
+  detectApi(apiPort)
+    .then(apiRunning => {
+      if (!apiRunning) {
+        boot();
+      }
+    });
 }
 
 app.whenReady().then(createWindow);

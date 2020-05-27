@@ -1,3 +1,6 @@
+const pathToFileURL = require('url').pathToFileURL;
+const path = require('path');
+
 module.exports = {
   /**
    * Locates the UI and returns the URL to it. Should return react dev server URL
@@ -6,12 +9,13 @@ module.exports = {
    */
   getUiUrl(developmentMode) {
     if (developmentMode) {
+      const url = process.env.ELECTRON_UI_URL;
+
+      if (!url) throw new Error('Missing environment variable ELECTRON_UI_URL');
+
       return process.env.ELECTRON_UI_URL;
     }
 
-    return url.format({
-      pathname: path.join(__dirname, '../frontend/build/index.html'),
-      protocol: 'file:'
-    });
+    return pathToFileURL(path.join(__dirname, '../build/index.html')).toString();
   }
 };
