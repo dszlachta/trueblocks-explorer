@@ -10,7 +10,7 @@ module.exports = {
     }
 
     return url.format({
-      pathname: path.join(__dirname, '../build/index.html'),
+      pathname: path.join(__dirname, '../frontend/build/index.html'),
       protocol: 'file:'
     });
   }

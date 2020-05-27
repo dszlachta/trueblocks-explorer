@@ -1,6 +1,5 @@
 {
   "name": "trueblocks-explorer",
-  "main": "electron/main.js",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,21 +12,7 @@
     "document": "documentation build src/components/**/[A-Zi]*.{js,jsx,ts,tsx} -f html -o docs/components ; open docs/components/index.html",
     "generate": "makeClass -jarv",
     "electron-dev": "ELECTRON_UI_URL=http://localhost:3002 electron electron/main.js",
-    "electron-app-dev": "nf start",
-    "electron-pack": "electron-builder --dir",
-    "electron-dist": "electron-builder",
-    "postinstall": "electron-builder install-app-deps"
-  },
-  "build": {
-    "extends": null,
-    "appId": "org.Trueblocks.Explorer",
-    "files": [
-      "./electron/**/*.js",
-      "./Procfile"
-    ],
-    "mac": {
-      "category": "public.app-category.finance"
-    }
+    "electron-app-dev": "nf start"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -36,8 +21,6 @@
     "d3-scale": "^3.2.1",
     "deepmerge": "^4.2.2",
     "documentation": "^12.3.0",
-    "electron-is-dev": "^1.2.0",
-    "electron-store": "^5.1.1",
     "husky": "^4.2.3",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
@@ -69,7 +52,9 @@
   },
   "devDependencies": {
     "electron": "^8.2.5",
-    "electron-builder": "^22.6.1",
+    "electron-is-dev": "^1.2.0",
+    "electron-store": "^5.1.1",
+    "husky": "^4.2.3",
     "prettier": "^2.0.2"
   }
 }
