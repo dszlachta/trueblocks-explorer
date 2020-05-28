@@ -1,6 +1,6 @@
 .sidebar-table {
   display: grid;
-  grid-template-columns: 10fr 5fr;
+  grid-template-columns: 80fr 1fr 35fr;
 }
 
 .st-left {
@@ -8,7 +8,7 @@
 }
 
 .st-right {
-  margin-top: -15px;
+  margin-top: 0px;
   overflow: hidden;
 }
 

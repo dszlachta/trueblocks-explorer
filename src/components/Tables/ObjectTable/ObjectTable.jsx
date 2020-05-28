@@ -80,7 +80,7 @@ export const ObjectTable = ({
 
           return (
             <div key={key} className={'at-row ' + (cn ? cn : 'ot') + '-row'}>
-              <ObjectTableSider cn={cn}>{fieldName + ':'}</ObjectTableSider>
+              <ObjectTableSider cn={cn}>{fieldName.replace(/statements./, '') + ':'}</ObjectTableSider>
               <ObjectTableColumn cn={cn} column={column}>
                 <Copyable
                   display={formatted}

@@ -146,7 +146,7 @@ export const Appearances = (props) => {
     const qqq = 'count&addrs=' + addresses.value + '&verbose=7' + (mocked ? '&mockData' : '');
     getServerData(dataUrl, qqq).then((theData) => {
       let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
-      const stepSize = stateFromStorage('perPage', 10) * 2; // start with five pages, double each time
+      const stepSize = stateFromStorage('perPage', 10) * 1; // start with five pages, double each time
       refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked, nRecords, stepSize);
       // statusDispatch(NOT_LOADING);
     });
@@ -178,14 +178,14 @@ export const Appearances = (props) => {
             const art = item['articulatedTx'];
             return art.name === 'transfer' || art.name === 'approve' || art.name === 'transferFrom';
           case 'Reconciled':
-            if (!item['statement'] || !item.statement['reconciled']) return false;
-            return item.statement['reconcilationType'] === '';
+            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
+            return item.statements[0]['reconciliationType'] === '';
           case 'Partial':
-            if (!item['statement'] || !item.statement['reconciled']) return false;
-            return item.statement['reconcilationType'].includes('partial');
+            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
+            return item.statements[0]['reconciliationType'].includes('partial');
           case 'Unreconciled':
-            if (!item['statement'] || !item.statement['reconciled']) return false;
-            return !item.statement['reconciled'];
+            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
+            return !item.statements[0]['reconciled'];
           case 'Balances':
           case 'Neighbors':
           case 'Functions':
@@ -368,20 +368,22 @@ function getFieldValue(record, fieldName) {
       break;
   }
 
-  if (fieldName && fieldName.includes('statement.')) {
-    let fn = fieldName.replace('statement.', '');
-    if (fn === 'begBalDiff' && record && record.statement && record.statement[fn] === 0) return '';
-    if (fn === 'endBalDiff' && record && record.statement && record.statement[fn] === 0) return '';
-    if (record && record.statement && fn === 'reconciled')
+  if (fieldName && fieldName.includes('statements.')) {
+    let fn = fieldName.replace('statements.', '');
+    if (fn === 'begBalDiff' && record && record.statements && record.statements[0] && record.statements[0][fn] === 0)
+      return '';
+    if (fn === 'endBalDiff' && record && record.statements && record.statements[0] && record.statements[0][fn] === 0)
+      return '';
+    if (record && record.statements && record.statements[0] && fn === 'reconciled')
       return getIcon(
         'reconciled',
-        record.statement[fn]
-          ? record.statement['reconcilationType'] === ''
+        record.statements[0][fn]
+          ? record.statements[0]['reconciliationType'] === ''
             ? 'CheckCircle'
             : 'CheckCircleYellow'
           : 'XCircle'
       );
-    if (record && record.statement) return record.statement[fn];
+    if (record && record.statements && record.statements[0]) return record.statements[0][fn];
   }
 
   const internal = record.from !== g_focusValue && record.to !== g_focusValue;
@@ -590,7 +592,7 @@ export const appearancesSchema = [
   },
   {
     name: 'Asset',
-    selector: 'statement.asset',
+    selector: 'statements.asset',
     type: 'string',
     width: 2,
     align: 'center',
@@ -599,16 +601,16 @@ export const appearancesSchema = [
   },
   {
     name: 'Beg',
-    selector: 'statement.begBal',
+    selector: 'statements.begBal',
     type: 'value',
     width: 2,
     detail: true,
-    underField: 'statement.begBalDiff',
+    underField: 'statements.begBalDiff',
     onDisplay: getFieldValue,
   },
   {
     name: 'Beg Diff',
-    selector: 'statement.begBalDiff',
+    selector: 'statements.begBalDiff',
     type: 'value',
     hidden: true,
     width: 2,
@@ -617,7 +619,7 @@ export const appearancesSchema = [
   },
   {
     name: 'Income',
-    selector: 'statement.inflow',
+    selector: 'statements.inflow',
     type: 'value',
     width: 2,
     detail: true,
@@ -625,7 +627,7 @@ export const appearancesSchema = [
   },
   {
     name: 'I-Income',
-    selector: 'statement.intInflow',
+    selector: 'statements.intInflow',
     type: 'value',
     width: 2,
     detail: true,
@@ -633,7 +635,7 @@ export const appearancesSchema = [
   },
   {
     name: 'S-Income',
-    selector: 'statement.suicideInflow',
+    selector: 'statements.suicideInflow',
     type: 'value',
     width: 2,
     detail: true,
@@ -641,7 +643,7 @@ export const appearancesSchema = [
   },
   {
     name: 'Spending',
-    selector: 'statement.outflow',
+    selector: 'statements.outflow',
     type: 'value',
     width: 2,
     detail: true,
@@ -649,7 +651,7 @@ export const appearancesSchema = [
   },
   {
     name: 'I-Spending',
-    selector: 'statement.intOutflow',
+    selector: 'statements.intOutflow',
     type: 'value',
     width: 2,
     detail: true,
@@ -657,7 +659,7 @@ export const appearancesSchema = [
   },
   {
     name: 'S-Spending',
-    selector: 'statement.suicideOutflow',
+    selector: 'statements.suicideOutflow',
     type: 'value',
     width: 2,
     detail: true,
@@ -665,7 +667,7 @@ export const appearancesSchema = [
   },
   {
     name: 'Gas Cost',
-    selector: 'statement.weiGasCost',
+    selector: 'statements.weiGasCost',
     type: 'value',
     width: 2,
     detail: true,
@@ -673,16 +675,16 @@ export const appearancesSchema = [
   },
   {
     name: 'Ending',
-    selector: 'statement.endBal',
+    selector: 'statements.endBal',
     type: 'value',
     width: 2,
     detail: true,
-    underField: 'statement.endBalDiff',
+    underField: 'statements.endBalDiff',
     onDisplay: getFieldValue,
   },
   {
     name: 'Calc',
-    selector: 'statement.endBalCalc',
+    selector: 'statements.endBalCalc',
     type: 'value',
     hidden: true,
     width: 2,
@@ -691,7 +693,7 @@ export const appearancesSchema = [
   },
   {
     name: 'End Diff',
-    selector: 'statement.endBalDiff',
+    selector: 'statements.endBalDiff',
     type: 'value',
     hidden: true,
     width: 2,
@@ -700,7 +702,7 @@ export const appearancesSchema = [
   },
   {
     name: 'Type',
-    selector: 'statement.reconcilationType',
+    selector: 'statements.reconciliationType',
     type: 'string',
     width: 2,
     detail: true,
@@ -708,7 +710,7 @@ export const appearancesSchema = [
   },
   {
     name: 'Okay',
-    selector: 'statement.reconciled',
+    selector: 'statements.reconciled',
     type: 'string',
     align: 'center',
     detail: true,
@@ -762,7 +764,6 @@ export const appearancesSchema = [
     selector: 'separator3',
     type: 'separator',
     hidden: true,
-    detail: true,
   },
   {
     name: 'Age',

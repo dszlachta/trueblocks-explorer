@@ -64,6 +64,7 @@ export const SidebarTable = ({
           parentHandler={sidebarHandler}
         />
       </div>
+      <div></div>
       <div className="st-right">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 5fr 1fr', alignItems: 'end' }}>
           <div></div>
