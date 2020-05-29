@@ -49,9 +49,9 @@ export const Appearances = (props) => {
 
   const dataUrl = 'http://localhost:8080/export';
 
-  const dataQuery = 'accounting&ether&addrs=' + addresses.value + '&verbose=7&articulate&write_txs&write_traces';
+  const dataQuery = 'accounting&ether&addrs=' + addresses.value;
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -143,7 +143,7 @@ export const Appearances = (props) => {
   );
 
   useEffect(() => {
-    const qqq = 'count&addrs=' + addresses.value + '&verbose=7' + (mocked ? '&mockData' : '');
+    const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
     getServerData(dataUrl, qqq).then((theData) => {
       let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
       const stepSize = stateFromStorage('perPage', 10) * 1; // start with five pages, double each time

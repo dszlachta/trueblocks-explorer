@@ -148,9 +148,12 @@ export const DataTable = ({
           });
           return row.join(asCSV ? ',' : '\t');
         });
+        const fieldNames = exportFields.map((column) => {
+          return column.name;
+        });
+        const output = fieldNames.join(asCSV ? ',' : '\t') + '\n' + download.join('\n');
         var hiddenElement = document.createElement('a');
-        hiddenElement.href =
-          'data:text/' + (asCSV ? 'csv' : 'text') + ';charset=utf-8,' + encodeURI(download.join('\n'));
+        hiddenElement.href = 'data:text/' + (asCSV ? 'csv' : 'text') + ';charset=utf-8,' + encodeURI(output);
         hiddenElement.target = '_blank';
         hiddenElement.download = 'download.' + (asCSV ? 'csv' : 'txt');
         hiddenElement.click();
