@@ -17,8 +17,9 @@
     "electron-dev": "ELECTRON_UI_URL=http://localhost:3002 electron electron/main.js",
     "electron-app-dev": "nf start",
     "package": "electron-forge package",
+    "premake": "yarn build",
     "make": "electron-forge make",
-    "make-mac": "electron-forge make --platform mas"
+    "make-mac": "yarn make --platform mas"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -73,7 +74,8 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "icon": "electron/icon"
+        "icon": "electron/icon",
+        "name": "TrueBlocks Explorer"
       },
       "makers": [
         {

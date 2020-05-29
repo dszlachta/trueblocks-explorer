@@ -143,7 +143,9 @@ export const currentPage = () => {
   const electronIndexLoaded = [/^file:\/\//, /index.html/]
         .every((regexp) => regexp.test(window.location));
 
-  if (electronIndexLoaded) return { page: 'dashboard', subpage: '', params: {} };
+  if (electronIndexLoaded) {
+    return { page: 'dashboard', subpage: '', params: {} };
+  }
 
   const parts = window.location.pathname.split('/');
   const query = window.location.search.substr(1).split('&');
