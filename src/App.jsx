@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import { Redirect } from 'react-router-dom';
 import Mousetrap from 'mousetrap';
 
 import { PageHeader, PageFooter, PageContent } from 'page-parts';
@@ -85,6 +86,16 @@ function App() {
   };
 
   mapHotKeys(panelDispatch);
+
+  const insideElectron = /electron/i.test(navigator.userAgent);
+  const electronIndexLoaded = [/^file:\/\//, /index.html/]
+        .every((regexp) => regexp.test(window.location));
+
+  if (insideElectron && electronIndexLoaded) {
+    return (
+      <Redirect to="/dashboard" />
+    );
+  }
 
   return (
     <GlobalContext.Provider value={theGlobalState}>

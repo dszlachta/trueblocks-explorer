@@ -6,7 +6,7 @@
 const net = require('net');
 const exec = require('child_process').exec;
 
-const foremanPortOffset = 100;
+const foremanPortOffset = 300;
 const port = process.env.PORT ? (process.env.PORT - foremanPortOffset) : 3000;
 const client = new net.Socket();
 
@@ -25,7 +25,9 @@ const tryConnection = () => client.connect({port: port}, () => {
 });
 
 client.on('error', (error) => {
-  watchTimeoutId = setTimeout(tryConnection, 1000);
+    console.warn(error);
+    watchTimeoutId = setTimeout(tryConnection, 1000);
+    //throw new Error(error);
 });
 
 tryConnection();
