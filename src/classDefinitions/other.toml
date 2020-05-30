@@ -1,0 +1,14 @@
+[settings]
+class = "COther"
+recordIcons = "editing"
+defaultSort = "blockNumber,name,date"
+dataUrl = "http://localhost:8080/when"
+dataQuery = "verbose=10&list"
+
+[[subpages]]
+list = [
+    { page = "other", subpage = "", },
+    { page = "other", subpage = "Your Blocks", route = "yours", },
+    { page = "other", subpage = "Known Blocks", route = "known", },
+    { page = "other", subpage = "Dated Blocks", route = "dated", },
+]

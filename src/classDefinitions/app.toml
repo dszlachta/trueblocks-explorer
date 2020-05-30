@@ -1,0 +1,17 @@
+[settings]
+pages = "dashboard|separator|\
+    collections|monitors|tags|explorer|separator|\
+    names|signatures|digests|caches|other|separator|\
+    settings|support"
+
+schemas = "menu|dashboard|collections|monitors|monitors-viewtxs|\
+    explorer|\
+    explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|\
+    explorer-traces|explorer-traceActions|explorer-traceResults|\
+    explorer-functions|explorer-parameters|explorer-abis|\
+    explorer-appearances|explorer-pricequotes|explorer-pricesources|\
+    names|tags|signatures|digests|\
+    caches|other|settings-schemas|settings-systems"
+
+from_source = "collections|monitors|tags|names|signatures|caches|other|\
+    explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|explorer-traces"

@@ -1,0 +1,11 @@
+name          ,selector     ,type         ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,domain ,range ,searchable ,sortable ,onDisplay ,onAccept ,onValidate
+ABIs          ,abis         ,CAbi         ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Blocks        ,blocks       ,CBlock       ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Functions     ,functions    ,CFunction    ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Logs          ,logs         ,CLogEntry    ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Parameters    ,parameters   ,CParameter   ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Receipts      ,receipts     ,CReceipt     ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Trace Actions ,traceActions ,CTraceAction ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Trace Results ,traceResults ,CTraceResult ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Traces        ,traces       ,CTrace       ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,
+Transactions  ,transactions ,CTransaction ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,          ,         ,

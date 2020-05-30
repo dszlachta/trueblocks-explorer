@@ -1,0 +1,24 @@
+/* needed for pills testing */
+.function {
+  background-color: blueviolet;
+  color: antiquewhite;
+}
+.event {
+  background-color: tomato;
+  color: yellow;
+}
+.constructor {
+  background-color: orange;
+  color: black;
+}
+.fallback {
+  background-color: teal;
+  color: white;
+}
+/* needed for pills testing */
+
+.skins {
+  display: flex;
+  flex-wrap: wrap;
+  justify-items: center;
+}

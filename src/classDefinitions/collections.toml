@@ -1,0 +1,11 @@
+[settings]
+class = "CCollections"
+recordIcons =  "editing,exporting"
+defaultSort = "tags,name,client"
+dataUrl = "http://localhost:8080/names"
+dataQuery = "verbose=10&collections"
+
+[[subpages]]
+list = [
+    { page = "collections", subpage = "" },
+]

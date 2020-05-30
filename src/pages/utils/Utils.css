@@ -1,0 +1,12 @@
+.menu-icon {
+  padding-right: 6px;
+}
+
+.menu-icon-padded {
+  padding-left: 6px;
+  align-self: center;
+}
+
+.clickable-icon {
+  display: inline;
+}

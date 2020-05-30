@@ -1,0 +1,20 @@
+{
+  "name": "trueblocks-api",
+  "version": "0.6.2-alpha",
+  "description": "**TrueBlocks** enhances your locally-running or remote Ethereum node by providing easy access and local caching to the **blocks**, **transactions**, **receipts**, **logs**, **traces**, **abis**, **names**, **transaction histories*, and **prices**. An Ethereum RPC endpoint, such as Infura, QuickNodes, or (our preference) your own node, is required.  The primary focus of **TrueBlocks** is delivering complete, fully-detailed, audit-quality historical lists of transactions for individual or groups of Ethereum addresses in a 100% decentralized manner. It is decentralized from first principals making it possible to run locally, while permitting (if desired) running the code on a cloud server. If you run the code locally, any data available from the node is presented to your application directly, without the intervention of any third party (including us!). Some portions of the data, such as USD prices and abi definitions, are provided from immutable data stores with an optional mechanism to participate in community-wide sharing of that data. ## Installation / Tutorials / Examples Instructions for installing the package, examples of its usage, and tutorials are available here.",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm install",
+    "start": "node index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "oas3-tools": "^2.0.2"
+  }
+}

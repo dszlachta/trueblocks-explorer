@@ -1,0 +1,7 @@
+[settings]
+class = "CDashboard"
+
+[[subpages]]
+list = [
+    { page = "dashboard", subpage = "", route = "" },
+]

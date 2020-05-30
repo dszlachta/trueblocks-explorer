@@ -1,0 +1,17 @@
+[settings]
+class = "CSignatures"
+recordIcons = "editing,exporting"
+defaultSort = "encoding,type,name"
+dataUrl = "http://localhost:8080/abi"
+dataQuery = "verbose=10&monitored&known"
+
+[[subpages]]
+list = [
+    { page = "signatures", subpage = "" },
+    { page = "signatures", subpage = "Known" },
+    { page = "signatures", subpage = "Monitored" },
+    { page = "signatures", subpage = "Separator" },
+    { page = "signatures", subpage = "Names" },
+    { page = "signatures", subpage = "Params" },
+    { page = "signatures", subpage = "Cross" },
+]

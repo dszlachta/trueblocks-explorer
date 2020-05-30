@@ -1,0 +1,29 @@
+.editable {
+  overflow: hidden;
+}
+
+.editable_text {
+  padding: inherit;
+  outline: none;
+  cursor: pointer;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.editable_input {
+  padding: inherit;
+  outline: none;
+  margin-top: -2px;
+  margin-left: -2px;
+  background-color: lightyellow;
+  height: 2.5em;
+  width: 98%;
+}
+
+.hidden {
+  display: none;
+}
+
+.prompt {
+}

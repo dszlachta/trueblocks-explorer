@@ -1,0 +1,114 @@
+import React from 'react';
+
+import './SettingsSkins.css';
+
+import { Card, PanelTable, ChartTable, DataTable, GridTable, ObjectTable } from 'components';
+
+export const SettingsSkins = () => {
+  const testData = [
+    {
+      name: 'operatorBurn operatorBurn operatorBurn operatorBurn operatorBurn operatorBurn',
+      type: 'function',
+      isReady: 'warning',
+    },
+    {
+      name: 'row2',
+      type: 'row2',
+      isReady: 'value',
+    },
+    {
+      name: 'row3',
+      type: 'row3',
+      isReady: 'okay',
+    },
+    {
+      name: 'row4',
+      type: 'row4',
+      isReady: 'warning',
+    },
+    {
+      name: 'row5',
+      type: 'row5',
+      isReady: 'okay',
+    },
+  ];
+  const oneTest = testData[0];
+  const fields = [
+    {
+      name: 'ID',
+      selector: 'id',
+      hidden: true,
+      onDisplay: (record, fieldName) => {
+        return record.name;
+      },
+    },
+    {
+      name: 'Name',
+      type: 'uint64',
+      selector: 'name',
+      editable: true,
+      range: true,
+      domain: true,
+    },
+    {
+      name: 'Type',
+      selector: 'type',
+      type: 'string',
+      align: 'center',
+      range: true,
+      domain: true,
+    },
+    {
+      name: 'Ready',
+      selector: 'isReady',
+      type: 'string',
+      isPill: true,
+      align: 'center',
+      range: true,
+      domain: true,
+    },
+  ];
+  const style = {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr 1fr',
+    gridGap: '10px',
+    justifyItems: 'stretch',
+  };
+
+  return (
+    <div style={{ width: '1200px' }}>
+      <div style={style}>
+        <Present>
+          <Card title="Card" headerLink={null} headerClass="card-center">
+            <ObjectTable data={oneTest} columns={fields} />
+          </Card>
+        </Present>
+        <Present>
+          <PanelTable data={oneTest} columns={fields} />
+        </Present>
+        <Present>
+          <ObjectTable data={oneTest} columns={fields} />
+        </Present>
+      </div>
+      <Present>
+        <DataTable name={'testTable'} data={testData} columns={fields} title="" />
+      </Present>
+      <Present>
+        <GridTable data={testData} columns={fields} rowSpan={1e5} />
+      </Present>
+      <Present>
+        <ChartTable
+          data={testData}
+          chartName="skins"
+          columns={fields}
+          pagination={true}
+          chartCtx={{ defPair: ['type', 'isReady'] }}
+        />
+      </Present>
+    </div>
+  );
+};
+
+const Present = ({ children }) => {
+  return <div style={{ border: '1px dashed black', padding: '30px', marginTop: '10px' }}>{children}</div>;
+};

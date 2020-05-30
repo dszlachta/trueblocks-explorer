@@ -1,0 +1,11 @@
+[settings]
+class = "CTags"
+recordIcons = "editing"
+defaultSort = "tags,subtags1,subtags2"
+dataUrl = "http://localhost:8080/names"
+dataQuery = "verbose=10&tags"
+
+[[subpages]]
+list = [
+    { page = "tags", subpage = "" },
+]
