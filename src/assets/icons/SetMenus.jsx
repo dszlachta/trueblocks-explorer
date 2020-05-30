@@ -1,5 +1,6 @@
 import Dashboard from './Dashboard';
 import Collections from './Collections';
+import InteractWith from './InteractWith';
 import Monitors from './Monitors';
 import Explorer from './Explorer';
 import Names from './Names';
@@ -14,6 +15,7 @@ import Support from './Support';
 export {
   Dashboard,
   Collections,
+  InteractWith,
   Monitors,
   Explorer,
   Names,

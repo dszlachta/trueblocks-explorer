@@ -352,9 +352,17 @@ const DataTableRows = ({
               {columns.map((column, colIndex) => {
                 // ...for each column
                 const colKey = rowKey + '_' + colIndex;
-                if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) return null;
                 let type = column.type ? column.type : 'string';
+
                 let rawValue = record[column.selector];
+                if (
+                  (column.hide_empty && rawValue === '') ||
+                  (column.hidden && !showHidden) ||
+                  (column.type === 'icons' && rowIcons.length > 0)
+                ) {
+                  return null;
+                }
+
                 let value = calcValue(record, column);
                 value = formatFieldByType(type, value, column.decimals);
                 let found = {};

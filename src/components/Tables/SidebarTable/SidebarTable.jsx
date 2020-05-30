@@ -41,13 +41,28 @@ export const SidebarTable = ({
         setShowHidden(!showHidden);
         localStorage.setItem('sideTableDetail', showHidden ? 0 : 1);
         break;
+      case 'interact':
+        alert('Interact with the contract ' + JSON.stringify(action.payload));
+        break;
       default:
         if (parentHandler) parentHandler(action);
         break;
     }
   };
 
+  function imageExists(image_url) {
+    var http = new XMLHttpRequest();
+    http.open('HEAD', image_url, false);
+    http.send();
+    return http.status !== 404;
+  }
+
+  let imageUrl = 'http://localhost:3002/assets/icons/' + selectedRow.to + '.png';
+  const exists = imageExists(imageUrl);
+  imageUrl = exists ? imageUrl : 'http://localhost:3002/assets/icons/blank.png';
+  let interact = exists ? getIcon('y', 'interactwith', true, true, 24) : <></>;
   const detailIcon = getIcon('x', showHidden ? 'toggleright' : 'toggleleft', true, true, 24);
+
   return (
     <div className="sidebar-table">
       <div className="st-left">
@@ -67,7 +82,12 @@ export const SidebarTable = ({
       <div></div>
       <div className="st-right">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 5fr 1fr', alignItems: 'end' }}>
-          <div></div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img height="50" alt={selectedRow.to} src={imageUrl} />
+            <div onClick={(e) => handleClick(e, sidebarHandler, { type: 'interact', payload: selectedRow['toName'] })}>
+              {interact}
+            </div>
+          </div>
           <div className="at-title" style={{ textAlign: 'center' }}>
             Transaction Detail
           </div>

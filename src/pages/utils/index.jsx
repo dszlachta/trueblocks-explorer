@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Dashboard,
   Collections,
+  InteractWith,
   Monitors,
   Explorer,
   Names,
@@ -46,6 +47,8 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
       return <Collections key={key} size={size} className={cn} />;
     case 'monitors':
       return <Monitors key={key} size={size} className={cn} />;
+    case 'interactwith':
+      return <InteractWith key={key} size={size} className={cn} />;
     case 'explorer':
       return <Explorer key={key} size={size} className={cn} />;
     case 'names':

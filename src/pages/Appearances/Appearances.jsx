@@ -7,7 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { ObjectTable, PageCaddie } from 'components';
+import { ObjectTable, ChartTable, PageCaddie } from 'components';
 import { getServerData, sortArray, handleClick } from 'components/utils';
 import { navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -173,6 +173,28 @@ export const Appearances = (props) => {
               (item['toName'] && item['toName'].name.includes('Gitcoin')) ||
               (item['fromName'] && item['fromName'].name.includes('Gitcoin'))
             );
+          case 'Eth':
+            if (!item['statements']) return false;
+            const statements = item['statements'][0];
+            if (statements.inflow !== '') return true;
+            if (statements.intInflow !== '') return true;
+            if (statements.suicideInflow !== '') return true;
+            if (statements.outflow !== '') return true;
+            if (statements.intOutflow !== '') return true;
+            if (statements.suicideOutflow !== '') return true;
+            if (statements.weiGasCost !== '') return true;
+            return false
+          case 'Not Eth':
+            if (!item['statements']) return false;
+            const statements1 = item['statements'][0];
+            if (statements1.inflow !== '') return false;
+            if (statements1.intInflow !== '') return false;
+            if (statements1.suicideInflow !== '') return false;
+            if (statements1.outflow !== '') return false;
+            if (statements1.intOutflow !== '') return false;
+            if (statements1.suicideOutflow !== '') return false;
+            if (statements1.weiGasCost !== '') return false;
+            return true;
           case 'Tokens':
             if (!item['articulatedTx']) return false;
             const art = item['articulatedTx'];
@@ -186,11 +208,11 @@ export const Appearances = (props) => {
           case 'Unreconciled':
             if (!item['statements'] || !item.statements[0]['reconciled']) return false;
             return !item.statements[0]['reconciled'];
-          case 'Balances':
           case 'Neighbors':
           case 'Functions':
           case 'Events':
             return false;
+          case 'Balances':
           case 'All':
           default:
             return true;
@@ -242,7 +264,7 @@ export const Appearances = (props) => {
 //----------------------------------------------------------------------
 const getTagList = (appearances) => {
   // prettier-ignore
-  let tagList = ['Tokens', 'Grants', 'Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
+  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
   tagList.unshift('|');
   tagList.unshift('All');
   tagList.push('|');
@@ -259,6 +281,18 @@ const getInnerTable = (appearances, curTag, filtered, title, searchFields, recor
       <Fragment>
         <ObjectTable data={appearances.meta} columns={metaSchema} />
       </Fragment>
+    );
+  } else if (curTag === 'Balances') {
+    return (
+      <ChartTable
+        columns={appearancesSchema}
+        data={filtered}
+        title=""
+        search={false}
+        chartName="appearances"
+        chartCtx={{ type: 'line', defPair: ['blockNumber', 'statements.endBal'] }}
+        pagination={true}
+      />
     );
   }
   // EXISTING_CODE
@@ -286,7 +320,7 @@ const recordIconList = [
   //
 ];
 const defaultSort = ['blockNumber', 'transactionIndex'];
-const defaultSearch = ['blockNumber', 'transactionIndex'];
+const defaultSearch = ['blockNumber', 'transactionIndex', 'fromName', 'toName'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
@@ -434,9 +468,19 @@ function getFieldValue(record, fieldName) {
           {getIcon(record.to, 'AddName', false, false, 12)}
         </div>
       );
+    case 'creations':
+      if (!record['receipt']) return null;
+      if (!record.receipt['contractAddress']) return null;
+      return record.receipt.contractAddress;
     case 'compressedTx':
       if (!record['compressedTx']) return null;
       if (record['compressedTx'] === '0x ( )') return <div key={'xxx'}>{<b>{'0x'}</b>}</div>;
+      if (record['compressedTx'].substr(0, 8) === 'message:')
+        return (
+          <div key={'xxx'}>
+            <b>{record['compressedTx'].replace('message:', '')}</b>
+          </div>
+        );
       let arr = record.compressedTx.replace(')', '').replace('(', ',').split(',');
       return (
         <div>
@@ -526,6 +570,7 @@ export const appearancesSchema = [
     width: 3,
     underField: 'marker',
     onDisplay: getFieldValue,
+    range: true,
   },
   {
     name: 'Marker',
@@ -544,6 +589,7 @@ export const appearancesSchema = [
     searchable: true,
     underField: 'fromName',
     onDisplay: getFieldValue,
+    range: true,
   },
   {
     name: 'fromName',
@@ -561,6 +607,7 @@ export const appearancesSchema = [
     searchable: true,
     underField: 'toName',
     onDisplay: getFieldValue,
+    range: true,
   },
   {
     name: 'toName',
@@ -571,10 +618,18 @@ export const appearancesSchema = [
     onDisplay: getFieldValue,
   },
   {
+    name: 'toSymbol',
+    selector: 'toSymbol',
+    type: 'string',
+    searchable: true,
+    hide_empty: true,
+  },
+  {
     name: 'Value',
     selector: 'value',
     type: 'wei',
     hidden: true,
+    domain: true,
   },
   {
     name: 'Ether',
@@ -582,6 +637,7 @@ export const appearancesSchema = [
     type: 'blknum',
     hidden: true,
     width: 2,
+    domain: true,
   },
   {
     name: 'Sep1',
@@ -672,6 +728,7 @@ export const appearancesSchema = [
     width: 2,
     detail: true,
     onDisplay: getFieldValue,
+    domain: true,
   },
   {
     name: 'Ending',
@@ -679,8 +736,8 @@ export const appearancesSchema = [
     type: 'value',
     width: 2,
     detail: true,
-    underField: 'statements.endBalDiff',
     onDisplay: getFieldValue,
+    domain: true,
   },
   {
     name: 'Calc',
@@ -729,6 +786,7 @@ export const appearancesSchema = [
     type: 'gas',
     hidden: true,
     width: 2,
+    domain: true,
   },
   {
     name: 'Gas Price',
@@ -754,6 +812,14 @@ export const appearancesSchema = [
   {
     name: 'Compressed',
     selector: 'compressedTx',
+    type: 'string',
+    hidden: true,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Creations',
+    selector: 'creations',
     type: 'string',
     hidden: true,
     detail: true,
@@ -821,6 +887,7 @@ export const appearancesSchema = [
     selector: 'timestamp',
     type: 'timestamp',
     hidden: true,
+    range: true,
   },
   {
     name: 'Hash',
