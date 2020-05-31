@@ -7,7 +7,12 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { ObjectTable, ChartTable, PageCaddie } from 'components';
+import {
+  ObjectTable,
+  ChartTable,
+  PageCaddie,
+  ProgressBar
+} from 'components';
 import { getServerData, sortArray, handleClick } from 'components/utils';
 import { navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -240,6 +245,7 @@ export const Appearances = (props) => {
   const table = getInnerTable(appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler);
   return (
     <div>
+      <ProgressBar id="export" />
       {/* prettier-ignore */}
       <PageCaddie
         caddieName="Tags"
