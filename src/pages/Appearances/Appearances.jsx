@@ -466,7 +466,6 @@ function getFieldValue(record, fieldName) {
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'fromName':
-      return (record && record.statements && record.statements.length) ? record.statements[0]['reconciled'] ? 'is' : 'isnt' : "EMPTY";
       return record.fromName ? (
         record.from
       ) : (
