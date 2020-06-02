@@ -16,7 +16,6 @@ export const ObjectTable = ({
   pagination = false,
   paginationParts = '',
   showHidden = false,
-  showDetail = false,
   handler = null,
   cn = null,
   tight = '',
@@ -52,8 +51,7 @@ export const ObjectTable = ({
           if (column.hide_empty && rawValue === '') return null;
 
           let showing = (!column.hidden || showHidden) && value !== '';
-          let detail = column.detail && showDetail;
-          if (!detail && !showing) return null;
+          if (!column.detail && !showing) return null;
 
           const fieldName = column.selector; //column.name || column.selector;
           const fieldType = column.type || 'string';

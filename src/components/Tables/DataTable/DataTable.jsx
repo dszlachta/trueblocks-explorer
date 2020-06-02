@@ -140,7 +140,7 @@ export const DataTable = ({
       case 'download':
         const asCSV = action.fmt === 'CSV';
         const exportFields = columns.filter((column) => {
-          return column.selector === 'compressedTx' || !column.hidden;
+          return (column.selector === 'compressedTx' || !column.hidden) && column.selector !== 'statements.reconciled';
         });
         const download = filteredData.map((record, index) => {
           const row = exportFields.map((column) => {
