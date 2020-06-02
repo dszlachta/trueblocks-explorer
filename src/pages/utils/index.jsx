@@ -23,6 +23,7 @@ import {
   Delete,
   Undelete,
   Remove,
+  InternalLink,
   ExternalLink,
   AddMonitor,
   AddName,
@@ -95,6 +96,8 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
       return <Undelete key={key} size={size} className={cn} />;
     case 'remove':
       return <Remove key={key} size={size} className={cn} />;
+    case 'internallink':
+      return <InternalLink key={key} size={size} className={cn} />;
     case 'externallink':
       return <ExternalLink key={key} size={size} className={cn} />;
     case 'greenlight':

@@ -3,7 +3,7 @@ import { search as theSearch } from 'ss-search';
 
 import { Tablebar, IconTray, Copyable } from 'components';
 import { createClass } from 'components/utils';
-import { calcValue, getPrimaryKey, getAltIconKey } from 'store';
+import { calcValue, exportValue, getPrimaryKey, getAltIconKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
 import { hasFields } from './utils';
 
@@ -142,9 +142,9 @@ export const DataTable = ({
         const exportFields = columns.filter((column) => {
           return column.selector === 'compressedTx' || !column.hidden;
         });
-        const download = data.map((record, index) => {
+        const download = filteredData.map((record, index) => {
           const row = exportFields.map((column) => {
-            return calcValue(record, column);
+            return exportValue(record, column);
           });
           return row.join(asCSV ? ',' : '\t');
         });
@@ -355,11 +355,7 @@ const DataTableRows = ({
                 let type = column.type ? column.type : 'string';
 
                 let rawValue = record[column.selector];
-                if (
-                  (column.hide_empty && rawValue === '') ||
-                  (column.hidden && !showHidden) ||
-                  (column.type === 'icons' && rowIcons.length > 0)
-                ) {
+                if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) {
                   return null;
                 }
 
@@ -418,8 +414,10 @@ const DataTableRows = ({
                     )}
                     <Copyable
                       display={value}
-                      copyable={column.type === 'address' || column.type.includes('hash') ? rawValue : null}
-                      viewable={column.type === 'address' ? rawValue : null}
+                      copyable={
+                        column.type && (column.type === 'address' || column.type.includes('hash')) ? rawValue : null
+                      }
+                      viewable={column.type && column.type === 'address' ? rawValue : null}
                       handler={handler}
                     />
                     {underField && <div>{underField}</div>}

@@ -446,8 +446,14 @@ export const monitorsSchema = [
     width: 2,
   },
   {
-    name: 'File Size',
+    name: 'Mon Cache',
     selector: 'sizeInBytes',
+    type: 'filesize',
+    width: 2,
+  },
+  {
+    name: 'Tx Cache',
+    selector: 'sizeInBytes2',
     type: 'filesize',
     width: 2,
   },

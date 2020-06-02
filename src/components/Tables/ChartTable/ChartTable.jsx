@@ -113,11 +113,36 @@ function ChartChart({ data, columns, chartCtx }) {
     case 'line':
       return <LineChart data={data} columns={columns} chartCtx={chartCtx} />;
     case 'bar':
-      return 'BAR';
+      return <BarChart data={data} columns={columns} chartCtx={chartCtx} />;
     default:
       return 'Unknown chart type ' + chartCtx.type;
   }
 }
+
+//-----------------------------------------------------------------
+const ScatterChart = ({ data, columns, chartCtx }) => {
+  const circles = data.map((d, i) => (
+    <circle
+      key={i}
+      r={chartCtx.radius || 2}
+      cx={chartCtx.xScale(calcValue(d, chartCtx.rangeCol))}
+      cy={chartCtx.yScale(calcValue(d, chartCtx.domainCol))}
+      style={{ fill: 'steelblue' }}
+    />
+  ));
+
+  return (
+    <div className="at-row chart">
+      <svg width={w} height={h}>
+        <g transform={`translate(${margin.left},${margin.top})`}>
+          <YAxis chartCtx={chartCtx} />
+          <XAxis chartCtx={chartCtx} />
+          {circles}
+        </g>
+      </svg>
+    </div>
+  );
+};
 
 //-----------------------------------------------------------------
 const LineChart = ({ data, columns, chartCtx }) => {
@@ -145,7 +170,7 @@ const LineChart = ({ data, columns, chartCtx }) => {
 };
 
 //-----------------------------------------------------------------
-const ScatterChart = ({ data, columns, chartCtx }) => {
+const BarChart = ({ data, columns, chartCtx }) => {
   const circles = data.map((d, i) => (
     <circle
       key={i}
@@ -320,15 +345,15 @@ const ChartControls = ({ data, columns, chartCtx }) => {
       <br />
       <h4>Range: </h4>
       {columns.map((column, index) => {
-        if (!column.range) return '';
-        return getButton('range', column);
+        if (column.chart === 'range' || column.chart === 'both') return getButton('range', column);
+        return '';
       })}
       <br />
       <br />
       <h4>Domain: </h4>
       {columns.map((column, index) => {
-        if (!column.domain) return '';
-        return getButton('domain', column);
+        if (column.chart === 'domain' || column.chart === 'both') return getButton('domain', column);
+        return '';
       })}
       {'* - functional columns'}
       <br />

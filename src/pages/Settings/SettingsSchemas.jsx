@@ -351,6 +351,20 @@ export const schemasSchema = [
     align: 'center',
   },
   {
+    name: 'Detail',
+    selector: 'detail',
+    type: 'bool',
+    isPill: true,
+    align: 'center',
+  },
+  {
+    name: 'HideEmpty',
+    selector: 'hide_empty',
+    type: 'bool',
+    isPill: true,
+    align: 'center',
+  },
+  {
     name: 'isPill',
     selector: 'isPill',
     type: 'bool',
@@ -358,15 +372,8 @@ export const schemasSchema = [
     align: 'center',
   },
   {
-    name: 'Domain',
-    selector: 'domain',
-    type: 'bool',
-    isPill: true,
-    align: 'center',
-  },
-  {
-    name: 'Range',
-    selector: 'range',
+    name: 'Export',
+    selector: 'export',
     type: 'bool',
     isPill: true,
     align: 'center',
@@ -376,6 +383,12 @@ export const schemasSchema = [
     selector: 'sortable',
     type: 'bool',
     isPill: true,
+    align: 'center',
+  },
+  {
+    name: 'Chart',
+    selector: 'chart',
+    type: 'string',
     align: 'center',
   },
   {

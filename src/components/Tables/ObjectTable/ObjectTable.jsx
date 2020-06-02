@@ -49,6 +49,7 @@ export const ObjectTable = ({
         {columns.map((column, index) => {
           const value = calcValue(data, column);
           const rawValue = data && data[column.selector];
+          if (column.hide_empty && rawValue === '') return null;
 
           let showing = (!column.hidden || showHidden) && value !== '';
           let detail = column.detail && showDetail;

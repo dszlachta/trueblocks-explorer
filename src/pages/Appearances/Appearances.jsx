@@ -12,7 +12,7 @@ import { getServerData, sortArray, handleClick } from 'components/utils';
 import { navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus } from 'store/status_store';
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Appearances.css';
@@ -49,10 +49,11 @@ export const Appearances = (props) => {
 
   const dataUrl = 'http://localhost:8080/export';
 
-  const dataQuery = 'accounting&ether&addrs=' + addresses.value;
+  const dataQuery = 'addrs=' + addresses.value + '&accounting&ether';
   function addendum(record, record_id) {
-    let ret = '';
+    let ret = '&verbose=10';
     // EXISTING_CODE
+    ret = "";
     // EXISTING_CODE
     return ret;
   }
@@ -129,6 +130,10 @@ export const Appearances = (props) => {
           break;
         case 'row-changed':
           break;
+        case 'internallink':
+          if (record)
+            navigate('/explorer/transactions?transactions=' + record.hash, true);
+          break;
         case 'externallink':
           navigate('https://etherscan.io/tx/' + action.record_id, true);
           break;
@@ -144,11 +149,13 @@ export const Appearances = (props) => {
 
   useEffect(() => {
     const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
-    getServerData(dataUrl, qqq).then((theData) => {
+      statusDispatch(LOADING);
+      getServerData(dataUrl, qqq).then((theData) => {
       let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
-      const stepSize = stateFromStorage('perPage', 10) * 1; // start with five pages, double each time
-      refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked, nRecords, stepSize);
-      // statusDispatch(NOT_LOADING);
+      const max_records = stateFromStorage('perPage', 10) * 2; // start with five pages, double each time
+      dispatch({ type: 'clear_data' });
+      refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked, 0, max_records, nRecords);
+      statusDispatch(NOT_LOADING);
     });
   }, [dataQuery, dispatch]);
 
@@ -165,9 +172,12 @@ export const Appearances = (props) => {
       setTagList(getTagList(appearances));
       const result = appearances.data.filter((item) => {
         // EXISTING_CODE
+        const isAirdrop = (item['toName'] && item['toName'].name.includes('Airdrop')) || (item['fromName'] && item['fromName'].name.includes('Airdrop'))
         switch (curTag) {
-          case 'Airdrops':
-            return item['toName'] && item['toName'].name.includes('Airdrop');
+          case 'Hide Airdrops':
+            return !isAirdrop
+          case 'Show Airdrops':
+              return isAirdrop;
           case 'Grants':
             return (
               (item['toName'] && item['toName'].name.includes('Gitcoin')) ||
@@ -200,14 +210,17 @@ export const Appearances = (props) => {
             const art = item['articulatedTx'];
             return art.name === 'transfer' || art.name === 'approve' || art.name === 'transferFrom';
           case 'Reconciled':
-            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
-            return item.statements[0]['reconciliationType'] === '';
+            if (!item['statements']) return false;
+            if (item.statements.length === 0) return false;
+            return (item.statements[0]['reconciled'] && item.statements[0]['reconciliationType'] === '');
           case 'Partial':
-            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
-            return item.statements[0]['reconciliationType'].includes('partial');
+            if (!item['statements']) return false;
+            if (item.statements.length === 0) return false;
+            return (item.statements[0]['reconciled'] && item.statements[0]['reconciliationType'].includes('partial'));
           case 'Unreconciled':
-            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
-            return !item.statements[0]['reconciled'];
+            if (!item['statements']) return false;
+            if (item.statements.length === 0) return false;
+            return (!item.statements[0]['reconciled']);
           case 'Neighbors':
           case 'Functions':
           case 'Events':
@@ -264,7 +277,7 @@ export const Appearances = (props) => {
 //----------------------------------------------------------------------
 const getTagList = (appearances) => {
   // prettier-ignore
-  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
+  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
   tagList.unshift('|');
   tagList.unshift('All');
   tagList.push('|');
@@ -320,14 +333,14 @@ const recordIconList = [
   //
 ];
 const defaultSort = ['blockNumber', 'transactionIndex'];
-const defaultSearch = ['blockNumber', 'transactionIndex', 'fromName', 'toName'];
+const defaultSearch = ['blockNumber', 'hash', 'from', 'fromName', 'to', 'toName', 'encoding', 'compressedTx'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(url, query, dispatch, mocked, nRecords, stepSize) {
+export function refreshAppearancesData(url, query, dispatch, mocked, firstRecord, maxRecords, nRecords) {
   getServerData(
     url,
-    query + (mocked ? '&mockData' : '') + (stepSize !== -1 ? '&first_record=0&max_records=' + stepSize : '')
+    query + (mocked ? '&mockData' : '') + (maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
   ).then((theData) => {
     let appearances = theData.data;
     // EXISTING_CODE
@@ -348,7 +361,7 @@ export function refreshAppearancesData(url, query, dispatch, mocked, nRecords, s
     // EXISTING_CODE
     if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
-    if (stepSize < nRecords) refreshAppearancesData(url, query, dispatch, mocked, nRecords, stepSize * 2);
+    if (maxRecords < nRecords) refreshAppearancesData(url, query, dispatch, mocked, 0, maxRecords * 2, nRecords);
   });
 }
 
@@ -408,7 +421,7 @@ function getFieldValue(record, fieldName) {
       return '';
     if (fn === 'endBalDiff' && record && record.statements && record.statements[0] && record.statements[0][fn] === 0)
       return '';
-    if (record && record.statements && record.statements[0] && fn === 'reconciled')
+    if (fn === 'reconciled' && record && record.statements && record.statements[0])
       return getIcon(
         'reconciled',
         record.statements[0][fn]
@@ -416,6 +429,12 @@ function getFieldValue(record, fieldName) {
             ? 'CheckCircle'
             : 'CheckCircleYellow'
           : 'XCircle'
+      );
+    if (fn === 'totalin' && record && record.statements && record.statements[0])
+      return record.statements[0]['inflow'] + record.statements[0]['intInflow'] + record.statements[0]['suicideInflow'];
+    if (fn === 'totalout' && record && record.statements && record.statements[0])
+      return (
+        Number(record.statements[0]['outflow']) + Number(record.statements[0]['intOutflow']) + Number(record.statements[0]['suicideOutflow']) + Number(record.statements[0]['weiGasCost'])
       );
     if (record && record.statements && record.statements[0]) return record.statements[0][fn];
   }
@@ -447,6 +466,7 @@ function getFieldValue(record, fieldName) {
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'fromName':
+      return (record && record.statements && record.statements.length) ? record.statements[0]['reconciled'] ? 'is' : 'isnt' : "EMPTY";
       return record.fromName ? (
         record.from
       ) : (
@@ -474,7 +494,7 @@ function getFieldValue(record, fieldName) {
       return record.receipt.contractAddress;
     case 'compressedTx':
       if (!record['compressedTx']) return null;
-      if (record['compressedTx'] === '0x ( )') return <div key={'xxx'}>{<b>{'0x'}</b>}</div>;
+      if (record['compressedTx'] === '0x ( )') return <div key={'xxx'}>{<i>{'null'}</i>}</div>;
       if (record['compressedTx'].substr(0, 8) === 'message:')
         return (
           <div key={'xxx'}>
@@ -568,9 +588,9 @@ export const appearancesSchema = [
     selector: 'date',
     type: 'string',
     width: 3,
+    chart: 'range',
     underField: 'marker',
     onDisplay: getFieldValue,
-    range: true,
   },
   {
     name: 'Marker',
@@ -586,10 +606,10 @@ export const appearancesSchema = [
     selector: 'from',
     type: 'address',
     width: 5,
+    chart: 'range',
     searchable: true,
     underField: 'fromName',
     onDisplay: getFieldValue,
-    range: true,
   },
   {
     name: 'fromName',
@@ -604,10 +624,10 @@ export const appearancesSchema = [
     selector: 'to',
     type: 'address',
     width: 5,
+    chart: 'range',
     searchable: true,
     underField: 'toName',
     onDisplay: getFieldValue,
-    range: true,
   },
   {
     name: 'toName',
@@ -618,18 +638,11 @@ export const appearancesSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'toSymbol',
-    selector: 'toSymbol',
-    type: 'string',
-    searchable: true,
-    hide_empty: true,
-  },
-  {
     name: 'Value',
     selector: 'value',
     type: 'wei',
     hidden: true,
-    domain: true,
+    chart: 'domain',
   },
   {
     name: 'Ether',
@@ -637,7 +650,7 @@ export const appearancesSchema = [
     type: 'blknum',
     hidden: true,
     width: 2,
-    domain: true,
+    chart: 'domain',
   },
   {
     name: 'Sep1',
@@ -661,7 +674,6 @@ export const appearancesSchema = [
     type: 'value',
     width: 2,
     detail: true,
-    underField: 'statements.begBalDiff',
     onDisplay: getFieldValue,
   },
   {
@@ -670,6 +682,13 @@ export const appearancesSchema = [
     type: 'value',
     hidden: true,
     width: 2,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Total In',
+    selector: 'statements.totalin',
+    type: 'value',
+    width: 2,
     detail: true,
     onDisplay: getFieldValue,
   },
@@ -677,21 +696,29 @@ export const appearancesSchema = [
     name: 'Income',
     selector: 'statements.inflow',
     type: 'value',
+    hidden: true,
     width: 2,
-    detail: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'I-Income',
     selector: 'statements.intInflow',
     type: 'value',
+    hidden: true,
     width: 2,
-    detail: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'S-Income',
     selector: 'statements.suicideInflow',
+    type: 'value',
+    hidden: true,
+    width: 2,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Total Out',
+    selector: 'statements.totalout',
     type: 'value',
     width: 2,
     detail: true,
@@ -701,43 +728,43 @@ export const appearancesSchema = [
     name: 'Spending',
     selector: 'statements.outflow',
     type: 'value',
+    hidden: true,
     width: 2,
-    detail: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'I-Spending',
     selector: 'statements.intOutflow',
     type: 'value',
+    hidden: true,
     width: 2,
-    detail: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'S-Spending',
     selector: 'statements.suicideOutflow',
     type: 'value',
+    hidden: true,
     width: 2,
-    detail: true,
     onDisplay: getFieldValue,
   },
   {
     name: 'Gas Cost',
     selector: 'statements.weiGasCost',
     type: 'value',
+    hidden: true,
     width: 2,
-    detail: true,
+    chart: 'domain',
     onDisplay: getFieldValue,
-    domain: true,
   },
   {
     name: 'Ending',
     selector: 'statements.endBal',
     type: 'value',
     width: 2,
+    chart: 'domain',
     detail: true,
     onDisplay: getFieldValue,
-    domain: true,
   },
   {
     name: 'Calc',
@@ -745,7 +772,6 @@ export const appearancesSchema = [
     type: 'value',
     hidden: true,
     width: 2,
-    detail: true,
     onDisplay: getFieldValue,
   },
   {
@@ -754,7 +780,6 @@ export const appearancesSchema = [
     type: 'value',
     hidden: true,
     width: 2,
-    detail: true,
     onDisplay: getFieldValue,
   },
   {
@@ -762,7 +787,6 @@ export const appearancesSchema = [
     selector: 'statements.reconciliationType',
     type: 'string',
     width: 2,
-    detail: true,
     onDisplay: getFieldValue,
   },
   {
@@ -786,7 +810,7 @@ export const appearancesSchema = [
     type: 'gas',
     hidden: true,
     width: 2,
-    domain: true,
+    chart: 'domain',
   },
   {
     name: 'Gas Price',
@@ -810,8 +834,16 @@ export const appearancesSchema = [
     detail: true,
   },
   {
-    name: 'Compressed',
+    name: 'Compressed Tx',
     selector: 'compressedTx',
+    type: 'string',
+    hidden: true,
+    detail: true,
+    onDisplay: getFieldValue,
+  },
+  {
+    name: 'Compressed Logs',
+    selector: 'compressedLog',
     type: 'string',
     hidden: true,
     detail: true,
@@ -887,7 +919,7 @@ export const appearancesSchema = [
     selector: 'timestamp',
     type: 'timestamp',
     hidden: true,
-    range: true,
+    chart: 'range',
   },
   {
     name: 'Hash',

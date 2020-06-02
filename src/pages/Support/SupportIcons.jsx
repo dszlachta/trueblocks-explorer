@@ -4,6 +4,7 @@ import Add from 'assets/icons/Add';
 import AddMonitor from 'assets/icons/AddMonitor';
 import AddName from 'assets/icons/AddName';
 import BarChart from 'assets/icons/BarChart';
+import InternalLink from 'assets/icons/InternalLink';
 import ExternalLink from 'assets/icons/ExternalLink';
 import Check from 'assets/icons/Check';
 import CheckCircle from 'assets/icons/CheckCircle';
@@ -124,6 +125,7 @@ export const SupportIcons = () => {
       group: 'Other Icons',
       items: [
         { name: 'BarChart', component: <BarChart size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Internal', component: <InternalLink size={size} color={color} fill={fill} style={style} /> },
         { name: 'External', component: <ExternalLink size={size} color={color} fill={fill} style={style} /> },
         { name: 'GridIcon', component: <GridIcon size={size} color={color} fill={fill} style={style} /> },
         { name: 'Help', component: <HelpCircle size={size} color={color} fill={fill} style={style} /> },

@@ -1,4 +1,4 @@
-name         ,selector     ,type     ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,domain ,range ,searchable ,detail ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
+name         ,selector     ,type     ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,export ,chart ,searchable ,detail ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
 ID           ,id           ,string   ,true   ,1     ,         ,         ,       ,      ,   ,       ,      ,true       ,         ,         ,           ,getFieldValue ,         ,
 Cache Type   ,type         ,string   ,       ,1     ,         ,         ,       ,      ,   ,       ,      ,true       ,         ,         ,           ,              ,         ,
 Location     ,path         ,string   ,       ,2     ,         ,         ,       ,      ,   ,       ,      ,true       ,         ,         ,           ,              ,         ,

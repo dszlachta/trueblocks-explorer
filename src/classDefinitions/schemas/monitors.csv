@@ -1,4 +1,4 @@
-name        ,selector         ,type     ,hidden ,width ,editable ,decimals ,isPill ,align  ,cn ,domain ,range ,searchable ,detail ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
+name        ,selector         ,type     ,hidden ,width ,editable ,decimals ,isPill ,align  ,cn ,export ,chart ,searchable ,detail ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
 ID          ,id               ,string   ,true   ,1     ,         ,         ,       ,       ,   ,       ,      ,true       ,         ,         ,           ,getFieldValue ,         ,
 Tags        ,tags             ,string   ,       ,3     ,true     ,         ,       ,       ,   ,       ,      ,true       ,         ,         ,           ,              ,         ,
 Address     ,address          ,address  ,       ,6     ,         ,         ,       ,       ,   ,       ,      ,true       ,         ,         ,           ,              ,         ,
@@ -15,4 +15,5 @@ First Block ,firstAppearance  ,blknum   ,       ,2     ,         ,         ,    
 Last Block  ,latestAppearance ,blknum   ,       ,2     ,         ,         ,       ,       ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
 Path        ,path             ,string   ,true   ,2     ,         ,         ,       ,       ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
 File Size   ,sizeInBytes      ,filesize ,       ,2     ,         ,         ,       ,       ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
+File Size 2 ,sizeInBytes2     ,filesize ,       ,2     ,         ,         ,       ,       ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
 Deleted     ,deleted          ,bool     ,true   ,2     ,         ,         ,       ,       ,   ,       ,      ,           ,         ,         ,           ,              ,         ,

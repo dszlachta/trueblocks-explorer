@@ -28,7 +28,7 @@ export const ContentPanel = () => {
 
 //----------------------------------------------------------------------
 export const InnerContent = () => {
-  if (!useSystemCheck('api')) return <Settings />;
+  //if (!useSystemCheck('api')) return <Settings />;
 
   const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];

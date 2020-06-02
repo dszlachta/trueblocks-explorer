@@ -47,16 +47,14 @@ export const SettingsSkins = () => {
       type: 'uint64',
       selector: 'name',
       editable: true,
-      range: true,
-      domain: true,
+      chart: 'both',
     },
     {
       name: 'Type',
       selector: 'type',
       type: 'string',
       align: 'center',
-      range: true,
-      domain: true,
+      chart: 'both',
     },
     {
       name: 'Ready',
@@ -64,8 +62,7 @@ export const SettingsSkins = () => {
       type: 'string',
       isPill: true,
       align: 'center',
-      range: true,
-      domain: true,
+      chart: 'both',
     },
   ];
   const style = {
