@@ -12,7 +12,7 @@ import { getServerData, sortArray, handleClick } from 'components/utils';
 import { navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus } from 'store/status_store';
+import { useStatus, NOT_LOADING } from 'store/status_store';
 import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './Appearances.css';
