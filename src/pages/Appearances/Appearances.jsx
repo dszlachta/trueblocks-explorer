@@ -5,22 +5,18 @@
 import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext from 'store';
-
-import { ObjectTable, ChartTable, PageCaddie } from 'components';
-import { getServerData, sortArray, handleClick } from 'components/utils';
-import { navigate, replaceRecord, stateFromStorage } from 'components/utils';
-import { calcValue } from 'store';
-
+import GlobalContext, { calcValue } from 'store';
 import { useStatus } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+
+import { DataTable, ObjectTable, ChartTable, PageCaddie } from 'components';
+import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
+import { NameDialog } from 'dialogs';
 
 import './Appearances.css';
 
 // EXISTING_CODE
 import { currentPage } from 'components/utils';
 import { SidebarTable } from 'components';
-import { useNames } from 'pages/Names/Names';
 import { getIcon } from 'pages/utils';
 let g_focusValue = '';
 var g_Handler = null;
@@ -44,10 +40,8 @@ export const Appearances = (props) => {
   const { params } = currentPage();
   const addresses = params[0];
   const name = params.length > 1 ? params[1].value : '';
-  g_focusValue = addresses.value.toLowerCase();
+  g_focusValue = addresses.value && addresses.value.toLowerCase();
   // EXISTING_CODE
-
-  const dataUrl = 'http://localhost:8080/export';
 
   const dataQuery = 'addrs=' + addresses.value + '&accounting&ether';
   function addendum(record, record_id) {
@@ -67,17 +61,19 @@ export const Appearances = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('appearancesTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('appearancesTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('appearancesTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('appearancesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -135,7 +131,10 @@ export const Appearances = (props) => {
             navigate('/explorer/transactions?transactions=' + record.hash, true);
           break;
         case 'externallink':
-          navigate('https://etherscan.io/tx/' + action.record_id, true);
+          if (record && (record.from === '0xBlockReward' || record.from === '0xUncleReward'))
+            navigate('https://etherscan.io/block/' + record.blockNumber, true);
+          else
+            navigate('https://etherscan.io/tx/' + action.record_id, true);
           break;
         case 'enter':
           break;
@@ -149,11 +148,11 @@ export const Appearances = (props) => {
 
   useEffect(() => {
     const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
-    getServerData(dataUrl, qqq).then((theData) => {
+    getServerData(getDataUrl(), qqq).then((theData) => {
       let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
       const max_records = stateFromStorage('perPage', 10) * 2; // start with five pages, double each time
-      refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked, 0, max_records, nRecords);
-      statusDispatch(NOT_LOADING);
+      refreshAppearancesData(dataQuery, dispatch, mocked, 0, max_records, nRecords);
+      //statusDispatch(NOT_LOADING);
     });
   }, [dataQuery, dispatch]);
 
@@ -205,8 +204,9 @@ export const Appearances = (props) => {
             return true;
           case 'Tokens':
             if (!item['articulatedTx']) return false;
-            const art = item['articulatedTx'];
-            return art.name === 'transfer' || art.name === 'approve' || art.name === 'transferFrom';
+            if (!item['articulatedTx'].name)  return false
+            const art = item['articulatedTx'].name.toLowerCase();
+            return art.includes('mint') || art === 'transfer' || art === 'approve' || art === 'transferfrom';
           case 'Reconciled':
             if (!item['statements']) return false;
             if (item.statements.length === 0) return false;
@@ -219,10 +219,23 @@ export const Appearances = (props) => {
             if (!item['statements']) return false;
             if (item.statements.length === 0) return false;
             return (!item.statements[0]['reconciled']);
-          case 'Neighbors':
+          case 'SelfDestructs':
+            if (!item['statements']) return false;
+            if (item.statements.length === 0) return false;
+            return (item.statements[0]['suicideInflow'] > 0 || item.statements[0]['suicideOutflow'] > 0);
+          case 'Creations':
+            if (!item['receipt']) return false;
+            if (!item.receipt['logs']) return false;
+            return (item.receipt['contractAddress'] !== '' && item.receipt['contractAddress'] !== '0x0');
+          case 'Messages':
+            if (!item['compressedTx']) return false;
+            return item.compressedTx.substr(0,8).includes('message:');
           case 'Functions':
-          case 'Events':
+            if (!item['compressedTx']) return true;
+            return !item.compressedTx.substr(0,8).includes('message:');
+          case 'Neighbors':
             return false;
+          case 'Events':
           case 'Balances':
           case 'All':
           default:
@@ -266,7 +279,7 @@ export const Appearances = (props) => {
       {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curRecordId }} columns={appearancesSchema}/>
       {custom}
     </div>
   );
@@ -275,7 +288,7 @@ export const Appearances = (props) => {
 //----------------------------------------------------------------------
 const getTagList = (appearances) => {
   // prettier-ignore
-  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
+  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Messages', 'Creations', 'SelfDestructs'];
   tagList.unshift('|');
   tagList.unshift('All');
   tagList.push('|');
@@ -287,24 +300,28 @@ const getTagList = (appearances) => {
 //----------------------------------------------------------------------
 const getInnerTable = (appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler) => {
   // EXISTING_CODE
+  if (!appearances) return <></>;
+
   if (curTag === 'Neighbors') {
-    return (
-      <Fragment>
-        <ObjectTable data={appearances.meta} columns={metaSchema} />
-      </Fragment>
-    );
+    return <ObjectTable data={appearances.meta} columns={metaSchema} title={'Direct Neighbors of ' + title} />
+
   } else if (curTag === 'Balances') {
-    return (
-      <ChartTable
-        columns={appearancesSchema}
-        data={filtered}
-        title=""
-        search={false}
-        chartName="appearances"
-        chartCtx={{ type: 'line', defPair: ['blockNumber', 'statements.endBal'] }}
-        pagination={true}
-      />
-    );
+    const test = appearancesSchema;
+    return <BalanceView data={filtered} columns={test} title={title}/>
+
+  } else if (curTag === 'Functions') {
+    const functionCallData = filtered.map((item) => {
+      const parts = item.compressedTx.replace(/\)/, '').split('(');
+      return { date: item.date, to: item.to, functionName: <b>{parts[0]}</b>, parameters: parts[1] }
+    });
+    return <DataTable data={functionCallData} columns={functionCallSchema} title={'Functions Called by ' + title} search={true} searchFields={searchFields} pagination={true} parentHandler={appearancesHandler}/>
+
+  } else if (curTag === 'Messages') {
+    const messageData = filtered.map((item) => {
+      return { date: item.date, to: item.to, from: item.from, message: <b>{item.compressedTx.replace("message:", '')}</b> }
+    });
+    return <DataTable data={messageData} columns={messagesSchema} title={'Functions Called by ' + title}/>
+
   }
   // EXISTING_CODE
   return (
@@ -322,6 +339,41 @@ const getInnerTable = (appearances, curTag, filtered, title, searchFields, recor
   );
 };
 
+// EXISTING_CODE
+//----------------------------------------------------------------------
+const BalanceView = ({data, columns, title}) => {
+  return (
+    <ChartTable
+      columns={columns}
+      data={data}
+      title=""
+      search={false}
+      chartName="appearances"
+      chartCtx={{ type: 'line', defPair: ['blockNumber', 'statements.endBal'] }}
+      pagination={true}
+    />
+  );
+}
+
+//----------------------------------------------------------------------
+const functionCallSchema = [
+  {selector: 'id',hidden: true},
+  {selector: 'date', width: 7},
+  {selector: 'to', width: 12},
+  {selector: 'functionName', width: 10},
+  {selector: 'parameters', width: 40},
+];
+
+//----------------------------------------------------------------------
+const messagesSchema = [
+  {selector: 'id',hidden: true},
+  {selector: 'date', width: 7},
+  {selector: 'to', width: 14},
+  {selector: 'from', width: 14},
+  {selector: 'message', width: 40},
+];
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'ExternalLink',
@@ -335,9 +387,14 @@ const defaultSearch = ['blockNumber', 'hash', 'from', 'fromName', 'to', 'toName'
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(url, query, dispatch, mocked, firstRecord, maxRecords, nRecords) {
+const getDataUrl = () => {
+  return 'http://localhost:8080/export';
+}
+
+//----------------------------------------------------------------------
+export function refreshAppearancesData(query, dispatch, mocked, firstRecord, maxRecords, nRecords) {
   getServerData(
-    url,
+    getDataUrl(),
     query + (mocked ? '&mockData' : '') + (!mocked && maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
   ).then((theData) => {
     let appearances = theData.data;
@@ -359,7 +416,7 @@ export function refreshAppearancesData(url, query, dispatch, mocked, firstRecord
     // EXISTING_CODE
     if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
-    if (!mocked && maxRecords < nRecords) refreshAppearancesData(url, query, dispatch, mocked, 0, maxRecords * 2, nRecords);
+    if (!mocked && maxRecords < nRecords) refreshAppearancesData(query, dispatch, mocked, 0, maxRecords * 2, nRecords);
   });
 }
 
@@ -455,12 +512,12 @@ function getFieldValue(record, fieldName) {
       return internal ? 'int' : '';
     case 'from': {
       const val = record.fromName ? record.fromName.name : record.from;
-      if (record.from === g_focusValue.toLowerCase()) return <div className="focusValue">{val}</div>;
+      if (record.from === g_focusValue) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'to': {
       const val = record.toName ? record.toName.name : record.to;
-      if (record.to === g_focusValue.toLowerCase()) return <div className="focusValue">{val}</div>;
+      if (record.to === g_focusValue) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'fromName':
@@ -567,6 +624,126 @@ const metaSchema = [
     onDisplay: getFieldValue,
   },
 ];
+
+/*
+import React from 'react';
+
+import { Modal, ObjectTable } from 'components';
+
+export const AddName = ({ showing, handler, object }) => {
+  return (
+    <Modal showing={showing} handler={handler}>
+      {/* prettier-ignore * /}
+      <ObjectTable
+            data={{...object, tags: 'MyTags'}}
+            columns={editNameSchema}
+            title="Add Name"
+            showHidden={false}
+          />
+    </Modal>
+  );
+};
+
+export const EditName = ({ showing, handler, object }) => {
+  return (
+    <Modal showing={showing} handler={handler}>
+      {/* prettier-ignore * /}
+      <ObjectTable
+            data={object}
+            columns={editNameSchema}
+            title="Edit Name"
+            editable={true}
+            showHidden={false}
+          />
+    </Modal>
+  );
+};
+*/
+
+/*
+export const Editable = (props) => {
+  const [isActive, setActive] = useState(props.isActive);
+  const [inputValue, setInput] = useState(props.fieldValue);
+  const [errorStr, setError] = useState('');
+
+  const wrapperRef = useRef(null);
+  const textRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const enter = useKeypress('Enter');
+  const esc = useKeypress('Escape');
+
+  const validateInput = useCallback(() => {
+    if (!props.onValidate) return true;
+    const res = props.onValidate(props.fieldName, cleanHTML(inputValue));
+    if (res === '') return true;
+    setError(res);
+    return false;
+  }, [inputValue, props]);
+
+  const closeEditor = useCallback(() => {
+    if (isActive) {
+      setActive(false);
+      if (validateInput() && props.onAccept) props.onAccept(props.record_id, props.fieldName, cleanHTML(inputValue));
+    }
+  }, [isActive, inputValue, props, validateInput]);
+
+  useEffect(() => {
+    if (isActive) {
+      inputRef.current.focus();
+      setError('');
+    }
+  }, [isActive]);
+
+  useEffect(() => {
+    if (isActive) {
+      if (enter) {
+        closeEditor();
+      } else if (esc) {
+        setActive(false);
+        setInput(props.fieldValue);
+      }
+    }
+  }, [enter, esc, closeEditor, isActive, props.fieldValue]); // watch the Enter and Escape key presses
+
+  let visibleText = errorStr;
+  if (visibleText === '') visibleText = props.fieldValue;
+  if (visibleText === '') visibleText = inputValue;
+  if (visibleText === '') visibleText = props.placeholder !== '' ? '<' + props.placeholder + '>' : '';
+  if (visibleText === '') visibleText = '<' + props.fieldName + '>';
+
+  let textCn = props.className + ' editable_text ' + (!isActive ? '' : 'hidden');
+  if (errorStr !== '') textCn = props.className + ' warning';
+  const inputCn = props.className + ' editable_input ' + (isActive ? '' : 'hidden');
+
+  if (!props.editable) return <Fragment>{props.fieldValue}</Fragment>;
+  return (
+    <div ref={wrapperRef}>
+      <div ref={textRef} onClick={() => setActive(true)} className={textCn}>
+        {visibleText}
+      </div>
+      <input
+        ref={inputRef}
+        value={inputValue}
+        onChange={(e) => {
+          setInput(e.target.value);
+          if (props.onChange) props.onChange(props.record_id, props.fieldName, cleanHTML(e.target.value));
+        }}
+        onBlur={(e) => {
+          closeEditor();
+        }}
+        placeholder={props.placeholder}
+        className={inputCn}
+      />
+    </div>
+  );
+};
+
+//------------------------------------------------------------------
+function cleanHTML(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+}
+*/
 // EXISTING_CODE
 
 //----------------------------------------------------------------------------
@@ -584,7 +761,7 @@ export const appearancesSchema = [
     name: 'Date/Block',
     selector: 'date',
     type: 'string',
-    width: 3,
+    width: 2,
     chart: 'range',
     underField: 'marker',
     onDisplay: getFieldValue,
@@ -660,7 +837,7 @@ export const appearancesSchema = [
     name: 'Asset',
     selector: 'statements.asset',
     type: 'string',
-    width: 2,
+    width: 1,
     align: 'center',
     detail: true,
     onDisplay: getFieldValue,

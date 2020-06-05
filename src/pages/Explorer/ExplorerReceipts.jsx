@@ -2,15 +2,12 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
-import Mousetrap from 'mousetrap';
+import React, { Fragment, useEffect, useState, useCallback } from 'react';
 
-import GlobalContext from 'store';
-
+import { useStatus } from 'store/status_store';
 import { ObjectTable } from 'components';
 import { getServerData, useArrowKeys } from 'components/utils';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { useExplorer } from './Explorer';
 
 // auto-generate: page-settings

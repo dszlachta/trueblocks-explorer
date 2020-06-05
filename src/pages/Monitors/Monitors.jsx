@@ -2,25 +2,19 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext from 'store';
+import GlobalContext, { calcValue } from 'store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
-import { calcValue } from 'store';
-
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord } from 'components/utils';
+import { NameDialog } from 'dialogs';
 
 import './Monitors.css';
 
 // EXISTING_CODE
-import { Appearances } from '../Appearances/Appearances';
-import { useStatusData } from 'store';
-import { currentPage } from 'components/utils';
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
@@ -40,7 +34,6 @@ export const Monitors = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/status';
   const cmdUrl = 'http://localhost:8080/rm';
 
   const dataQuery = 'modes=monitors&details&verbose=10';
@@ -61,17 +54,19 @@ export const Monitors = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('monitorsTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('monitorsTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('monitorsTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('monitorsTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -129,7 +124,7 @@ export const Monitors = (props) => {
             statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshMonitorsData(dataUrl, dataQuery, dispatch);
+              refreshMonitorsData(dataQuery, dispatch, mocked);
               statusDispatch(NOT_LOADING);
             });
           }
@@ -155,7 +150,7 @@ export const Monitors = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshMonitorsData(dataUrl, dataQuery, dispatch, mocked);
+    refreshMonitorsData(dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 
@@ -202,7 +197,7 @@ export const Monitors = (props) => {
       {debug && <pre>{JSON.stringify(monitors, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={monitorsHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={monitorsHandler} object={{ address: curRecordId }} columns={monitorsSchema}/>
       {custom}
     </div>
   );
@@ -239,6 +234,9 @@ const getInnerTable = (monitors, curTag, filtered, title, searchFields, recordIc
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'ExternalLink',
@@ -256,8 +254,13 @@ const defaultSearch = ['tags', 'address', 'name'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshMonitorsData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return 'http://localhost:8080/status';
+}
+
+//----------------------------------------------------------------------
+export function refreshMonitorsData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let monitors = theData.data;
     // EXISTING_CODE
     if (!mocked) monitors = theData.data[0].caches[0].items;
@@ -446,13 +449,13 @@ export const monitorsSchema = [
     width: 2,
   },
   {
-    name: 'Mon Cache',
+    name: 'Monitor Size',
     selector: 'sizeInBytes',
     type: 'filesize',
     width: 2,
   },
   {
-    name: 'Tx Cache',
+    name: 'Tx Cache Size',
     selector: 'sizeInBytes2',
     type: 'filesize',
     width: 2,

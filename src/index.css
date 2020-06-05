@@ -145,6 +145,8 @@ button {
   margin: 4px;
   padding: 4px;
   outline: none;
+  font-size: 0.9em;
+  line-height: 1.0em;
 }
 button.activeButton {
   background: var(--at-primary-bg-color);
@@ -152,4 +154,6 @@ button.activeButton {
   margin: 4px;
   padding: 6px;
   outline: none;
+  font-size: 0.9em;
+  line-height: 1.1em;
 }

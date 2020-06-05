@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3-array';
 

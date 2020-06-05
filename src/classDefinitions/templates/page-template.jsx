@@ -13,7 +13,7 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+//import { NameDialog } from 'dialogs/NameDialog/NameDialog';
 
 import './[{PROPER}].css';
 
@@ -36,8 +36,7 @@ export const [{PROPER}] = (props) => {
 
   // EXISTING_CODE
   // EXISTING_CODE
-
-  const dataUrl = '[{DATAURL}]';[{CMDURL}]
+[{CMDURL}]
 
   const dataQuery = '[{DATAQUERY}]';
   function addendum(record, record_id) {
@@ -56,17 +55,19 @@ export const [{PROPER}] = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('[{LONG}]Tag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('[{LONG}]Tag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('[{LONG}]Tag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('[{LONG}]Tag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -108,7 +109,7 @@ export const [{PROPER}] = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refresh[{PROPER}]Data(dataUrl, dataQuery, dispatch, mocked);
+    refresh[{PROPER}]Data(dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 
@@ -155,7 +156,7 @@ export const [{PROPER}] = (props) => {
       {debug && <pre>{JSON.stringify([{LONG}], null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={[{LONG}]Handler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={[{LONG}]Handler} object={{ address: curRecordId }} columns={[{LONG}]Schema}/>
       {custom}
     </div>
   );
@@ -178,7 +179,7 @@ const getInnerTable = ([{LONG}], curTag, filtered, title, searchFields, recordIc
   // EXISTING_CODE
   // EXISTING_CODE
   return (
-    <DataTable
+    <[{DEFAULT_TABLE}]
       tableName={'[{LONG}]Table'}
       data={filtered}
       columns={[{LONG}]Schema}
@@ -192,12 +193,20 @@ const getInnerTable = ([{LONG}], curTag, filtered, title, searchFields, recordIc
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refresh[{PROPER}]Data(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return '[{DATAURL}]';
+}
+
+//----------------------------------------------------------------------
+export function refresh[{PROPER}]Data(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let [{LONG}] = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE

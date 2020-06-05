@@ -38,6 +38,7 @@ import GridIcon from 'assets/icons/GridIcon';
 import './Utils.css';
 
 export function getIcon(index, labelIn, expanded = false, pad = false, size = 20) {
+  if (!labelIn) return null;
   const label = labelIn.toLowerCase();
   const key = 'icon_' + label + '_' + index;
   const cn = (expanded ? 'menu-icon' : '') + (pad ? ' menu-icon-padded' : '');

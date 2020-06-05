@@ -2,18 +2,15 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext from 'store';
+import GlobalContext, { calcValue } from 'store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
-import { calcValue } from 'store';
-
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
+import { NameDialog } from 'dialogs';
 
 import './Caches.css';
 
@@ -37,7 +34,6 @@ export const Caches = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/status';
   const cmdUrl = 'http://localhost:8080/status';
 
   const dataQuery = 'verbose=10&modes=abis%20caches&types=all&details&depth=1';
@@ -57,17 +53,19 @@ export const Caches = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('cachesTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('cachesTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('cachesTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('cachesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -125,7 +123,7 @@ export const Caches = (props) => {
             statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshCachesData(dataUrl, dataQuery, dispatch);
+              refreshCachesData(dataQuery, dispatch, mocked);
               statusDispatch(NOT_LOADING);
             });
           }
@@ -142,7 +140,7 @@ export const Caches = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshCachesData(dataUrl, dataQuery, dispatch, mocked);
+    refreshCachesData(dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 
@@ -189,7 +187,7 @@ export const Caches = (props) => {
       {debug && <pre>{JSON.stringify(caches, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={cachesHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={cachesHandler} object={{ address: curRecordId }} columns={cachesSchema}/>
       {custom}
     </div>
   );
@@ -226,6 +224,9 @@ const getInnerTable = (caches, curTag, filtered, title, searchFields, recordIcon
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
@@ -240,8 +241,13 @@ const defaultSearch = ['path'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshCachesData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return 'http://localhost:8080/status';
+}
+
+//----------------------------------------------------------------------
+export function refreshCachesData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let caches = theData.data;
     // EXISTING_CODE
     if (caches) caches = caches[0].caches;

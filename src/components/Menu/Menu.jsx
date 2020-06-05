@@ -5,19 +5,21 @@ import { currentPage } from 'components/utils';
 import { getIcon } from 'pages/utils';
 
 import './Menu.css';
+import { handleClick } from 'components/utils';
 
 //----------------------------------------------------------------------
-export const Menu = ({ menu, parent = '', minimized, selected, handler }) => {
+export const Menu = ({ menu, parent = '', minimized, selected, handler, useIcons = true, topLevel = true }) => {
   if (!menu) return <Fragment></Fragment>;
 
   const indent = parent !== '';
   const cn = indent ? 'menu-indent' : '';
 
   return (
-    <Fragment>
+    <div style={topLevel ? {} : { display: 'flex' }}>
       {menu.map((item, index) => {
-        const isSep = item.label.toLowerCase() === 'separator';
-        if (isSep) {
+        if (!item.label) return null;
+        const isSep = item.label.toLowerCase() === 'separator' || item.lable === '|';
+        if (isSep && topLevel) {
           let sep = '- - - - - - - - - - - - - - - - ';
           if (minimized) sep = sep.substr(0, 12);
           return (
@@ -25,10 +27,12 @@ export const Menu = ({ menu, parent = '', minimized, selected, handler }) => {
               {sep}
             </div>
           );
+        } else if (isSep) {
+          return <div>&nbsp;&nbsp;</div>
         }
 
         const { label, exact, items } = item;
-        const icon = indent ? <Fragment></Fragment> : getIcon(index, label, !minimized, false, 20);
+        const icon = (!useIcons || indent) ? <Fragment></Fragment> : getIcon(index, label, !minimized, false, 20);
         const route = cleanPath(label, parent, item.route);
         return (
           <MenuItem
@@ -42,17 +46,18 @@ export const Menu = ({ menu, parent = '', minimized, selected, handler }) => {
             parent={parent}
             selected={selected}
             handler={handler}
+            topLevel={topLevel}
           >
             <Menu menu={minimized ? null : items} parent={label.toLowerCase()} exact={exact} minimized={minimized} />
           </MenuItem>
         );
       })}
-    </Fragment>
+    </div>
   );
 };
 
 //----------------------------------------------------------------------
-export const MenuItem = ({ label, icon, to, indent, exact, minimized, parent, selected, handler, children }) => {
+export const MenuItem = ({ label, icon, to, indent, exact, minimized, parent, selected, handler, topLevel, children }) => {
   let cn = '';
   if (indent) cn = 'menu-indent';
 
@@ -60,22 +65,31 @@ export const MenuItem = ({ label, icon, to, indent, exact, minimized, parent, se
   const active = page !== '/' && to.includes(page);
   const action = { type: 'menu-clicked', selected: label, parent: parent };
 
+  if (topLevel) {
+    return (
+      <Fragment>
+        <NavLink
+          className={cn + ' menu-item'}
+          activeClassName="is-active"
+          exact={exact}
+          to={to}
+          onClick={(e) => { return handler && handler(action); }}
+        >
+          {icon}
+          {(!minimized || !icon) && label}
+        </NavLink>
+        {active && children}
+      </Fragment>
+    );
+  }
+
   return (
-    <Fragment>
-      <NavLink
-        className={cn + ' menu-item'}
-        activeClassName="is-active"
-        exact={exact}
-        to={to}
-        onClick={(e) => {
-          return handler && handler(action); // Note: do not use handleClick as it won't allow a bubble up
-        }}
-      >
-        {icon}
-        {(!minimized || !icon) && label}
-      </NavLink>
-      {active && children}
-    </Fragment>
+    <button
+      key={label}
+      className={label === selected ? "activeButton" : ""}
+      onClick={(e) => { handleClick(e, handler, action); return true; } } >
+      {label}
+    </button>
   );
 };
 

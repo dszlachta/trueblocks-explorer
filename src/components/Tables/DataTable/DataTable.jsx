@@ -259,7 +259,7 @@ export const DataTable = ({
         tableName={tableName}
         curIndex={pagingCtx.curIndex}
       />
-      {search && (
+      {search && filteredData && filteredData.length ? (
         <Tablebar
           search={search}
           searchFields={searchFields}
@@ -267,7 +267,7 @@ export const DataTable = ({
           handler={dataTableHandler}
           footerIcons={footerIcons}
         />
-      )}
+      ) : <></>}
     </Fragment>
   );
 };
@@ -323,7 +323,8 @@ const DataTableRows = ({
   tableName,
   curIndex,
 }) => {
-  if (!data || data.length === 0) return <div>Loading...</div>;
+  if (!data) return <div>Loading...</div>;
+  if (data.length === 0) return <div>No Results</div>;
   const debug = false;
   return (
     <Fragment>

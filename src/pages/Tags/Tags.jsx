@@ -2,18 +2,15 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext from 'store';
+import GlobalContext, { calcValue } from 'store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
-import { calcValue } from 'store';
-
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
+import { NameDialog } from 'dialogs';
 
 import './Tags.css';
 
@@ -37,7 +34,6 @@ export const Tags = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/names';
   const cmdUrl = 'http://localhost:8080/names';
 
   const dataQuery = 'verbose=10&tags';
@@ -57,17 +53,19 @@ export const Tags = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('tagsTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('tagsTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('tagsTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('tagsTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -125,7 +123,7 @@ export const Tags = (props) => {
             statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshTagsData(dataUrl, dataQuery, dispatch);
+              refreshTagsData(dataQuery, dispatch, mocked);
               statusDispatch(NOT_LOADING);
             });
           }
@@ -142,7 +140,7 @@ export const Tags = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshTagsData(dataUrl, dataQuery, dispatch, mocked);
+    refreshTagsData(dataQuery, dispatch, mocked);
     statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 
@@ -189,7 +187,7 @@ export const Tags = (props) => {
       {debug && <pre>{JSON.stringify(tags, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={tagsHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={tagsHandler} object={{ address: curRecordId }} columns={tagsSchema}/>
       {custom}
     </div>
   );
@@ -226,6 +224,9 @@ const getInnerTable = (tags, curTag, filtered, title, searchFields, recordIconLi
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
@@ -238,8 +239,13 @@ const defaultSearch = ['tags', 'subtags1', 'subtags2'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshTagsData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return 'http://localhost:8080/names';
+}
+
+//----------------------------------------------------------------------
+export function refreshTagsData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let tags = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE

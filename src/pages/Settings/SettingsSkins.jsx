@@ -1,9 +1,10 @@
 import React from 'react';
 
-import './SettingsSkins.css';
-
 import { Card, PanelTable, ChartTable, DataTable, GridTable, ObjectTable } from 'components';
 
+import './SettingsSkins.css';
+
+//------------------------------------------------------------------------------
 export const SettingsSkins = () => {
   const testData = [
     {

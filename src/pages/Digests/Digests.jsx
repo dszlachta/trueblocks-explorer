@@ -4,13 +4,12 @@
  */
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 
-import GlobalContext, { useStatusMeta } from 'store';
+import GlobalContext from 'store';
+import { useStatus, LOADING, NOT_LOADING, useStatusMeta } from 'store/status_store';
 
-import { DataTable } from 'components';
+import { GridTable, ChartTable, DataTable } from 'components';
 import { getServerData, currentPage, sortArray } from 'components/utils';
-
-import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { GridTable, ChartTable } from 'components';
+import { NameDialog } from 'dialogs';
 
 // EXISTING_CODE
 // EXISTING_CODE
@@ -36,7 +35,7 @@ export const Digests = () => {
   const digestsHandler = useCallback(
     (action) => {
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
+        case 'select-tag':
           setTag(action.payload);
           localStorage.setItem('digestsTag', action.payload);
           break;
@@ -113,9 +112,9 @@ export const Digests = () => {
 
   return (
     <div>
-      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'grid-view' })}>grid view</button>
-      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'data-view' })}>table view</button>
-      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'graph-view' })}>graph view</button>
+      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'grid-view' })}>grid view</button>
+      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'data-view' })}>table view</button>
+      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'graph-view' })}>graph view</button>
       <button onClick={() => setStart((start + 3000000) % 9000000)}>ignore ddos</button>
       {view}
     </div>

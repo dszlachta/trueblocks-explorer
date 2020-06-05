@@ -1,8 +1,9 @@
 import React, { Fragment, useState } from 'react';
 
+import { useStatusData, useSystemCheck } from 'store';
+
 import { ObjectTable } from 'components';
 import { handleClick } from 'components/utils';
-import { useStatusData, useSystemCheck } from 'store';
 
 import './Settings.css';
 

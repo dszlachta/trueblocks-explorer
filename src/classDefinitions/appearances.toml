@@ -3,12 +3,12 @@ class = "CAppearances"
 noPage = true
 recordIcons = "viewing,exporting,importing"
 defaultSort = "blockNumber,transactionIndex"
-defaultSearch = "blockNumber,transactionIndex,fromName,toName,encoding,compressedTx"
-defaultTags = "['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs']"
-
+defaultSearch = "blockNumber,hash,from,fromName,to,toName,encoding,compressedTx"
+defaultTags = "['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Messages', 'Creations', 'SelfDestructs']"
 dataUrl = "http://localhost:8080/export"
 dataQuery = "addrs=' + addresses.value + '&accounting&ether"
 cmdUrl = "none"
+mainTable = "SidebarTable"
 
 [[subpages]]
 list = [

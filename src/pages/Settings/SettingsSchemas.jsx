@@ -133,7 +133,7 @@ export const SettingsSchemas = () => {
         name="system"
         buttons={systemList}
         current={current}
-        action="change-schema"
+        actionType="change-schema"
         handler={changeSchema}
       />
       {/* prettier-ignore */}
@@ -141,14 +141,14 @@ export const SettingsSchemas = () => {
         name="pages_"
         buttons={pagesList}
         current={current}
-        action="change-schema"
+        actionType="change-schema"
         handler={changeSchema}
       />
       <ButtonCaddie
         name="explore"
         buttons={exploreList}
         current={current}
-        action="change-schema"
+        actionType="change-schema"
         handler={changeSchema}
       />
       <div className="okay">{known.join(', ')}</div>
