@@ -2,16 +2,20 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext, { calcValue } from 'store';
-import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord } from 'components/utils';
+import { DataTable, ObjectTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { calcValue } from 'store';
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
+import { otherSchema } from './OtherSchema.jsx';
 import './Other.css';
 
 // EXISTING_CODE
@@ -292,7 +296,7 @@ export const useOther = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -307,54 +311,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const otherSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    width: 1,
-    searchable: true,
-  },
-  {
-    name: 'Block Number',
-    selector: 'blockNumber',
-    type: 'blknum',
-    width: 2,
-    align: 'center',
-    searchable: true,
-  },
-  {
-    name: 'Timestamp',
-    selector: 'timestamp',
-    type: 'timestamp',
-    width: 2,
-    align: 'center',
-  },
-  {
-    name: 'Date',
-    selector: 'date',
-    type: 'string',
-    width: 2,
-    align: 'center',
-    searchable: true,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

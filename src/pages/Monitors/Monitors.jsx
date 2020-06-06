@@ -2,16 +2,20 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext, { calcValue } from 'store';
-import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord } from 'components/utils';
+import { DataTable, ObjectTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { calcValue } from 'store';
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
+import { monitorsSchema } from './MonitorsSchema.jsx';
 import './Monitors.css';
 
 // EXISTING_CODE
@@ -305,7 +309,7 @@ export const useMonitors = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -330,148 +334,3 @@ function getFieldValue(record, fieldName) {
       // console.log('ret: ', ret.find((p) => p.id === action.id));
 */
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const monitorsSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Tags',
-    selector: 'tags',
-    type: 'string',
-    width: 3,
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Address',
-    selector: 'address',
-    type: 'address',
-    width: 6,
-    searchable: true,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    width: 7,
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Symbol',
-    selector: 'symbol',
-    type: 'string',
-    hidden: true,
-    width: 4,
-    editable: true,
-    align: 'center',
-    searchable: true,
-  },
-  {
-    name: 'Source',
-    selector: 'source',
-    type: 'string',
-    hidden: true,
-    width: 4,
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Decimals',
-    selector: 'decimals',
-    type: 'uint64',
-    hidden: true,
-    width: 3,
-    align: 'center',
-  },
-  {
-    name: 'Description',
-    selector: 'description',
-    type: 'string',
-    hidden: true,
-    width: 8,
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'isCustom',
-    selector: 'is_custom',
-    type: 'bool',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'isPrefund',
-    selector: 'is_prefund',
-    type: 'bool',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Count',
-    selector: 'nAppearances',
-    type: 'blknum',
-    width: 2,
-  },
-  {
-    name: 'Last Export',
-    selector: 'lastExport',
-    type: 'blknum',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'First Block',
-    selector: 'firstAppearance',
-    type: 'blknum',
-    width: 2,
-  },
-  {
-    name: 'Last Block',
-    selector: 'latestAppearance',
-    type: 'blknum',
-    width: 2,
-  },
-  {
-    name: 'Path',
-    selector: 'path',
-    type: 'string',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Monitor Size',
-    selector: 'sizeInBytes',
-    type: 'filesize',
-    width: 2,
-  },
-  {
-    name: 'Tx Cache Size',
-    selector: 'sizeInBytes2',
-    type: 'filesize',
-    width: 2,
-  },
-  {
-    name: 'Deleted',
-    selector: 'deleted',
-    type: 'bool',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

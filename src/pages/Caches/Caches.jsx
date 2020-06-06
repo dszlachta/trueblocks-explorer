@@ -2,16 +2,20 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext, { calcValue } from 'store';
-import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
+import { DataTable, ObjectTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { calcValue } from 'store';
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
+import { cachesSchema } from './CachesSchema.jsx';
 import './Caches.css';
 
 // EXISTING_CODE
@@ -292,7 +296,7 @@ export const useCaches = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -311,77 +315,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const cachesSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Cache Type',
-    selector: 'type',
-    type: 'string',
-    width: 1,
-    searchable: true,
-  },
-  {
-    name: 'Location',
-    selector: 'path',
-    type: 'string',
-    width: 2,
-    searchable: true,
-  },
-  {
-    name: '# Folders',
-    selector: 'nFolders',
-    type: 'uint64',
-    width: 1,
-  },
-  {
-    name: '# Files',
-    selector: 'nFiles',
-    type: 'uint64',
-    width: 1,
-  },
-  {
-    name: 'Total Size',
-    selector: 'sizeInBytes',
-    type: 'filesize',
-    width: 1,
-  },
-  {
-    name: 'Average Size',
-    selector: 'bytesPerFile',
-    type: 'filesize',
-    width: 1,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'perFolder',
-    selector: 'perFolder',
-    type: 'double',
-    width: 1,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Valid',
-    selector: 'is_valid',
-    type: 'bool',
-    hidden: true,
-    width: 1,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

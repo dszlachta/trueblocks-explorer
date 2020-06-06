@@ -105,7 +105,7 @@ export const dashboardDefault = [
 ];
 
 //----------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   switch (fieldName) {
     case 'id':
       return record.route;

@@ -2,16 +2,20 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext, { calcValue } from 'store';
-import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, handleClick, replaceRecord } from 'components/utils';
+import { DataTable, ObjectTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { calcValue } from 'store';
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
+import { signaturesSchema } from './SignaturesSchema.jsx';
 import './Signatures.css';
 
 // EXISTING_CODE
@@ -292,7 +296,7 @@ export const useSignatures = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -329,77 +333,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const signaturesSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Encoding',
-    selector: 'encoding',
-    type: 'hash',
-    width: 1,
-    searchable: true,
-  },
-  {
-    name: 'Type',
-    selector: 'type',
-    type: 'string',
-    width: 1,
-    isPill: true,
-    searchable: true,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    width: 2,
-    searchable: true,
-  },
-  {
-    name: 'Signature',
-    selector: 'signature',
-    type: 'string',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Input Names',
-    selector: 'inputs',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Output Names',
-    selector: 'outputs',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Signature',
-    selector: 'function',
-    type: 'string',
-    width: 6,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

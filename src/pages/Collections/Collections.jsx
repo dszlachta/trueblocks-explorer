@@ -2,16 +2,20 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
-import GlobalContext, { calcValue } from 'store';
-import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, notEmpty, replaceRecord } from 'components/utils';
+import { DataTable, ObjectTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
+import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { calcValue } from 'store';
+
+import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
+import { collectionsSchema } from './CollectionsSchema.jsx';
 import './Collections.css';
 
 // EXISTING_CODE
@@ -292,7 +296,7 @@ export const useCollections = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   // EXISTING_CODE
@@ -300,74 +304,4 @@ function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
-//----------------------------------------------------------------------------
-const validateUserInput = (fieldName, value) => {
-  if (fieldName === 'group') return notEmpty(fieldName, value);
-  return true;
-};
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const collectionsSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-  },
-  {
-    name: 'Tags',
-    selector: 'tags',
-    type: 'string',
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Client',
-    selector: 'client',
-    type: 'string',
-    editable: true,
-    searchable: true,
-    onValidate: validateUserInput,
-  },
-  {
-    name: 'Monitored',
-    selector: 'monitored',
-    type: 'bool',
-    hidden: true,
-  },
-  {
-    name: 'Deleted',
-    selector: 'deleted',
-    type: 'bool',
-    hidden: true,
-  },
-  {
-    name: 'Size',
-    selector: 'sizeInBytes',
-    type: 'filesize',
-  },
-  {
-    name: 'Addresses',
-    selector: 'addresses',
-    type: 'CAddressArray',
-    width: 4,
-    searchable: true,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

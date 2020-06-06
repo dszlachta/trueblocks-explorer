@@ -7,31 +7,31 @@ import { DataTable, ObjectTable, ButtonCaddie } from 'components';
 import { stateFromStorage } from 'components/utils';
 
 import { abisSchema } from 'pages/Explorer/ExplorerAbis';
-import { blocksSchema } from 'pages/Explorer/ExplorerBlocks';
+import { blocksSchema } from 'pages/Explorer/ExplorerBlocksSchema';
 import { functionsSchema } from 'pages/Explorer/ExplorerFunctions';
-import { logsSchema } from 'pages/Explorer/ExplorerLogs';
+import { logsSchema } from 'pages/Explorer/ExplorerLogsSchema';
 import { parametersSchema } from 'pages/Explorer/ExplorerParameters';
 import { pricequotesSchema } from 'pages/Explorer/ExplorerPricequotes';
 import { pricesourcesSchema } from 'pages/Explorer/ExplorerPricesources';
-import { receiptsSchema } from 'pages/Explorer/ExplorerReceipts';
+import { receiptsSchema } from 'pages/Explorer/ExplorerReceiptsSchema';
 import { traceActionsSchema } from 'pages/Explorer/ExplorerTraceActions';
 import { traceResultsSchema } from 'pages/Explorer/ExplorerTraceResults';
-import { tracesSchema } from 'pages/Explorer/ExplorerTraces';
-import { transactionsSchema } from 'pages/Explorer/ExplorerTransactions';
+import { tracesSchema } from 'pages/Explorer/ExplorerTracesSchema';
+import { transactionsSchema } from 'pages/Explorer/ExplorerTransactionsSchema';
 import { digestRecordSchema } from 'pages/Digests/DigestRecord';
 
 // auto-generate: all-schemas
-import { dashboardSchema } from 'pages/Dashboard/Dashboard';
-import { collectionsSchema } from 'pages/Collections/Collections';
-import { monitorsSchema } from 'pages/Monitors/Monitors';
-import { appearancesSchema } from 'pages/Appearances/Appearances';
-import { tagsSchema } from 'pages/Tags/Tags';
-import { explorerSchema } from 'pages/Explorer/Explorer';
-import { namesSchema } from 'pages/Names/Names';
-import { signaturesSchema } from 'pages/Signatures/Signatures';
-import { digestsSchema } from 'pages/Digests/Digests';
-import { cachesSchema } from 'pages/Caches/Caches';
-import { otherSchema } from 'pages/Other/Other';
+import { dashboardSchema } from 'pages/Dashboard/DashboardSchema';
+import { collectionsSchema } from 'pages/Collections/CollectionsSchema';
+import { monitorsSchema } from 'pages/Monitors/MonitorsSchema';
+import { appearancesSchema } from 'pages/Appearances/AppearancesSchema';
+import { tagsSchema } from 'pages/Tags/TagsSchema';
+import { explorerSchema } from 'pages/Explorer/ExplorerSchema';
+import { namesSchema } from 'pages/Names/NamesSchema';
+import { signaturesSchema } from 'pages/Signatures/SignaturesSchema';
+import { digestsSchema } from 'pages/Digests/DigestsSchema';
+import { cachesSchema } from 'pages/Caches/CachesSchema';
+import { otherSchema } from 'pages/Other/OtherSchema';
 import { settingsSchema } from 'pages/Settings/Settings';
 import { supportSchema } from 'pages/Support/Support';
 // auto-generate: all-schemas

@@ -13,8 +13,9 @@ import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-//import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { NameDialog } from 'dialogs';
 
+import { [{LONG}]Schema } from './[{PROPER}]Schema.jsx';
 import './[{PROPER}].css';
 
 // EXISTING_CODE
@@ -250,7 +251,7 @@ export const use[{PROPER}] = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   // EXISTING_CODE
@@ -259,7 +260,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-// auto-generate: schema
