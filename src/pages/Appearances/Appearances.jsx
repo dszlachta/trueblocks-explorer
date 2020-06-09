@@ -8,14 +8,13 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ChartTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
-import { appearancesSchema } from './AppearancesSchema.jsx';
+import { appearancesSchema } from './AppearancesSchema';
 import './Appearances.css';
 
 // EXISTING_CODE
@@ -151,13 +150,23 @@ export const Appearances = (props) => {
   );
 
   useEffect(() => {
-    const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
-    getServerData(getDataUrl(), qqq).then((theData) => {
-      let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
-      const max_records = stateFromStorage('perPage', 10) * 2; // start with five pages, double each time
-      refreshAppearancesData(dataQuery, dispatch, mocked, 0, max_records, nRecords);
-      //statusDispatch(NOT_LOADING);
-    });
+    //statusDispatch(LOADING);
+    let partialFetch = false;
+    // EXISTING_CODE
+    partialFetch = true;
+    if (partialFetch) {
+      const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
+      getServerData(getDataUrl(), qqq).then((theData) => {
+        let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
+        const max_records = stateFromStorage('perPage', 10) * 2; // start with five pages, double each time
+        refreshAppearancesData(dataQuery, dispatch, mocked, 0, max_records, nRecords);
+      });
+    }
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshAppearancesData(dataQuery, dispatch, mocked);
+    }
+    //statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 
   useEffect(() => {
@@ -358,24 +367,6 @@ const BalanceView = ({data, columns, title}) => {
     />
   );
 }
-
-//----------------------------------------------------------------------
-const functionCallSchema = [
-  {selector: 'id',hidden: true},
-  {selector: 'date', width: 7},
-  {selector: 'to', width: 12},
-  {selector: 'functionName', width: 10},
-  {selector: 'parameters', width: 40},
-];
-
-//----------------------------------------------------------------------
-const messagesSchema = [
-  {selector: 'id',hidden: true},
-  {selector: 'date', width: 7},
-  {selector: 'to', width: 14},
-  {selector: 'from', width: 14},
-  {selector: 'message', width: 40},
-];
 // EXISTING_CODE
 
 // auto-generate: page-settings
@@ -402,7 +393,6 @@ export function refreshAppearancesData(query, dispatch, mocked, firstRecord, max
     query + (mocked ? '&mockData' : '') + (!mocked && maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
   ).then((theData) => {
     let appearances = theData.data;
-    // EXISTING_CODE
     if (!mocked) appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
     let named = appearances;
     if (!mocked && appearances && theData.meta) {
@@ -417,7 +407,6 @@ export function refreshAppearancesData(query, dispatch, mocked, firstRecord, max
       });
     }
     appearances = named;
-    // EXISTING_CODE
     if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
     if (!mocked && maxRecords < nRecords) refreshAppearancesData(query, dispatch, mocked, 0, maxRecords * 2, nRecords);
@@ -596,7 +585,8 @@ export function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
-const metaSchema = [
+//----------------------------------------------------------------------
+export const metaSchema = [
   {
     name: 'ID',
     selector: 'id',
@@ -627,5 +617,23 @@ const metaSchema = [
     selector: 'namedFromAndTo',
     onDisplay: getFieldValue,
   },
+];
+
+//----------------------------------------------------------------------
+export const functionCallSchema = [
+  {selector: 'id',hidden: true},
+  {selector: 'date', width: 7},
+  {selector: 'to', width: 12},
+  {selector: 'functionName', width: 10},
+  {selector: 'parameters', width: 40},
+];
+
+//----------------------------------------------------------------------
+export const messagesSchema = [
+  {selector: 'id',hidden: true},
+  {selector: 'date', width: 7},
+  {selector: 'to', width: 14},
+  {selector: 'from', width: 14},
+  {selector: 'message', width: 40},
 ];
 // EXISTING_CODE

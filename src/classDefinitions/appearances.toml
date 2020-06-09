@@ -9,6 +9,7 @@ defaultTags = "['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Airdrops', 'Sho
 dataUrl = "http://localhost:8080/export"
 dataQuery = "addrs=' + addresses.value + '&accounting&ether"
 cmdUrl = "none"
+imports = "Fragment, |DataTable, ObjectTable, ChartTable, PageCaddie|getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage|useStatus, LOADING, NOT_LOADING||"
 
 [[subpages]]
 list = [

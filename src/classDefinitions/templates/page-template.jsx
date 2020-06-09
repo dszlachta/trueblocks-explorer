@@ -2,20 +2,19 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { [{FRAGMENT}]useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { [{TABLE_IMPORT}] } from 'components';
+import { [{UTILS_IMPORT}] } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { [{STATUS_STORE_IMPORT}] } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
-import { [{LONG}]Schema } from './[{PROPER}]Schema.jsx';
+import { [{LONG}]Schema } from './[{PROPER}]Schema';
 import './[{PROPER}].css';
 
 // EXISTING_CODE
@@ -110,7 +109,12 @@ export const [{PROPER}] = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refresh[{PROPER}]Data(dataQuery, dispatch, mocked);
+    let partialFetch = false;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refresh[{PROPER}]Data(dataQuery, dispatch, mocked);
+    }
     statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 

@@ -3,7 +3,7 @@
  * of 'EXISTING_CODE' tags.
  */
 
-import { getFieldValue } from './ExplorerTransactions'
+import { getFieldValue } from 'pages/Explorer/ExplorerTransactions'
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -117,3 +117,4 @@ export const transactionsSchema = [
   },
 ];
 // auto-generate: schema
+  

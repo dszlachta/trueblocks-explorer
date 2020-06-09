@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 
 import { menuSchema } from 'pages/index';
-import { systemsSchema } from 'pages/Settings/SettingsSystems';
+import { systemsSchema } from 'pages/Settings/SettingsSystemsSchema';
+import { schemasSchema } from 'pages/Settings/SettingsSchemasSchema';
 
 import { DataTable, ObjectTable, ButtonCaddie } from 'components';
 import { stateFromStorage } from 'components/utils';
 
-import { abisSchema } from 'pages/Explorer/ExplorerAbis';
+import { abisSchema } from 'pages/Explorer/ExplorerAbisSchema';
 import { blocksSchema } from 'pages/Explorer/ExplorerBlocksSchema';
-import { functionsSchema } from 'pages/Explorer/ExplorerFunctions';
+import { functionsSchema } from 'pages/Explorer/ExplorerFunctionsSchema';
 import { logsSchema } from 'pages/Explorer/ExplorerLogsSchema';
-import { parametersSchema } from 'pages/Explorer/ExplorerParameters';
-import { pricequotesSchema } from 'pages/Explorer/ExplorerPricequotes';
-import { pricesourcesSchema } from 'pages/Explorer/ExplorerPricesources';
+import { parametersSchema } from 'pages/Explorer/ExplorerParametersSchema';
+import { pricequotesSchema } from 'pages/Explorer/ExplorerPricequotesSchema';
+import { pricesourcesSchema } from 'pages/Explorer/ExplorerPricesourcesSchema';
 import { receiptsSchema } from 'pages/Explorer/ExplorerReceiptsSchema';
-import { traceActionsSchema } from 'pages/Explorer/ExplorerTraceActions';
-import { traceResultsSchema } from 'pages/Explorer/ExplorerTraceResults';
+import { traceActionsSchema } from 'pages/Explorer/ExplorerTraceActionsSchema';
+import { traceResultsSchema } from 'pages/Explorer/ExplorerTraceResultsSchema';
 import { tracesSchema } from 'pages/Explorer/ExplorerTracesSchema';
 import { transactionsSchema } from 'pages/Explorer/ExplorerTransactionsSchema';
-import { digestRecordSchema } from 'pages/Digests/DigestRecord';
 
 // auto-generate: all-schemas
 import { dashboardSchema } from 'pages/Dashboard/DashboardSchema';
@@ -32,8 +32,8 @@ import { signaturesSchema } from 'pages/Signatures/SignaturesSchema';
 import { digestsSchema } from 'pages/Digests/DigestsSchema';
 import { cachesSchema } from 'pages/Caches/CachesSchema';
 import { otherSchema } from 'pages/Other/OtherSchema';
-import { settingsSchema } from 'pages/Settings/Settings';
-import { supportSchema } from 'pages/Support/Support';
+import { settingsSchema } from 'pages/Settings/SettingsSchemasSchema';
+import { supportSchema } from 'pages/Support/SupportSchema';
 // auto-generate: all-schemas
 
 //------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ export const SettingsSchemas = () => {
   const schemas = useSchemas();
   const matched = schemas.filter((item) => item.name === current)[0];
   const hasIcons =
-    matched.schema.filter((field) => {
+    matched && matched.schema.filter((field) => {
       return field.type === 'icons';
     }).length > 0;
   const mocks = matched ? mockData(matched.schema) : [];
@@ -157,7 +157,7 @@ export const SettingsSchemas = () => {
       {/* prettier-ignore */}
       <div>
         <br />
-        <DataTable
+        {matched && <DataTable
           tableName={'schemaTable'}
           key={matched.name + 'm'}
           title={'Schema for ' + matched.name.replace('Schema', '')}
@@ -165,7 +165,7 @@ export const SettingsSchemas = () => {
           columns={schemasSchema}
           search={false}
           pagination={false}
-        />
+        />}
       </div>
       <br />
       <table width="100%" style={{ border: '1px solid black' }}>
@@ -184,7 +184,7 @@ export const SettingsSchemas = () => {
             >
               <div></div>
               <div>
-                <DataTable
+                {matched && <DataTable
                   tableName={'mocksTable'}
                   key={matched.name + 'm'}
                   title={''}
@@ -194,12 +194,13 @@ export const SettingsSchemas = () => {
                   pagination={false}
                   showHidden={true}
                   recordIcons={hasIcons ? ['Add', 'Edit'] : []}
-                />
+                />}
                 <br />
               </div>
               <div></div>
               <div></div>
               <div>
+                  {matched && 
                 <ObjectTable
                   key={matched.name + 'm'}
                   title={''}
@@ -208,7 +209,7 @@ export const SettingsSchemas = () => {
                   search={false}
                   pagination={false}
                   showHidden={true}
-                />
+                />}
               </div>
             </div>
           </td>
@@ -225,7 +226,6 @@ const useSchemas = () => {
     { group: 'system', name: 'menuSchema', schema: menuSchema },
     { group: 'system', name: 'systemsSchema', schema: systemsSchema },
     { group: 'system', name: 'schemasSchema', schema: schemasSchema },
-    { group: 'system', name: 'digestRecordSchema', schema: digestRecordSchema },
 
     // auto-generate: use-schemas
     { group: 'pages_', name: 'dashboardSchema', schema: dashboardSchema },
@@ -287,129 +287,3 @@ function getFieldValue(record, fieldName) {
       return record[fieldName];
   }
 }
-
-//------------------------------------------------------------------------------
-// auto-generate: schema
-export const schemasSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-  },
-  {
-    name: 'Selector',
-    selector: 'selector',
-    type: 'string',
-  },
-  {
-    name: 'Type',
-    selector: 'type',
-    type: 'string',
-  },
-  {
-    name: 'Width',
-    selector: 'width',
-    type: 'uint64',
-    align: 'center',
-  },
-  {
-    name: 'Class Name',
-    selector: 'cn',
-    type: 'string',
-    align: 'center',
-  },
-  {
-    name: 'Alignment',
-    selector: 'align',
-    type: 'string',
-    align: 'center',
-  },
-  {
-    name: 'Decimals',
-    selector: 'decimals',
-    type: 'uint64',
-    align: 'center',
-  },
-  {
-    name: 'Editable',
-    selector: 'editable',
-    type: 'bool',
-    isPill: true,
-    align: 'center',
-  },
-  {
-    name: 'Hidden',
-    selector: 'hidden',
-    type: 'bool',
-    isPill: true,
-    align: 'center',
-  },
-  {
-    name: 'Detail',
-    selector: 'detail',
-    type: 'bool',
-    isPill: true,
-    align: 'center',
-  },
-  {
-    name: 'HideEmpty',
-    selector: 'hide_empty',
-    type: 'bool',
-    isPill: true,
-    align: 'center',
-  },
-  {
-    name: 'isPill',
-    selector: 'isPill',
-    type: 'bool',
-    isPill: true,
-    align: 'center',
-  },
-  {
-    name: 'Export',
-    selector: 'export',
-    type: 'bool',
-    isPill: true,
-    align: 'center',
-  },
-  {
-    name: 'Sortable',
-    selector: 'sortable',
-    type: 'bool',
-    isPill: true,
-    align: 'center',
-  },
-  {
-    name: 'Chart',
-    selector: 'chart',
-    type: 'string',
-    align: 'center',
-  },
-  {
-    name: 'underField',
-    selector: 'underField',
-    type: 'string',
-  },
-  {
-    name: 'onDisplay',
-    selector: 'onDisplay',
-    type: 'function',
-  },
-  {
-    name: 'onAccept',
-    selector: 'onAccept',
-    type: 'function',
-  },
-  {
-    name: 'onValidate',
-    selector: 'onValidate',
-    type: 'function',
-  },
-];
-// auto-generate: schema

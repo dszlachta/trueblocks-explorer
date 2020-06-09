@@ -3,7 +3,7 @@
  * of 'EXISTING_CODE' tags.
  */
 
-import { getFieldValue } from './ExplorerReceipts'
+import { getFieldValue } from 'pages/Explorer/ExplorerReceipts'
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -89,3 +89,4 @@ export const receiptsSchema = [
   },
 ];
 // auto-generate: schema
+  

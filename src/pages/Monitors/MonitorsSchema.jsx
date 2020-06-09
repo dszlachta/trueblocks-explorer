@@ -2,7 +2,7 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import { getFieldValue } from './Monitors';
+import { getFieldValue } from 'pages/Monitors/Monitors';
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -148,3 +148,4 @@ export const monitorsSchema = [
   },
 ];
 // auto-generate: schema
+  

@@ -2,20 +2,19 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
-import { otherSchema } from './OtherSchema.jsx';
+import { otherSchema } from './OtherSchema';
 import './Other.css';
 
 // EXISTING_CODE
@@ -147,7 +146,12 @@ export const Other = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshOtherData(dataQuery, dispatch, mocked);
+    let partialFetch = false;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshOtherData(dataQuery, dispatch, mocked);
+    }
     statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 

@@ -2,7 +2,7 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import { getFieldValue } from './Appearances';
+import { getFieldValue } from 'pages/Appearances/Appearances';
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -439,3 +439,4 @@ export const appearancesSchema = [
   },
 ];
 // auto-generate: schema
+  

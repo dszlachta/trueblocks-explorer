@@ -2,7 +2,7 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import { getFieldValue } from './Caches';
+import { getFieldValue } from 'pages/Caches/Caches';
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -77,3 +77,4 @@ export const cachesSchema = [
   },
 ];
 // auto-generate: schema
+  

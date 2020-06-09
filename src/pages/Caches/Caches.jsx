@@ -2,20 +2,19 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 import { NameDialog } from 'dialogs';
 
-import { cachesSchema } from './CachesSchema.jsx';
+import { cachesSchema } from './CachesSchema';
 import './Caches.css';
 
 // EXISTING_CODE
@@ -37,8 +36,6 @@ export const Caches = (props) => {
 
   // EXISTING_CODE
   // EXISTING_CODE
-
-  const cmdUrl = 'http://localhost:8080/status';
 
   const dataQuery = 'verbose=10&modes=abis%20caches&types=all&details&depth=1';
   function addendum(record, record_id) {
@@ -99,39 +96,6 @@ export const Caches = (props) => {
           // });
           setEditDialog({ showing: false, record: {} });
           break;
-        case 'delete':
-          {
-            const cmdQuery = 'editCmd=delete&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            dispatch(action);
-            sendServerCommand(cmdUrl, cmdQuery).then(() => {
-              // we assume the delete worked, so we don't reload the data
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
-        case 'undelete':
-          {
-            const cmdQuery = 'editCmd=undelete&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            dispatch(action);
-            sendServerCommand(cmdUrl, cmdQuery).then(() => {
-              // we assume the delete worked, so we don't reload the data
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
-        case 'remove':
-          {
-            const cmdQuery = 'editCmd=remove&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
-              // the command worked, but now we need to reload the data
-              refreshCachesData(dataQuery, dispatch, mocked);
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
 
         // EXISTING_CODE
         // EXISTING_CODE
@@ -144,7 +108,12 @@ export const Caches = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshCachesData(dataQuery, dispatch, mocked);
+    let partialFetch = false;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshCachesData(dataQuery, dispatch, mocked);
+    }
     statusDispatch(NOT_LOADING);
   }, [dataQuery, dispatch]);
 

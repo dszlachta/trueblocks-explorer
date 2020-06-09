@@ -3,7 +3,7 @@
  * of 'EXISTING_CODE' tags.
  */
 
-import { getFieldValue } from './ExplorerBlocks'
+import { getFieldValue } from 'pages/Explorer/ExplorerBlocks'
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -88,3 +88,4 @@ export const blocksSchema = [
   },
 ];
 // auto-generate: schema
+  

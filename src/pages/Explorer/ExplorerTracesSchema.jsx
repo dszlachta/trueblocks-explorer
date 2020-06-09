@@ -3,7 +3,7 @@
  * of 'EXISTING_CODE' tags.
  */
 
-import { getFieldValue } from './ExplorerTraces'
+import { getFieldValue } from 'pages/Explorer/ExplorerTraces'
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -82,3 +82,4 @@ export const tracesSchema = [
   },
 ];
 // auto-generate: schema
+  

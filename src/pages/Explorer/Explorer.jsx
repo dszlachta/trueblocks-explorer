@@ -9,6 +9,8 @@ import { ExplorerReceipts } from './ExplorerReceipts';
 import { ExplorerLogs } from './ExplorerLogs';
 import { ExplorerTraces } from './ExplorerTraces';
 
+import { explorerSchema } from './ExplorerSchema'
+
 //----------------------------------------------------------------------
 export const Explorer = () => {
   switch (currentPage().subpage) {
@@ -49,58 +51,3 @@ export const explorerReducer = (state, action) => {
 export const useExplorer = () => {
   return useContext(GlobalContext).explorer;
 };
-
-// auto-generate: schema
-export const explorerSchema = [
-  {
-    name: 'ABIs',
-    selector: 'abis',
-    type: 'CAbi',
-  },
-  {
-    name: 'Blocks',
-    selector: 'blocks',
-    type: 'CBlock',
-  },
-  {
-    name: 'Functions',
-    selector: 'functions',
-    type: 'CFunction',
-  },
-  {
-    name: 'Logs',
-    selector: 'logs',
-    type: 'CLogEntry',
-  },
-  {
-    name: 'Parameters',
-    selector: 'parameters',
-    type: 'CParameter',
-  },
-  {
-    name: 'Receipts',
-    selector: 'receipts',
-    type: 'CReceipt',
-  },
-  {
-    name: 'Trace Actions',
-    selector: 'traceActions',
-    type: 'CTraceAction',
-  },
-  {
-    name: 'Trace Results',
-    selector: 'traceResults',
-    type: 'CTraceResult',
-  },
-  {
-    name: 'Traces',
-    selector: 'traces',
-    type: 'CTrace',
-  },
-  {
-    name: 'Transactions',
-    selector: 'transactions',
-    type: 'CTransaction',
-  },
-];
-// auto-generate: schema

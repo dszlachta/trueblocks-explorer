@@ -2,7 +2,7 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import { getFieldValue } from './Digests';
+import { getFieldValue } from 'pages/Digests/Digests';
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -151,3 +151,4 @@ export const digestsSchema = [
   },
 ];
 // auto-generate: schema
+  

@@ -7,9 +7,9 @@ pages = "\
     settings|support"
 
 schemas = "\
-    menu|dashboard|collections|monitors|appearances|tags|\
-    names|signatures|digests|digests-record|\
-    caches|other|settings-schemas|settings-systems|\
+    dashboard|collections|monitors|appearances|tags|\
+    names|signatures|digests|\
+    caches|other|settings|settings-schemas|settings-systems|support|\
     explorer|\
     explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|\
     explorer-traces|explorer-traceActions|explorer-traceResults|\

@@ -2,7 +2,7 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import { getFieldValue } from './Other';
+import { getFieldValue } from 'pages/Other/Other';
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -54,3 +54,4 @@ export const otherSchema = [
   },
 ];
 // auto-generate: schema
+  
