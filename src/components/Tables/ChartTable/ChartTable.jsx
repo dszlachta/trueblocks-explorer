@@ -5,6 +5,10 @@ import { extent } from 'd3-array';
 import { Tablebar, DataTable } from 'components';
 import { calcValue } from 'store';
 
+import { LineChart } from './Charts/Line';
+import { BarChart } from './Charts/Bar';
+import { ScatterChart } from './Charts/Scatter';
+
 import './ChartTable.css';
 
 //-----------------------------------------------------------------
@@ -99,6 +103,8 @@ function ChartChart({ data, columns, chartCtx }) {
 
   chartCtx.height = h - margin.top - margin.bottom;
 
+  console.log('x domain', extent(data, (d) => calcValue(d, chartCtx.rangeCol)));
+
   chartCtx.xScale = scaleLinear()
     .domain(extent(data, (d) => calcValue(d, chartCtx.rangeCol)))
     .range([0, chartCtx.width]);
@@ -109,90 +115,30 @@ function ChartChart({ data, columns, chartCtx }) {
 
   switch (chartCtx.type) {
     case 'scatter':
-      return <ScatterChart data={data} columns={columns} chartCtx={chartCtx} />;
+      return (
+        <ScatterChart data={data} columns={columns} chartCtx={chartCtx} margin={margin} width={w} height={h}>
+          <YAxis chartCtx={chartCtx} />
+          <XAxis chartCtx={chartCtx} />
+        </ScatterChart>
+      );
     case 'line':
-      return <LineChart data={data} columns={columns} chartCtx={chartCtx} />;
+      return (
+        <LineChart data={data} columns={columns} chartCtx={chartCtx} margin={margin} width={w} height={h}>
+          <YAxis chartCtx={chartCtx} />
+          <XAxis chartCtx={chartCtx} />
+        </LineChart>
+      );
     case 'bar':
-      return <BarChart data={data} columns={columns} chartCtx={chartCtx} />;
+      return (
+        <BarChart data={data} columns={columns} chartCtx={chartCtx} margin={margin} width={w} height={h}>
+          <YAxis chartCtx={chartCtx} />
+          <XAxis chartCtx={chartCtx} />
+        </BarChart>
+      );
     default:
       return 'Unknown chart type ' + chartCtx.type;
   }
 }
-
-//-----------------------------------------------------------------
-const ScatterChart = ({ data, columns, chartCtx }) => {
-  const circles = data.map((d, i) => (
-    <circle
-      key={i}
-      r={chartCtx.radius || 2}
-      cx={chartCtx.xScale(calcValue(d, chartCtx.rangeCol))}
-      cy={chartCtx.yScale(calcValue(d, chartCtx.domainCol))}
-      style={{ fill: 'steelblue' }}
-    />
-  ));
-
-  return (
-    <div className="at-row chart">
-      <svg width={w} height={h}>
-        <g transform={`translate(${margin.left},${margin.top})`}>
-          <YAxis chartCtx={chartCtx} />
-          <XAxis chartCtx={chartCtx} />
-          {circles}
-        </g>
-      </svg>
-    </div>
-  );
-};
-
-//-----------------------------------------------------------------
-const LineChart = ({ data, columns, chartCtx }) => {
-  const circles = data.map((d, i) => (
-    <circle
-      key={i}
-      r={chartCtx.radius || 2}
-      cx={chartCtx.xScale(calcValue(d, chartCtx.rangeCol))}
-      cy={chartCtx.yScale(calcValue(d, chartCtx.domainCol))}
-      style={{ fill: 'steelblue' }}
-    />
-  ));
-
-  return (
-    <div className="at-row chart">
-      <svg width={w} height={h}>
-        <g transform={`translate(${margin.left},${margin.top})`}>
-          <YAxis chartCtx={chartCtx} />
-          <XAxis chartCtx={chartCtx} />
-          {circles}
-        </g>
-      </svg>
-    </div>
-  );
-};
-
-//-----------------------------------------------------------------
-const BarChart = ({ data, columns, chartCtx }) => {
-  const circles = data.map((d, i) => (
-    <circle
-      key={i}
-      r={chartCtx.radius || 2}
-      cx={chartCtx.xScale(calcValue(d, chartCtx.rangeCol))}
-      cy={chartCtx.yScale(calcValue(d, chartCtx.domainCol))}
-      style={{ fill: 'steelblue' }}
-    />
-  ));
-
-  return (
-    <div className="at-row chart">
-      <svg width={w} height={h}>
-        <g transform={`translate(${margin.left},${margin.top})`}>
-          <YAxis chartCtx={chartCtx} />
-          <XAxis chartCtx={chartCtx} />
-          {circles}
-        </g>
-      </svg>
-    </div>
-  );
-};
 
 //-----------------------------------------------------------------
 const YAxis = ({ chartCtx }) => {
@@ -201,7 +147,7 @@ const YAxis = ({ chartCtx }) => {
     return (
       <g key={i} className="y-tick">
         <line style={{ stroke: '#e4e5eb' }} x1={0} y1={scaledTick} x2={chartCtx.width} y2={scaledTick} />
-        <text style={{ fontSize: 12 }} x={-20} y={scaledTick} dy=".32em">
+        <text style={{ fontSize: 12 }} x={-25} y={scaledTick} dy=".32em">
           {tick}
         </text>
       </g>
