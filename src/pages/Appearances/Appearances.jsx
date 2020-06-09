@@ -23,11 +23,13 @@ import { SidebarTable } from 'components';
 import { getIcon } from 'pages/utils';
 let g_focusValue = '';
 var g_Handler = null;
+const useMountEffect = (fun) => useEffect(fun, [])
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
 export const Appearances = (props) => {
   const { appearances, dispatch } = useAppearances();
+  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -38,6 +40,7 @@ export const Appearances = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [recordCount, setRecordCount] = useState(0);
 
   // EXISTING_CODE
   const { params } = currentPage();
@@ -149,32 +152,34 @@ export const Appearances = (props) => {
     [dispatch, filtered, statusDispatch]
   );
 
-  useEffect(() => {
-    //statusDispatch(LOADING);
-    let partialFetch = false;
-    // EXISTING_CODE
-    partialFetch = true;
-    if (partialFetch) {
-      const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
-      getServerData(getDataUrl(), qqq).then((theData) => {
-        let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
-        const max_records = stateFromStorage('perPage', 10) * 2; // start with five pages, double each time
-        refreshAppearancesData(dataQuery, dispatch, mocked, 0, max_records, nRecords);
-      });
-    }
-    // EXISTING_CODE
-    if (!partialFetch) {
-      refreshAppearancesData(dataQuery, dispatch, mocked);
-    }
-    //statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
-
-  useEffect(() => {
+  useMountEffect(() => {
+    const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
+    getServerData(getDataUrl(), qqq).then((theData) => {
+      setRecordCount(mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0);
+    });
     Mousetrap.bind('plus', (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
     return () => {
       Mousetrap.unbind('plus');
     };
-  }, [appearancesHandler]);
+  });
+
+  useEffect(() => {
+    statusDispatch(LOADING);
+    if (!loading) {
+      let partialFetch = false;
+      // EXISTING_CODE
+      partialFetch = true;
+      if (partialFetch) {
+        const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
+        refreshAppearancesData2(dataQuery, dispatch, mocked, 0, max_records, recordCount);
+      }
+      // EXISTING_CODE
+      if (!partialFetch) {
+        refreshAppearancesData(dataQuery, dispatch, mocked);
+      }
+    }
+    statusDispatch(NOT_LOADING);
+  }, [dataQuery, dispatch, mocked, recordCount, statusDispatch, loading]);
 
   useMemo(() => {
     // prettier-ignore
@@ -367,6 +372,33 @@ const BalanceView = ({data, columns, title}) => {
     />
   );
 }
+
+//----------------------------------------------------------------------
+export function refreshAppearancesData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords) {
+  getServerData(
+    getDataUrl(),
+    query + (mocked ? '&mockData' : '') + (!mocked && maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
+  ).then((theData) => {
+    let appearances = theData.data;
+    if (!mocked) appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
+    let named = appearances;
+    if (!mocked && appearances && theData.meta) {
+      named = appearances.map((item) => {
+        if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.from])
+          item.fromName = theData.meta.namedFromAndTo[item.from];
+        else item.fromName = theData.meta.namedFrom && theData.meta.namedFrom[item.from];
+        if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.to])
+          item.toName = theData.meta.namedFromAndTo[item.to];
+        else item.toName = theData.meta.namedTo && theData.meta.namedTo[item.to];
+        return item;
+      });
+    }
+    appearances = named;
+    if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
+    if (!mocked && maxRecords < nRecords) refreshAppearancesData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords);
+  });
+}
 // EXISTING_CODE
 
 // auto-generate: page-settings
@@ -393,23 +425,8 @@ export function refreshAppearancesData(query, dispatch, mocked, firstRecord, max
     query + (mocked ? '&mockData' : '') + (!mocked && maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
   ).then((theData) => {
     let appearances = theData.data;
-    if (!mocked) appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
-    let named = appearances;
-    if (!mocked && appearances && theData.meta) {
-      named = appearances.map((item) => {
-        if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.from])
-          item.fromName = theData.meta.namedFromAndTo[item.from];
-        else item.fromName = theData.meta.namedFrom && theData.meta.namedFrom[item.from];
-        if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.to])
-          item.toName = theData.meta.namedFromAndTo[item.to];
-        else item.toName = theData.meta.namedTo && theData.meta.namedTo[item.to];
-        return item;
-      });
-    }
-    appearances = named;
     if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
-    if (!mocked && maxRecords < nRecords) refreshAppearancesData(query, dispatch, mocked, 0, maxRecords * 2, nRecords);
   });
 }
 
