@@ -28,7 +28,7 @@ export const Menu = ({ menu, parent = '', minimized, selected, handler, useIcons
             </div>
           );
         } else if (isSep) {
-          return <div>&nbsp;&nbsp;</div>
+          return <div key={'sep_' + index} >&nbsp;&nbsp;</div>
         }
 
         const { label, exact, items } = item;
