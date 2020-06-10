@@ -45,6 +45,7 @@
     "react-spring": "^8.0.27",
     "shortid": "^2.2.15",
     "ss-search": "^1.5.20",
+    "styled-components": "^5.1.1",
     "swr": "^0.1.18",
     "yarn.lock": "^0.0.1-security"
   },
