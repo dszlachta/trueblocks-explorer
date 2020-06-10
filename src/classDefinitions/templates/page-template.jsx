@@ -40,7 +40,7 @@ export const [{PROPER}] = (props) => {
 
   const dataQuery = '[{DATAQUERY}]';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -85,7 +85,6 @@ export const [{PROPER}] = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -115,8 +114,7 @@ export const [{PROPER}] = (props) => {
     if (!partialFetch) {
       refresh[{PROPER}]Data(dataQuery, dispatch, mocked);
     }
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, [{LONG}]Handler, { type: 'Add' }));
@@ -136,7 +134,8 @@ export const [{PROPER}] = (props) => {
       });
       setFiltered(result);
     }
-  }, [[{LONG}], curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [[{LONG}], curTag, statusDispatch]);
 
   let custom = null;
   let title = '[{PROPER}]';

@@ -5,7 +5,7 @@ defaultSort = "encoding,type,name"
 defaultTags = "['Functions', 'Events', 'Constructors', '|', 'Known', 'Monitored', '|', 'Names Only', 'Signatures Only', 'Cross']"
 cmdUrl = "http://localhost:8080/abi"
 dataUrl = "http://localhost:8080/abi"
-dataQuery = "verbose=10&monitored&known"
+dataQuery = "monitored&known"
 imports = "||getServerData, sendServerCommand, sortArray, handleClick, replaceRecord|||"
 
 [[subpages]]

@@ -4,7 +4,7 @@ recordIcons = "editing"
 defaultSort = "blockNumber,name,date"
 cmdUrl = "http://localhost:8080/when"
 dataUrl = "http://localhost:8080/when"
-dataQuery = "verbose=10&list"
+dataQuery = "list"
 defaultTags = "['Yours', 'Known', 'Dated']"
 imports = "||getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord|||"
 

@@ -29,7 +29,7 @@ export const Digests = () => {
 
   const [start, setStart] = useState(0);
   const [source] = useState(currentPage().subpage);
-  const [query] = useState('modes=index&details&verbose=10');
+  const [query] = useState('modes=index&details');
 
   // prettier-ignore
   const digestsHandler = useCallback(

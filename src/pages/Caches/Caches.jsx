@@ -37,9 +37,9 @@ export const Caches = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataQuery = 'verbose=10&modes=abis%20caches&types=all&details&depth=1';
+  const dataQuery = 'modes=abis%20caches&types=all&details&depth=1';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -84,7 +84,6 @@ export const Caches = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -114,8 +113,7 @@ export const Caches = (props) => {
     if (!partialFetch) {
       refreshCachesData(dataQuery, dispatch, mocked);
     }
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, cachesHandler, { type: 'Add' }));
@@ -135,7 +133,8 @@ export const Caches = (props) => {
       });
       setFiltered(result);
     }
-  }, [caches, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [caches, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Caches';

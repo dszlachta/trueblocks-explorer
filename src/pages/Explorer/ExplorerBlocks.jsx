@@ -48,7 +48,7 @@ export const ExplorerBlocks = () => {
   useArrowKeys(blocksHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, blocksHandler]);
 
   const url = 'http://localhost:8080/blocks';
-  let query = 'blocks=' + current + '&hashes_only&verbose=10';
+  let query = 'blocks=' + current + '&hashes_only';
   useEffect(() => {
     getServerData(url, query + (mocked ? "&mockData" : "")).then((theData) => {
       let result = theData.data;

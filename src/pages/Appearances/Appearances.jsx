@@ -29,7 +29,6 @@ const useMountEffect = (fun) => useEffect(fun, [])
 //---------------------------------------------------------------------------
 export const Appearances = (props) => {
   const { appearances, dispatch } = useAppearances();
-  const loading = useStatus().state.loading;
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -40,9 +39,9 @@ export const Appearances = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
-  const [recordCount, setRecordCount] = useState(0);
 
   // EXISTING_CODE
+  const [recordCount, setRecordCount] = useState(0);
   const { params } = currentPage();
   const addresses = params[0];
   const name = params.length > 1 ? params[1].value : '';
@@ -51,7 +50,7 @@ export const Appearances = (props) => {
 
   const dataQuery = 'addrs=' + addresses.value + '&accounting&ether';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     ret = "";
     // EXISTING_CODE
@@ -97,7 +96,6 @@ export const Appearances = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -113,7 +111,7 @@ export const Appearances = (props) => {
         // EXISTING_CODE
         case 'addmonitor':
           // {
-          //   const cmdQuery = 'addrs=' + action.record_id + '&verbose=10&dollars';
+          //   const cmdQuery = 'addrs=' + action.record_id + '&dollars';
           //   statusDispatch(LOADING);
           //   sendServerCommand('http://localhost:8080/export/', cmdQuery).then((theData) => {
           //     // the command worked, but now we need to reload the data
@@ -152,34 +150,27 @@ export const Appearances = (props) => {
     [dispatch, filtered, statusDispatch]
   );
 
-  useMountEffect(() => {
-    const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
-    getServerData(getDataUrl(), qqq).then((theData) => {
-      setRecordCount(mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0);
-    });
+  useEffect(() => {
+    statusDispatch(LOADING);
+    let partialFetch = false;
+    // EXISTING_CODE
+    partialFetch = true;
+    if (partialFetch) {
+      const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
+      refreshAppearancesData2(dataQuery, dispatch, mocked, 0, max_records, recordCount, statusDispatch);
+    }
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshAppearancesData(dataQuery, dispatch, mocked);
+    }
+  }, [dataQuery, dispatch, mocked, recordCount, statusDispatch]);
+
+  useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
     return () => {
       Mousetrap.unbind('plus');
     };
-  });
-
-  useEffect(() => {
-    statusDispatch(LOADING);
-    if (!loading) {
-      let partialFetch = false;
-      // EXISTING_CODE
-      partialFetch = true;
-      if (partialFetch) {
-        const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
-        refreshAppearancesData2(dataQuery, dispatch, mocked, 0, max_records, recordCount);
-      }
-      // EXISTING_CODE
-      if (!partialFetch) {
-        refreshAppearancesData(dataQuery, dispatch, mocked);
-      }
-    }
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch, mocked, recordCount, statusDispatch, loading]);
+  }, [appearancesHandler]);
 
   useMemo(() => {
     // prettier-ignore
@@ -264,7 +255,8 @@ export const Appearances = (props) => {
       });
       setFiltered(result);
     }
-  }, [appearances, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [appearances, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Appearances';
@@ -277,6 +269,18 @@ export const Appearances = (props) => {
       addresses.value.substr(addresses.value.length - 6, addresses.value.length - 1)
     : 'No Name';
   g_Handler = appearancesHandler;
+
+    useMountEffect(() => {
+    const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
+    getServerData(getDataUrl(), qqq).then((theData) => {
+      setRecordCount(mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0);
+    });
+    Mousetrap.bind('plus', (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind('plus');
+    };
+  });
+
   // EXISTING_CODE
 
   const table = getInnerTable(appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler);
@@ -374,7 +378,7 @@ const BalanceView = ({data, columns, title}) => {
 }
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords) {
+export function refreshAppearancesData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords, statusDispatch) {
   getServerData(
     getDataUrl(),
     query + (mocked ? '&mockData' : '') + (!mocked && maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
@@ -396,7 +400,10 @@ export function refreshAppearancesData2(query, dispatch, mocked, firstRecord, ma
     appearances = named;
     if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
-    if (!mocked && maxRecords < nRecords) refreshAppearancesData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords);
+    if (!mocked && maxRecords < nRecords) {
+      statusDispatch(LOADING);
+      refreshAppearancesData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords, statusDispatch);
+    }
   });
 }
 // EXISTING_CODE
@@ -419,12 +426,11 @@ const getDataUrl = () => {
 }
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(query, dispatch, mocked, firstRecord, maxRecords, nRecords) {
-  getServerData(
-    getDataUrl(),
-    query + (mocked ? '&mockData' : '') + (!mocked && maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
-  ).then((theData) => {
+export function refreshAppearancesData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let appearances = theData.data;
+    // EXISTING_CODE
+    // EXISTING_CODE
     if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });

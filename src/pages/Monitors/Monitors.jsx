@@ -39,9 +39,9 @@ export const Monitors = (props) => {
 
   const cmdUrl = 'http://localhost:8080/rm';
 
-  const dataQuery = 'modes=monitors&details&verbose=10';
+  const dataQuery = 'modes=monitors&details';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     ret += '&address=' + record_id;
     // EXISTING_CODE
@@ -87,7 +87,6 @@ export const Monitors = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -159,8 +158,7 @@ export const Monitors = (props) => {
     if (!partialFetch) {
       refreshMonitorsData(dataQuery, dispatch, mocked);
     }
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, monitorsHandler, { type: 'Add' }));
@@ -180,7 +178,8 @@ export const Monitors = (props) => {
       });
       setFiltered(result);
     }
-  }, [monitors, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [monitors, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Monitors';

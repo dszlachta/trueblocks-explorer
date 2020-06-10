@@ -48,7 +48,7 @@ export const ExplorerTransactions = () => {
   useArrowKeys(transactionsHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, transactionsHandler]);
 
   const url = 'http://localhost:8080/transactions';
-  let query = 'transactions=' + current + '&verbose=10&force';
+  let query = 'transactions=' + current + '&force';
   useEffect(() => {
     getServerData(url, query + (mocked ? "&mockData" : "")).then((theData) => {
       let result = theData.data;

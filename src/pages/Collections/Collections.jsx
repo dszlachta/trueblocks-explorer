@@ -39,9 +39,9 @@ export const Collections = (props) => {
 
   const cmdUrl = 'http://localhost:8080/names';
 
-  const dataQuery = 'verbose=10&collections';
+  const dataQuery = 'collections';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -86,7 +86,6 @@ export const Collections = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -149,8 +148,7 @@ export const Collections = (props) => {
     if (!partialFetch) {
       refreshCollectionsData(dataQuery, dispatch, mocked);
     }
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, collectionsHandler, { type: 'Add' }));
@@ -170,7 +168,8 @@ export const Collections = (props) => {
       });
       setFiltered(result);
     }
-  }, [collections, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [collections, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Collections';

@@ -3,7 +3,7 @@ class = "CCaches"
 recordIcons =  "editing,exporting"
 defaultSort = "path"
 dataUrl = "http://localhost:8080/status"
-dataQuery = "verbose=10&modes=abis%20caches&types=all&details&depth=1"
+dataQuery = "modes=abis%20caches&types=all&details&depth=1"
 imports = "||getServerData, sortArray, sortStrings, handleClick, replaceRecord|||"
 
 [[subpages]]

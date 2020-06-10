@@ -4,7 +4,7 @@ recordIcons = "viewing,editing,follow,exporting,importing"
 defaultSort = "tags,address,name"
 cmdUrl = "http://localhost:8080/names"
 dataUrl = "http://localhost:8080/names"
-dataQuery = "verbose=10&all&expand"
+dataQuery = "all&expand"
 imports = "|||useStatus, LOADING, NOT_LOADING, useMonitorMap||"
 [[subpages]]
 list = [

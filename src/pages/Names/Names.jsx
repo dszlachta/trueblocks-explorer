@@ -39,9 +39,9 @@ export const Names = (props) => {
 
   const cmdUrl = 'http://localhost:8080/names';
 
-  const dataQuery = 'verbose=10&all&expand';
+  const dataQuery = 'all&expand';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     ret += '&expand' + (record ? (record.is_custom ? '&to_custom' : '') : '');
     // EXISTING_CODE
@@ -87,7 +87,6 @@ export const Names = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -139,7 +138,7 @@ export const Names = (props) => {
           break;
         case 'addmonitor':
           // {
-          //   const cmdQuery = 'addrs=' + action.record_id + '&verbose=10&dollars';
+          //   const cmdQuery = 'addrs=' + action.record_id + '&dollars';
           //   statusDispatch(LOADING);
           //   sendServerCommand('http://localhost:8080/export/', cmdQuery).then((theData) => {
           //     // the command worked, but now we need to reload the data
@@ -174,8 +173,7 @@ export const Names = (props) => {
     if (!partialFetch) {
       refreshNamesData(dataQuery, dispatch, mocked);
     }
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, namesHandler, { type: 'Add' }));
@@ -195,7 +193,8 @@ export const Names = (props) => {
       });
       setFiltered(result);
     }
-  }, [names, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [names, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Names';
