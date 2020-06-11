@@ -7,7 +7,13 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ChartTable, PageCaddie } from 'components';
+import {
+  DataTable,
+  ObjectTable,
+  ChartTable,
+  PageCaddie,
+  ProgressBar
+} from 'components';
 import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
@@ -291,6 +297,7 @@ export const Appearances = (props) => {
         caddieName="Tags"
         caddieData={tagList}
         current={curTag}
+        useProgress={true}
         handler={appearancesHandler}
       />
       {mocked && (

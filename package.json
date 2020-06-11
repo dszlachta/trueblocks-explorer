@@ -12,6 +12,7 @@
     "eject": "react-scripts eject",
     "prettify": "node_modules/.bin/prettier '{src,test,mocks}/**/*.js' --write",
     "lint": "eslint '{src,test,mocks}/**/*.js'",
+    "test": "react-scripts test",
     "document": "documentation build src/components/**/[A-Zi]*.{js,jsx,ts,tsx} -f html -o docs/components ; open docs/components/index.html",
     "generate": "cd src ; makeClass -jarv ; cd -",
     "electron-dev": "ELECTRON_UI_URL=http://localhost:3002 electron electron/main.js",
@@ -72,6 +73,9 @@
     "@electron-forge/maker-zip": "6.0.0-beta.51",
     "electron": "^8.2.5",
     "husky": "^4.2.3",
+    "jest": "24.9.0",
+    "jest-websocket-mock": "^2.0.2",
+    "mock-socket": "^9.0.3",
     "prettier": "^2.0.2"
   },
   "config": {
