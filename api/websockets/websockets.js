@@ -66,7 +66,7 @@ module.exports = {
   broadcast(message, sendRaw=false) {
     const messageToSend = sendRaw ? message : JSON.stringify(message);
 
-    log('broadcasting message:', messageToSend);
+    //log('broadcasting message:', messageToSend);
     [...server.clients]
       .filter(({ readyState }) => readyState === ws.OPEN)
       .forEach(socket => socket.send(messageToSend));

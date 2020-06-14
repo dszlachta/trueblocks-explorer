@@ -12,7 +12,6 @@ import {
   ObjectTable,
   ChartTable,
   PageCaddie,
-  ProgressBar
 } from 'components';
 import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
@@ -371,9 +370,10 @@ const getInnerTable = (appearances, curTag, filtered, title, searchFields, recor
 // EXISTING_CODE
 //----------------------------------------------------------------------
 const BalanceView = ({data, columns, title}) => {
+  const cols = JSON.parse(JSON.stringify(columns));;
   return (
     <ChartTable
-      columns={columns}
+      columns={cols}
       data={data}
       title=""
       search={false}
