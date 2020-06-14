@@ -280,10 +280,12 @@ function mockData(columns) {
 
 //----------------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   switch (fieldName) {
     case 'id':
       return record.selector; // this is right - it's a confusing name
     default:
       return record[fieldName];
   }
+  return record[fieldName];
 }

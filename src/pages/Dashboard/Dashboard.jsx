@@ -107,12 +107,14 @@ export const dashboardDefault = [
 
 //----------------------------------------------------
 export function getFieldValue(record, fieldName) {
+  if (!record) return '';
   switch (fieldName) {
     case 'id':
       return record.route;
     default:
       break;
   }
+  return record[fieldName];
 }
 
 //----------------------------------------------------------------------

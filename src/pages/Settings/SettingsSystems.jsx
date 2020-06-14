@@ -176,6 +176,7 @@ export function getFieldValue(record, fieldName) {
     default:
       break;
   }
+  return record[fieldName];
 }
 
 //------------------------------------------------------------------------

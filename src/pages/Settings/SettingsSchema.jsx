@@ -1,9 +1,11 @@
 function getFieldValue(record, fieldName) {
-    switch (fieldName) {
-      default:
-        break;
-    }
+  if (!record) return '';
+  switch (fieldName) {
+    default:
+      break;
   }
+  return record[fieldName];
+}
   
 // auto-generate: schema
 export const settingsSchema = [];

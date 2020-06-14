@@ -44,6 +44,11 @@ export const stateFromStorage = (key, defaultState, asString = false) => {
 };
 
 //----------------------------------------------------------------------
+export function obscureAddress(address) {
+  return address && address.slice(0,10) + "..." + address.slice(address.length-8, address.length);
+}
+
+//----------------------------------------------------------------------
 export const handleClick = (e, dispatch, action = {}) => {
   if (e) e.preventDefault();
   if (dispatch) dispatch(action);

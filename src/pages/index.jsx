@@ -199,6 +199,7 @@ export const theMenu = {
 
 //----------------------------------------------------------------------
 function getFieldValue(record, fieldName) {
+  if (!record) return '';
   switch (fieldName) {
     case 'id':
       return record.label;
@@ -209,6 +210,7 @@ function getFieldValue(record, fieldName) {
     default:
       break;
   }
+  return record[fieldName];
 }
 
 //----------------------------------------------------------------------

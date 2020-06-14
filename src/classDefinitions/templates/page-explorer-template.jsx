@@ -85,8 +85,10 @@ export const Explorer[{PROPER}] = () => {
 
 //----------------------------------------------------------------------------
 export function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   // EXISTING_CODE
+  return record[fieldName];
 }
 
 // EXISTING_CODE

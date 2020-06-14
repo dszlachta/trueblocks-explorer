@@ -13,7 +13,7 @@ import {
   ChartTable,
   PageCaddie,
 } from 'components';
-import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
+import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage, obscureAddress } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -534,18 +534,18 @@ export function getFieldValue(record, fieldName) {
     case 'internal':
       return internal ? 'int' : '';
     case 'from': {
-      const val = record.fromName ? record.fromName.name : record.from;
+      const val = record.fromName ? record.fromName.name : obscureAddress(record.from);
       if (record.from === g_focusValue) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'to': {
-      const val = record.toName ? record.toName.name : record.to;
+      const val = record.toName ? record.toName.name : obscureAddress(record.to);
       if (record.to === g_focusValue) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'fromName':
       return record.fromName ? (
-        record.from
+        obscureAddress(record.from)
       ) : (
         <div
           onClick={(e) => handleClick(e, g_Handler, { type: 'Add', record_id: record.from })}
@@ -556,7 +556,7 @@ export function getFieldValue(record, fieldName) {
       );
     case 'toName':
       return record.toName ? (
-        record.to
+        obscureAddress(record.to)
       ) : (
         <div
           onClick={(e) => handleClick(e, g_Handler, { type: 'Add', record_id: record.to })}
@@ -569,6 +569,10 @@ export function getFieldValue(record, fieldName) {
       if (!record['receipt']) return null;
       if (!record.receipt['contractAddress']) return null;
       return record.receipt.contractAddress;
+    case 'compressedLog':
+      if (!record.receipt || !record.receipt.logs || record.receipt.logs.length === 0) return '[]';
+      const logs = record.receipt.logs.map((l) => { return l})
+      return JSON.stringify(logs);
     case 'compressedTx':
       if (!record['compressedTx']) return null;
       if (record['compressedTx'] === '0x ( )') return <div key={'xxx'}>{<i>{'null'}</i>}</div>;

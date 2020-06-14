@@ -1,10 +1,8 @@
 function getFieldValue(record, fieldName) {
-    switch (fieldName) {
-      default:
-        break;
-    }
-  }
+  if (!record) return '';
+  return record[fieldName];
+}
   
-  // auto-generate: schema
-  // auto-generate: schema
+// auto-generate: schema
+// auto-generate: schema
   
