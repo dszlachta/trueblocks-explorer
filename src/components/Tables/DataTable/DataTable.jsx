@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { search as theSearch } from 'ss-search';
 
-import { Tablebar, IconTray, Copyable } from 'components';
+import { Tablebar, IconTray, Displayable } from 'components';
 import { createClass } from 'components/utils';
 import { calcValue, exportValue, getPrimaryKey, getAltIconKey } from 'store';
 import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
@@ -413,7 +413,7 @@ const DataTableRows = ({
                     {column.isPill && !handler && (
                       <div className="warning">pill column '{column.selector}' does not have a handler</div>
                     )}
-                    <Copyable
+                    <Displayable
                       display={value}
                       copyable={
                         column.type && (column.type === 'address' || column.type.includes('hash')) ? rawValue : null

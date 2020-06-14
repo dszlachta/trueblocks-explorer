@@ -85,6 +85,7 @@ export const ExplorerBlocks = () => {
 
 //----------------------------------------------------------------------------
 export function getFieldValue(record, fieldName) {
+  if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':
@@ -93,6 +94,7 @@ export function getFieldValue(record, fieldName) {
       break;
   }
   // EXISTING_CODE
+  return record[fieldName];
 }
 
 // EXISTING_CODE

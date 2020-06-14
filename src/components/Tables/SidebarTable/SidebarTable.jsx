@@ -39,6 +39,7 @@ export const SidebarTable = ({
       case 'toggle-detail':
         setShowHidden(!showHidden);
         localStorage.setItem('sideTableDetail', showHidden ? 0 : 1);
+        if (parentHandler) parentHandler(action);
         break;
       case 'interact':
         alert('Interact with the contract ' + JSON.stringify(action.payload));
@@ -103,6 +104,7 @@ export const SidebarTable = ({
           data={selectedRow}
           columns={columns}
           showHidden={showHidden}
+          showDetail={true}
         />
       </div>
     </div>

@@ -6,7 +6,7 @@ import { useMonitorMap } from 'store/status_store';
 import { useToast } from "components/Toast";
 
 //--------------------------------------------------------------
-export const Copyable = ({ display, copyable = null, viewable = null, handler }) => {
+export const Displayable = ({ display, copyable = null, viewable = null, handler }) => {
   const monitorMap = useMonitorMap();
   if (!monitorMap) return display;
   if (!copyable) return display;

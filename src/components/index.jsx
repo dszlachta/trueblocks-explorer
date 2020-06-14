@@ -7,5 +7,5 @@ export { IconTray, ClickableIcon } from './IconTray/IconTray';
 export { Modal } from './Modal/Modal';
 export { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable, SidebarTable } from './Tables';
 export { Panel } from './Panels/Panel/Panel';
-export { Copyable } from './CopyIcon/CopyIcon';
+export { Displayable } from './CopyIcon/CopyIcon';
 export { ProgressBar } from './ProgressBar/ProgressBar'

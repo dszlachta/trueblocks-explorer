@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Tablebar } from 'components';
 import { formatFieldByType } from 'components/utils';
 import { calcValue, getPrimaryKey } from 'store';
-import { Copyable } from 'components';
+import { Displayable } from 'components';
 import './ObjectTable.css';
 
 //-----------------------------------------------------------------
@@ -16,15 +16,14 @@ export const ObjectTable = ({
   pagination = false,
   paginationParts = '',
   showHidden = false,
+  showDetail = false,
   handler = null,
   cn = null,
-  tight = '',
 }) => {
   const [filterText] = useState('');
 
   const idCol = getPrimaryKey(columns);
-  if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
-
+  if (!idCol) return <div className='warning'>{"The data schema contain no primary key. Can't render."}</div>;
   const id = calcValue(data, idCol);
 
   const tableBar = (title !== '' || pagination) && (
@@ -46,42 +45,44 @@ export const ObjectTable = ({
       {tableBar}
       <div className={'at-body ' + (cn ? cn : 'ot') + '-body'}>
         {columns.map((column, index) => {
+
           const value = calcValue(data, column);
           const rawValue = data && data[column.selector];
-          if (column.hide_empty && rawValue === '') return null;
 
-          let showing = (!column.hidden || showHidden) && value !== '';
-          if (!column.detail && !showing) return null;
+          // hide_empty is not part of the schema. This is here as a note so I don't forget about adding it back in
+          // if (column.hide_empty && rawValue === '') return null;
+
+          const isHidden = (column.hidden && !showHidden);
+          const isDetail = (column.detail && showDetail);
+          const isSeparator = (column.type === 'separator');
+          if (!isSeparator && !isDetail && isHidden) return null;
 
           const fieldName = column.selector; //column.name || column.selector;
           const fieldType = column.type || 'string';
           const formatted = formatFieldByType(fieldType, value, column.decimals) || '';
           const key = id + '_' + column.selector;
 
+          const siderClass = 'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider';
+          const rowClass = 'at-row ' + (cn ? cn : 'ot') + '-row' + (column.wide ? '-wide nowrap' : '');
+
           if (column.type === 'separator') {
             return (
-              <div key={key} className={'at-row ' + (cn ? cn : 'ot') + '-row'}>
+              <div key={key} className={rowClass + '-wide'}>
                 <div
-                  className={'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider'}
+                  className={siderClass}
                   style={{ backgroundColor: 'lightgrey' }}
                 >
-                  {' '}
-                </div>
-                <div
-                  className={'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider'}
-                  style={{ backgroundColor: 'lightgrey' }}
-                >
-                  {' '}
+                  {column.name}
                 </div>
               </div>
             );
           }
 
           return (
-            <div key={key} className={'at-row ' + (cn ? cn : 'ot') + '-row'}>
-              <ObjectTableSider cn={cn}>{fieldName.replace(/statements./, '') + ':'}</ObjectTableSider>
+            <div key={key} className={rowClass}>
+              {!column.wide && <ObjectTableSider siderClass={siderClass}>{fieldName.replace(/statements./, '') + ':'}</ObjectTableSider>}
               <ObjectTableColumn cn={cn} column={column}>
-                <Copyable
+                <Displayable
                   display={formatted}
                   copyable={column.copyable ? rawValue : null}
                   viewable={column.type === 'address' ? rawValue : null}
@@ -97,14 +98,17 @@ export const ObjectTable = ({
 };
 
 //-----------------------------------------------------------------
-const ObjectTableSider = ({ cn, children }) => {
-  return <div className={'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider'}>{children}</div>;
+const ObjectTableSider = ({ siderClass, children }) => {
+  return <div className={siderClass}>{children}</div>;
 };
 
 //-----------------------------------------------------------------
-export const ObjectTableColumn = ({ cn, column, children }) => {
+const ObjectTableColumn = ({ cn, column, children }) => {
   const { align, editable } = column;
-  let ccn = (cn ? cn : 'ot') + '-cell' + (editable ? ' editable' : '') + (align === 'wordwrap' ? ' ' : ' nowrap');
+  let ccn = (cn ? cn : 'ot') + '-cell';
+  ccn += (column.wide ? '-wide' : '');
+  ccn += (editable ? ' editable' : '');
+  ccn += (align === 'wordwrap' ? ' ' : ' nowrap');
   if (column.cn) ccn += ' ' + column.cn;
   return (
     <div style={{ overflow: 'none' }} className={ccn} align="left">

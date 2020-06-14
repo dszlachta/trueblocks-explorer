@@ -13,6 +13,12 @@
   justify-content: space-between;
 }
 
+.ot-row-wide {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: space-between;
+}
+
 .ot-cell {
   padding: var(--at-padding);
   padding-left: 4px;

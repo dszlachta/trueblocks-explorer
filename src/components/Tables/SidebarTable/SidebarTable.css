@@ -1,6 +1,6 @@
 .sidebar-table {
   display: grid;
-  grid-template-columns: 80fr 1fr 35fr;
+  grid-template-columns: 80fr 1fr 40fr;
 }
 
 .st-left {
@@ -25,9 +25,22 @@
   justify-content: space-between;
 }
 
+.st-row-wide {
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: aqua;
+}
+
 .st-cell {
   padding: var(--at-padding);
   padding-left: 4px;
+}
+
+.st-cell-wide {
+  padding: var(--at-padding);
+  padding-left: 4px;
+  background-color: blueviolet;
+  color: yellow;
 }
 
 .st-cell.editable {

@@ -8,6 +8,13 @@ import { getFieldValue } from 'pages/Appearances/Appearances';
 // auto-generate: schema
 export const appearancesSchema = [
   {
+    name: 'Basics',
+    selector: 'separator0',
+    type: 'separator',
+    hidden: true,
+    detail: true,
+  },
+  {
     name: 'ID',
     selector: 'id',
     type: 'string',
@@ -85,7 +92,7 @@ export const appearancesSchema = [
     chart: 'domain',
   },
   {
-    name: 'Sep1',
+    name: 'Reconcilations',
     selector: 'separator1',
     type: 'separator',
     hidden: true,
@@ -219,6 +226,7 @@ export const appearancesSchema = [
     selector: 'statements.reconciliationType',
     type: 'string',
     width: 2,
+    hidden: true,
     onDisplay: getFieldValue,
   },
   {
@@ -259,7 +267,7 @@ export const appearancesSchema = [
     width: 2,
   },
   {
-    name: 'Sep2',
+    name: 'Input Data',
     selector: 'separator2',
     type: 'separator',
     hidden: true,
@@ -272,6 +280,14 @@ export const appearancesSchema = [
     hidden: true,
     detail: true,
     onDisplay: getFieldValue,
+    wide: true,
+  },
+  {
+    name: 'Generated Events',
+    selector: 'separator21',
+    type: 'separator',
+    hidden: true,
+    detail: true,
   },
   {
     name: 'Compressed Logs',
@@ -280,6 +296,14 @@ export const appearancesSchema = [
     hidden: true,
     detail: true,
     onDisplay: getFieldValue,
+    wide: true,
+  },
+  {
+    name: 'Details',
+    selector: 'separator3',
+    type: 'separator',
+    hidden: true,
+    detail: true,
   },
   {
     name: 'Creations',
@@ -288,12 +312,6 @@ export const appearancesSchema = [
     hidden: true,
     detail: true,
     onDisplay: getFieldValue,
-  },
-  {
-    name: 'Sep3',
-    selector: 'separator3',
-    type: 'separator',
-    hidden: true,
   },
   {
     name: 'Age',

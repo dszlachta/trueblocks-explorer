@@ -285,7 +285,6 @@ export const Appearances = (props) => {
       Mousetrap.unbind('plus');
     };
   });
-
   // EXISTING_CODE
 
   const table = getInnerTable(appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler);
@@ -566,51 +565,23 @@ export function getFieldValue(record, fieldName) {
         </div>
       );
     case 'creations':
-      if (!record['receipt']) return null;
-      if (!record.receipt['contractAddress']) return null;
+      if (!record['receipt']) return '';
+      if (!record.receipt['contractAddress']) return '';
+      if (record.receipt.contractAddress === '0x0') return '';
       return record.receipt.contractAddress;
     case 'compressedLog':
       if (!record.receipt || !record.receipt.logs || record.receipt.logs.length === 0) return '[]';
       const logs = record.receipt.logs.map((l) => { return l})
-      return JSON.stringify(logs);
+      const theList = logs.map((log) => {
+        return log.compressedLog;
+      })
+      if (theList.length === 0) return '[]';
+      return (<>{theList.map((x) => { return <div>{x}</div>; })}</>);
+      //JSON.stringify(theList);
     case 'compressedTx':
-      if (!record['compressedTx']) return null;
-      if (record['compressedTx'] === '0x ( )') return <div key={'xxx'}>{<i>{'null'}</i>}</div>;
-      if (record['compressedTx'].substr(0, 8) === 'message:')
-        return (
-          <div key={'xxx'}>
-            <b>{record['compressedTx'].replace('message:', '')}</b>
-          </div>
-        );
-      let arr = record.compressedTx.replace(')', '').replace('(', ',').split(',');
-      return (
-        <div>
-          {arr.map((item, index) => {
-            if (index === 0) {
-              return <div key={item}>{<b>{item}</b>}</div>;
-            } else {
-              let s = item.split(':');
-              if (!s) {
-                s[0] = s[1] = '';
-              } else if (!s[1]) {
-                s[1] = '';
-              }
-              s[1] = s[1].trim();
-              const ofInterest = s[1].includes(g_focusValue);
-              return (
-                <>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr' }}>
-                    <div key={item + '_a'}>{index + ' ' + (s[0] === ' stub' ? '0x' : s[0] + ':')}</div>
-                    <div className={ofInterest ? 'focusValue' : ''} key={item + '_b'}>
-                      {s[1] + '-' + JSON.stringify(s[1].length)}
-                    </div>
-                  </div>
-                </>
-              );
-            }
-          })}
-        </div>
-      );
+      if (!record[fieldName]) return null;
+      const compressed = record[fieldName];
+      return displayCompressed(compressed);
     default:
       break;
   }
@@ -670,4 +641,44 @@ export const messagesSchema = [
   {selector: 'from', width: 14},
   {selector: 'message', width: 40},
 ];
+
+//----------------------------------------------------------------------
+function displayCompressed(compressed) {
+  if (compressed === '0x ( )') return <div key={'xxx'}>{<i>{'null'}</i>}</div>;
+  if (compressed.substr(0, 8) === 'message:')
+    return (
+      <div key={'xxx'}>
+        <b>{compressed.replace('message:', '')}</b>
+      </div>
+    );
+  let arr = compressed.replace(')', '').replace('(', ',').split(',');
+  return (
+    <div>
+      {arr.map((item, index) => {
+        if (index === 0) {
+          return <div key={item}>{<b>{item}</b>}</div>;
+        } else {
+          let s = item.split(':');
+          if (!s) {
+            s[0] = s[1] = '';
+          } else if (!s[1]) {
+            s[1] = '';
+          }
+          s[1] = s[1].trim();
+          const ofInterest = s[1].includes(g_focusValue);
+          return (
+            <>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr' }}>
+                <div key={item + '_a'}>{(s[0] === ' stub' ? '0x' : s[0] + ':')}</div>
+                <div className={ofInterest ? 'focusValue' : ''} key={item + '_b'}>
+                  {s[1] + '-' + JSON.stringify(s[1].length)}
+                </div>
+              </div>
+            </>
+          );
+        }
+      })}
+    </div>
+  );
+}
 // EXISTING_CODE
