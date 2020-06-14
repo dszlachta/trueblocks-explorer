@@ -2,19 +2,19 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+import { NameDialog } from 'dialogs';
 
+import { cachesSchema } from './CachesSchema';
 import './Caches.css';
 
 // EXISTING_CODE
@@ -37,12 +37,9 @@ export const Caches = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/status';
-  const cmdUrl = 'http://localhost:8080/status';
-
-  const dataQuery = 'verbose=10&modes=abis%20caches&types=all&details&depth=1';
+  const dataQuery = 'modes=abis%20caches&types=all&details&depth=1';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -57,17 +54,19 @@ export const Caches = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('cachesTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('cachesTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('cachesTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('cachesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -85,7 +84,6 @@ export const Caches = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -96,39 +94,6 @@ export const Caches = (props) => {
           //  statusDispatch(NOT_LOADING);
           // });
           setEditDialog({ showing: false, record: {} });
-          break;
-        case 'delete':
-          {
-            const cmdQuery = 'editCmd=delete&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            dispatch(action);
-            sendServerCommand(cmdUrl, cmdQuery).then(() => {
-              // we assume the delete worked, so we don't reload the data
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
-        case 'undelete':
-          {
-            const cmdQuery = 'editCmd=undelete&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            dispatch(action);
-            sendServerCommand(cmdUrl, cmdQuery).then(() => {
-              // we assume the delete worked, so we don't reload the data
-              statusDispatch(NOT_LOADING);
-            });
-          }
-          break;
-        case 'remove':
-          {
-            const cmdQuery = 'editCmd=remove&terms=' + action.record_id + addendum(record, action.record_id);
-            statusDispatch(LOADING);
-            sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
-              // the command worked, but now we need to reload the data
-              refreshCachesData(dataUrl, dataQuery, dispatch);
-              statusDispatch(NOT_LOADING);
-            });
-          }
           break;
 
         // EXISTING_CODE
@@ -142,9 +107,13 @@ export const Caches = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshCachesData(dataUrl, dataQuery, dispatch, mocked);
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+    let partialFetch = false;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshCachesData(dataQuery, dispatch, mocked);
+    }
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, cachesHandler, { type: 'Add' }));
@@ -164,7 +133,8 @@ export const Caches = (props) => {
       });
       setFiltered(result);
     }
-  }, [caches, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [caches, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Caches';
@@ -189,7 +159,7 @@ export const Caches = (props) => {
       {debug && <pre>{JSON.stringify(caches, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={cachesHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={cachesHandler} object={{ address: curRecordId }} columns={cachesSchema}/>
       {custom}
     </div>
   );
@@ -226,6 +196,9 @@ const getInnerTable = (caches, curTag, filtered, title, searchFields, recordIcon
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
@@ -240,8 +213,13 @@ const defaultSearch = ['path'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshCachesData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return 'http://localhost:8080/status';
+}
+
+//----------------------------------------------------------------------
+export function refreshCachesData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let caches = theData.data;
     // EXISTING_CODE
     if (caches) caches = caches[0].caches;
@@ -286,7 +264,7 @@ export const useCaches = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -305,77 +283,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const cachesSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Cache Type',
-    selector: 'type',
-    type: 'string',
-    width: 1,
-    searchable: true,
-  },
-  {
-    name: 'Location',
-    selector: 'path',
-    type: 'string',
-    width: 2,
-    searchable: true,
-  },
-  {
-    name: '# Folders',
-    selector: 'nFolders',
-    type: 'uint64',
-    width: 1,
-  },
-  {
-    name: '# Files',
-    selector: 'nFiles',
-    type: 'uint64',
-    width: 1,
-  },
-  {
-    name: 'Total Size',
-    selector: 'sizeInBytes',
-    type: 'filesize',
-    width: 1,
-  },
-  {
-    name: 'Average Size',
-    selector: 'bytesPerFile',
-    type: 'filesize',
-    width: 1,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'perFolder',
-    selector: 'perFolder',
-    type: 'double',
-    width: 1,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Valid',
-    selector: 'is_valid',
-    type: 'bool',
-    hidden: true,
-    width: 1,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

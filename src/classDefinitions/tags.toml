@@ -2,8 +2,10 @@
 class = "CTags"
 recordIcons = "editing"
 defaultSort = "tags,subtags1,subtags2"
+cmdUrl = "http://localhost:8080/names"
 dataUrl = "http://localhost:8080/names"
-dataQuery = "verbose=10&tags"
+dataQuery = "tags"
+imports = "||getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord|||"
 
 [[subpages]]
 list = [

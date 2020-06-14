@@ -7,23 +7,28 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { ObjectTable, ChartTable, PageCaddie } from 'components';
-import { getServerData, sortArray, handleClick } from 'components/utils';
-import { navigate, replaceRecord, stateFromStorage } from 'components/utils';
+import {
+  DataTable,
+  ObjectTable,
+  ChartTable,
+  PageCaddie,
+} from 'components';
+import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+import { NameDialog } from 'dialogs';
 
+import { appearancesSchema } from './AppearancesSchema';
 import './Appearances.css';
 
 // EXISTING_CODE
 import { currentPage } from 'components/utils';
 import { SidebarTable } from 'components';
-import { useNames } from 'pages/Names/Names';
 import { getIcon } from 'pages/utils';
 let g_focusValue = '';
 var g_Handler = null;
+const useMountEffect = (fun) => useEffect(fun, [])
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
@@ -41,18 +46,18 @@ export const Appearances = (props) => {
   const [debug, setDebug] = useState(false);
 
   // EXISTING_CODE
+  const [recordCount, setRecordCount] = useState(0);
   const { params } = currentPage();
   const addresses = params[0];
   const name = params.length > 1 ? params[1].value : '';
-  g_focusValue = addresses.value.toLowerCase();
+  g_focusValue = addresses.value && addresses.value.toLowerCase();
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/export';
-
-  const dataQuery = 'accounting&ether&addrs=' + addresses.value;
+  const dataQuery = 'addrs=' + addresses.value + '&accounting&ether';
   function addendum(record, record_id) {
     let ret = '';
     // EXISTING_CODE
+    ret = "";
     // EXISTING_CODE
     return ret;
   }
@@ -66,17 +71,19 @@ export const Appearances = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('appearancesTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('appearancesTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('appearancesTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('appearancesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -94,7 +101,6 @@ export const Appearances = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -110,7 +116,7 @@ export const Appearances = (props) => {
         // EXISTING_CODE
         case 'addmonitor':
           // {
-          //   const cmdQuery = 'addrs=' + action.record_id + '&verbose=10&dollars';
+          //   const cmdQuery = 'addrs=' + action.record_id + '&dollars';
           //   statusDispatch(LOADING);
           //   sendServerCommand('http://localhost:8080/export/', cmdQuery).then((theData) => {
           //     // the command worked, but now we need to reload the data
@@ -129,8 +135,15 @@ export const Appearances = (props) => {
           break;
         case 'row-changed':
           break;
+        case 'internallink':
+          if (record)
+            navigate('/explorer/transactions?transactions=' + record.hash, true);
+          break;
         case 'externallink':
-          navigate('https://etherscan.io/tx/' + action.record_id, true);
+          if (record && (record.from === '0xBlockReward' || record.from === '0xUncleReward'))
+            navigate('https://etherscan.io/block/' + record.blockNumber, true);
+          else
+            navigate('https://etherscan.io/tx/' + action.record_id, true);
           break;
         case 'enter':
           break;
@@ -143,14 +156,19 @@ export const Appearances = (props) => {
   );
 
   useEffect(() => {
-    const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
-    getServerData(dataUrl, qqq).then((theData) => {
-      let nRecords = mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0;
-      const stepSize = stateFromStorage('perPage', 10) * 1; // start with five pages, double each time
-      refreshAppearancesData(dataUrl, dataQuery, dispatch, mocked, nRecords, stepSize);
-      // statusDispatch(NOT_LOADING);
-    });
-  }, [dataQuery, dispatch]);
+    statusDispatch(LOADING);
+    let partialFetch = false;
+    // EXISTING_CODE
+    partialFetch = true;
+    if (partialFetch) {
+      const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
+      refreshAppearancesData2(dataQuery, dispatch, mocked, 0, max_records, recordCount, statusDispatch);
+    }
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshAppearancesData(dataQuery, dispatch, mocked);
+    }
+  }, [dataQuery, dispatch, mocked, recordCount, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
@@ -165,9 +183,12 @@ export const Appearances = (props) => {
       setTagList(getTagList(appearances));
       const result = appearances.data.filter((item) => {
         // EXISTING_CODE
+        const isAirdrop = (item['toName'] && item['toName'].name.includes('Airdrop')) || (item['fromName'] && item['fromName'].name.includes('Airdrop'))
         switch (curTag) {
-          case 'Airdrops':
-            return item['toName'] && item['toName'].name.includes('Airdrop');
+          case 'Hide Airdrops':
+            return !isAirdrop
+          case 'Show Airdrops':
+              return isAirdrop;
           case 'Grants':
             return (
               (item['toName'] && item['toName'].name.includes('Gitcoin')) ||
@@ -197,21 +218,38 @@ export const Appearances = (props) => {
             return true;
           case 'Tokens':
             if (!item['articulatedTx']) return false;
-            const art = item['articulatedTx'];
-            return art.name === 'transfer' || art.name === 'approve' || art.name === 'transferFrom';
+            if (!item['articulatedTx'].name)  return false
+            const art = item['articulatedTx'].name.toLowerCase();
+            return art.includes('mint') || art === 'transfer' || art === 'approve' || art === 'transferfrom';
           case 'Reconciled':
-            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
-            return item.statements[0]['reconciliationType'] === '';
+            if (!item['statements']) return false;
+            if (item.statements.length === 0) return false;
+            return (item.statements[0]['reconciled'] && item.statements[0]['reconciliationType'] === '');
           case 'Partial':
-            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
-            return item.statements[0]['reconciliationType'].includes('partial');
+            if (!item['statements']) return false;
+            if (item.statements.length === 0) return false;
+            return (item.statements[0]['reconciled'] && item.statements[0]['reconciliationType'].includes('partial'));
           case 'Unreconciled':
-            if (!item['statements'] || !item.statements[0]['reconciled']) return false;
-            return !item.statements[0]['reconciled'];
-          case 'Neighbors':
+            if (!item['statements']) return false;
+            if (item.statements.length === 0) return false;
+            return (!item.statements[0]['reconciled']);
+          case 'SelfDestructs':
+            if (!item['statements']) return false;
+            if (item.statements.length === 0) return false;
+            return (item.statements[0]['suicideInflow'] > 0 || item.statements[0]['suicideOutflow'] > 0);
+          case 'Creations':
+            if (!item['receipt']) return false;
+            if (!item.receipt['logs']) return false;
+            return (item.receipt['contractAddress'] !== '' && item.receipt['contractAddress'] !== '0x0');
+          case 'Messages':
+            if (!item['compressedTx']) return false;
+            return item.compressedTx.substr(0,8).includes('message:');
           case 'Functions':
-          case 'Events':
+            if (!item['compressedTx']) return true;
+            return !item.compressedTx.substr(0,8).includes('message:');
+          case 'Neighbors':
             return false;
+          case 'Events':
           case 'Balances':
           case 'All':
           default:
@@ -222,7 +260,8 @@ export const Appearances = (props) => {
       });
       setFiltered(result);
     }
-  }, [appearances, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [appearances, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Appearances';
@@ -235,6 +274,18 @@ export const Appearances = (props) => {
       addresses.value.substr(addresses.value.length - 6, addresses.value.length - 1)
     : 'No Name';
   g_Handler = appearancesHandler;
+
+    useMountEffect(() => {
+    const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
+    getServerData(getDataUrl(), qqq).then((theData) => {
+      setRecordCount(mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0);
+    });
+    Mousetrap.bind('plus', (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
+    return () => {
+      Mousetrap.unbind('plus');
+    };
+  });
+
   // EXISTING_CODE
 
   const table = getInnerTable(appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler);
@@ -245,6 +296,7 @@ export const Appearances = (props) => {
         caddieName="Tags"
         caddieData={tagList}
         current={curTag}
+        useProgress={true}
         handler={appearancesHandler}
       />
       {mocked && (
@@ -255,7 +307,7 @@ export const Appearances = (props) => {
       {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curRecordId }} columns={appearancesSchema}/>
       {custom}
     </div>
   );
@@ -264,7 +316,7 @@ export const Appearances = (props) => {
 //----------------------------------------------------------------------
 const getTagList = (appearances) => {
   // prettier-ignore
-  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Creations', 'SelfDestructs'];
+  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Messages', 'Creations', 'SelfDestructs'];
   tagList.unshift('|');
   tagList.unshift('All');
   tagList.push('|');
@@ -276,24 +328,28 @@ const getTagList = (appearances) => {
 //----------------------------------------------------------------------
 const getInnerTable = (appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler) => {
   // EXISTING_CODE
+  if (!appearances) return <></>;
+
   if (curTag === 'Neighbors') {
-    return (
-      <Fragment>
-        <ObjectTable data={appearances.meta} columns={metaSchema} />
-      </Fragment>
-    );
+    return <ObjectTable data={appearances.meta} columns={metaSchema} title={'Direct Neighbors of ' + title} />
+
   } else if (curTag === 'Balances') {
-    return (
-      <ChartTable
-        columns={appearancesSchema}
-        data={filtered}
-        title=""
-        search={false}
-        chartName="appearances"
-        chartCtx={{ type: 'line', defPair: ['blockNumber', 'statements.endBal'] }}
-        pagination={true}
-      />
-    );
+    const test = appearancesSchema;
+    return <BalanceView data={filtered} columns={test} title={title}/>
+
+  } else if (curTag === 'Functions') {
+    const functionCallData = filtered.map((item) => {
+      const parts = item.compressedTx.replace(/\)/, '').split('(');
+      return { date: item.date, to: item.to, functionName: <b>{parts[0]}</b>, parameters: parts[1] }
+    });
+    return <DataTable data={functionCallData} columns={functionCallSchema} title={'Functions Called by ' + title} search={true} searchFields={searchFields} pagination={true} parentHandler={appearancesHandler}/>
+
+  } else if (curTag === 'Messages') {
+    const messageData = filtered.map((item) => {
+      return { date: item.date, to: item.to, from: item.from, message: <b>{item.compressedTx.replace("message:", '')}</b> }
+    });
+    return <DataTable data={messageData} columns={messagesSchema} title={'Functions Called by ' + title}/>
+
   }
   // EXISTING_CODE
   return (
@@ -311,26 +367,30 @@ const getInnerTable = (appearances, curTag, filtered, title, searchFields, recor
   );
 };
 
-// auto-generate: page-settings
-const recordIconList = [
-  'ExternalLink',
-  'footer-CSV',
-  'footer-TXT',
-  'footer-Import',
-  //
-];
-const defaultSort = ['blockNumber', 'transactionIndex'];
-const defaultSearch = ['blockNumber', 'transactionIndex', 'fromName', 'toName'];
-// auto-generate: page-settings
+// EXISTING_CODE
+//----------------------------------------------------------------------
+const BalanceView = ({data, columns, title}) => {
+  const cols = JSON.parse(JSON.stringify(columns));;
+  return (
+    <ChartTable
+      columns={cols}
+      data={data}
+      title=""
+      search={false}
+      chartName="appearances"
+      chartCtx={{ type: 'line', defPair: ['blockNumber', 'statements.endBal'] }}
+      pagination={true}
+    />
+  );
+}
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(url, query, dispatch, mocked, nRecords, stepSize) {
+export function refreshAppearancesData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords, statusDispatch) {
   getServerData(
-    url,
-    query + (mocked ? '&mockData' : '') + (stepSize !== -1 ? '&first_record=0&max_records=' + stepSize : '')
+    getDataUrl(),
+    query + (mocked ? '&mockData' : '') + (!mocked && maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
   ).then((theData) => {
     let appearances = theData.data;
-    // EXISTING_CODE
     if (!mocked) appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
     let named = appearances;
     if (!mocked && appearances && theData.meta) {
@@ -345,10 +405,41 @@ export function refreshAppearancesData(url, query, dispatch, mocked, nRecords, s
       });
     }
     appearances = named;
+    if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData });
+    if (!mocked && maxRecords < nRecords) {
+      statusDispatch(LOADING);
+      refreshAppearancesData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords, statusDispatch);
+    }
+  });
+}
+// EXISTING_CODE
+
+// auto-generate: page-settings
+const recordIconList = [
+  'ExternalLink',
+  'footer-CSV',
+  'footer-TXT',
+  'footer-Import',
+  //
+];
+const defaultSort = ['blockNumber', 'transactionIndex'];
+const defaultSearch = ['blockNumber', 'hash', 'from', 'fromName', 'to', 'toName', 'encoding', 'compressedTx'];
+// auto-generate: page-settings
+
+//----------------------------------------------------------------------
+const getDataUrl = () => {
+  return 'http://localhost:8080/export';
+}
+
+//----------------------------------------------------------------------
+export function refreshAppearancesData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
+    let appearances = theData.data;
+    // EXISTING_CODE
     // EXISTING_CODE
     if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
-    if (stepSize < nRecords) refreshAppearancesData(url, query, dispatch, mocked, nRecords, stepSize * 2);
   });
 }
 
@@ -387,7 +478,7 @@ export const useAppearances = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -408,7 +499,7 @@ function getFieldValue(record, fieldName) {
       return '';
     if (fn === 'endBalDiff' && record && record.statements && record.statements[0] && record.statements[0][fn] === 0)
       return '';
-    if (record && record.statements && record.statements[0] && fn === 'reconciled')
+    if (fn === 'reconciled' && record && record.statements && record.statements[0])
       return getIcon(
         'reconciled',
         record.statements[0][fn]
@@ -416,6 +507,12 @@ function getFieldValue(record, fieldName) {
             ? 'CheckCircle'
             : 'CheckCircleYellow'
           : 'XCircle'
+      );
+    if (fn === 'totalin' && record && record.statements && record.statements[0])
+      return record.statements[0]['inflow'] + record.statements[0]['intInflow'] + record.statements[0]['suicideInflow'];
+    if (fn === 'totalout' && record && record.statements && record.statements[0])
+      return (
+        Number(record.statements[0]['outflow']) + Number(record.statements[0]['intOutflow']) + Number(record.statements[0]['suicideOutflow']) + Number(record.statements[0]['weiGasCost'])
       );
     if (record && record.statements && record.statements[0]) return record.statements[0][fn];
   }
@@ -438,12 +535,12 @@ function getFieldValue(record, fieldName) {
       return internal ? 'int' : '';
     case 'from': {
       const val = record.fromName ? record.fromName.name : record.from;
-      if (record.from === g_focusValue.toLowerCase()) return <div className="focusValue">{val}</div>;
+      if (record.from === g_focusValue) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'to': {
       const val = record.toName ? record.toName.name : record.to;
-      if (record.to === g_focusValue.toLowerCase()) return <div className="focusValue">{val}</div>;
+      if (record.to === g_focusValue) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'fromName':
@@ -474,7 +571,7 @@ function getFieldValue(record, fieldName) {
       return record.receipt.contractAddress;
     case 'compressedTx':
       if (!record['compressedTx']) return null;
-      if (record['compressedTx'] === '0x ( )') return <div key={'xxx'}>{<b>{'0x'}</b>}</div>;
+      if (record['compressedTx'] === '0x ( )') return <div key={'xxx'}>{<i>{'null'}</i>}</div>;
       if (record['compressedTx'].substr(0, 8) === 'message:')
         return (
           <div key={'xxx'}>
@@ -518,7 +615,8 @@ function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
-const metaSchema = [
+//----------------------------------------------------------------------
+export const metaSchema = [
   {
     name: 'ID',
     selector: 'id',
@@ -550,428 +648,22 @@ const metaSchema = [
     onDisplay: getFieldValue,
   },
 ];
-// EXISTING_CODE
 
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const appearancesSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Date/Block',
-    selector: 'date',
-    type: 'string',
-    width: 3,
-    underField: 'marker',
-    onDisplay: getFieldValue,
-    range: true,
-  },
-  {
-    name: 'Marker',
-    selector: 'marker',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'From',
-    selector: 'from',
-    type: 'address',
-    width: 5,
-    searchable: true,
-    underField: 'fromName',
-    onDisplay: getFieldValue,
-    range: true,
-  },
-  {
-    name: 'fromName',
-    selector: 'fromName',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'To',
-    selector: 'to',
-    type: 'address',
-    width: 5,
-    searchable: true,
-    underField: 'toName',
-    onDisplay: getFieldValue,
-    range: true,
-  },
-  {
-    name: 'toName',
-    selector: 'toName',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'toSymbol',
-    selector: 'toSymbol',
-    type: 'string',
-    searchable: true,
-    hide_empty: true,
-  },
-  {
-    name: 'Value',
-    selector: 'value',
-    type: 'wei',
-    hidden: true,
-    domain: true,
-  },
-  {
-    name: 'Ether',
-    selector: 'ether',
-    type: 'blknum',
-    hidden: true,
-    width: 2,
-    domain: true,
-  },
-  {
-    name: 'Sep1',
-    selector: 'separator1',
-    type: 'separator',
-    hidden: true,
-    detail: true,
-  },
-  {
-    name: 'Asset',
-    selector: 'statements.asset',
-    type: 'string',
-    width: 2,
-    align: 'center',
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Beg',
-    selector: 'statements.begBal',
-    type: 'value',
-    width: 2,
-    detail: true,
-    underField: 'statements.begBalDiff',
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Beg Diff',
-    selector: 'statements.begBalDiff',
-    type: 'value',
-    hidden: true,
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Income',
-    selector: 'statements.inflow',
-    type: 'value',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'I-Income',
-    selector: 'statements.intInflow',
-    type: 'value',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'S-Income',
-    selector: 'statements.suicideInflow',
-    type: 'value',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Spending',
-    selector: 'statements.outflow',
-    type: 'value',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'I-Spending',
-    selector: 'statements.intOutflow',
-    type: 'value',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'S-Spending',
-    selector: 'statements.suicideOutflow',
-    type: 'value',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Gas Cost',
-    selector: 'statements.weiGasCost',
-    type: 'value',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-    domain: true,
-  },
-  {
-    name: 'Ending',
-    selector: 'statements.endBal',
-    type: 'value',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-    domain: true,
-  },
-  {
-    name: 'Calc',
-    selector: 'statements.endBalCalc',
-    type: 'value',
-    hidden: true,
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'End Diff',
-    selector: 'statements.endBalDiff',
-    type: 'value',
-    hidden: true,
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Type',
-    selector: 'statements.reconciliationType',
-    type: 'string',
-    width: 2,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Okay',
-    selector: 'statements.reconciled',
-    type: 'string',
-    align: 'center',
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Gas',
-    selector: 'gas',
-    type: 'gas',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Gas Used',
-    selector: 'gasUsed',
-    type: 'gas',
-    hidden: true,
-    width: 2,
-    domain: true,
-  },
-  {
-    name: 'Gas Price',
-    selector: 'gasPrice',
-    type: 'wei',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Gas Cost (Eth)',
-    selector: 'etherGasCost',
-    type: 'ether',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Sep2',
-    selector: 'separator2',
-    type: 'separator',
-    hidden: true,
-    detail: true,
-  },
-  {
-    name: 'Compressed',
-    selector: 'compressedTx',
-    type: 'string',
-    hidden: true,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Creations',
-    selector: 'creations',
-    type: 'string',
-    hidden: true,
-    detail: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Sep3',
-    selector: 'separator3',
-    type: 'separator',
-    hidden: true,
-  },
-  {
-    name: 'Age',
-    selector: 'age',
-    type: 'blknum',
-    hidden: true,
-  },
-  {
-    name: 'Encoding',
-    selector: 'encoding',
-    type: 'hash',
-    hidden: true,
-  },
-  {
-    name: 'Receipt',
-    selector: 'receipt',
-    type: 'CReceipt',
-    hidden: true,
-  },
-  {
-    name: 'Articulated Tx',
-    selector: 'articulatedTx',
-    type: 'CFunction',
-    hidden: true,
-    searchable: true,
-  },
-  {
-    name: 'Traces',
-    selector: 'traces',
-    type: 'CTraceArray',
-    hidden: true,
-  },
-  {
-    name: 'Block Hash',
-    selector: 'blockHash',
-    type: 'hash',
-    hidden: true,
-  },
-  {
-    name: 'Blk',
-    selector: 'blockNumber',
-    type: 'blknum',
-    hidden: true,
-    width: 1,
-  },
-  {
-    name: 'Tx',
-    selector: 'transactionIndex',
-    type: 'string',
-    hidden: true,
-    width: 1,
-  },
-  {
-    name: 'Timestamp',
-    selector: 'timestamp',
-    type: 'timestamp',
-    hidden: true,
-    range: true,
-  },
-  {
-    name: 'Hash',
-    selector: 'hash',
-    type: 'hash',
-    hidden: true,
-    width: 5,
-    searchable: true,
-  },
-  {
-    name: 'Nonce',
-    selector: 'nonce',
-    type: 'blknum',
-    hidden: true,
-  },
-  {
-    name: 'Input',
-    selector: 'input',
-    type: 'string',
-    hidden: true,
-  },
-  {
-    name: 'Finalized',
-    selector: 'finalized',
-    type: 'bool',
-    hidden: true,
-  },
-  {
-    name: 'Function',
-    selector: 'function',
-    type: 'string',
-    hidden: true,
-    width: 5,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Events',
-    selector: 'events',
-    type: 'string',
-    hidden: true,
-    width: 3,
-  },
-  {
-    name: 'Price',
-    selector: 'price',
-    type: 'double',
-    hidden: true,
-    width: 3,
-  },
-  {
-    name: 'Date Short',
-    selector: 'datesh',
-    type: 'string',
-    hidden: true,
-  },
-  {
-    name: 'Time',
-    selector: 'time',
-    type: 'string',
-    hidden: true,
-  },
-  {
-    name: 'Error',
-    selector: 'isError',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    isPill: true,
-  },
-  {
-    name: 'Internal',
-    selector: 'internal',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    align: 'center',
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
+//----------------------------------------------------------------------
+export const functionCallSchema = [
+  {selector: 'id',hidden: true},
+  {selector: 'date', width: 7},
+  {selector: 'to', width: 12},
+  {selector: 'functionName', width: 10},
+  {selector: 'parameters', width: 40},
 ];
-// auto-generate: schema
+
+//----------------------------------------------------------------------
+export const messagesSchema = [
+  {selector: 'id',hidden: true},
+  {selector: 'date', width: 7},
+  {selector: 'to', width: 14},
+  {selector: 'from', width: 14},
+  {selector: 'message', width: 40},
+];
+// EXISTING_CODE

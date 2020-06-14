@@ -4,17 +4,16 @@
  */
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 
-import GlobalContext, { useStatusMeta } from 'store';
+import GlobalContext from 'store';
+import { useStatus, LOADING, NOT_LOADING, useStatusMeta } from 'store/status_store';
 
-import { DataTable } from 'components';
+import { GridTable, ChartTable, DataTable } from 'components';
 import { getServerData, currentPage, sortArray } from 'components/utils';
 
-import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { GridTable, ChartTable } from 'components';
-
 // EXISTING_CODE
 // EXISTING_CODE
 
+import { digestsSchema } from './DigestsSchema';
 import './Digests.css';
 
 //---------------------------------------------------------------------------
@@ -30,13 +29,13 @@ export const Digests = () => {
 
   const [start, setStart] = useState(0);
   const [source] = useState(currentPage().subpage);
-  const [query] = useState('modes=index&details&verbose=10');
+  const [query] = useState('modes=index&details');
 
   // prettier-ignore
   const digestsHandler = useCallback(
     (action) => {
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
+        case 'select-tag':
           setTag(action.payload);
           localStorage.setItem('digestsTag', action.payload);
           break;
@@ -113,9 +112,9 @@ export const Digests = () => {
 
   return (
     <div>
-      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'grid-view' })}>grid view</button>
-      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'data-view' })}>table view</button>
-      <button onClick={() => digestsHandler({ type: 'set-tags', payload: 'graph-view' })}>graph view</button>
+      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'grid-view' })}>grid view</button>
+      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'data-view' })}>table view</button>
+      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'graph-view' })}>graph view</button>
       <button onClick={() => setStart((start + 3000000) % 9000000)}>ignore ddos</button>
       {view}
     </div>
@@ -173,7 +172,7 @@ export const useDigests = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -224,166 +223,6 @@ const recordIconList = [];
 const defaultSort = [];
 const defaultSearch = [];
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const digestsSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Cache Type',
-    selector: 'type',
-    type: 'string',
-    hidden: true,
-  },
-  {
-    name: 'Block Range',
-    selector: 'blockRange',
-    type: 'string',
-    hidden: true,
-    align: 'center',
-    domain: true,
-    range: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Block Span',
-    selector: 'blockSpan',
-    type: 'uint64',
-    domain: true,
-    range: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Duration',
-    selector: 'duration',
-    type: 'uint64',
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Seconds',
-    selector: 'seconds',
-    type: 'uint64',
-    hidden: true,
-    domain: true,
-    range: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'First Block',
-    selector: 'firstAppearance',
-    type: 'blknum',
-    hidden: true,
-    domain: true,
-    range: true,
-  },
-  {
-    name: 'Latest Block',
-    selector: 'latestAppearance',
-    type: 'blknum',
-    hidden: true,
-  },
-  {
-    name: 'nAddrs',
-    selector: 'nAddresses',
-    type: 'uint64',
-    domain: true,
-    range: true,
-  },
-  {
-    name: 'nApps',
-    selector: 'nAppearances',
-    type: 'uint64',
-    cn: 'apps',
-    domain: true,
-    range: true,
-  },
-  {
-    name: 'nAddrs/nBlock',
-    selector: 'addrsPerBlock',
-    type: 'double',
-    decimals: 5,
-    domain: true,
-    range: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'nApps/nBlock',
-    selector: 'appsPerBlock',
-    type: 'double',
-    decimals: 5,
-    domain: true,
-    range: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'nApps/nAddress',
-    selector: 'appsPerAddr',
-    type: 'double',
-    decimals: 5,
-    domain: true,
-    range: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'First TS',
-    selector: 'firstTs',
-    type: 'timestamp',
-    hidden: true,
-    domain: true,
-    range: true,
-  },
-  {
-    name: 'Latest TS',
-    selector: 'latestTs',
-    type: 'timestamp',
-    hidden: true,
-  },
-  {
-    name: 'Filename',
-    selector: 'filename',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-  },
-  {
-    name: 'Chunk Size',
-    selector: 'indexSizeBytes',
-    type: 'filesize',
-    domain: true,
-    range: true,
-  },
-  {
-    name: 'Bloom Size',
-    selector: 'bloomSizeBytes',
-    type: 'filesize',
-    domain: true,
-    range: true,
-  },
-  {
-    name: 'Chunk Hash',
-    selector: 'index_hash',
-    type: 'hash',
-    align: 'center',
-    cn: 'hashes',
-    searchable: true,
-  },
-  {
-    name: 'Bloom Hash',
-    selector: 'bloom_hash',
-    type: 'hash',
-    align: 'center',
-    cn: 'hashes',
-    searchable: true,
-  },
-];
-// auto-generate: schema
 
 //-----------------------------------------------------
 export function pad2(n) {

@@ -8,13 +8,13 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, handleClick } from 'components/utils';
-import { replaceRecord } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, handleClick, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { NameDialog } from 'dialogs';
 
+import { signaturesSchema } from './SignaturesSchema';
 import './Signatures.css';
 
 // EXISTING_CODE
@@ -37,12 +37,11 @@ export const Signatures = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/abi';
   const cmdUrl = 'http://localhost:8080/abi';
 
-  const dataQuery = 'verbose=10&monitored&known';
+  const dataQuery = 'monitored&known';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -57,17 +56,19 @@ export const Signatures = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('signaturesTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('signaturesTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('signaturesTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('signaturesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -85,7 +86,6 @@ export const Signatures = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -125,7 +125,7 @@ export const Signatures = (props) => {
             statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshSignaturesData(dataUrl, dataQuery, dispatch);
+              refreshSignaturesData(dataQuery, dispatch, mocked);
               statusDispatch(NOT_LOADING);
             });
           }
@@ -142,9 +142,13 @@ export const Signatures = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshSignaturesData(dataUrl, dataQuery, dispatch, mocked);
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+    let partialFetch = false;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshSignaturesData(dataQuery, dispatch, mocked);
+    }
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, signaturesHandler, { type: 'Add' }));
@@ -164,7 +168,8 @@ export const Signatures = (props) => {
       });
       setFiltered(result);
     }
-  }, [signatures, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [signatures, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Signatures';
@@ -189,7 +194,7 @@ export const Signatures = (props) => {
       {debug && <pre>{JSON.stringify(signatures, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={signaturesHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={signaturesHandler} object={{ address: curRecordId }} columns={signaturesSchema}/>
       {custom}
     </div>
   );
@@ -226,6 +231,9 @@ const getInnerTable = (signatures, curTag, filtered, title, searchFields, record
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
@@ -240,8 +248,13 @@ const defaultSearch = ['encoding', 'type', 'name'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshSignaturesData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return 'http://localhost:8080/abi';
+}
+
+//----------------------------------------------------------------------
+export function refreshSignaturesData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let signatures = theData.data;
     // EXISTING_CODE
     signatures = signatures.filter((item) => item.type !== 'constructor');
@@ -286,7 +299,7 @@ export const useSignatures = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -323,77 +336,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const signaturesSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Encoding',
-    selector: 'encoding',
-    type: 'hash',
-    width: 1,
-    searchable: true,
-  },
-  {
-    name: 'Type',
-    selector: 'type',
-    type: 'string',
-    width: 1,
-    isPill: true,
-    searchable: true,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    width: 2,
-    searchable: true,
-  },
-  {
-    name: 'Signature',
-    selector: 'signature',
-    type: 'string',
-    hidden: true,
-    width: 2,
-  },
-  {
-    name: 'Input Names',
-    selector: 'inputs',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Output Names',
-    selector: 'outputs',
-    type: 'string',
-    hidden: true,
-    width: 2,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Signature',
-    selector: 'function',
-    type: 'string',
-    width: 6,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

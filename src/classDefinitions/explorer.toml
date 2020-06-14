@@ -1,11 +1,11 @@
 [settings]
 class = "CExplorer"
 dataUrl = "http://localhost:8080/[{LONG}]"
-query_blocks = "blocks=' + current + '&hashes_only&verbose=10"
-query_transactions = "transactions=' + current + '&verbose=10&force"
-query_receipts = "transactions=' + current + '&verbose=10"
-query_logs = "transactions=' + current + '&verbose=10"
-query_traces = "transactions=' + current + '&verbose=10"
+query_blocks = "blocks=' + current + '&hashes_only"
+query_transactions = "transactions=' + current + '&force"
+query_receipts = "transactions=' + current + '"
+query_logs = "transactions=' + current + '"
+query_traces = "transactions=' + current + '"
 
 
 [[subpages]]

@@ -40,7 +40,15 @@ export function getAltIconKey(columns) {
 
 //-----------------------------------------------------------------
 export function calcValue(record, column) {
+  if (!column) return '';
   if (column.onDisplay) return column.onDisplay(record, column.selector);
   if (!record || record === undefined) return '';
+  return record[column.selector];
+}
+
+//-----------------------------------------------------------------
+export function exportValue(record, column) {
+  if (!column) return '';
+  if (!record[column.selector] || record[column.selector] === '') return calcValue(record, column);
   return record[column.selector];
 }

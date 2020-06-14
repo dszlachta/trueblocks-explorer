@@ -8,13 +8,13 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, handleClick } from 'components/utils';
-import { navigate, replaceRecord } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { NameDialog } from 'dialogs';
 
+import { otherSchema } from './OtherSchema';
 import './Other.css';
 
 // EXISTING_CODE
@@ -37,12 +37,11 @@ export const Other = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/when';
   const cmdUrl = 'http://localhost:8080/when';
 
-  const dataQuery = 'verbose=10&list';
+  const dataQuery = 'list';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -57,17 +56,19 @@ export const Other = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('otherTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('otherTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('otherTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('otherTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -85,7 +86,6 @@ export const Other = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -125,7 +125,7 @@ export const Other = (props) => {
             statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshOtherData(dataUrl, dataQuery, dispatch);
+              refreshOtherData(dataQuery, dispatch, mocked);
               statusDispatch(NOT_LOADING);
             });
           }
@@ -145,9 +145,13 @@ export const Other = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshOtherData(dataUrl, dataQuery, dispatch, mocked);
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+    let partialFetch = false;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshOtherData(dataQuery, dispatch, mocked);
+    }
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, otherHandler, { type: 'Add' }));
@@ -167,7 +171,8 @@ export const Other = (props) => {
       });
       setFiltered(result);
     }
-  }, [other, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [other, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Other';
@@ -192,7 +197,7 @@ export const Other = (props) => {
       {debug && <pre>{JSON.stringify(other, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={otherHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={otherHandler} object={{ address: curRecordId }} columns={otherSchema}/>
       {custom}
     </div>
   );
@@ -229,6 +234,9 @@ const getInnerTable = (other, curTag, filtered, title, searchFields, recordIconL
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
@@ -241,8 +249,13 @@ const defaultSearch = ['blockNumber', 'name', 'date'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshOtherData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return 'http://localhost:8080/when';
+}
+
+//----------------------------------------------------------------------
+export function refreshOtherData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let other = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
@@ -286,7 +299,7 @@ export const useOther = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -301,54 +314,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const otherSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    width: 1,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    width: 1,
-    searchable: true,
-  },
-  {
-    name: 'Block Number',
-    selector: 'blockNumber',
-    type: 'blknum',
-    width: 2,
-    align: 'center',
-    searchable: true,
-  },
-  {
-    name: 'Timestamp',
-    selector: 'timestamp',
-    type: 'timestamp',
-    width: 2,
-    align: 'center',
-  },
-  {
-    name: 'Date',
-    selector: 'date',
-    type: 'string',
-    width: 2,
-    align: 'center',
-    searchable: true,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

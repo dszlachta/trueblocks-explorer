@@ -23,6 +23,7 @@ import {
   Delete,
   Undelete,
   Remove,
+  InternalLink,
   ExternalLink,
   AddMonitor,
   AddName,
@@ -37,6 +38,7 @@ import GridIcon from 'assets/icons/GridIcon';
 import './Utils.css';
 
 export function getIcon(index, labelIn, expanded = false, pad = false, size = 20) {
+  if (!labelIn) return null;
   const label = labelIn.toLowerCase();
   const key = 'icon_' + label + '_' + index;
   const cn = (expanded ? 'menu-icon' : '') + (pad ? ' menu-icon-padded' : '');
@@ -95,6 +97,8 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
       return <Undelete key={key} size={size} className={cn} />;
     case 'remove':
       return <Remove key={key} size={size} className={cn} />;
+    case 'internallink':
+      return <InternalLink key={key} size={size} className={cn} />;
     case 'externallink':
       return <ExternalLink key={key} size={size} className={cn} />;
     case 'greenlight':

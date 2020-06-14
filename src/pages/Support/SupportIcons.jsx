@@ -4,8 +4,9 @@ import Add from 'assets/icons/Add';
 import AddMonitor from 'assets/icons/AddMonitor';
 import AddName from 'assets/icons/AddName';
 import BarChart from 'assets/icons/BarChart';
+import InternalLink from 'assets/icons/InternalLink';
 import ExternalLink from 'assets/icons/ExternalLink';
-import Check from 'assets/icons/Check';
+//import Check from 'assets/icons/Check';
 import CheckCircle from 'assets/icons/CheckCircle';
 import CheckCircleYellow from 'assets/icons/CheckCircleYellow';
 import ChevronDown from 'assets/icons/ChevronDown';
@@ -24,16 +25,16 @@ import GitHub from 'assets/icons/GitHub';
 import GridIcon from 'assets/icons/GridIcon';
 import HelpCircle from 'assets/icons/HelpCircle';
 import Medium from 'assets/icons/Medium';
-import Plus from 'assets/icons/Plus';
+//import Plus from 'assets/icons/Plus';
 import PlusCircle from 'assets/icons/PlusCircle';
-import PlusSquare from 'assets/icons/PlusSquare';
+//import PlusSquare from 'assets/icons/PlusSquare';
 import Remove from 'assets/icons/Remove';
 import ToggleLeft from 'assets/icons/ToggleLeft';
 import ToggleRight from 'assets/icons/ToggleRight';
 import Twitter from 'assets/icons/Twitter';
 import Undelete from 'assets/icons/Undelete';
 import View from 'assets/icons/View';
-import X from 'assets/icons/X';
+//import X from 'assets/icons/X';
 import XCircle from 'assets/icons/XCircle';
 
 import {
@@ -124,6 +125,7 @@ export const SupportIcons = () => {
       group: 'Other Icons',
       items: [
         { name: 'BarChart', component: <BarChart size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Internal', component: <InternalLink size={size} color={color} fill={fill} style={style} /> },
         { name: 'External', component: <ExternalLink size={size} color={color} fill={fill} style={style} /> },
         { name: 'GridIcon', component: <GridIcon size={size} color={color} fill={fill} style={style} /> },
         { name: 'Help', component: <HelpCircle size={size} color={color} fill={fill} style={style} /> },

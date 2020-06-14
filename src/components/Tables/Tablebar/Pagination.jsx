@@ -12,13 +12,13 @@ import { useArrowKeys } from 'components/utils';
 //-----------------------------------------------------------------
 export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curPage: 0, paginationParts: '' } }) => {
   useArrowKeys(handler, [handler, pagingCtx]);
-  if (!enabled) return <div></div>; // we need this div so spacing of title works right
+  if (!enabled || pagingCtx.nRecords === 0) return <div></div>; // we need this div so spacing of title works right
   if (!handler) return <div className="warning">Pagination is enabled, but no handler given</div>;
 
   const parts = pagingCtx.paginationParts;
   return (
     <div className="pagination-container">
-      {parts !== 'arrows-only' && <Selector handler={handler} pagingCtx={pagingCtx} />}
+      {parts !== 'arrows-only' && pagingCtx.nRecords > pagingCtx.perPage && <Selector handler={handler} pagingCtx={pagingCtx} />}
       {parts !== 'arrows-only' && <Display pagingCtx={pagingCtx} />}
       {
         <Fragment>

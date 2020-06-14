@@ -8,7 +8,7 @@ function getFieldValue(record, fieldName) {
 }
 
 // auto-generate: schema
-export const pricesourcesSchema = [
+export const traceResultsSchema = [
   {
     name: 'ID',
     selector: 'id',
@@ -17,16 +17,28 @@ export const pricesourcesSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'url',
-    selector: 'url',
+    name: 'Address',
+    selector: 'address',
+    type: 'address',
+    searchable: true,
+  },
+  {
+    name: 'Code',
+    selector: 'code',
     type: 'string',
     searchable: true,
   },
   {
-    name: 'pair',
-    selector: 'pair',
+    name: 'Gas Used',
+    selector: 'gasUsed',
+    type: 'gas',
+  },
+  {
+    name: 'Output',
+    selector: 'output',
     type: 'string',
     searchable: true,
   },
 ];
 // auto-generate: schema
+  

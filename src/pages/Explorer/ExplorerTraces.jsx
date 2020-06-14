@@ -2,16 +2,15 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
-import Mousetrap from 'mousetrap';
+import React, { Fragment, useEffect, useState, useCallback } from 'react';
 
-import GlobalContext from 'store';
-
+import { useStatus } from 'store/status_store';
 import { ObjectTable } from 'components';
 import { getServerData, useArrowKeys } from 'components/utils';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { useExplorer } from './Explorer';
+
+import { tracesSchema } from './ExplorerTracesSchema';
 
 // auto-generate: page-settings
 // auto-generate: page-settings
@@ -49,7 +48,7 @@ export const ExplorerTraces = () => {
   useArrowKeys(tracesHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, tracesHandler]);
 
   const url = 'http://localhost:8080/traces';
-  let query = 'transactions=' + current + '&verbose=10';
+  let query = 'transactions=' + current + '';
   useEffect(() => {
     getServerData(url, query + (mocked ? "&mockData" : "")).then((theData) => {
       let result = theData.data;
@@ -85,7 +84,7 @@ export const ExplorerTraces = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':
@@ -98,81 +97,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const tracesSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'blockHash',
-    selector: 'blockHash',
-    type: 'hash',
-    searchable: true,
-  },
-  {
-    name: 'blockNumber',
-    selector: 'blockNumber',
-    type: 'blknum',
-  },
-  {
-    name: 'subtraces',
-    selector: 'subtraces',
-    type: 'uint64',
-  },
-  {
-    name: 'traceAddress',
-    selector: 'traceAddress',
-    type: 'CStringArray',
-    searchable: true,
-  },
-  {
-    name: 'transactionHash',
-    selector: 'transactionHash',
-    type: 'hash',
-    searchable: true,
-  },
-  {
-    name: 'transactionIndex',
-    selector: 'transactionIndex',
-    type: 'blknum',
-  },
-  {
-    name: 'type',
-    selector: 'type',
-    type: 'string',
-    searchable: true,
-  },
-  {
-    name: 'error',
-    selector: 'error',
-    type: 'string',
-  },
-  {
-    name: 'articulatedTrace',
-    selector: 'articulatedTrace',
-    type: 'CFunction',
-    searchable: true,
-  },
-  {
-    name: 'compressedTrace',
-    selector: 'compressedTrace',
-    type: 'string',
-  },
-  {
-    name: 'action',
-    selector: 'action',
-    type: 'CTraceAction',
-  },
-  {
-    name: 'result',
-    selector: 'result',
-    type: 'CTraceResult',
-  },
-];
-// auto-generate: schema

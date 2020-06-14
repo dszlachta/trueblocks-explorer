@@ -2,19 +2,19 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
+import { NameDialog } from 'dialogs';
 
+import { collectionsSchema } from './CollectionsSchema';
 import './Collections.css';
 
 // EXISTING_CODE
@@ -37,12 +37,11 @@ export const Collections = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/names';
   const cmdUrl = 'http://localhost:8080/names';
 
-  const dataQuery = 'verbose=10&collections';
+  const dataQuery = 'collections';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     // EXISTING_CODE
     return ret;
@@ -57,17 +56,19 @@ export const Collections = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('collectionsTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('collectionsTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('collectionsTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('collectionsTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -85,7 +86,6 @@ export const Collections = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -125,7 +125,7 @@ export const Collections = (props) => {
             statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshCollectionsData(dataUrl, dataQuery, dispatch);
+              refreshCollectionsData(dataQuery, dispatch, mocked);
               statusDispatch(NOT_LOADING);
             });
           }
@@ -142,9 +142,13 @@ export const Collections = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshCollectionsData(dataUrl, dataQuery, dispatch, mocked);
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+    let partialFetch = false;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshCollectionsData(dataQuery, dispatch, mocked);
+    }
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, collectionsHandler, { type: 'Add' }));
@@ -164,7 +168,8 @@ export const Collections = (props) => {
       });
       setFiltered(result);
     }
-  }, [collections, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [collections, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Collections';
@@ -189,7 +194,7 @@ export const Collections = (props) => {
       {debug && <pre>{JSON.stringify(collections, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={collectionsHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={collectionsHandler} object={{ address: curRecordId }} columns={collectionsSchema}/>
       {custom}
     </div>
   );
@@ -226,6 +231,9 @@ const getInnerTable = (collections, curTag, filtered, title, searchFields, recor
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'header-Add',
@@ -241,8 +249,13 @@ const defaultSearch = ['tags', 'name', 'client'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshCollectionsData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return 'http://localhost:8080/names';
+}
+
+//----------------------------------------------------------------------
+export function refreshCollectionsData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let collections = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
@@ -286,7 +299,7 @@ export const useCollections = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   // EXISTING_CODE
@@ -294,74 +307,4 @@ function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
-//----------------------------------------------------------------------------
-const validateUserInput = (fieldName, value) => {
-  if (fieldName === 'group') return notEmpty(fieldName, value);
-  return true;
-};
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const collectionsSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    hidden: true,
-    searchable: true,
-  },
-  {
-    name: 'Tags',
-    selector: 'tags',
-    type: 'string',
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Client',
-    selector: 'client',
-    type: 'string',
-    editable: true,
-    searchable: true,
-    onValidate: validateUserInput,
-  },
-  {
-    name: 'Monitored',
-    selector: 'monitored',
-    type: 'bool',
-    hidden: true,
-  },
-  {
-    name: 'Deleted',
-    selector: 'deleted',
-    type: 'bool',
-    hidden: true,
-  },
-  {
-    name: 'Size',
-    selector: 'sizeInBytes',
-    type: 'filesize',
-  },
-  {
-    name: 'Addresses',
-    selector: 'addresses',
-    type: 'CAddressArray',
-    width: 4,
-    searchable: true,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

@@ -2,8 +2,10 @@
 class = "CCollections"
 recordIcons =  "editing,view,exporting"
 defaultSort = "tags,name,client"
+cmdUrl = "http://localhost:8080/names"
 dataUrl = "http://localhost:8080/names"
-dataQuery = "verbose=10&collections"
+dataQuery = "collections"
+imports = "||getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord|||"
 
 [[subpages]]
 list = [

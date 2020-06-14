@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import { Redirect } from 'react-router-dom';
 import Mousetrap from 'mousetrap';
 
+import { ToastProvider } from "components/Toast";
 import { PageHeader, PageFooter, PageContent } from 'page-parts';
 import GlobalContext, { defaultToggles, togglesReducer, statusDefault, statusReducer } from 'store';
 import { theMenu, menusReducer } from 'pages';
@@ -106,13 +107,16 @@ function App() {
   return (
     <GlobalContext.Provider value={theGlobalState}>
       <div className="whole-page">
-        <PageHeader />
-        <PageContent />
-        <PageFooter />
-      </div>
+        <ToastProvider>
+          <PageHeader />
+          <PageContent />
+          <PageFooter />
+         </ToastProvider>
+       </div>
     </GlobalContext.Provider>
   );
 }
+
 export default App;
 
 //------------------------------------------------------

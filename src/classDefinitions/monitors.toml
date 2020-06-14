@@ -4,7 +4,7 @@ recordIcons = "viewing,editing,view,exporting,importing"
 defaultSort = "tags,address"
 defaultSearch = "tags,address,name"
 dataUrl = "http://localhost:8080/status"
-dataQuery = "modes=monitors&details&verbose=10"
+dataQuery = "modes=monitors&details"
 cmdUrl = "http://localhost:8080/rm"
 
 [[subpages]]

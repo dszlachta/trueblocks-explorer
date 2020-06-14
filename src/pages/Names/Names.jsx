@@ -2,19 +2,19 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useContext } from 'react';
 import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick } from 'components/utils';
-import { navigate, notEmpty, replaceRecord, stateFromStorage } from 'components/utils';
+import { DataTable, PageCaddie } from 'components';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-import { NameDialog } from 'dialogs/NameDialog/NameDialog';
+import { NameDialog } from 'dialogs';
 
+import { namesSchema } from './NamesSchema';
 import './Names.css';
 
 // EXISTING_CODE
@@ -37,12 +37,11 @@ export const Names = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const dataUrl = 'http://localhost:8080/names';
   const cmdUrl = 'http://localhost:8080/names';
 
-  const dataQuery = 'verbose=10&all&expand';
+  const dataQuery = 'all&expand';
   function addendum(record, record_id) {
-    let ret = '&verbose=10';
+    let ret = '';
     // EXISTING_CODE
     ret += '&expand' + (record ? (record.is_custom ? '&to_custom' : '') : '');
     // EXISTING_CODE
@@ -58,17 +57,19 @@ export const Names = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
-        case 'set-tags':
-          let tag = action.payload;
+        case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('namesTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
-            tag = 'All';
+            setTag('All');
+            localStorage.setItem('namesTag', 'All');
+          } else {
+            setTag(action.payload);
+            localStorage.setItem('namesTag', action.payload);
           }
-          setTag(tag);
-          localStorage.setItem('namesTag', tag);
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
@@ -86,7 +87,6 @@ export const Names = (props) => {
           // query += '&term=';
           // query += "!" + (record ? record.)
           // query += '&terms=A!0xaaaaeeeeddddccccbbbbaaaa0e92113ea9d19ca3!C!D!E!F!false!false';
-          // query += '&verbose=10';
           // query += '&expand';
           // query += record ? (record.is_custom ? '&to_custom' : '') : '';
           // query += '&to_custom=false';
@@ -126,7 +126,7 @@ export const Names = (props) => {
             statusDispatch(LOADING);
             sendServerCommand(cmdUrl, cmdQuery).then((theData) => {
               // the command worked, but now we need to reload the data
-              refreshNamesData(dataUrl, dataQuery, dispatch);
+              refreshNamesData(dataQuery, dispatch, mocked);
               statusDispatch(NOT_LOADING);
             });
           }
@@ -138,7 +138,7 @@ export const Names = (props) => {
           break;
         case 'addmonitor':
           // {
-          //   const cmdQuery = 'addrs=' + action.record_id + '&verbose=10&dollars';
+          //   const cmdQuery = 'addrs=' + action.record_id + '&dollars';
           //   statusDispatch(LOADING);
           //   sendServerCommand('http://localhost:8080/export/', cmdQuery).then((theData) => {
           //     // the command worked, but now we need to reload the data
@@ -167,9 +167,13 @@ export const Names = (props) => {
 
   useEffect(() => {
     statusDispatch(LOADING);
-    refreshNamesData(dataUrl, dataQuery, dispatch, mocked);
-    statusDispatch(NOT_LOADING);
-  }, [dataQuery, dispatch]);
+    let partialFetch = false;
+    // EXISTING_CODE
+    // EXISTING_CODE
+    if (!partialFetch) {
+      refreshNamesData(dataQuery, dispatch, mocked);
+    }
+  }, [dataQuery, dispatch, mocked]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, namesHandler, { type: 'Add' }));
@@ -189,7 +193,8 @@ export const Names = (props) => {
       });
       setFiltered(result);
     }
-  }, [names, curTag, debug, mocked]);
+    statusDispatch(NOT_LOADING);
+  }, [names, curTag, statusDispatch]);
 
   let custom = null;
   let title = 'Names';
@@ -214,7 +219,7 @@ export const Names = (props) => {
       {debug && <pre>{JSON.stringify(names, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={namesHandler} object={{ address: curRecordId }} />
+      <NameDialog showing={editDialog.showing} handler={namesHandler} object={{ address: curRecordId }} columns={namesSchema}/>
       {custom}
     </div>
   );
@@ -251,6 +256,9 @@ const getInnerTable = (names, curTag, filtered, title, searchFields, recordIconL
   );
 };
 
+// EXISTING_CODE
+// EXISTING_CODE
+
 // auto-generate: page-settings
 const recordIconList = [
   'ExternalLink',
@@ -268,8 +276,13 @@ const defaultSearch = ['tags', 'address', 'name'];
 // auto-generate: page-settings
 
 //----------------------------------------------------------------------
-export function refreshNamesData(url, query, dispatch, mocked) {
-  getServerData(url, query + (mocked ? '&mockData' : '')).then((theData) => {
+const getDataUrl = () => {
+  return 'http://localhost:8080/names';
+}
+
+//----------------------------------------------------------------------
+export function refreshNamesData(query, dispatch, mocked) {
+  getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let names = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
@@ -313,7 +326,7 @@ export const useNames = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   if (!record) return '';
   // EXISTING_CODE
   switch (fieldName) {
@@ -331,146 +344,8 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 //----------------------------------------------------------------------------
-function useFieldValue(record, fieldName) {
+export function useFieldValue(record, fieldName) {
   const monitorMap = useMonitorMap();
   return monitorMap[record.address] && !record.deleted;
 }
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const namesSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    width: 1,
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Tags',
-    selector: 'tags',
-    type: 'string',
-    width: 3,
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Address',
-    selector: 'address',
-    type: 'address',
-    width: 6,
-    searchable: true,
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    type: 'string',
-    width: 4,
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Symbol',
-    selector: 'symbol',
-    type: 'string',
-    width: 2,
-    editable: true,
-    align: 'center',
-    searchable: true,
-  },
-  {
-    name: 'Source',
-    selector: 'source',
-    type: 'string',
-    hidden: true,
-    width: 4,
-    editable: true,
-  },
-  {
-    name: 'Decimals',
-    selector: 'decimals',
-    type: 'uint64',
-    width: 2,
-    align: 'center',
-  },
-  {
-    name: 'Description',
-    selector: 'description',
-    type: 'string',
-    width: 4,
-    editable: true,
-    searchable: true,
-  },
-  {
-    name: 'Deleted',
-    selector: 'deleted',
-    type: 'bool',
-    hidden: true,
-  },
-  {
-    name: 'isCustom',
-    selector: 'is_custom',
-    type: 'bool',
-    hidden: true,
-  },
-  {
-    name: 'isPrefund',
-    selector: 'is_prefund',
-    type: 'bool',
-    hidden: true,
-  },
-  {
-    name: 'nAppearances',
-    selector: 'nAppearances',
-    type: 'blknum',
-    hidden: true,
-  },
-  {
-    name: 'Last Export',
-    selector: 'lastExport',
-    type: 'blknum',
-    hidden: true,
-  },
-  {
-    name: 'First Appearance',
-    selector: 'firstAppearance',
-    type: 'blknum',
-    hidden: true,
-  },
-  {
-    name: 'Latest Appearance',
-    selector: 'latestAppearance',
-    type: 'blknum',
-    hidden: true,
-  },
-  {
-    name: 'isMonitored',
-    selector: 'monitored',
-    type: 'bool',
-    width: 2,
-    isPill: true,
-    align: 'center',
-    onDisplay: useFieldValue,
-  },
-  {
-    name: 'Path',
-    selector: 'path',
-    type: 'string',
-    hidden: true,
-  },
-  {
-    name: 'Size',
-    selector: 'sizeInBytes',
-    type: 'filesize',
-    hidden: true,
-  },
-  {
-    name: 'Icons',
-    selector: 'icons',
-    type: 'icons',
-    hidden: true,
-  },
-];
-// auto-generate: schema

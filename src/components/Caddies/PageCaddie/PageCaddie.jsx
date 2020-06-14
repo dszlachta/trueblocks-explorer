@@ -1,16 +1,17 @@
 import React from 'react';
 
-import { ButtonCaddie } from 'components';
+import { ButtonCaddie, ProgressBar } from 'components';
 import { Spinner } from 'assets/spinners';
 import { useStatus } from 'store';
 
-export const PageCaddie = ({ caddieName, caddieData, current, handler }) => {
+export const PageCaddie = ({ caddieName, caddieData, current, useProgress = false, handler }) => {
   const loading = useStatus().state.loading;
+  const spinner = useProgress ? <ProgressBar id="export" /> : <Spinner showing={loading} which="ellipsis" size={24} />;
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '4fr 1fr' }}>
-      <ButtonCaddie name={caddieName} buttons={caddieData} current={current} action="set-tags" handler={handler} />
-      <div style={{ height: '28px', justifySelf: 'end' }}>
-        <Spinner showing={loading} which="ellipsis" size={24} />
+      <ButtonCaddie name={caddieName} buttons={caddieData} current={current} actionType="select-tag" handler={handler} />
+      <div style={{ height: '40px', justifySelf: 'end' }}>
+      {spinner}
       </div>
     </div>
   );

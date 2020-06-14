@@ -9,7 +9,6 @@ const mainnetMEW = 'https://api.mycryptoapi.com/eth'
 const localhost = 'http://localhost:8545'
 
 const web3 = new Web3(mainnetTrust)
-
 if (process.env.PARITY) {
   web3.eth.extend({
     property: 'parity',

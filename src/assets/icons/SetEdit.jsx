@@ -7,6 +7,7 @@ import Edit from 'assets/icons/Edit';
 import Delete from 'assets/icons/Delete';
 import Undelete from 'assets/icons/Undelete';
 import Remove from 'assets/icons/Remove';
+import InternalLink from 'assets/icons/InternalLink';
 import ExternalLink from 'assets/icons/ExternalLink';
 import AddMonitor from 'assets/icons/AddMonitor';
 import AddName from 'assets/icons/AddName';
@@ -26,6 +27,7 @@ export {
   Delete,
   Undelete,
   Remove,
+  InternalLink,
   ExternalLink,
   AddMonitor,
   AddName,

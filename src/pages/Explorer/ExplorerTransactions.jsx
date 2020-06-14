@@ -2,16 +2,15 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import React, { Fragment, useEffect, useState, useMemo, useCallback, useContext } from 'react';
-import Mousetrap from 'mousetrap';
+import React, { Fragment, useEffect, useState, useCallback } from 'react';
 
-import GlobalContext from 'store';
-
+import { useStatus } from 'store/status_store';
 import { ObjectTable } from 'components';
 import { getServerData, useArrowKeys } from 'components/utils';
 
-import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
 import { useExplorer } from './Explorer';
+
+import { transactionsSchema } from './ExplorerTransactionsSchema';
 
 // auto-generate: page-settings
 // auto-generate: page-settings
@@ -49,7 +48,7 @@ export const ExplorerTransactions = () => {
   useArrowKeys(transactionsHandler, [dispatch, explorer.blockNumber, explorer.transactionIndex, transactionsHandler]);
 
   const url = 'http://localhost:8080/transactions';
-  let query = 'transactions=' + current + '&verbose=10&force';
+  let query = 'transactions=' + current + '&force';
   useEffect(() => {
     getServerData(url, query + (mocked ? "&mockData" : "")).then((theData) => {
       let result = theData.data;
@@ -85,7 +84,7 @@ export const ExplorerTransactions = () => {
 };
 
 //----------------------------------------------------------------------------
-function getFieldValue(record, fieldName) {
+export function getFieldValue(record, fieldName) {
   // EXISTING_CODE
   switch (fieldName) {
     case 'id':
@@ -98,116 +97,3 @@ function getFieldValue(record, fieldName) {
 
 // EXISTING_CODE
 // EXISTING_CODE
-
-//----------------------------------------------------------------------------
-// auto-generate: schema
-export const transactionsSchema = [
-  {
-    name: 'ID',
-    selector: 'id',
-    type: 'string',
-    searchable: true,
-    onDisplay: getFieldValue,
-  },
-  {
-    name: 'Hash',
-    selector: 'hash',
-    type: 'hash',
-    searchable: true,
-  },
-  {
-    name: 'Block Hash',
-    selector: 'blockHash',
-    type: 'hash',
-    searchable: true,
-  },
-  {
-    name: 'Block Number',
-    selector: 'blockNumber',
-    type: 'blknum',
-  },
-  {
-    name: 'Tx Index',
-    selector: 'transactionIndex',
-    type: 'blknum',
-  },
-  {
-    name: 'Nonce',
-    selector: 'nonce',
-    type: 'uint64',
-  },
-  {
-    name: 'Timestamp',
-    selector: 'timestamp',
-    type: 'timestamp',
-  },
-  {
-    name: 'From',
-    selector: 'from',
-    type: 'address',
-    searchable: true,
-  },
-  {
-    name: 'To',
-    selector: 'to',
-    type: 'address',
-    searchable: true,
-  },
-  {
-    name: 'Value',
-    selector: 'value',
-    type: 'wei',
-  },
-  {
-    name: 'Gas',
-    selector: 'gas',
-    type: 'gas',
-  },
-  {
-    name: 'Gas Price',
-    selector: 'gasPrice',
-    type: 'gas',
-  },
-  {
-    name: 'Input',
-    selector: 'input',
-    type: 'string',
-  },
-  {
-    name: 'isError',
-    selector: 'isError',
-    type: 'uint64',
-  },
-  {
-    name: 'isInternal',
-    selector: 'isInternal',
-    type: 'uint64',
-  },
-  {
-    name: 'Receipt',
-    selector: 'receipt',
-    type: 'CReceipt',
-  },
-  {
-    name: 'Articulated Tx',
-    selector: 'articulatedTx',
-    type: 'CFunction',
-    searchable: true,
-  },
-  {
-    name: 'Compressed Tx',
-    selector: 'compressedTx',
-    type: 'string',
-  },
-  {
-    name: 'Finalized',
-    selector: 'finalized',
-    type: 'bool',
-  },
-  {
-    name: 'Traces',
-    selector: 'traces',
-    type: 'CTraceArray',
-  },
-];
-// auto-generate: schema

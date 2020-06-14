@@ -7,6 +7,7 @@ import { SettingsSystems } from './SettingsSystems';
 import { SettingsSkins } from './SettingsSkins';
 import { SettingsSchemas } from './SettingsSchemas';
 
+//----------------------------------------------------------------------
 export const Settings = () => {
   const apiOkay = useSystemCheck('api');
   const nodeOkay = useSystemCheck('node');
@@ -40,5 +41,3 @@ export const settingsReducer = (state, action) => {
   // localStorage.setItem('otherState', JSON.stringify(ret));
   return ret;
 };
-
-export const settingsSchema = [{ name: 'Id', selector: 'id' }];

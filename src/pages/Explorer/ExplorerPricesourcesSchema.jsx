@@ -8,7 +8,7 @@ function getFieldValue(record, fieldName) {
 }
 
 // auto-generate: schema
-export const pricequotesSchema = [
+export const pricesourcesSchema = [
   {
     name: 'ID',
     selector: 'id',
@@ -17,21 +17,17 @@ export const pricequotesSchema = [
     onDisplay: getFieldValue,
   },
   {
-    name: 'date',
-    selector: 'date',
-    type: 'date',
+    name: 'url',
+    selector: 'url',
+    type: 'string',
     searchable: true,
-    onDisplay: getFieldValue,
   },
   {
-    name: 'timestamp',
-    selector: 'timestamp',
-    type: 'timestamp',
-  },
-  {
-    name: 'close',
-    selector: 'close',
-    type: 'double',
+    name: 'pair',
+    selector: 'pair',
+    type: 'string',
+    searchable: true,
   },
 ];
 // auto-generate: schema
+  

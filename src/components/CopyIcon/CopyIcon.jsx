@@ -3,6 +3,7 @@ import React from 'react';
 import { getIcon } from 'pages/utils';
 import { handleClick } from 'components/utils';
 import { useMonitorMap } from 'store/status_store';
+import { useToast } from "components/Toast";
 
 //--------------------------------------------------------------
 export const Copyable = ({ display, copyable = null, viewable = null, handler }) => {
@@ -41,14 +42,17 @@ const CopyIcon = ({ text, handler }) => {
 
 //--------------------------------------------------------------
 const useCopyToClipboard = () => {
+  const { addToast } = useToast();
   const copyToClipboard = (e, text, handler) => {
     if (typeof text == 'string' || typeof text == 'number') {
+      
       const element = document.createElement('textarea'); // create textarea HTML element
       element.value = text; // add the text to be copied to the element
       document.body.appendChild(element); // add element to DOM
       element.select(); // select the text
       document.execCommand('copy'); // execute copy command
       document.body.removeChild(element); // remove element from DOM
+      addToast('Copied');
       if (handler) handleClick(e, handler, { type: 'copied', text: text });
     } else {
       console.error(`Cannot copy typeof ${typeof text} to clipboard, must be a valid string or number.`);

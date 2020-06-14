@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const { spawn } = require('child_process');
 const fs = require('fs');
 
+const chifraStreamEvents = require('./chifra_stream_events');
+const webSockets = require('./websockets');
+
 const app = express();
 
 const port = !isNaN(process.argv[2]) ? process.argv[2] : 8080;
@@ -116,6 +119,7 @@ app.get(`/:routeName`, (req, res) => {
     removeFromProcessList(chifra.pid);
     reportAndSend(routeName, code, res);
   });
+  chifraStreamEvents.bindEvents(chifra.stderr, { routeName });
 });
 
 app.put(`/settings`, (req, res) => {
@@ -195,6 +199,8 @@ if (paths) {
 }
 */
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log('TrueBlocks Data API (version 0.6.7) initialized on port ' + port);
 });
+
+webSockets.createServer(server);
