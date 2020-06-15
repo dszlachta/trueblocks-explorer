@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord, obscureAddress } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -318,8 +318,6 @@ export function getFieldValue(record, fieldName) {
   switch (fieldName) {
     case 'id':
       return record.address;
-    case 'address':
-      return obscureAddress(record.address);
     case 'tags':
       const array = record.tags.split(':');
       return array.length > 0 ? array[0] : '';

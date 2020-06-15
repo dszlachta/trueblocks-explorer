@@ -67,7 +67,7 @@ export const ObjectTable = ({
 
           if (column.type === 'separator') {
             return (
-              <div key={key} className={rowClass + '-wide'}>
+              <div key={key} className={rowClass + "-wide"}>
                 <div
                   className={siderClass}
                   style={{ backgroundColor: 'lightgrey' }}
@@ -106,7 +106,6 @@ const ObjectTableSider = ({ siderClass, children }) => {
 const ObjectTableColumn = ({ cn, column, children }) => {
   const { align, editable } = column;
   let ccn = (cn ? cn : 'ot') + '-cell';
-  ccn += (column.wide ? '-wide' : '');
   ccn += (editable ? ' editable' : '');
   ccn += (align === 'wordwrap' ? ' ' : ' nowrap');
   if (column.cn) ccn += ' ' + column.cn;

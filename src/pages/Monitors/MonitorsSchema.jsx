@@ -30,7 +30,6 @@ export const monitorsSchema = [
     type: 'address',
     width: 6,
     searchable: true,
-    onDisplay: getFieldValue,
   },
   {
     name: 'Name',

@@ -28,7 +28,6 @@
 .st-row-wide {
   display: grid;
   grid-template-columns: 1fr;
-  background-color: aqua;
 }
 
 .st-cell {
@@ -39,8 +38,7 @@
 .st-cell-wide {
   padding: var(--at-padding);
   padding-left: 4px;
-  background-color: blueviolet;
-  color: yellow;
+  text-align: center;
 }
 
 .st-cell.editable {

@@ -13,7 +13,7 @@ import {
   ChartTable,
   PageCaddie,
 } from 'components';
-import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage, obscureAddress } from 'components/utils';
+import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -275,7 +275,7 @@ export const Appearances = (props) => {
     : 'No Name';
   g_Handler = appearancesHandler;
 
-    useMountEffect(() => {
+  useMountEffect(() => {
     const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
     getServerData(getDataUrl(), qqq).then((theData) => {
       setRecordCount(mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0);
@@ -533,18 +533,18 @@ export function getFieldValue(record, fieldName) {
     case 'internal':
       return internal ? 'int' : '';
     case 'from': {
-      const val = record.fromName ? record.fromName.name : obscureAddress(record.from);
+      const val = record.fromName ? record.fromName.name : record.from;
       if (record.from === g_focusValue) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'to': {
-      const val = record.toName ? record.toName.name : obscureAddress(record.to);
+      const val = record.toName ? record.toName.name : record.to;
       if (record.to === g_focusValue) return <div className="focusValue">{val}</div>;
       return <div className="nonFocusValue">{val}</div>;
     }
     case 'fromName':
       return record.fromName ? (
-        obscureAddress(record.from)
+        record.from
       ) : (
         <div
           onClick={(e) => handleClick(e, g_Handler, { type: 'Add', record_id: record.from })}
@@ -555,7 +555,7 @@ export function getFieldValue(record, fieldName) {
       );
     case 'toName':
       return record.toName ? (
-        obscureAddress(record.to)
+        record.to
       ) : (
         <div
           onClick={(e) => handleClick(e, g_Handler, { type: 'Add', record_id: record.to })}
