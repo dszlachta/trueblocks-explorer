@@ -72,6 +72,7 @@ export const Names = (props) => {
           }
           break;
         case 'add':
+          setCurRecordId('');
           setEditDialog({ showing: true, record: {} });
           break;
         case 'edit':
