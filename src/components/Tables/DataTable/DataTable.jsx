@@ -23,6 +23,7 @@ export const DataTable = ({
   pagination = false,
   paginationParts = '',
   showHidden = false,
+  detailLevel = false,
   recordIcons = [],
   parentHandler = null,
 }) => {
@@ -140,7 +141,7 @@ export const DataTable = ({
       case 'download':
         const asCSV = action.fmt === 'CSV';
         const exportFields = columns.filter((column) => {
-          return (column.selector === 'compressedTx' || !column.hidden) && column.selector !== 'statements.reconciled';
+          return column.export;
         });
         const download = filteredData.map((record, index) => {
           const row = exportFields.map((column) => {
@@ -152,11 +153,11 @@ export const DataTable = ({
           return column.name;
         });
         const output = fieldNames.join(asCSV ? ',' : '\t') + '\n' + download.join('\n');
-        var hiddenElement = document.createElement('a');
-        hiddenElement.href = 'data:text/' + (asCSV ? 'csv' : 'text') + ';charset=utf-8,' + encodeURI(output);
-        hiddenElement.target = '_blank';
-        hiddenElement.download = 'download.' + (asCSV ? 'csv' : 'txt');
-        hiddenElement.click();
+        var expElement = document.createElement('a');
+        expElement.href = 'data:text/' + (asCSV ? 'csv' : 'text') + ';charset=utf-8,' + encodeURI(output);
+        expElement.target = '_blank';
+        expElement.download = 'download.' + (asCSV ? 'csv' : 'txt');
+        expElement.click();
         break;
 
       case 'copied':
@@ -225,7 +226,7 @@ export const DataTable = ({
   const debug = false;
   return (
     <Fragment key="dt">
-      {debug && <pre>{JSON.stringify(tableName + '|' + str)}</pre>}
+      {debug && <pre>{JSON.stringify(widArray + '|' + str)}</pre>}
       {showTools && (
         <Tablebar
           title={title}
@@ -294,7 +295,8 @@ const DataTableHeader = ({
             {column.selector === sortCtx2.sortBy && sortIcon2}
           </div>
         );
-        return column.hidden || column.selector === 'icons' ? null : (
+        const hidden = !column.width && !showHidden;
+        return hidden || column.selector === 'icons' ? null : (
           <div
             key={'head_' + index}
             onClick={(e) => handleClick(e, handler, { type: 'sortBy', fieldName: column.selector })}
@@ -356,7 +358,8 @@ const DataTableRows = ({
                 let type = column.type ? column.type : 'string';
 
                 let rawValue = record[column.selector];
-                if ((column.hidden && !showHidden) || (column.type === 'icons' && rowIcons.length > 0)) {
+                const hidden = !column.width && !showHidden;
+                if (hidden || (column.type === 'icons' && rowIcons.length > 0)) {
                   return null;
                 }
 
@@ -444,17 +447,17 @@ const DataTableRows = ({
 //-----------------------------------------------------------------
 export function widthsFromColumns(columns, showHidden) {
   let totalWidth = columns.reduce((sum, column) => {
-    const hidden = (column.hidden && !showHidden) || column.type === 'icons';
-    const width = column.width || 1;
-    return sum + (hidden ? 0 : width);
+    if ((!column.width && !showHidden) || column.type === 'icons')
+      return sum;
+    return sum + Number(column.width);
   }, 0);
 
   // console.log('totalWidth: ', totalWidth);
   const ret = columns
     .map((column) => {
-      const hidden = (column.hidden && !showHidden) || column.type === 'icons';
-      if (hidden) return null;
-      const width = column.width || 1;
+      if ((!column.width && !showHidden) || column.type === 'icons')
+        return null;
+      const width = column.width;
       if (column.isPill) return 'minmax(80px, ' + (Math.floor((width / totalWidth) * 64) + 'fr) ');
       /* this value (80px) appears in the css for .at-pill - search it */
       return Math.floor((width / totalWidth) * 64) + 'fr ';

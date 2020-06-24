@@ -18,13 +18,13 @@ export const collectionsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    hidden: true,
     searchable: true,
   },
   {
     name: 'Tags',
     selector: 'tags',
     type: 'string',
+    width: 1,
     editable: true,
     searchable: true,
   },
@@ -32,6 +32,7 @@ export const collectionsSchema = [
     name: 'Name',
     selector: 'name',
     type: 'string',
+    width: 1,
     editable: true,
     searchable: true,
   },
@@ -39,6 +40,7 @@ export const collectionsSchema = [
     name: 'Client',
     selector: 'client',
     type: 'string',
+    width: 1,
     editable: true,
     searchable: true,
     onValidate: validateUserInput,
@@ -47,18 +49,17 @@ export const collectionsSchema = [
     name: 'Monitored',
     selector: 'monitored',
     type: 'bool',
-    hidden: true,
   },
   {
     name: 'Deleted',
     selector: 'deleted',
     type: 'bool',
-    hidden: true,
   },
   {
     name: 'Size',
     selector: 'sizeInBytes',
     type: 'filesize',
+    width: 1,
   },
   {
     name: 'Addresses',
@@ -71,7 +72,6 @@ export const collectionsSchema = [
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
-    hidden: true,
   },
 ];
 // auto-generate: schema

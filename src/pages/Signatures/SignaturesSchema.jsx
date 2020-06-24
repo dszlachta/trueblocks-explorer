@@ -11,8 +11,6 @@ export const signaturesSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    hidden: true,
-    width: 1,
     searchable: true,
     onDisplay: getFieldValue,
   },
@@ -42,23 +40,17 @@ export const signaturesSchema = [
     name: 'Signature',
     selector: 'signature',
     type: 'string',
-    hidden: true,
-    width: 2,
   },
   {
     name: 'Input Names',
     selector: 'inputs',
     type: 'string',
-    hidden: true,
-    width: 2,
     onDisplay: getFieldValue,
   },
   {
     name: 'Output Names',
     selector: 'outputs',
     type: 'string',
-    hidden: true,
-    width: 2,
     onDisplay: getFieldValue,
   },
   {
@@ -73,7 +65,6 @@ export const signaturesSchema = [
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
-    hidden: true,
   },
 ];
 // auto-generate: schema

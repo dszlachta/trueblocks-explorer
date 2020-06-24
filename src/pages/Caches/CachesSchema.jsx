@@ -11,8 +11,6 @@ export const cachesSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    hidden: true,
-    width: 1,
     searchable: true,
     onDisplay: getFieldValue,
   },
@@ -66,14 +64,11 @@ export const cachesSchema = [
     name: 'Valid',
     selector: 'is_valid',
     type: 'bool',
-    hidden: true,
-    width: 1,
   },
   {
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
-    hidden: true,
   },
 ];
 // auto-generate: schema

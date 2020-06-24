@@ -1,6 +1,6 @@
-name        ,selector ,type   ,hidden ,width ,editable ,decimals ,isPill ,align ,cn ,export ,chart ,searchable ,detail ,sortable ,underField ,onDisplay     ,onAccept ,onValidate
-ID          ,id       ,string ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,         ,           ,getFieldValue ,         ,
-Label       ,label    ,string ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,         ,           ,getFieldValue ,         ,
-Name        ,name     ,string ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
-Route       ,route    ,string ,true   ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,         ,           ,getFieldValue ,         ,
-Description ,descr    ,string ,       ,      ,         ,         ,       ,      ,   ,       ,      ,           ,         ,         ,           ,              ,         ,
+name        ,selector ,type   ,unused ,width ,editable ,decimals ,isPill ,align ,cn ,export ,chart ,searchable ,detail ,wide ,underField ,onDisplay     ,onAccept ,onValidate
+ID          ,id       ,string ,       ,0     ,         ,         ,       ,      ,   ,       ,      ,           ,       ,     ,           ,getFieldValue ,         ,
+Label       ,label    ,string ,       ,0     ,         ,         ,       ,      ,   ,       ,      ,           ,       ,     ,           ,getFieldValue ,         ,
+Name        ,name     ,string ,       ,0     ,         ,         ,       ,      ,   ,       ,      ,           ,       ,     ,           ,              ,         ,
+Route       ,route    ,string ,       ,0     ,         ,         ,       ,      ,   ,       ,      ,           ,       ,     ,           ,getFieldValue ,         ,
+Description ,descr    ,string ,       ,1     ,         ,         ,       ,      ,   ,       ,      ,           ,       ,     ,           ,              ,         ,

@@ -193,6 +193,7 @@ export const SettingsSchemas = () => {
                   search={false}
                   pagination={false}
                   showHidden={true}
+                  detailLevel={2}
                   recordIcons={hasIcons ? ['Add', 'Edit'] : []}
                 />}
                 <br />
@@ -209,6 +210,7 @@ export const SettingsSchemas = () => {
                   search={false}
                   pagination={false}
                   showHidden={true}
+                  detailLevel={2}
                 />}
               </div>
             </div>

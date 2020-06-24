@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { spawn } = require('child_process');
-const fs = require('fs');
 
 const chifraStreamEvents = require('./chifra_stream_events');
 const webSockets = require('./websockets');
@@ -28,13 +27,18 @@ app.use('/help', express.static(__dirname + '/help'));
 app.use('/docs', express.static(__dirname + '/docs'));
 app.use('/', express.static(__dirname + '/build'));
 
-var debug = false;
+let processList = [];
+let cmdCount = 0;
+
+var DEBUG = false;
+function debug_log(...args) {
+  if (DEBUG) {
+    console.log.apply(null, [ ...args ]);
+  }
+}
 //app.get('/', (req, res) => {
 //  return res.redirect('/docs');
 //});
-
-let processList = [];
-let cnt = 0;
 
 const reportAndSend = (routeName, code, res) => {
   console.log(
@@ -42,12 +46,12 @@ const reportAndSend = (routeName, code, res) => {
       ' ~ \x1b[32m\x1b[1m<INFO>\x1b[0m  : ' +
       `Exiting route \'${routeName}\' with ${code === undefined ? 'OK' : code}`
   );
-  console.log(`------------- ${++cnt} ---------------------------`);
+  console.log(`------------- ${++cmdCount} ---------------------------`);
   return res.send();
 };
 
 const generateCmd = (routeName, queryObj) => {
-  let cmd = Object.entries(queryObj)
+  let cmdLine = Object.entries(queryObj)
     .map(([key, val]) => {
       let option = apiOptions[routeName][key];
       let cmdString = [];
@@ -66,9 +70,9 @@ const generateCmd = (routeName, queryObj) => {
     .reduce((acc, val) => acc.concat(val), [])
     .join(' ');
   console.log(
-    ~~(Date.now() / 1000) + ' ~ \x1b[32m\x1b[1m<INFO>\x1b[0m  : ' + `API calling \'chifra ${routeName} ${cmd}\'`
+    ~~(Date.now() / 1000) + ' ~ \x1b[32m\x1b[1m<INFO>\x1b[0m  : ' + `API calling \'chifra ${routeName} ${cmdLine}\'`
   );
-  return cmd;
+  return cmdLine;
 };
 
 const removeFromProcessList = (pid) => {
@@ -100,20 +104,20 @@ app.get(`/:routeName`, (req, res) => {
     console.log(msg);
     return res.send(msg);
   }
-  let cmd = generateCmd(routeName, req.query);
-  let chifra = spawn('chifra', [routeName, cmd], { env: env, detached: true });
+  let cmdLine = generateCmd(routeName, req.query);
+  let chifra = spawn('chifra', [routeName, cmdLine], { env: env, detached: true });
   req.on('close', (err) => {
-    if (debug) console.log(`killing ${-chifra.pid}...`);
+    debug_log(`killing ${-chifra.pid}...`);
     try {
       process.kill(-chifra.pid, 'SIGINT');
     } catch (e) {
-      if (debug) console.log(`error killing process: ${e}`);
+      debug_log(`error killing process: ${e}`);
     }
     removeFromProcessList(chifra.pid);
     return false;
   });
-  processList.push({ pid: chifra.pid, cmd: `chifra ${routeName} ${cmd}` });
-  if (debug) console.log(processList);
+  processList.push({ pid: chifra.pid, cmdLine: `chifra ${routeName} ${cmdLine}` });
+  debug_log(processList);
   chifra.stderr.pipe(process.stderr);
   chifra.stdout.pipe(res).on('finish', (code) => {
     removeFromProcessList(chifra.pid);
@@ -124,28 +128,25 @@ app.get(`/:routeName`, (req, res) => {
 
 app.put(`/settings`, (req, res) => {
   const routeName = 'settings';
-  if (debug) console.log(req.query);
+  debug_log(req.query);
   if (req.query.set !== undefined) {
-    if (debug) console.log(`setting env CONFIG_SET to...\n${JSON.stringify(req.body)}`);
+    debug_log(`setting env CONFIG_SET to...\n${JSON.stringify(req.body)}`);
     env.CONFIG_SET = JSON.stringify(req.body);
   }
-  let cmd = generateCmd(routeName, req.query);
-  let chifra = spawn('chifra', [routeName, cmd], { env: env, detached: true });
+  let cmdLine = generateCmd(routeName, req.query);
+  let chifra = spawn('chifra', [routeName, cmdLine], { env: env, detached: true });
   req.on('close', (err) => {
-    //        if (debug)
-    //            console.log(`killing ${-chifra.pid}...`)
+    debug_log(`killing ${-chifra.pid}...`)
     try {
       process.kill(-chifra.pid, 'SIGINT');
     } catch (e) {
-      //            if (debug)
-      //                console.log("completed"); //`error killing process: ${e}`)
+      debug_log("completed"); //`error killing process: ${e}`)
     }
     removeFromProcessList(chifra.pid);
     return false;
   });
-  processList.push({ pid: chifra.pid, cmd: `chifra ${routeName} ${cmd}` });
-  //    if (debug)
-  //        console.log(processList);
+  processList.push({ pid: chifra.pid, cmdLine: `chifra ${routeName} ${cmdLine}` });
+  debug_log(processList);
   chifra.stderr.pipe(process.stderr);
   chifra.stdout.pipe(res).on('finish', (code) => {
     removeFromProcessList(chifra.pid);

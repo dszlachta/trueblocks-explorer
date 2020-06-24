@@ -20,7 +20,7 @@ export const SidebarTable = ({
   parentHandler,
 }) => {
   const [selectedRow, setSelectedRow] = useState({});
-  const [showHidden, setShowHidden] = useState(Number(stateFromStorage('sideTableDetail', 0)));
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('sideTableDetail', 0)));
 
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
@@ -37,8 +37,8 @@ export const SidebarTable = ({
         if (parentHandler) parentHandler(action);
         return;
       case 'toggle-detail':
-        setShowHidden(!showHidden);
-        localStorage.setItem('sideTableDetail', showHidden ? 0 : 1);
+        setDetailLevel((detailLevel + 1) % 3);
+        localStorage.setItem('sideTableDetail', detailLevel);
         if (parentHandler) parentHandler(action);
         break;
       case 'interact':
@@ -61,7 +61,7 @@ export const SidebarTable = ({
   const exists = imageExists(imageUrl);
   imageUrl = exists ? imageUrl : 'http://localhost:3002/assets/icons/blank.png';
   let interact = exists ? getIcon('y', 'interactwith', true, true, 24) : <></>;
-  const detailIcon = getIcon('x', showHidden ? 'toggleright' : 'toggleleft', true, true, 24);
+  const detailIcon = getIcon('x', (detailLevel === 0 ? 'toggleleft' : (detailLevel === 1 ? 'togglecenter' : 'toggleright')), true, true, 24);
 
   return (
     <div className="sidebar-table">
@@ -76,6 +76,8 @@ export const SidebarTable = ({
           pagination={pagination}
           paginationParts=""
           recordIcons={recordIcons}
+          showHidden={Number(stateFromStorage('showHidden', false))}
+          detailLevel={detailLevel}
           parentHandler={sidebarHandler}
         />
       </div>
@@ -95,7 +97,7 @@ export const SidebarTable = ({
             style={{ textAlign: 'right', paddingRight: '8px', alignItems: 'end' }}
             onClick={(e) => handleClick(e, sidebarHandler, { type: 'toggle-detail' })}
           >
-            <div>detail: {detailIcon}</div>
+            <div>{detailIcon}</div>
           </div>
         </div>
         <ObjectTable
@@ -103,8 +105,8 @@ export const SidebarTable = ({
           cn="st"
           data={selectedRow}
           columns={columns}
-          showHidden={showHidden}
-          showDetail={true}
+          showHidden={Number(stateFromStorage('showHidden', false))}
+          detailLevel={detailLevel}
         />
       </div>
     </div>

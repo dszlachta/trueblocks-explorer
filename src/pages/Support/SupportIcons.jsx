@@ -30,6 +30,7 @@ import PlusCircle from 'assets/icons/PlusCircle';
 //import PlusSquare from 'assets/icons/PlusSquare';
 import Remove from 'assets/icons/Remove';
 import ToggleLeft from 'assets/icons/ToggleLeft';
+import ToggleCenter from 'assets/icons/ToggleCenter';
 import ToggleRight from 'assets/icons/ToggleRight';
 import Twitter from 'assets/icons/Twitter';
 import Undelete from 'assets/icons/Undelete';
@@ -85,6 +86,7 @@ export const SupportIcons = () => {
         { name: 'Add Name', component: <AddName size={size} color={color} fill={fill} style={style} /> },
         { name: 'View Monitor', component: <View size={size} color={color} fill={fill} style={style} /> },
         { name: 'Paused', component: <ToggleLeft size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Neutral', component: <ToggleCenter size={size} color={color} fill={fill} style={style} /> },
         { name: 'Active', component: <ToggleRight size={size} color={color} fill={fill} style={style} /> },
       ],
     },

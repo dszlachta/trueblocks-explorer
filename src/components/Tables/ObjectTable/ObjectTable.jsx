@@ -16,7 +16,7 @@ export const ObjectTable = ({
   pagination = false,
   paginationParts = '',
   showHidden = false,
-  showDetail = false,
+  detailLevel = false,
   handler = null,
   cn = null,
 }) => {
@@ -52,12 +52,10 @@ export const ObjectTable = ({
           // hide_empty is not part of the schema. This is here as a note so I don't forget about adding it back in
           // if (column.hide_empty && rawValue === '') return null;
 
-          const isHidden = (column.hidden && !showHidden);
-          const isDetail = (column.detail && showDetail);
-          const isSeparator = (column.type === 'separator');
-          if (!isSeparator && !isDetail && isHidden) return null;
+          if (column.detail > detailLevel) return null;
+          if (column.type === 'icons') return null;
 
-          const fieldName = column.selector; //column.name || column.selector;
+          const fieldName = column.name || column.selector;
           const fieldType = column.type || 'string';
           const formatted = formatFieldByType(fieldType, value, column.decimals) || '';
           const key = id + '_' + column.selector;
@@ -65,14 +63,17 @@ export const ObjectTable = ({
           const siderClass = 'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider';
           const rowClass = 'at-row ' + (cn ? cn : 'ot') + '-row' + (column.wide ? '-wide nowrap' : '');
 
+
           if (column.type === 'separator') {
+            const record = {...column, 'detailLevel': detailLevel};
+            const value = column.onDisplay ? column.onDisplay(record, column.selector) : column.name;
             return (
               <div key={key} className={rowClass + "-wide"}>
                 <div
                   className={siderClass}
                   style={{ backgroundColor: 'lightgrey' }}
                 >
-                  {column.name}
+                {value}
                 </div>
               </div>
             );

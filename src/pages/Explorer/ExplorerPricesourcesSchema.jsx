@@ -13,6 +13,7 @@ export const pricesourcesSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    width: 1,
     searchable: true,
     onDisplay: getFieldValue,
   },
@@ -20,12 +21,14 @@ export const pricesourcesSchema = [
     name: 'url',
     selector: 'url',
     type: 'string',
+    width: 1,
     searchable: true,
   },
   {
     name: 'pair',
     selector: 'pair',
     type: 'string',
+    width: 1,
     searchable: true,
   },
 ];

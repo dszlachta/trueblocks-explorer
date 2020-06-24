@@ -7,9 +7,12 @@ const ws = require('ws');
 
 let server = null;
 const listeners = [];
+const DEBUG = false;
 
 function log(...args) {
-  console.log.apply(null, [ 'WebSockets:', ...args ]);
+  if (DEBUG) {
+    console.log.apply(null, [ 'WebSockets:', ...args ]);
+  }
 }
 
 function reportConnectedCount() {

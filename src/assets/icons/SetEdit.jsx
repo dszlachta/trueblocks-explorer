@@ -1,6 +1,7 @@
 // commonly used edit/delete/add icons
 
 import ToggleLeft from 'assets/icons/ToggleLeft';
+import ToggleCenter from 'assets/icons/ToggleCenter';
 import ToggleRight from 'assets/icons/ToggleRight';
 import Add from 'assets/icons/Add';
 import Edit from 'assets/icons/Edit';
@@ -21,6 +22,7 @@ import CheckCircleYellow from 'assets/icons/CheckCircleYellow';
 
 export {
   ToggleLeft,
+  ToggleCenter,
   ToggleRight,
   Add,
   Edit,

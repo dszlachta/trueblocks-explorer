@@ -13,6 +13,7 @@ export const pricequotesSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    width: 1,
     searchable: true,
     onDisplay: getFieldValue,
   },
@@ -20,6 +21,7 @@ export const pricequotesSchema = [
     name: 'date',
     selector: 'date',
     type: 'date',
+    width: 1,
     searchable: true,
     onDisplay: getFieldValue,
   },
@@ -27,11 +29,13 @@ export const pricequotesSchema = [
     name: 'timestamp',
     selector: 'timestamp',
     type: 'timestamp',
+    width: 1,
   },
   {
     name: 'close',
     selector: 'close',
     type: 'double',
+    width: 1,
   },
 ];
 // auto-generate: schema

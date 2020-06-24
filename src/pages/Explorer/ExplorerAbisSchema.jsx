@@ -13,6 +13,7 @@ export const abisSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
+    width: 1,
     searchable: true,
     onDisplay: getFieldValue,
   },
@@ -20,12 +21,14 @@ export const abisSchema = [
     name: 'Address',
     selector: 'address',
     type: 'address',
+    width: 1,
     searchable: true,
   },
   {
     name: 'Interfaces',
     selector: 'interfaces',
     type: 'CFunctionArray',
+    width: 1,
   },
 ];
 // auto-generate: schema

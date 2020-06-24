@@ -51,9 +51,9 @@ export const namesSchema = [
     name: 'Source',
     selector: 'source',
     type: 'string',
-    hidden: true,
     width: 4,
     editable: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Decimals',
@@ -69,48 +69,42 @@ export const namesSchema = [
     width: 4,
     editable: true,
     searchable: true,
+    onDisplay: getFieldValue,
   },
   {
     name: 'Deleted',
     selector: 'deleted',
     type: 'bool',
-    hidden: true,
   },
   {
     name: 'isCustom',
     selector: 'is_custom',
     type: 'bool',
-    hidden: true,
   },
   {
     name: 'isPrefund',
     selector: 'is_prefund',
     type: 'bool',
-    hidden: true,
   },
   {
     name: 'nAppearances',
     selector: 'nAppearances',
     type: 'blknum',
-    hidden: true,
   },
   {
     name: 'Last Export',
     selector: 'lastExport',
     type: 'blknum',
-    hidden: true,
   },
   {
     name: 'First Appearance',
     selector: 'firstAppearance',
     type: 'blknum',
-    hidden: true,
   },
   {
     name: 'Latest Appearance',
     selector: 'latestAppearance',
     type: 'blknum',
-    hidden: true,
   },
   {
     name: 'isMonitored',
@@ -125,19 +119,16 @@ export const namesSchema = [
     name: 'Path',
     selector: 'path',
     type: 'string',
-    hidden: true,
   },
   {
     name: 'Size',
     selector: 'sizeInBytes',
     type: 'filesize',
-    hidden: true,
   },
   {
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
-    hidden: true,
   },
 ];
 // auto-generate: schema

@@ -7,12 +7,7 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import {
-  DataTable,
-  ObjectTable,
-  ChartTable,
-  PageCaddie,
-} from 'components';
+import { DataTable, ObjectTable, ChartTable, PageCaddie } from 'components';
 import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
@@ -27,7 +22,7 @@ import { currentPage } from 'components/utils';
 import { SidebarTable } from 'components';
 import { getIcon } from 'pages/utils';
 let g_focusValue = '';
-var g_Handler = null;
+let g_Handler = null;
 const useMountEffect = (fun) => useEffect(fun, [])
 // EXISTING_CODE
 
@@ -53,7 +48,7 @@ export const Appearances = (props) => {
   g_focusValue = addresses.value && addresses.value.toLowerCase();
   // EXISTING_CODE
 
-  const dataQuery = 'addrs=' + addresses.value + '&accounting&ether';
+  const dataQuery = 'addrs=' + addresses.value + '&accounting&ether';  
   function addendum(record, record_id) {
     let ret = '';
     // EXISTING_CODE
@@ -186,9 +181,11 @@ export const Appearances = (props) => {
         const isAirdrop = (item['toName'] && item['toName'].name.includes('Airdrop')) || (item['fromName'] && item['fromName'].name.includes('Airdrop'))
         switch (curTag) {
           case 'Hide Airdrops':
-            return !isAirdrop
+            return !isAirdrop;
           case 'Show Airdrops':
               return isAirdrop;
+          case 'Hide Outgoing':
+            return item.from !== g_focusValue;
           case 'Grants':
             return (
               (item['toName'] && item['toName'].name.includes('Gitcoin')) ||
@@ -199,22 +196,26 @@ export const Appearances = (props) => {
             const statements = item['statements'][0];
             if (statements.inflow !== '') return true;
             if (statements.intInflow !== '') return true;
-            if (statements.suicideInflow !== '') return true;
+            if (statements.selfDestructInflow !== '') return true;
+            if (statements.miningInflow !== '') return true;
+            if (statements.prefundInflow !== '') return true;
             if (statements.outflow !== '') return true;
             if (statements.intOutflow !== '') return true;
-            if (statements.suicideOutflow !== '') return true;
-            if (statements.weiGasCost !== '') return true;
+            if (statements.selfDestructOutflow !== '') return true;
+            if (statements.gasCostOutflow !== '') return true;
             return false
           case 'Not Eth':
             if (!item['statements']) return false;
             const statements1 = item['statements'][0];
             if (statements1.inflow !== '') return false;
             if (statements1.intInflow !== '') return false;
-            if (statements1.suicideInflow !== '') return false;
+            if (statements1.selfDestructInflow !== '') return false;
+            if (statements1.miningInflow !== '') return false;
+            if (statements1.prefundInflow !== '') return false;
             if (statements1.outflow !== '') return false;
             if (statements1.intOutflow !== '') return false;
-            if (statements1.suicideOutflow !== '') return false;
-            if (statements1.weiGasCost !== '') return false;
+            if (statements1.selfDestructOutflow !== '') return false;
+            if (statements1.gasCostOutflow !== '') return false;
             return true;
           case 'Tokens':
             if (!item['articulatedTx']) return false;
@@ -224,11 +225,7 @@ export const Appearances = (props) => {
           case 'Reconciled':
             if (!item['statements']) return false;
             if (item.statements.length === 0) return false;
-            return (item.statements[0]['reconciled'] && item.statements[0]['reconciliationType'] === '');
-          case 'Partial':
-            if (!item['statements']) return false;
-            if (item.statements.length === 0) return false;
-            return (item.statements[0]['reconciled'] && item.statements[0]['reconciliationType'].includes('partial'));
+            return (item.statements[0]['reconciled'] && (item.statements[0]['reconciliationType'] === '' || item.statements[0]['reconciliationType'].includes('partial')));
           case 'Unreconciled':
             if (!item['statements']) return false;
             if (item.statements.length === 0) return false;
@@ -236,7 +233,7 @@ export const Appearances = (props) => {
           case 'SelfDestructs':
             if (!item['statements']) return false;
             if (item.statements.length === 0) return false;
-            return (item.statements[0]['suicideInflow'] > 0 || item.statements[0]['suicideOutflow'] > 0);
+            return (item.statements[0]['selfDestructInflow'] > 0 || item.statements[0]['selfDestructOutflow'] > 0);
           case 'Creations':
             if (!item['receipt']) return false;
             if (!item.receipt['logs']) return false;
@@ -315,7 +312,7 @@ export const Appearances = (props) => {
 //----------------------------------------------------------------------
 const getTagList = (appearances) => {
   // prettier-ignore
-  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Messages', 'Creations', 'SelfDestructs'];
+  let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Outgoing', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Messages', 'Creations', 'SelfDestructs'];
   tagList.unshift('|');
   tagList.unshift('All');
   tagList.push('|');
@@ -508,18 +505,25 @@ export function getFieldValue(record, fieldName) {
           : 'XCircle'
       );
     if (fn === 'totalin' && record && record.statements && record.statements[0])
-      return record.statements[0]['inflow'] + record.statements[0]['intInflow'] + record.statements[0]['suicideInflow'];
+      return record.statements[0]['inflow'] +
+              record.statements[0]['intInflow'] +
+              record.statements[0]['selfDestructInflow'] +
+              record.statements[0]['miningInflow'] +
+              record.statements[0]['prefundInflow'];
     if (fn === 'totalout' && record && record.statements && record.statements[0])
       return (
-        Number(record.statements[0]['outflow']) + Number(record.statements[0]['intOutflow']) + Number(record.statements[0]['suicideOutflow']) + Number(record.statements[0]['weiGasCost'])
+        Number(record.statements[0]['outflow']) + Number(record.statements[0]['intOutflow']) + Number(record.statements[0]['selfDestructOutflow']) + Number(record.statements[0]['gasCostOutflow'])
       );
     if (record && record.statements && record.statements[0]) return record.statements[0][fn];
   }
 
   const internal = record.from !== g_focusValue && record.to !== g_focusValue;
+
   switch (fieldName) {
     case 'id':
       return record.hash;
+    case 'separator4':
+      return record.detailLevel === 2 ? "All Events" : record.name;
     case 'marker':
       return (
         <Fragment>
@@ -570,18 +574,9 @@ export function getFieldValue(record, fieldName) {
       if (record.receipt.contractAddress === '0x0') return '';
       return record.receipt.contractAddress;
     case 'compressedLog':
-      if (!record.receipt || !record.receipt.logs || record.receipt.logs.length === 0) return '[]';
-      const logs = record.receipt.logs.map((l) => { return l})
-      const theList = logs.map((log) => {
-        return log.compressedLog;
-      })
-      if (theList.length === 0) return '[]';
-      return (<>{theList.map((x) => { return <div>{x}</div>; })}</>);
-      //JSON.stringify(theList);
+      return <CompressedLogs record={record} />
     case 'compressedTx':
-      if (!record[fieldName]) return null;
-      const compressed = record[fieldName];
-      return displayCompressed(compressed);
+      return <CompressedTx record={record} fieldName={fieldName}/>
     default:
       break;
   }
@@ -590,6 +585,65 @@ export function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
+//----------------------------------------------------------------------
+export const CompressedLogs = ({record}) => {
+  if (!record.receipt || !record.receipt.logs || record.receipt.logs.length === 0) return <div key={'yyy'}>{<i>{'no events'}</i>}</div>;
+  const logs = record.receipt.logs.map((l) => { return l})
+  const theList = logs.map((log) => {
+    return displayCompressed(log.compressedLog.replace(/ /g, ''));
+  })
+  return <>{theList}</>;
+}
+
+//----------------------------------------------------------------------
+export const CompressedTx = ({record, fieldName}) => {
+  if (!record[fieldName]) return null;
+  const compressed = record[fieldName];
+  return displayCompressed(compressed.replace(/ /g, ''));
+}
+
+//----------------------------------------------------------------------
+function displayCompressed(compressed) {
+  if (compressed === '0x()') return <div key={'xxx'}>{<i>{'null'}</i>}</div>;
+  if (compressed.substr(0, 8) === 'message:')
+    return (
+      <div key={'xxx'}>
+        <b>{compressed.replace('message:', '')}</b>
+      </div>
+    );
+  let arr = compressed.replace(')', '').replace('(', ',').split(',');
+  return (
+    <div>
+      {arr.map((item, index) => {
+        if (index === 0) {
+          return <div key={item}>{<b>{item}</b>}</div>;
+        } else {
+          let s = item.split(':');
+          if (!s) {
+            s[0] = s[1] = '';
+          } else if (!s[1]) {
+            s[1] = '';
+          }
+          s[1] = s[1].trim();
+          const ofInterest = s[1].includes(g_focusValue);
+          return (
+            <>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 15fr 80fr 1fr' }}>
+                <div>{' '}</div>
+                <div key={item + '_a'}>{(s[0] === ' stub' ? '0x' : s[0] + ':')}</div>
+                <div className={ofInterest ? 'focusValue' : ''} key={item + '_b'}>
+                  {s[1]}
+                </div>
+                <div>{' '}</div>
+              </div>
+            </>
+          );
+        }
+      })}
+    </div>
+  );
+}
+
 //----------------------------------------------------------------------
 export const metaSchema = [
   {
@@ -641,44 +695,4 @@ export const messagesSchema = [
   {selector: 'from', width: 14},
   {selector: 'message', width: 40},
 ];
-
-//----------------------------------------------------------------------
-function displayCompressed(compressed) {
-  if (compressed === '0x ( )') return <div key={'xxx'}>{<i>{'null'}</i>}</div>;
-  if (compressed.substr(0, 8) === 'message:')
-    return (
-      <div key={'xxx'}>
-        <b>{compressed.replace('message:', '')}</b>
-      </div>
-    );
-  let arr = compressed.replace(')', '').replace('(', ',').split(',');
-  return (
-    <div>
-      {arr.map((item, index) => {
-        if (index === 0) {
-          return <div key={item}>{<b>{item}</b>}</div>;
-        } else {
-          let s = item.split(':');
-          if (!s) {
-            s[0] = s[1] = '';
-          } else if (!s[1]) {
-            s[1] = '';
-          }
-          s[1] = s[1].trim();
-          const ofInterest = s[1].includes(g_focusValue);
-          return (
-            <>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 3fr' }}>
-                <div key={item + '_a'}>{(s[0] === ' stub' ? '0x' : s[0] + ':')}</div>
-                <div className={ofInterest ? 'focusValue' : ''} key={item + '_b'}>
-                  {s[1] + '-' + JSON.stringify(s[1].length)}
-                </div>
-              </div>
-            </>
-          );
-        }
-      })}
-    </div>
-  );
-}
 // EXISTING_CODE

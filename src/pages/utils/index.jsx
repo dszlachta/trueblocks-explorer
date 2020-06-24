@@ -17,6 +17,7 @@ import {
 } from 'assets/icons/SetMenus';
 import {
   ToggleLeft,
+  ToggleCenter,
   ToggleRight,
   Add,
   Edit,
@@ -71,6 +72,8 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
       return <Support key={key} size={size} className={cn} />;
     case 'toggleleft':
       return <ToggleLeft key={key} size={size} className={cn} />;
+    case 'togglecenter':
+      return <ToggleCenter key={key} size={size} className={cn} />;
     case 'toggleright':
       return <ToggleRight key={key} size={size} className={cn} />;
     case 'add':

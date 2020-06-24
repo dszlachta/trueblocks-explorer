@@ -133,6 +133,9 @@ export const Names = (props) => {
           break;
 
         // EXISTING_CODE
+        case 'gotoURL':
+          navigate(action.payload, true);
+          break;
         case 'externallink':
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
@@ -335,6 +338,12 @@ export function getFieldValue(record, fieldName) {
     case 'tags':
       const array = record.tags.split(':');
       return array.length > 0 ? array[0] : '';
+    case 'source':
+      const action1 = {type: 'gotoURL', payload: record.source};
+      return validURL(record.source) ? <div onClick={action1}>{record.source}</div> : record.source;
+    case 'description':
+      const action2 = {type: 'gotoURL', payload: record.description};
+      return validURL(record.source) ? <div onClick={action2}>{record.description}</div> : record.description;
     default:
       break;
   }
@@ -343,6 +352,17 @@ export function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
+//----------------------------------------------------------------------------
+function validURL(str) {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
+}
+
 //----------------------------------------------------------------------------
 export function useFieldValue(record, fieldName) {
   const monitorMap = useMonitorMap();

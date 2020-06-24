@@ -11,8 +11,6 @@ export const otherSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    hidden: true,
-    width: 1,
     searchable: true,
     onDisplay: getFieldValue,
   },
@@ -50,7 +48,6 @@ export const otherSchema = [
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
-    hidden: true,
   },
 ];
 // auto-generate: schema
