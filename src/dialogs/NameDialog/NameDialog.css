@@ -24,3 +24,15 @@
 .hidden {
   display: none;
 }
+
+label {
+  display: flex;
+}
+
+label span {
+  flex-basis: 20%;
+}
+
+label div {
+  flex-basis: 80%;
+}
