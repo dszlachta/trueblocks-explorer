@@ -20,7 +20,9 @@
     "package": "electron-forge package",
     "premake": "yarn build",
     "make": "electron-forge make",
-    "make-mac": "yarn make --platform mas"
+    "make-mac": "yarn make --platform mas",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
     "axios": "^0.19.2",
@@ -46,6 +48,7 @@
     "react-spring": "^8.0.27",
     "shortid": "^2.2.15",
     "ss-search": "^1.5.20",
+    "styled-components": "^5.1.1",
     "swr": "^0.1.18",
     "yarn.lock": "^0.0.1-security"
   },
@@ -71,6 +74,11 @@
     "@electron-forge/maker-rpm": "6.0.0-beta.51",
     "@electron-forge/maker-squirrel": "6.0.0-beta.51",
     "@electron-forge/maker-zip": "6.0.0-beta.51",
+    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-links": "^5.3.19",
+    "@storybook/addons": "^5.3.19",
+    "@storybook/preset-create-react-app": "^3.1.1",
+    "@storybook/react": "^5.3.19",
     "electron": "^8.2.5",
     "husky": "^4.2.3",
     "jest": "24.9.0",
