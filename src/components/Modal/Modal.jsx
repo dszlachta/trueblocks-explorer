@@ -4,7 +4,22 @@ import Mousetrap from 'mousetrap';
 import { handleClick } from 'components/utils';
 import './Modal.css';
 
-export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children }) => {
+const defaultButtonsLabels = ['cancel', 'okay'];
+const getDefaultButtons = (handler) => defaultButtonsLabels.map((buttonLabel, index) => {
+  return (
+    <button
+      className={index === defaultButtonsLabels.length - 1 ? 'selected' : ''}
+      key={buttonLabel + index}
+      onClick={(e) => {
+        handleClick(e, handler, { type: buttonLabel });
+      }}
+    >
+      {buttonLabel}
+    </button>
+  );
+});
+
+export const Modal = ({ showing, buttons = null, handler, children, header='' }) => {
   useEffect(() => {
     Mousetrap.bind('esc', (e) => handleClick(e, handler, { type: 'close' }));
     Mousetrap.bind('enter', (e) => {
@@ -40,23 +55,10 @@ export const Modal = ({ showing, buttons = ['cancel', 'okay'], handler, children
   return (
     <div style={backdropStyle}>
       <div style={modalStyle}>
+        {header ? (<h1>{header}</h1>) : null}
         {children}
-        <div>
-          {buttons.map((button, index) => {
-            return (
-              <Fragment>
-                <button
-                  className={index === buttons.length - 1 ? 'selected' : ''}
-                  key={button + index}
-                  onClick={(e) => {
-                    handleClick(e, handler, { type: button });
-                  }}
-                >
-                  {button}
-                </button>{' '}
-              </Fragment>
-            );
-          })}
+        <div className="modal-buttons">
+          {buttons || getDefaultButtons(handler)}
         </div>
       </div>
     </div>
