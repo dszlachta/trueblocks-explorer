@@ -1,10 +1,10 @@
 import React from 'react';
-import { NameDialog } from './NameDialog';
+import { Dialog } from './Dialog';
 
-export default { title: 'NameDialog' };
+export default { title: 'Dialog' };
 
 export const showing = () => (
-    <NameDialog
+    <Dialog
         showing={true}
         columns={[]}
         handler={{}}
@@ -13,7 +13,7 @@ export const showing = () => (
 );
 
 export const generatingInputs = () => (
-    <NameDialog
+    <Dialog
         showing={true}
         columns={[
             {
@@ -153,7 +153,7 @@ export const generatingInputs = () => (
 )
 
 export const editingMode = () => (
-    <NameDialog
+    <Dialog
         showing={true}
         columns={[
             {

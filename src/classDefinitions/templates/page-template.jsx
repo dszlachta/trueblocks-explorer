@@ -7,12 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { [{TABLE_IMPORT}] } from 'components';
+import { [{TABLE_IMPORT}], Dialog } from 'components';
 import { [{UTILS_IMPORT}] } from 'components/utils';
 import { calcValue } from 'store';
 
 import { [{STATUS_STORE_IMPORT}] } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
 import { [{LONG}]Schema } from './[{PROPER}]Schema';
 import './[{PROPER}].css';
@@ -160,7 +159,7 @@ export const [{PROPER}] = (props) => {
       {debug && <pre>{JSON.stringify([{LONG}], null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={[{LONG}]Handler} object={{ address: curRecordId }} columns={[{LONG}]Schema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add [{SINGULAR}]'} handler={[{LONG}]Handler} object={{ address: curRecordId }} columns={[{LONG}]Schema}/>
       {custom}
     </div>
   );

@@ -5,6 +5,7 @@ import {
   Collections,
   InteractWith,
   Monitors,
+  Accounts,
   Explorer,
   Names,
   Tags,
@@ -50,6 +51,8 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
       return <Collections key={key} size={size} className={cn} />;
     case 'monitors':
       return <Monitors key={key} size={size} className={cn} />;
+    case 'accounts':
+      return <Accounts key={key} size={size} className={cn} />;
     case 'interactwith':
       return <InteractWith key={key} size={size} className={cn} />;
     case 'explorer':

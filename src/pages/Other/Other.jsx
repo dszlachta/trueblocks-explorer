@@ -7,12 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
+import { DataTable, PageCaddie, Dialog } from 'components';
 import { getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
 import { otherSchema } from './OtherSchema';
 import './Other.css';
@@ -197,7 +196,7 @@ export const Other = (props) => {
       {debug && <pre>{JSON.stringify(other, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={otherHandler} object={{ address: curRecordId }} columns={otherSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Other'} handler={otherHandler} object={{ address: curRecordId }} columns={otherSchema}/>
       {custom}
     </div>
   );

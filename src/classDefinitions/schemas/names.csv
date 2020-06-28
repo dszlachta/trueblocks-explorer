@@ -1,11 +1,11 @@
 name              ,selector         ,type     ,unused ,width ,editable ,decimals ,isPill ,align  ,cn ,export ,chart ,searchable ,detail ,wide ,underField ,onDisplay     ,onAccept ,onValidate
 ID                ,id               ,string   ,       ,1     ,         ,         ,       ,       ,   ,       ,      ,true       ,       ,     ,           ,getFieldValue ,         ,
 Tags              ,tags             ,string   ,       ,3     ,true     ,         ,       ,       ,   ,       ,      ,true       ,       ,     ,           ,              ,         ,
-Address           ,address          ,address  ,       ,6     ,         ,         ,       ,       ,   ,       ,      ,true       ,       ,     ,           ,              ,         ,
+Address           ,address          ,address  ,       ,6     ,true     ,         ,       ,       ,   ,       ,      ,true       ,       ,     ,           ,              ,         ,
 Name              ,name             ,string   ,       ,4     ,true     ,         ,       ,       ,   ,       ,      ,true       ,       ,     ,           ,              ,         ,
 Symbol            ,symbol           ,string   ,       ,2     ,true     ,         ,       ,center ,   ,       ,      ,true       ,       ,     ,           ,              ,         ,
 Source            ,source           ,string   ,       ,4     ,true     ,         ,       ,       ,   ,       ,      ,           ,       ,     ,           ,getFieldValue ,         ,
-Decimals          ,decimals         ,uint64   ,       ,2     ,         ,         ,       ,center ,   ,       ,      ,           ,       ,     ,           ,              ,         ,
+Decimals          ,decimals         ,uint64   ,       ,2     ,true     ,         ,       ,center ,   ,       ,      ,           ,       ,     ,           ,              ,         ,
 Description       ,description      ,string   ,       ,4     ,true     ,         ,       ,       ,   ,       ,      ,true       ,       ,     ,           ,getFieldValue ,         ,
 Deleted           ,deleted          ,bool     ,       ,0     ,         ,         ,       ,       ,   ,       ,      ,           ,       ,     ,           ,              ,         ,
 isCustom          ,is_custom        ,bool     ,       ,0     ,         ,         ,       ,       ,   ,       ,      ,           ,       ,     ,           ,              ,         ,

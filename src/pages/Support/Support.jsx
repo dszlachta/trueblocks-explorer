@@ -51,6 +51,7 @@ export const SupportKeys = () => {
       {'\ts d\t\tOpen Dashboard screen\n'}
       {'\ts c\t\tOpen Collections screen\n'}
       {'\ts m\t\tOpen Monitors screen\n'}
+      {'\ts a\t\tOpen Accounts screen\n'}
       {'\ts e\t\tOpen Explorers screen\n'}
       {'\ts n\t\tOpen Names screen\n'}
       {'\ts t\t\tOpen Tags screen\n'}

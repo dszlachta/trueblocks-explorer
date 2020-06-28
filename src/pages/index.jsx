@@ -4,11 +4,11 @@ import { useContext } from 'react';
 import GlobalContext from 'store';
 
 //----------------------------------------------------------------------
-import { Appearances } from './Appearances/Appearances';
 // auto-generate: imports
 import { Dashboard } from './Dashboard/Dashboard';
 import { Collections } from './Collections/Collections';
 import { Monitors } from './Monitors/Monitors';
+import { Accounts } from './Accounts/Accounts';
 import { Explorer } from './Explorer/Explorer';
 import { Names } from './Names/Names';
 import { Tags } from './Tags/Tags';
@@ -28,11 +28,8 @@ export const thePages = {
   'collections/': { component: <Collections /> },
   //
   'monitors/': { component: <Monitors /> },
-  'monitors/active': { component: <Monitors /> },
-  'monitors/paused': { component: <Monitors /> },
-  'monitors/pending': { component: <Monitors /> },
-  'monitors/explore': { component: <Appearances /> },
   //
+  'accounts/': { component: <Accounts /> },
   //
   'tags/': { component: <Tags /> },
   //
@@ -100,13 +97,10 @@ export const theMenu = {
     {
       label: 'Monitors',
       exact: true,
-      items: [
-        { label: 'Active', route: 'active' },
-        { label: 'Paused', route: 'paused' },
-        { label: 'Pending', route: 'pending' },
-        { label: 'Separator' },
-        { label: 'Explore', route: 'explore' },
-      ],
+    },
+    {
+      label: 'Accounts',
+      exact: true,
     },
     {
       label: 'Tags',

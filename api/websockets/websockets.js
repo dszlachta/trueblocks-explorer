@@ -9,16 +9,19 @@ let server = null;
 const listeners = [];
 const DEBUG = false;
 
+//--------------------------------------------------------
 function log(...args) {
   if (DEBUG) {
     console.log.apply(null, [ 'WebSockets:', ...args ]);
   }
 }
 
+//--------------------------------------------------------
 function reportConnectedCount() {
   log('sockets connected', server.clients.size);
 }
 
+//--------------------------------------------------------
 function bindSocketEvents(socket) {
   socket.on('close', (code, reason) => {
     log('socket closing', code, reason);
@@ -34,12 +37,12 @@ function bindSocketEvents(socket) {
   });
 }
 
+//--------------------------------------------------------
 function bindServerEvents(server) {
   server.on('listening', () => log('server ready'));
   server.on('connection', socket => {
     log('socket connected');
     reportConnectedCount();
-
     bindSocketEvents(socket);
   });
 }

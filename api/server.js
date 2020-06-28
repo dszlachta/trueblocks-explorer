@@ -36,27 +36,19 @@ function debug_log(...args) {
     console.log.apply(null, [ ...args ]);
   }
 }
-//app.get('/', (req, res) => {
-//  return res.redirect('/docs');
-//});
 
-const reportAndSend = (routeName, code, res) => {
-  console.log(
-    ~~(Date.now() / 1000) +
-      ' ~ \x1b[32m\x1b[1m<INFO>\x1b[0m  : ' +
-      `Exiting route \'${routeName}\' with ${code === undefined ? 'OK' : code}`
-  );
-  console.log(`------------- ${++cmdCount} ---------------------------`);
-  return res.send();
+function log(...args) {
+  const head = '-API: ';
+  console.log.apply(null, [ head, ...args ]);
 };
 
-const generateCmd = (routeName, queryObj) => {
-  let cmdLine = Object.entries(queryObj)
+const getCommandLine = (routeName, queryObj) => {
+  let cmd = Object.entries(queryObj)
     .map(([key, val]) => {
       let option = apiOptions[routeName][key];
       let cmdString = [];
       if (option === undefined) {
-        // console.log('\x1b[31m', 'apiOption[' + routeName + '][' + key + '] not found', '\x1b[0m');
+        debug_log('\x1b[31m', 'apiOption[' + routeName + '][' + key + '] not found', '\x1b[0m');
         cmdString.push(`--${key}`, val);
       } else if (option.option_kind === 'positional') {
         cmdString.push(val);
@@ -69,10 +61,8 @@ const generateCmd = (routeName, queryObj) => {
     })
     .reduce((acc, val) => acc.concat(val), [])
     .join(' ');
-  console.log(
-    ~~(Date.now() / 1000) + ' ~ \x1b[32m\x1b[1m<INFO>\x1b[0m  : ' + `API calling \'chifra ${routeName} ${cmdLine}\'`
-  );
-  return cmdLine;
+
+  return cmd;
 };
 
 const removeFromProcessList = (pid) => {
@@ -101,11 +91,19 @@ app.get(`/:routeName`, (req, res) => {
     var msg = '{ "errors": [ "JS API: Route ';
     msg += routeName;
     msg += ' is not available." ] }';
-    console.log(msg);
+    debug_log(msg);
     return res.send(msg);
   }
-  let cmdLine = generateCmd(routeName, req.query);
-  let chifra = spawn('chifra', [routeName, cmdLine], { env: env, detached: true });
+
+  let cmd = getCommandLine(routeName, req.query);
+  let chifra = spawn('chifra', [routeName, cmd], { env: env, detached: true });
+
+  cmdCount++;
+  console.log(`-API: -------------- ${cmdCount} ---------------------------`);
+  console.log(
+    ~~(Date.now() / 1000) + ' ~ \x1b[32m\x1b[1m<INFO>\x1b[0m  : ' + `API calling \'chifra ${routeName} ${cmd}\'`
+  );
+
   req.on('close', (err) => {
     debug_log(`killing ${-chifra.pid}...`);
     try {
@@ -116,12 +114,16 @@ app.get(`/:routeName`, (req, res) => {
     removeFromProcessList(chifra.pid);
     return false;
   });
-  processList.push({ pid: chifra.pid, cmdLine: `chifra ${routeName} ${cmdLine}` });
+
+  processList.push({ pid: chifra.pid, cmd: `chifra ${routeName} ${cmd}` });
   debug_log(processList);
   chifra.stderr.pipe(process.stderr);
   chifra.stdout.pipe(res).on('finish', (code) => {
     removeFromProcessList(chifra.pid);
-    reportAndSend(routeName, code, res);
+    log(`Exiting route ${routeName} with ${code === undefined ? 'OK' : code}`);
+    console.log(`-API: -------------- ${cmdCount} ---------------------------`);
+    console.log(' ');
+    res.send();
   });
   chifraStreamEvents.bindEvents(chifra.stderr, { routeName });
 });
@@ -133,8 +135,19 @@ app.put(`/settings`, (req, res) => {
     debug_log(`setting env CONFIG_SET to...\n${JSON.stringify(req.body)}`);
     env.CONFIG_SET = JSON.stringify(req.body);
   }
-  let cmdLine = generateCmd(routeName, req.query);
-  let chifra = spawn('chifra', [routeName, cmdLine], { env: env, detached: true });
+
+  let cmd = getCommandLine(routeName, req.query);
+  let chifra = spawn('chifra', [routeName, cmd], { env: env, detached: true });
+
+  cmdCount++;
+  console.log(`-API: -------------- ${cmdCount} ---------------------------`);
+  console.log(
+    ~~(Date.now() / 1000) + ' ~ \x1b[32m\x1b[1m<INFO>\x1b[0m  : ' + `API calling \'chifra ${routeName} ${cmd}\'`
+  );
+
+  processList.push({ pid: chifra.pid, cmd: `chifra ${routeName} ${cmd}` });
+  debug_log(processList);
+
   req.on('close', (err) => {
     debug_log(`killing ${-chifra.pid}...`)
     try {
@@ -145,16 +158,24 @@ app.put(`/settings`, (req, res) => {
     removeFromProcessList(chifra.pid);
     return false;
   });
-  processList.push({ pid: chifra.pid, cmdLine: `chifra ${routeName} ${cmdLine}` });
-  debug_log(processList);
   chifra.stderr.pipe(process.stderr);
   chifra.stdout.pipe(res).on('finish', (code) => {
     removeFromProcessList(chifra.pid);
-    reportAndSend(routeName, code, res);
+    log(`Exiting route ${routeName} with ${code === undefined ? 'OK' : code}`);
+    console.log(`-API: -------------- ${cmdCount} ---------------------------`);
+    console.log(' ');
+    res.send();
   });
 });
 
-// TODO(tjayrush): This code should notice the lack of a path but allow the API to run anyway. All requests to the API should return an error to the requestor instread of refusing to run.
+const server = app.listen(port, () => {
+  console.log('TrueBlocks Data API (version 0.6.7) initialized on port ' + port);
+});
+
+webSockets.createServer(server);
+
+// TODO(tjayrush): This code should notice the lack of a path but allow the API to run anyway. All requests
+// TODO(tjayrush): to the API should return an error to the requestor instread of refusing to run.
 /*
 let thePath = '';
 const paths = env.PATH.split(':');
@@ -199,9 +220,3 @@ if (paths) {
   }
 }
 */
-
-const server = app.listen(port, () => {
-  console.log('TrueBlocks Data API (version 0.6.7) initialized on port ' + port);
-});
-
-webSockets.createServer(server);

@@ -7,12 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
+import { DataTable, PageCaddie, Dialog } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
 import { namesSchema } from './NamesSchema';
 import './Names.css';
@@ -72,9 +71,9 @@ export const Names = (props) => {
           }
           break;
         case 'add':
-          setCurRecordId('');
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Name', record: record });
           break;
@@ -149,24 +148,24 @@ export const Names = (props) => {
           //     statusDispatch(NOT_LOADING);
           //     if (editDialog) {
           //       // only navigate if the user hasn't shut the dialog
-          //       navigate('/monitors/explore?addrs=' + action.record_id, false);
+          //       navigate('/accounts?addrs=' + action.record_id, false);
           //     }
           //   });
           // }
           // setEditDialog({ showing: true, name: 'Reload', record: record });
-          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          navigate('/accounts?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           break;
-        case 'enter':
+        case 'shift_enter':
         case 'row_doubleclick':
         case 'view':
-          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          navigate('/accounts?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           break;
         // EXISTING_CODE
         default:
           break;
       }
     },
-    [dispatch, filtered, statusDispatch]
+    [dispatch, filtered, statusDispatch, debug, mocked]
   );
 
   useEffect(() => {
@@ -177,7 +176,7 @@ export const Names = (props) => {
     if (!partialFetch) {
       refreshNamesData(dataQuery, dispatch, mocked);
     }
-  }, [dataQuery, dispatch, mocked]);
+  }, [dataQuery, dispatch, mocked, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, namesHandler, { type: 'Add' }));
@@ -223,7 +222,7 @@ export const Names = (props) => {
       {debug && <pre>{JSON.stringify(names, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={namesHandler} object={{ address: curRecordId }} columns={namesSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Name'} handler={namesHandler} object={{ address: curRecordId }} columns={namesSchema}/>
       {custom}
     </div>
   );

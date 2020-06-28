@@ -2,6 +2,7 @@ import Dashboard from './Dashboard';
 import Collections from './Collections';
 import InteractWith from './InteractWith';
 import Monitors from './Monitors';
+import Accounts from './Accounts';
 import Explorer from './Explorer';
 import Names from './Names';
 import Tags from './Tags';
@@ -16,6 +17,7 @@ export {
   Dashboard,
   Collections,
   InteractWith,
+  Accounts,
   Monitors,
   Explorer,
   Names,

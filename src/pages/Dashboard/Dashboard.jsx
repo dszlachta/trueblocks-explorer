@@ -35,6 +35,15 @@ export const dashboardDefault = [
     timestamp: 1577953849,
   },
   {
+    name: 'Accounts',
+    route: '/accounts',
+    count: 200,
+    sizeInBytes: 102001,
+    custom: 'each node',
+    date: '2020-01-02 08:30:49 UTC',
+    timestamp: 1577953849,
+  },
+  {
     name: 'Tags',
     route: '/tags',
     count: 200,

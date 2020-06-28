@@ -8,26 +8,42 @@ import {
 import './ProgressBar.css';
 
 export const ProgressBar = (props) => {
-  const [progress, setProgress] = useState(0);
-  const [finished, setFinished] = useState(false);
+  const [progPct, setProgressPct] = useState(0);
+  const [finished, setFinished] = useState(true);
+  const [op, setOp] = useState('');
 
   useEffect(() => {
     const listener = addActionListener('progress', ({ id, progress }) => {
       if (id !== props.id) return;
 
-      const toPercent = () => (parseInt(done) / parseInt(total) * 100).toFixed(2);
-      const { finished, done, total } = progress;
+      const toPercent = () => (parseInt(done) / parseInt(total) * 100).toFixed(0);
+      const { op, finished, done, total } = progress;
+      const prevPct = progPct;
       const progressPercentage = finished ? 0 : toPercent();
-
-      setFinished(finished);
-      setProgress(progressPercentage);
+      if (progressPercentage !== prevPct) {
+        setOp(op);
+        setFinished(finished);
+        setProgressPct(progressPercentage);
+      }
     });
     return () => removeListener(listener);
   });
 
+  const style = {
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    font: '.9rem Inconsolata, monospace',
+    border: finished ? '0px' : '1px solid black',
+    backgroundColor: 'black',
+    color: 'yellow',
+    padding: finished ? '0px' : '3px',
+    alignContent: 'center'
+  };
+  const item = (props.text ? <div style={style}>{op}</div> : finished ? null : <progress max="100" value={progPct}></progress>);
   return (
     <div className={`progress-wrapper ${props.className}`}>
-      {finished ? null : <progress max="100" value={progress}></progress>}
+      {item}
     </div>
   );
 }

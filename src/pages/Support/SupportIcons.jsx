@@ -41,6 +41,7 @@ import XCircle from 'assets/icons/XCircle';
 import {
   Dashboard,
   Monitors,
+  Accounts,
   Explorer,
   Names,
   Tags,
@@ -68,6 +69,7 @@ export const SupportIcons = () => {
       items: [
         { name: 'Dashboard', component: <Dashboard size={size} color={color} fill={fill} style={style} /> },
         { name: 'Monitors', component: <Monitors size={size} color={color} fill={fill} style={style} /> },
+        { name: 'Accounts', component: <Accounts size={size} color={color} fill={fill} style={style} /> },
         { name: 'Explorer', component: <Explorer size={size} color={color} fill={fill} style={style} /> },
         { name: 'Names', component: <Names size={size} color={color} fill={fill} style={style} /> },
         { name: 'Tags', component: <Tags size={size} color={color} fill={fill} style={style} /> },

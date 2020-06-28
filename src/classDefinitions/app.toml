@@ -2,12 +2,12 @@
 # pages are the top level menu choices only. Not to be confused with the generated code from_source
 pages = "\
     dashboard|separator|\
-    collections|monitors|appearances|tags|explorer|separator|\
+    collections|monitors|accounts|tags|explorer|separator|\
     names|signatures|digests|caches|other|separator|\
     settings|support"
 
 schemas = "\
-    dashboard|collections|monitors|appearances|tags|\
+    dashboard|collections|monitors|accounts|tags|\
     names|signatures|digests|\
     caches|other|settings|settings-schemas|settings-systems|support|\
     explorer|\
@@ -17,6 +17,6 @@ schemas = "\
     explorer-pricequotes|explorer-pricesources"
 
 from_source = "\
-    collections|monitors|appearances|tags|\
+    collections|monitors|accounts|tags|\
     explorer-blocks|explorer-transactions|explorer-receipts|explorer-logs|explorer-traces|\
     names|signatures|caches|other"

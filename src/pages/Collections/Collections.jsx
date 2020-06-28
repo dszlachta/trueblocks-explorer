@@ -7,12 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
+import { DataTable, PageCaddie, Dialog } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
 import { collectionsSchema } from './CollectionsSchema';
 import './Collections.css';
@@ -194,7 +193,7 @@ export const Collections = (props) => {
       {debug && <pre>{JSON.stringify(collections, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={collectionsHandler} object={{ address: curRecordId }} columns={collectionsSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Collection'} handler={collectionsHandler} object={{ address: curRecordId }} columns={collectionsSchema}/>
       {custom}
     </div>
   );

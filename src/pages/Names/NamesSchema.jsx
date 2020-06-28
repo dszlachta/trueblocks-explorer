@@ -28,6 +28,7 @@ export const namesSchema = [
     selector: 'address',
     type: 'address',
     width: 6,
+    editable: true,
     searchable: true,
   },
   {
@@ -60,6 +61,7 @@ export const namesSchema = [
     selector: 'decimals',
     type: 'uint64',
     width: 2,
+    editable: true,
     align: 'center',
   },
   {

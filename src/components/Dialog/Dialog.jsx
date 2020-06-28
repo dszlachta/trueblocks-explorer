@@ -1,42 +1,16 @@
 import React, { Fragment } from 'react';
 import { useForm, ErrorMessage } from 'react-hook-form';
+import { DevTool } from "react-hook-form-devtools";
 
 import { Modal } from 'components/Modal/Modal';
-//import { EditTable } from 'components';
-import { NameDialogFormRow } from './NameDialogFormRow';
 
-import './NameDialog.css';
+import './Dialog.css';
 import { handleClick } from 'components/utils';
 import { typeToConstraints } from 'modules/string_validation';
 
-function columnsToInputs({ columns, defaultValues, register, errors }) {
-  return columns
-    .filter(({ hidden }) => !hidden)
-    .map((column) => {
-      const { selector, name } = column;
-
-      if (selector === 'id') return null;
-
-      const constraints = typeToConstraints.get(selector) || {};
-
-      return (
-        <NameDialogFormRow
-          key={selector}
-          name={name}
-          selector={selector}>
-            <input
-            name={selector}
-            defaultValue={defaultValues[selector]}
-            className="editable_input"
-            ref={register({ ...constraints })} />
-            <ErrorMessage errors={errors} name={selector} />
-        </NameDialogFormRow>
-      )
-    });
-}
-
-export const NameDialog = ({ showing, handler, object, columns }) => {
-  const { register, handleSubmit, errors } = useForm();
+//-------------------------------------------------------------------------
+export const Dialog = ({ showing, header, handler, object, columns }) => {
+  const { register, control, handleSubmit, errors } = useForm();
   const onSubmit = (data) => console.log(data);
 
   if (!showing) return <Fragment></Fragment>;
@@ -80,10 +54,47 @@ export const NameDialog = ({ showing, handler, object, columns }) => {
   );
 
   return (
-    <Modal showing={true} handler={handler} buttons={buttons} header="Add/Edit Named Address">
+    <Modal showing={true} handler={handler} buttons={buttons} header={header}>
       <form onSubmit={handleSubmit(onSubmit)}>
         {columnsToInputs({ columns, defaultValues: object, register, errors })}
       </form>
+      <DevTool control={control} />
     </Modal>
   );
 };
+
+//-------------------------------------------------------------------------
+export const DialogRow = ({ name, selector, children }) => {
+  return (
+      <label
+          key={selector}>
+          <span>
+              {name}
+          </span>
+          <div>
+              {children}
+          </div>
+      </label>
+  )
+}
+
+//-------------------------------------------------------------------------
+function columnsToInputs({ columns, defaultValues, register, errors }) {
+  return columns
+    .filter(({ editable }) => editable)
+    .map((column, index) => {
+      const { selector, name, type } = column;
+      if (selector === 'id') return null;
+      const constraints = typeToConstraints.get(selector) || {};
+      return (
+        <DialogRow
+          key={selector}
+          name={name}
+          selector={selector}>
+            <input name={selector} tabindex={index+1} placeholder={type} defaultValue={defaultValues[selector]} className="editable_input" ref={register({ ...constraints })} />
+            <ErrorMessage errors={errors} name={selector} />
+        </DialogRow>
+      )
+    });
+}
+

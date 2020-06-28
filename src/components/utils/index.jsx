@@ -292,6 +292,7 @@ export const useArrowKeys = (handler, deps) => {
     Mousetrap.bind('del', (e) => handleClick(e, handler, { type: 'delete' }));
     Mousetrap.bind('shift+del', (e) => handleClick(e, handler, { type: 'remove' }));
     Mousetrap.bind('enter', (e) => handleClick(e, handler, { type: 'enter' }));
+    Mousetrap.bind('shift+enter', (e) => handleClick(e, handler, { type: 'shift_enter' }));
     return () => {
       Mousetrap.unbind('home');
       Mousetrap.unbind('end');
@@ -304,6 +305,7 @@ export const useArrowKeys = (handler, deps) => {
       Mousetrap.unbind('del');
       Mousetrap.unbind('shift+del');
       Mousetrap.unbind('enter');
+      Mousetrap.unbind('shit+enter');
     };
   }, [handler, deps]);
 };

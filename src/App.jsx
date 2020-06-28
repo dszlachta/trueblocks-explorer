@@ -13,7 +13,7 @@ import { stateFromStorage } from 'components/utils';
 import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/Dashboard';
 import { collectionsDefault, collectionsReducer } from 'pages/Collections/Collections';
 import { monitorsDefault, monitorsReducer } from 'pages/Monitors/Monitors';
-import { appearancesDefault, appearancesReducer } from 'pages/Appearances/Appearances';
+import { accountsDefault, accountsReducer } from 'pages/Accounts/Accounts';
 import { tagsDefault, tagsReducer } from 'pages/Tags/Tags';
 import { explorerDefault, explorerReducer } from 'pages/Explorer/Explorer';
 import { namesDefault, namesReducer } from 'pages/Names/Names';
@@ -37,7 +37,7 @@ const defaultData = {
   dashboard: dashboardDefault,
   collections: collectionsDefault,
   monitors: monitorsDefault,
-  appearances: appearancesDefault,
+  accounts: accountsDefault,
   tags: tagsDefault,
   explorer: explorerDefault,
   names: namesDefault,
@@ -59,7 +59,7 @@ function App() {
   const [dashboardState, dashboardDispatch] = useReducer(dashboardReducer, defaultData['dashboard']);
   const [collectionsState, collectionsDispatch] = useReducer(collectionsReducer, defaultData['collections']);
   const [monitorsState, monitorsDispatch] = useReducer(monitorsReducer, defaultData['monitors']);
-  const [appearancesState, appearancesDispatch] = useReducer(appearancesReducer, defaultData['appearances']);
+  const [accountsState, accountsDispatch] = useReducer(accountsReducer, defaultData['accounts']);
   const [tagsState, tagsDispatch] = useReducer(tagsReducer, defaultData['tags']);
   const [explorerState, explorerDispatch] = useReducer(explorerReducer, defaultData['explorer']);
   const [namesState, namesDispatch] = useReducer(namesReducer, defaultData['names']);
@@ -79,7 +79,7 @@ function App() {
     dashboard: { dashboard: dashboardState, dispatch: dashboardDispatch },
     collections: { collections: collectionsState, dispatch: collectionsDispatch },
     monitors: { monitors: monitorsState, dispatch: monitorsDispatch },
-    appearances: { appearances: appearancesState, dispatch: appearancesDispatch },
+    accounts: { accounts: accountsState, dispatch: accountsDispatch },
     tags: { tags: tagsState, dispatch: tagsDispatch },
     explorer: { explorer: explorerState, dispatch: explorerDispatch },
     names: { names: namesState, dispatch: namesDispatch },
@@ -129,6 +129,9 @@ const mapHotKeys = (panelDispatch) => {
   });
   Mousetrap.bind('s m', function () {
     window.location = '/monitors';
+  });
+  Mousetrap.bind('s a', function () {
+    window.location = '/acccounts';
   });
   Mousetrap.bind('s e', function () {
     window.location = '/explorer';
@@ -192,6 +195,7 @@ const mapHotKeys = (panelDispatch) => {
   });
 };
 
+// https://fusion.li/
 // https://bashooka.com/coding/react-i con-co mponents/
 // https://datatables.net/
 // https://github.com/ccampbell/mousetrap

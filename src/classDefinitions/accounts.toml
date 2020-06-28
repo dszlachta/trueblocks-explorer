@@ -1,11 +1,10 @@
 [settings]
-class = "CAppearances"
-noPage = true
+class = "CAccounts"
 recordIcons = "viewing,exporting,importing"
 defaultTable = "SidebarTable"
 defaultSort = "blockNumber,transactionIndex"
 defaultSearch = "blockNumber,hash,from,fromName,to,toName,encoding,compressedTx"
-defaultTags = "['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Outgoing', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Partial', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Messages', 'Creations', 'SelfDestructs']"
+defaultTags = "['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Outgoing', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Messages', 'Creations', 'SelfDestructs']"
 dataUrl = "http://localhost:8080/export"
 dataQuery = "addrs=' + addresses.value + '&accounting"
 cmdUrl = "none"
@@ -13,5 +12,5 @@ imports = "Fragment, |DataTable, ObjectTable, ChartTable, PageCaddie|getServerDa
 
 [[subpages]]
 list = [
-    { page = "appearances", subpage = "" },
+    { page = "accounts", subpage = "" },
 ]

@@ -7,12 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
+import { DataTable, PageCaddie, Dialog } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
 import { tagsSchema } from './TagsSchema';
 import './Tags.css';
@@ -194,7 +193,7 @@ export const Tags = (props) => {
       {debug && <pre>{JSON.stringify(tags, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={tagsHandler} object={{ address: curRecordId }} columns={tagsSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Tag'} handler={tagsHandler} object={{ address: curRecordId }} columns={tagsSchema}/>
       {custom}
     </div>
   );

@@ -24,7 +24,7 @@ import { transactionsSchema } from 'pages/Explorer/ExplorerTransactionsSchema';
 import { dashboardSchema } from 'pages/Dashboard/DashboardSchema';
 import { collectionsSchema } from 'pages/Collections/CollectionsSchema';
 import { monitorsSchema } from 'pages/Monitors/MonitorsSchema';
-import { appearancesSchema } from 'pages/Appearances/AppearancesSchema';
+import { accountsSchema } from 'pages/Accounts/AccountsSchema';
 import { tagsSchema } from 'pages/Tags/TagsSchema';
 import { explorerSchema } from 'pages/Explorer/ExplorerSchema';
 import { namesSchema } from 'pages/Names/NamesSchema';
@@ -233,7 +233,7 @@ const useSchemas = () => {
     { group: 'pages_', name: 'dashboardSchema', schema: dashboardSchema },
     { group: 'pages_', name: 'collectionsSchema', schema: collectionsSchema },
     { group: 'pages_', name: 'monitorsSchema', schema: monitorsSchema },
-    { group: 'pages_', name: 'appearancesSchema', schema: appearancesSchema },
+    { group: 'pages_', name: 'accountsSchema', schema: accountsSchema },
     { group: 'pages_', name: 'tagsSchema', schema: tagsSchema },
     { group: 'pages_', name: 'explorerSchema', schema: explorerSchema },
     { group: 'pages_', name: 'namesSchema', schema: namesSchema },

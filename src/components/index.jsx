@@ -2,6 +2,7 @@ export { PageCaddie } from './Caddies/PageCaddie/PageCaddie';
 export { ButtonCaddie } from './Caddies/ButtonCaddie/ButtonCaddie';
 export { Caddie } from './Caddies/Caddie/Caddie';
 export { Card } from './Card/Card';
+export { Dialog } from './Dialog/Dialog';
 export { Menu, MenuItem } from './Menu/Menu';
 export { IconTray, ClickableIcon } from './IconTray/IconTray';
 export { Modal } from './Modal/Modal';

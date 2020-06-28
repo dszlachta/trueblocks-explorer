@@ -2,11 +2,11 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import { getFieldValue } from 'pages/Appearances/Appearances';
+import { getFieldValue } from 'pages/Accounts/Accounts';
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
-export const appearancesSchema = [
+export const accountsSchema = [
   {
     name: 'Basics',
     selector: 'separator0',
@@ -25,6 +25,7 @@ export const appearancesSchema = [
     selector: 'date',
     type: 'string',
     width: 2,
+    editable: true,
     chart: 'range',
     underField: 'marker',
     onDisplay: getFieldValue,
@@ -40,6 +41,7 @@ export const appearancesSchema = [
     selector: 'from',
     type: 'address',
     width: 5,
+    editable: true,
     chart: 'range',
     searchable: true,
     underField: 'fromName',
@@ -58,6 +60,7 @@ export const appearancesSchema = [
     selector: 'to',
     type: 'address',
     width: 5,
+    editable: true,
     chart: 'range',
     searchable: true,
     underField: 'toName',
@@ -75,6 +78,7 @@ export const appearancesSchema = [
     name: 'Value',
     selector: 'value',
     type: 'wei',
+    editable: true,
     chart: 'domain',
     detail: 2,
   },
@@ -82,6 +86,7 @@ export const appearancesSchema = [
     name: 'Ether',
     selector: 'ether',
     type: 'double',
+    editable: true,
     chart: 'domain',
     detail: 1,
   },
@@ -102,6 +107,7 @@ export const appearancesSchema = [
     name: 'Input Data',
     selector: 'separator2',
     type: 'separator',
+    editable: true,
   },
   {
     name: 'Compressed Tx',
@@ -227,7 +233,6 @@ export const appearancesSchema = [
     name: 'Calc',
     selector: 'statements.endBalCalc',
     type: 'value',
-    width: 0,
     detail: 2,
     onDisplay: getFieldValue,
   },
@@ -270,12 +275,14 @@ export const appearancesSchema = [
     name: 'Gas',
     selector: 'gas',
     type: 'gas',
+    editable: true,
     detail: 1,
   },
   {
     name: 'Gas Used',
     selector: 'gasUsed',
     type: 'gas',
+    editable: true,
     chart: 'domain',
     detail: 1,
   },
@@ -283,6 +290,7 @@ export const appearancesSchema = [
     name: 'Gas Price',
     selector: 'gasPrice',
     type: 'wei',
+    editable: true,
     detail: 1,
   },
   {
@@ -301,12 +309,14 @@ export const appearancesSchema = [
     name: 'Encoding',
     selector: 'encoding',
     type: 'hash',
+    editable: true,
     detail: 1,
   },
   {
     name: 'Input',
     selector: 'input',
     type: 'string',
+    editable: true,
     detail: 1,
   },
   {
@@ -371,24 +381,28 @@ export const appearancesSchema = [
     name: 'Block Hash',
     selector: 'blockHash',
     type: 'hash',
+    editable: true,
     detail: 2,
   },
   {
     name: 'Blk',
     selector: 'blockNumber',
     type: 'blknum',
+    editable: true,
     detail: 2,
   },
   {
     name: 'Tx',
     selector: 'transactionIndex',
     type: 'string',
+    editable: true,
     detail: 2,
   },
   {
     name: 'Timestamp',
     selector: 'timestamp',
     type: 'timestamp',
+    editable: true,
     chart: 'range',
     detail: 2,
   },
@@ -396,6 +410,7 @@ export const appearancesSchema = [
     name: 'Hash',
     selector: 'hash',
     type: 'hash',
+    editable: true,
     detail: 2,
     searchable: true,
   },

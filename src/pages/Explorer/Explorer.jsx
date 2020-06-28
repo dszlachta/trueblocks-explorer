@@ -9,8 +9,6 @@ import { ExplorerReceipts } from './ExplorerReceipts';
 import { ExplorerLogs } from './ExplorerLogs';
 import { ExplorerTraces } from './ExplorerTraces';
 
-import { explorerSchema } from './ExplorerSchema'
-
 //----------------------------------------------------------------------
 export const Explorer = () => {
   switch (currentPage().subpage) {

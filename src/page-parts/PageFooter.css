@@ -30,6 +30,16 @@
   border-top: var(--border-panel);
   border-left: var(--border-panel);
   overflow: hidden;
+  display: grid;
+  grid-template-columns: 500px 20px 900px auto;
+}
+
+/*------------------------------------------*/
+.center-footer-right {
+  grid-area: center-footer-right;
+  border-top: var(--border-panel);
+  border-left: var(--border-panel);
+  overflow: hidden;
 }
 
 /*------------------------------------------*/

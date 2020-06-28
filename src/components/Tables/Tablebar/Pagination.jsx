@@ -1,13 +1,11 @@
 import React, { Fragment, useState } from 'react';
 
-import { handleClick } from 'components/utils';
-
 import 'components/Tables/DataTable/DataTable.css';
 import { ChevronsLeft, ChevronLeft, ChevronRight, ChevronsRight } from 'assets/icons/SetChevrons.jsx';
 import { ChevronsUp, ChevronUp, ChevronDown, ChevronsDown } from 'assets/icons/SetChevrons.jsx';
 
 import './Pagination.css';
-import { useArrowKeys } from 'components/utils';
+import { handleClick, useArrowKeys } from 'components/utils';
 
 //-----------------------------------------------------------------
 export const Pagination = ({ enabled = false, handler = null, pagingCtx = { curPage: 0, paginationParts: '' } }) => {

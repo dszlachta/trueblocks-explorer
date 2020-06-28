@@ -7,15 +7,14 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, ObjectTable, ChartTable, PageCaddie } from 'components';
+import { DataTable, ObjectTable, ChartTable, PageCaddie, Dialog } from 'components';
 import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
-import { appearancesSchema } from './AppearancesSchema';
-import './Appearances.css';
+import { accountsSchema } from './AccountsSchema';
+import './Accounts.css';
 
 // EXISTING_CODE
 import { currentPage } from 'components/utils';
@@ -27,15 +26,15 @@ const useMountEffect = (fun) => useEffect(fun, [])
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Appearances = (props) => {
-  const { appearances, dispatch } = useAppearances();
+export const Accounts = (props) => {
+  const { accounts, dispatch } = useAccounts();
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
-  const [filtered, setFiltered] = useState(appearancesDefault);
+  const [filtered, setFiltered] = useState(accountsDefault);
   const [tagList, setTagList] = useState([]);
   const [searchFields] = useState(defaultSearch);
-  const [curTag, setTag] = useState(localStorage.getItem('appearancesTag') || 'All');
+  const [curTag, setTag] = useState(localStorage.getItem('accountsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
@@ -48,7 +47,7 @@ export const Appearances = (props) => {
   g_focusValue = addresses.value && addresses.value.toLowerCase();
   // EXISTING_CODE
 
-  const dataQuery = 'addrs=' + addresses.value + '&accounting&ether';  
+  const dataQuery = 'addrs=' + addresses.value + '&staging&accounting&ether';  
   function addendum(record, record_id) {
     let ret = '';
     // EXISTING_CODE
@@ -57,7 +56,7 @@ export const Appearances = (props) => {
     return ret;
   }
 
-  const appearancesHandler = useCallback(
+  const accountsHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
       setCurRecordId(record_id);
@@ -70,21 +69,22 @@ export const Appearances = (props) => {
           if (action.payload === 'Debug') {
             setDebug(!debug);
             setTag('All');
-            localStorage.setItem('appearancesTag', 'All');
+            localStorage.setItem('accountsTag', 'All');
           } else if (action.payload === 'MockData') {
             statusDispatch({ type: 'mocked', payload: !mocked });
             setTag('All');
-            localStorage.setItem('appearancesTag', 'All');
+            localStorage.setItem('accountsTag', 'All');
           } else {
             setTag(action.payload);
-            localStorage.setItem('appearancesTag', action.payload);
+            localStorage.setItem('accountsTag', action.payload);
           }
           break;
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
-          if (record) setEditDialog({ showing: true, name: 'Edit Appearance', record: record });
+          if (record) setEditDialog({ showing: true, name: 'Edit Account', record: record });
           break;
         case 'close':
         case 'cancel':
@@ -118,15 +118,15 @@ export const Appearances = (props) => {
           //     statusDispatch(NOT_LOADING);
           //     if (editDialog) {
           //       // only navigate if the user hasn't shut the dialog
-          //       navigate('/monitors/explore?addrs=' + action.record_id, false);
+          //       navigate('/accounts?addrs=' + action.record_id, false);
           //     }
           //   });
           // }
           // setEditDialog({ showing: true, name: 'Reload', record: record });
-          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          navigate('/accounts?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           break;
         case 'view':
-          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          navigate('/accounts?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           break;
         case 'row-changed':
           break;
@@ -140,14 +140,12 @@ export const Appearances = (props) => {
           else
             navigate('https://etherscan.io/tx/' + action.record_id, true);
           break;
-        case 'enter':
-          break;
         // EXISTING_CODE
         default:
           break;
       }
     },
-    [dispatch, filtered, statusDispatch]
+    [filtered, statusDispatch, debug, mocked]
   );
 
   useEffect(() => {
@@ -157,26 +155,26 @@ export const Appearances = (props) => {
     partialFetch = true;
     if (partialFetch) {
       const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
-      refreshAppearancesData2(dataQuery, dispatch, mocked, 0, max_records, recordCount, statusDispatch);
+      refreshAccountsData2(dataQuery, dispatch, mocked, 0, max_records, recordCount, statusDispatch);
     }
     // EXISTING_CODE
     if (!partialFetch) {
-      refreshAppearancesData(dataQuery, dispatch, mocked);
+      refreshAccountsData(dataQuery, dispatch, mocked);
     }
   }, [dataQuery, dispatch, mocked, recordCount, statusDispatch]);
 
   useEffect(() => {
-    Mousetrap.bind('plus', (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
+    Mousetrap.bind('plus', (e) => handleClick(e, accountsHandler, { type: 'Add' }));
     return () => {
       Mousetrap.unbind('plus');
     };
-  }, [appearancesHandler]);
+  }, [accountsHandler]);
 
   useMemo(() => {
     // prettier-ignore
-    if (appearances && appearances.data) {
-      setTagList(getTagList(appearances));
-      const result = appearances.data.filter((item) => {
+    if (accounts && accounts.data) {
+      setTagList(getTagList(accounts));
+      const result = accounts.data.filter((item) => {
         // EXISTING_CODE
         const isAirdrop = (item['toName'] && item['toName'].name.includes('Airdrop')) || (item['fromName'] && item['fromName'].name.includes('Airdrop'))
         switch (curTag) {
@@ -258,10 +256,10 @@ export const Appearances = (props) => {
       setFiltered(result);
     }
     statusDispatch(NOT_LOADING);
-  }, [appearances, curTag, statusDispatch]);
+  }, [accounts, curTag, statusDispatch]);
 
   let custom = null;
-  let title = 'Appearances';
+  let title = 'Accounts';
   // EXISTING_CODE
   title = name
     ? decodeURIComponent(name.replace(/\+/g, '%20'))
@@ -270,21 +268,21 @@ export const Appearances = (props) => {
       '...' +
       addresses.value.substr(addresses.value.length - 6, addresses.value.length - 1)
     : 'No Name';
-  g_Handler = appearancesHandler;
+  g_Handler = accountsHandler;
 
   useMountEffect(() => {
     const qqq = 'count&addrs=' + addresses.value + '' + (mocked ? '&mockData' : '');
     getServerData(getDataUrl(), qqq).then((theData) => {
       setRecordCount(mocked ? 100 : theData && theData.data && theData.data.length > 0 ? theData.data[0].nRecords : 0);
     });
-    Mousetrap.bind('plus', (e) => handleClick(e, appearancesHandler, { type: 'Add' }));
+    Mousetrap.bind('plus', (e) => handleClick(e, accountsHandler, { type: 'Add' }));
     return () => {
       Mousetrap.unbind('plus');
     };
   });
   // EXISTING_CODE
 
-  const table = getInnerTable(appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler);
+  const table = getInnerTable(accounts, curTag, filtered, title, searchFields, recordIconList, accountsHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -293,24 +291,24 @@ export const Appearances = (props) => {
         caddieData={tagList}
         current={curTag}
         useProgress={true}
-        handler={appearancesHandler}
+        handler={accountsHandler}
       />
       {mocked && (
         <span className="warning">
           <b>&nbsp;&nbsp;MOCKED DATA&nbsp;&nbsp;</b>
         </span>
       )}
-      {debug && <pre>{JSON.stringify(appearances, null, 2)}</pre>}
+      {debug && <pre>{JSON.stringify(accounts, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={appearancesHandler} object={{ address: curRecordId }} columns={appearancesSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Account'} handler={accountsHandler} object={editDialog.record} columns={accountsSchema}/>
       {custom}
     </div>
   );
 };
 
 //----------------------------------------------------------------------
-const getTagList = (appearances) => {
+const getTagList = (accounts) => {
   // prettier-ignore
   let tagList = ['Eth', 'Not Eth', '|', 'Tokens', 'Grants', 'Hide Outgoing', 'Hide Airdrops', 'Show Airdrops', '|', 'Reconciled', 'Unreconciled', '|', 'Neighbors', 'Balances', 'Functions', 'Events', 'Messages', 'Creations', 'SelfDestructs'];
   tagList.unshift('|');
@@ -322,15 +320,15 @@ const getTagList = (appearances) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (appearances, curTag, filtered, title, searchFields, recordIconList, appearancesHandler) => {
+const getInnerTable = (accounts, curTag, filtered, title, searchFields, recordIconList, accountsHandler) => {
   // EXISTING_CODE
-  if (!appearances) return <></>;
+  if (!accounts) return <></>;
 
   if (curTag === 'Neighbors') {
-    return <ObjectTable data={appearances.meta} columns={metaSchema} title={'Direct Neighbors of ' + title} />
+    return <ObjectTable data={accounts.meta} columns={metaSchema} title={'Direct Neighbors of ' + title} />
 
   } else if (curTag === 'Balances') {
-    const test = appearancesSchema;
+    const test = accountsSchema;
     return <BalanceView data={filtered} columns={test} title={title}/>
 
   } else if (curTag === 'Functions') {
@@ -338,7 +336,7 @@ const getInnerTable = (appearances, curTag, filtered, title, searchFields, recor
       const parts = item.compressedTx.replace(/\)/, '').split('(');
       return { date: item.date, to: item.to, functionName: <b>{parts[0]}</b>, parameters: parts[1] }
     });
-    return <DataTable data={functionCallData} columns={functionCallSchema} title={'Functions Called by ' + title} search={true} searchFields={searchFields} pagination={true} parentHandler={appearancesHandler}/>
+    return <DataTable data={functionCallData} columns={functionCallSchema} title={'Functions Called by ' + title} search={true} searchFields={searchFields} pagination={true} parentHandler={accountsHandler}/>
 
   } else if (curTag === 'Messages') {
     const messageData = filtered.map((item) => {
@@ -350,15 +348,15 @@ const getInnerTable = (appearances, curTag, filtered, title, searchFields, recor
   // EXISTING_CODE
   return (
     <SidebarTable
-      tableName={'appearancesTable'}
+      tableName={'accountsTable'}
       data={filtered}
-      columns={appearancesSchema}
+      columns={accountsSchema}
       title={title}
       search={true}
       searchFields={searchFields}
       pagination={true}
       recordIcons={recordIconList}
-      parentHandler={appearancesHandler}
+      parentHandler={accountsHandler}
     />
   );
 };
@@ -373,7 +371,7 @@ const BalanceView = ({data, columns, title}) => {
       data={data}
       title=""
       search={false}
-      chartName="appearances"
+      chartName="accounts"
       chartCtx={{ type: 'line', defPair: ['blockNumber', 'statements.endBal'] }}
       pagination={true}
     />
@@ -381,16 +379,16 @@ const BalanceView = ({data, columns, title}) => {
 }
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords, statusDispatch) {
+export function refreshAccountsData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords, statusDispatch) {
   getServerData(
     getDataUrl(),
     query + (mocked ? '&mockData' : '') + (!mocked && maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
   ).then((theData) => {
-    let appearances = theData.data;
-    if (!mocked) appearances = appearances && appearances.length > 0 ? appearances[0] : appearances;
-    let named = appearances;
-    if (!mocked && appearances && theData.meta) {
-      named = appearances.map((item) => {
+    let accounts = theData.data;
+    if (!mocked) accounts = accounts && accounts.length > 0 ? accounts[0] : accounts;
+    let named = accounts;
+    if (!mocked && accounts && theData.meta) {
+      named = accounts.map((item) => {
         if (theData.meta.namedFromAndTo && theData.meta.namedFromAndTo[item.from])
           item.fromName = theData.meta.namedFromAndTo[item.from];
         else item.fromName = theData.meta.namedFrom && theData.meta.namedFrom[item.from];
@@ -400,12 +398,12 @@ export function refreshAppearancesData2(query, dispatch, mocked, firstRecord, ma
         return item;
       });
     }
-    appearances = named;
-    if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
+    accounts = named;
+    if (accounts) theData.data = sortArray(accounts, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
     if (!mocked && maxRecords < nRecords) {
       statusDispatch(LOADING);
-      refreshAppearancesData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords, statusDispatch);
+      refreshAccountsData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords, statusDispatch);
     }
   });
 }
@@ -429,48 +427,48 @@ const getDataUrl = () => {
 }
 
 //----------------------------------------------------------------------
-export function refreshAppearancesData(query, dispatch, mocked) {
+export function refreshAccountsData(query, dispatch, mocked) {
   getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
-    let appearances = theData.data;
+    let accounts = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    if (appearances) theData.data = sortArray(appearances, defaultSort, ['asc', 'asc', 'asc']);
+    if (accounts) theData.data = sortArray(accounts, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
   });
 }
 
 //----------------------------------------------------------------------
-export const appearancesDefault = [];
+export const accountsDefault = [];
 
 //----------------------------------------------------------------------
-export const appearancesReducer = (state, action) => {
-  let appearances = state;
+export const accountsReducer = (state, action) => {
+  let accounts = state;
   switch (action.type.toLowerCase()) {
     case 'undelete':
     case 'delete':
       {
-        const record = appearances.data.filter((r) => {
+        const record = accounts.data.filter((r) => {
           const val = calcValue(r, { selector: 'id', onDisplay: getFieldValue });
           return val === action.record_id;
         })[0];
         if (record) {
           record.deleted = !record.deleted;
-          appearances.data = replaceRecord(appearances.data, record, action.record_id, calcValue, getFieldValue);
+          accounts.data = replaceRecord(accounts.data, record, action.record_id, calcValue, getFieldValue);
         }
       }
       break;
     case 'success':
-      appearances = action.payload;
+      accounts = action.payload;
       break;
     default:
     // do nothing
   }
-  return appearances;
+  return accounts;
 };
 
 //----------------------------------------------------------------------
-export const useAppearances = () => {
-  return useContext(GlobalContext).appearances;
+export const useAccounts = () => {
+  return useContext(GlobalContext).accounts;
 };
 
 //----------------------------------------------------------------------------
@@ -592,7 +590,7 @@ export const CompressedLogs = ({record}) => {
   const theList = logs.map((log) => {
     return displayCompressed(log.compressedLog.replace(/ /g, ''));
   })
-  return <>{theList}</>;
+  return <Fragment>{theList}</Fragment>;
 }
 
 //----------------------------------------------------------------------

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useToggles } from 'store';
 import { Settings, Discord, GitHub, Medium, Twitter } from 'assets/icons/SetSocial';
-import { ClickableIcon } from 'components';
+import { ClickableIcon, ProgressBar } from 'components';
 import './PageFooter.css';
 
 //----------------------------------------------------------------------
@@ -32,11 +32,16 @@ const LeftFooter = () => {
 const CenterFooter = () => {
   return (
     <div className="center-footer">
-      <div>TrueBlocks, LLC • 1010 N Hancock St, Philadelpia, PA 19123</div>
       <div>
-        <FooterLink link="http://www.quickblocks.io" /> •{' '}
-        <FooterLink link="mailto:info@quickblocks.io?subject=Inquiry" text="info@quickblocks.io" />
+        <div>TrueBlocks, LLC • 1010 N Hancock St, Philadelpia, PA 19123</div>
+        <div>
+          <FooterLink link="http://www.quickblocks.io" /> •{' '}
+          <FooterLink link="mailto:info@quickblocks.io?subject=Inquiry" text="info@quickblocks.io" />
+        </div>
       </div>
+      <div></div>
+      <div>Console: <ProgressBar id="export" text={true} /></div>
+      <div></div>
     </div>
   );
 };

@@ -7,12 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
+import { DataTable, PageCaddie, Dialog } from 'components';
 import { getServerData, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
 import { cachesSchema } from './CachesSchema';
 import './Caches.css';
@@ -159,7 +158,7 @@ export const Caches = (props) => {
       {debug && <pre>{JSON.stringify(caches, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={cachesHandler} object={{ address: curRecordId }} columns={cachesSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Cache'} handler={cachesHandler} object={{ address: curRecordId }} columns={cachesSchema}/>
       {custom}
     </div>
   );

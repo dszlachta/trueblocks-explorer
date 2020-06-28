@@ -7,12 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
+import { DataTable, PageCaddie, Dialog } from 'components';
 import { getServerData, sendServerCommand, sortArray, handleClick, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
 import { signaturesSchema } from './SignaturesSchema';
 import './Signatures.css';
@@ -194,7 +193,7 @@ export const Signatures = (props) => {
       {debug && <pre>{JSON.stringify(signatures, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={signaturesHandler} object={{ address: curRecordId }} columns={signaturesSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Signature'} handler={signaturesHandler} object={{ address: curRecordId }} columns={signaturesSchema}/>
       {custom}
     </div>
   );

@@ -7,7 +7,7 @@ import React, { useEffect, useState, useCallback, useContext } from 'react';
 import GlobalContext from 'store';
 import { useStatus, LOADING, NOT_LOADING, useStatusMeta } from 'store/status_store';
 
-import { GridTable, ChartTable, DataTable } from 'components';
+import { GridTable, ChartTable, DataTable, PageCaddie } from 'components';
 import { getServerData, currentPage, sortArray } from 'components/utils';
 
 // EXISTING_CODE
@@ -40,6 +40,9 @@ export const Digests = () => {
           localStorage.setItem('digestsTag', action.payload);
           break;
         // EXISTING_CODE
+        case 'set-start':
+          setStart((start + 3000000) % 9000000);
+          break;
         // EXISTING_CODE
         default:
           break;
@@ -112,10 +115,13 @@ export const Digests = () => {
 
   return (
     <div>
-      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'grid-view' })}>grid view</button>
-      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'data-view' })}>table view</button>
-      <button onClick={() => digestsHandler({ type: 'select-tag', payload: 'graph-view' })}>graph view</button>
-      <button onClick={() => setStart((start + 3000000) % 9000000)}>ignore ddos</button>
+      <PageCaddie
+        caddieName="Digests"
+        caddieData={['grid-view', 'data-view', 'graph-view']}
+        current={curTag}
+        useProgress={true}
+        handler={digestsHandler}
+      />
       {view}
     </div>
   );

@@ -1,11 +1,10 @@
 import React, { Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { currentPage } from 'components/utils';
+import { currentPage, handleClick } from 'components/utils';
 import { getIcon } from 'pages/utils';
 
 import './Menu.css';
-import { handleClick } from 'components/utils';
 
 //----------------------------------------------------------------------
 export const Menu = ({ menu, parent = '', minimized, selected, handler, useIcons = true, topLevel = true }) => {

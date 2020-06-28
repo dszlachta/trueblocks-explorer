@@ -7,12 +7,11 @@ import Mousetrap from 'mousetrap';
 
 import GlobalContext from 'store';
 
-import { DataTable, PageCaddie } from 'components';
+import { DataTable, PageCaddie, Dialog } from 'components';
 import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
-import { NameDialog } from 'dialogs';
 
 import { monitorsSchema } from './MonitorsSchema';
 import './Monitors.css';
@@ -74,6 +73,7 @@ export const Monitors = (props) => {
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Monitor', record: record });
           break;
@@ -136,18 +136,18 @@ export const Monitors = (props) => {
         case 'externallink':
           navigate('https://etherscan.io/address/' + action.record_id, true);
           break;
-        case 'enter':
+        case 'shift_enter':
         case 'row_doubleclick':
         case 'view':
-          navigate('/monitors/explore?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
-          //          navigate('/monitors/explore?addrs=' + action.record_id, false);
+          navigate('/accounts?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
+          //          navigate('/accounts?addrs=' + action.record_id, false);
           break;
         // EXISTING_CODE
         default:
           break;
       }
     },
-    [dispatch, filtered, statusDispatch]
+    [dispatch, filtered, statusDispatch, debug, mocked]
   );
 
   useEffect(() => {
@@ -158,7 +158,7 @@ export const Monitors = (props) => {
     if (!partialFetch) {
       refreshMonitorsData(dataQuery, dispatch, mocked);
     }
-  }, [dataQuery, dispatch, mocked]);
+  }, [dataQuery, dispatch, mocked, statusDispatch]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, monitorsHandler, { type: 'Add' }));
@@ -204,7 +204,7 @@ export const Monitors = (props) => {
       {debug && <pre>{JSON.stringify(monitors, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <NameDialog showing={editDialog.showing} handler={monitorsHandler} object={{ address: curRecordId }} columns={monitorsSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Monitor'} handler={monitorsHandler} object={{ address: curRecordId }} columns={monitorsSchema}/>
       {custom}
     </div>
   );

@@ -38,7 +38,7 @@ export const SidebarTable = ({
         return;
       case 'toggle-detail':
         setDetailLevel((detailLevel + 1) % 3);
-        localStorage.setItem('sideTableDetail', detailLevel);
+        localStorage.setItem('sideTableDetail', (detailLevel + 1) % 3);
         if (parentHandler) parentHandler(action);
         break;
       case 'interact':
@@ -50,17 +50,7 @@ export const SidebarTable = ({
     }
   };
 
-  function imageExists(image_url) {
-    var http = new XMLHttpRequest();
-    http.open('HEAD', image_url, false);
-    http.send();
-    return http.status !== 404;
-  }
-
   let imageUrl = 'http://localhost:3002/assets/icons/' + selectedRow.to + '.png';
-  const exists = imageExists(imageUrl);
-  imageUrl = exists ? imageUrl : 'http://localhost:3002/assets/icons/blank.png';
-  let interact = exists ? getIcon('y', 'interactwith', true, true, 24) : <></>;
   const detailIcon = getIcon('x', (detailLevel === 0 ? 'toggleleft' : (detailLevel === 1 ? 'togglecenter' : 'toggleright')), true, true, 24);
 
   return (
@@ -85,13 +75,12 @@ export const SidebarTable = ({
       <div className="st-right">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 5fr 1fr', alignItems: 'end' }}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img height="50" alt={selectedRow.to} src={imageUrl} />
-            <div onClick={(e) => handleClick(e, sidebarHandler, { type: 'interact', payload: selectedRow['toName'] })}>
-              {interact}
+            <div style={{height: '30px', width: '200px', overflow: 'hidden'}} onClick={(e) => handleClick(e, sidebarHandler, { type: 'interact', payload: selectedRow['toName'] })}>
+              <img height="30px" title={''} alt={''} src={imageUrl} />
             </div>
           </div>
           <div className="at-title" style={{ textAlign: 'center' }}>
-            Transaction Detail
+            Details
           </div>
           <div
             style={{ textAlign: 'right', paddingRight: '8px', alignItems: 'end' }}
