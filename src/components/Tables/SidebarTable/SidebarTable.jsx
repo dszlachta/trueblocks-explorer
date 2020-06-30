@@ -18,9 +18,9 @@ export const SidebarTable = ({
   pagination,
   recordIcons,
   parentHandler,
+  detailLevel=2,
 }) => {
   const [selectedRow, setSelectedRow] = useState({});
-  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('sideTableDetail', 0)));
 
   const idCol = getPrimaryKey(columns);
   if (!idCol) return <div className="warning">The data schema does not contain a primary key</div>;
@@ -36,11 +36,6 @@ export const SidebarTable = ({
         if (record) setSelectedRow(record);
         if (parentHandler) parentHandler(action);
         return;
-      case 'toggle-detail':
-        setDetailLevel((detailLevel + 1) % 3);
-        localStorage.setItem('sideTableDetail', (detailLevel + 1) % 3);
-        if (parentHandler) parentHandler(action);
-        break;
       case 'interact':
         alert('Interact with the contract ' + JSON.stringify(action.payload));
         break;
@@ -52,7 +47,6 @@ export const SidebarTable = ({
 
   let imageUrl = 'http://localhost:3002/assets/icons/' + selectedRow.to + '.png';
   const detailIcon = getIcon('x', (detailLevel === 0 ? 'toggleleft' : (detailLevel === 1 ? 'togglecenter' : 'toggleright')), true, true, 24);
-
   return (
     <div className="sidebar-table">
       <div className="st-left">
@@ -84,7 +78,7 @@ export const SidebarTable = ({
           </div>
           <div
             style={{ textAlign: 'right', paddingRight: '8px', alignItems: 'end' }}
-            onClick={(e) => handleClick(e, sidebarHandler, { type: 'toggle-detail' })}
+            onClick={(e) => handleClick(e, parentHandler, { type: 'toggle-detail' })}
           >
             <div>{detailIcon}</div>
           </div>

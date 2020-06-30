@@ -4,7 +4,7 @@ recordIcons =  "editing,exporting"
 defaultSort = "path"
 dataUrl = "http://localhost:8080/status"
 dataQuery = "modes=abis%20caches&types=all&details&depth=1"
-imports = "||getServerData, sortArray, sortStrings, handleClick, replaceRecord|||"
+imports = "||getServerData, sortArray, sortStrings, handleClick, replaceRecord, stateFromStorage|||"
 
 [[subpages]]
 list = [

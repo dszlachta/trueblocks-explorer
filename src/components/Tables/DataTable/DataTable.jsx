@@ -23,7 +23,7 @@ export const DataTable = ({
   pagination = false,
   paginationParts = '',
   showHidden = false,
-  detailLevel = false,
+  detailLevel = 2,
   recordIcons = [],
   parentHandler = null,
 }) => {
@@ -259,6 +259,7 @@ export const DataTable = ({
         showHidden={showHidden}
         tableName={tableName}
         curIndex={pagingCtx.curIndex}
+        detailLevel={detailLevel}
       />
       {search && filteredData && filteredData.length ? (
         <Tablebar
@@ -324,6 +325,7 @@ const DataTableRows = ({
   showHidden,
   tableName,
   curIndex,
+  detailLevel
 }) => {
   if (!data) return <div>Loading...</div>;
   if (data.length === 0) return <div>No Results</div>;
@@ -367,7 +369,7 @@ const DataTableRows = ({
                 value = formatFieldByType(type, value, column.decimals);
                 let found = {};
                 let underField = null;
-                if (column.underField && column.underField !== '') {
+                if (detailLevel > 1 && column.underField && column.underField !== '') {
                   underField = column.underField; // don't remove
                   found = columns.filter((col) => {
                     return col.selector === underField;
@@ -394,10 +396,10 @@ const DataTableRows = ({
                   case 'bool':
                     cn += ' center ';
                     break;
+                  case 'function':
                   case 'hash':
                   case 'address':
                   case 'bytes32':
-                  case 'function':
                   case 'string':
                   default:
                     break;

@@ -30,6 +30,8 @@ export const thePages = {
   'monitors/': { component: <Monitors /> },
   //
   'accounts/': { component: <Accounts /> },
+  'accounts/summary': { component: <Accounts /> },
+  'accounts/transactions': { component: <Accounts /> },
   //
   'tags/': { component: <Tags /> },
   //
@@ -101,6 +103,10 @@ export const theMenu = {
     {
       label: 'Accounts',
       exact: true,
+      items: [
+        { label: 'Summary' },
+        { label: 'Transactions' },
+      ],
     },
     {
       label: 'Tags',

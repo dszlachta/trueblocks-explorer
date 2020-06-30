@@ -6,6 +6,7 @@ defaultSearch = "tags,address,name"
 dataUrl = "http://localhost:8080/status"
 dataQuery = "modes=monitors&details"
 cmdUrl = "http://localhost:8080/rm"
+imports = "||getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord, stateFromStorage|||"
 
 [[subpages]]
 list = [

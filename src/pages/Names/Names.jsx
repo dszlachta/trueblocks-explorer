@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING, useMonitorMap } from 'store/status_store';
@@ -32,6 +32,7 @@ export const Names = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('namesPageDetails', 0)));
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -56,6 +57,10 @@ export const Names = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
+        case 'toggle-detail':
+          setDetailLevel((detailLevel + 1) % 3);
+          localStorage.setItem('namesPageDetails', (detailLevel + 1) % 3);
+          break;
         case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
@@ -204,7 +209,7 @@ export const Names = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable(names, curTag, filtered, title, searchFields, recordIconList, namesHandler);
+  const table = getInnerTable(names, curTag, filtered, title, detailLevel, searchFields, recordIconList, namesHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -222,7 +227,7 @@ export const Names = (props) => {
       {debug && <pre>{JSON.stringify(names, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <Dialog showing={editDialog.showing} header={'Edit/Add Name'} handler={namesHandler} object={{ address: curRecordId }} columns={namesSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Name'} handler={namesHandler} object={editDialog.record} columns={namesSchema}/>
       {custom}
     </div>
   );
@@ -241,7 +246,7 @@ const getTagList = (names) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (names, curTag, filtered, title, searchFields, recordIconList, namesHandler) => {
+const getInnerTable = (names, curTag, filtered, title, detailLevel, searchFields, recordIconList, namesHandler) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -255,6 +260,7 @@ const getInnerTable = (names, curTag, filtered, title, searchFields, recordIconL
       pagination={true}
       recordIcons={recordIconList}
       parentHandler={namesHandler}
+      detailLevel={detailLevel}
     />
   );
 };
@@ -289,7 +295,7 @@ export function refreshNamesData(query, dispatch, mocked) {
     let names = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    if (names) theData.data = sortArray(names, defaultSort, ['asc', 'asc', 'asc']);
+    theData.data = sortArray(names, defaultSort, ['asc', 'asc', 'asc']); // will return if array is null
     dispatch({ type: 'success', payload: theData });
   });
 }

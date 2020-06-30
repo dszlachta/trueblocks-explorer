@@ -5,7 +5,8 @@ defaultSort = "tags,address,name"
 cmdUrl = "http://localhost:8080/names"
 dataUrl = "http://localhost:8080/names"
 dataQuery = "all&expand"
-imports = "|||useStatus, LOADING, NOT_LOADING, useMonitorMap||"
+imports = "||getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord, stateFromStorage|useStatus, LOADING, NOT_LOADING, useMonitorMap||"
+
 [[subpages]]
 list = [
     { page = "names", subpage = "" },

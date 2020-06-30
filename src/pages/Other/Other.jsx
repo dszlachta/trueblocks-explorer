@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -32,6 +32,7 @@ export const Other = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('otherPageDetails', 0)));
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -55,6 +56,10 @@ export const Other = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
+        case 'toggle-detail':
+          setDetailLevel((detailLevel + 1) % 3);
+          localStorage.setItem('otherPageDetails', (detailLevel + 1) % 3);
+          break;
         case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
@@ -72,6 +77,7 @@ export const Other = (props) => {
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Other', record: record });
           break;
@@ -178,7 +184,7 @@ export const Other = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable(other, curTag, filtered, title, searchFields, recordIconList, otherHandler);
+  const table = getInnerTable(other, curTag, filtered, title, detailLevel, searchFields, recordIconList, otherHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -196,7 +202,7 @@ export const Other = (props) => {
       {debug && <pre>{JSON.stringify(other, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <Dialog showing={editDialog.showing} header={'Edit/Add Other'} handler={otherHandler} object={{ address: curRecordId }} columns={otherSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Other'} handler={otherHandler} object={editDialog.record} columns={otherSchema}/>
       {custom}
     </div>
   );
@@ -215,7 +221,7 @@ const getTagList = (other) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (other, curTag, filtered, title, searchFields, recordIconList, otherHandler) => {
+const getInnerTable = (other, curTag, filtered, title, detailLevel, searchFields, recordIconList, otherHandler) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -229,6 +235,7 @@ const getInnerTable = (other, curTag, filtered, title, searchFields, recordIconL
       pagination={true}
       recordIcons={recordIconList}
       parentHandler={otherHandler}
+      detailLevel={detailLevel}
     />
   );
 };
@@ -258,7 +265,7 @@ export function refreshOtherData(query, dispatch, mocked) {
     let other = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    if (other) theData.data = sortArray(other, defaultSort, ['asc', 'asc', 'asc']);
+    theData.data = sortArray(other, defaultSort, ['asc', 'asc', 'asc']); // will return if array is null
     dispatch({ type: 'success', payload: theData });
   });
 }

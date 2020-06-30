@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext } from 'react';
 
 import { useSystemCheck } from 'store';
 
@@ -27,11 +27,15 @@ export const ContentPanel = () => {
 };
 
 //----------------------------------------------------------------------
+export var PageContext = createContext({});
 export const InnerContent = () => {
+  const { page, subpage } = currentPage();
   if (!useSystemCheck('api')) return <Settings />;
 
-  const { page, subpage } = currentPage();
   const ret = thePages[page + '/' + subpage];
-
-  return ret ? ret.component : <div className="warning">Missing Inner Content</div>;
+  return (
+    <PageContext.Provider value={[]}>
+      {ret ? ret.component : <div className="warning">Missing Inner Content</div>}
+    </PageContext.Provider>
+  );
 };

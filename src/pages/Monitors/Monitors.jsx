@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -32,6 +32,7 @@ export const Monitors = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('monitorsPageDetails', 0)));
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -56,6 +57,10 @@ export const Monitors = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
+        case 'toggle-detail':
+          setDetailLevel((detailLevel + 1) % 3);
+          localStorage.setItem('monitorsPageDetails', (detailLevel + 1) % 3);
+          break;
         case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
@@ -186,7 +191,7 @@ export const Monitors = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable(monitors, curTag, filtered, title, searchFields, recordIconList, monitorsHandler);
+  const table = getInnerTable(monitors, curTag, filtered, title, detailLevel, searchFields, recordIconList, monitorsHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -204,7 +209,7 @@ export const Monitors = (props) => {
       {debug && <pre>{JSON.stringify(monitors, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <Dialog showing={editDialog.showing} header={'Edit/Add Monitor'} handler={monitorsHandler} object={{ address: curRecordId }} columns={monitorsSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Monitor'} handler={monitorsHandler} object={editDialog.record} columns={monitorsSchema}/>
       {custom}
     </div>
   );
@@ -223,7 +228,7 @@ const getTagList = (monitors) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (monitors, curTag, filtered, title, searchFields, recordIconList, monitorsHandler) => {
+const getInnerTable = (monitors, curTag, filtered, title, detailLevel, searchFields, recordIconList, monitorsHandler) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -237,6 +242,7 @@ const getInnerTable = (monitors, curTag, filtered, title, searchFields, recordIc
       pagination={true}
       recordIcons={recordIconList}
       parentHandler={monitorsHandler}
+      detailLevel={detailLevel}
     />
   );
 };
@@ -272,7 +278,7 @@ export function refreshMonitorsData(query, dispatch, mocked) {
     // EXISTING_CODE
     if (!mocked) monitors = theData.data[0].caches[0].items;
     // EXISTING_CODE
-    if (monitors) theData.data = sortArray(monitors, defaultSort, ['asc', 'asc', 'asc']);
+    theData.data = sortArray(monitors, defaultSort, ['asc', 'asc', 'asc']); // will return if array is null
     dispatch({ type: 'success', payload: theData });
   });
 }

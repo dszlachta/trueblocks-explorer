@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sendServerCommand, sortArray, handleClick, replaceRecord } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, handleClick, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -32,6 +32,7 @@ export const Signatures = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('signaturesPageDetails', 0)));
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -55,6 +56,10 @@ export const Signatures = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
+        case 'toggle-detail':
+          setDetailLevel((detailLevel + 1) % 3);
+          localStorage.setItem('signaturesPageDetails', (detailLevel + 1) % 3);
+          break;
         case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
@@ -72,6 +77,7 @@ export const Signatures = (props) => {
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Signature', record: record });
           break;
@@ -175,7 +181,7 @@ export const Signatures = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable(signatures, curTag, filtered, title, searchFields, recordIconList, signaturesHandler);
+  const table = getInnerTable(signatures, curTag, filtered, title, detailLevel, searchFields, recordIconList, signaturesHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -193,7 +199,7 @@ export const Signatures = (props) => {
       {debug && <pre>{JSON.stringify(signatures, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <Dialog showing={editDialog.showing} header={'Edit/Add Signature'} handler={signaturesHandler} object={{ address: curRecordId }} columns={signaturesSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Signature'} handler={signaturesHandler} object={editDialog.record} columns={signaturesSchema}/>
       {custom}
     </div>
   );
@@ -212,7 +218,7 @@ const getTagList = (signatures) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (signatures, curTag, filtered, title, searchFields, recordIconList, signaturesHandler) => {
+const getInnerTable = (signatures, curTag, filtered, title, detailLevel, searchFields, recordIconList, signaturesHandler) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -226,6 +232,7 @@ const getInnerTable = (signatures, curTag, filtered, title, searchFields, record
       pagination={true}
       recordIcons={recordIconList}
       parentHandler={signaturesHandler}
+      detailLevel={detailLevel}
     />
   );
 };
@@ -258,7 +265,7 @@ export function refreshSignaturesData(query, dispatch, mocked) {
     // EXISTING_CODE
     signatures = signatures.filter((item) => item.type !== 'constructor');
     // EXISTING_CODE
-    if (signatures) theData.data = sortArray(signatures, defaultSort, ['asc', 'asc', 'asc']);
+    theData.data = sortArray(signatures, defaultSort, ['asc', 'asc', 'asc']); // will return if array is null
     dispatch({ type: 'success', payload: theData });
   });
 }

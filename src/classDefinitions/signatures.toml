@@ -6,7 +6,7 @@ defaultTags = "['Functions', 'Events', 'Constructors', '|', 'Known', 'Monitored'
 cmdUrl = "http://localhost:8080/abi"
 dataUrl = "http://localhost:8080/abi"
 dataQuery = "monitored&known"
-imports = "||getServerData, sendServerCommand, sortArray, handleClick, replaceRecord|||"
+imports = "||getServerData, sendServerCommand, sortArray, handleClick, replaceRecord, stateFromStorage|||"
 
 [[subpages]]
 list = [

@@ -6,7 +6,13 @@ export { Dialog } from './Dialog/Dialog';
 export { Menu, MenuItem } from './Menu/Menu';
 export { IconTray, ClickableIcon } from './IconTray/IconTray';
 export { Modal } from './Modal/Modal';
-export { Tablebar, DataTable, GridTable, PanelTable, ChartTable, ObjectTable, SidebarTable } from './Tables';
+export { Tablebar } from './Tables/Tablebar/Tablebar';
+export { DataTable } from './Tables/DataTable/DataTable';
+export { GridTable } from './Tables/GridTable/GridTable';
+export { PanelTable } from './Tables/PanelTable/PanelTable';
+export { ChartTable } from './Tables/ChartTable/ChartTable';
+export { ObjectTable } from './Tables/ObjectTable/ObjectTable';
+export { SidebarTable } from './Tables/SidebarTable/SidebarTable';
 export { Panel } from './Panels/Panel/Panel';
 export { Displayable } from './CopyIcon/CopyIcon';
 export { ProgressBar } from './ProgressBar/ProgressBar'

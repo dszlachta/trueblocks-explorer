@@ -13,21 +13,23 @@ import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 
-import { accountsSchema } from './AccountsSchema';
-import './Accounts.css';
+import { accountsSchema } from './AccountsTxsSchema';
+import './AccountsTxs.css';
 
 // EXISTING_CODE
 import { currentPage } from 'components/utils';
 import { SidebarTable } from 'components';
 import { getIcon } from 'pages/utils';
+import { PageContext } from 'panels/ContentPanel/ContentPanel'
 let g_focusValue = '';
 let g_Handler = null;
 const useMountEffect = (fun) => useEffect(fun, [])
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
-export const Accounts = (props) => {
-  const { accounts, dispatch } = useAccounts();
+export const AccountsTxs = (props) => {
+  var context = useContext(PageContext)
+  const { accounts, dispatch } = useAccountsTxs();
   const mocked = useStatus().state.mocked;
   const statusDispatch = useStatus().dispatch;
 
@@ -160,11 +162,11 @@ export const Accounts = (props) => {
     partialFetch = true;
     if (partialFetch) {
       const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
-      refreshAccountsData2(dataQuery, dispatch, mocked, 0, max_records, recordCount, statusDispatch);
+      refreshAccountsTxsData2(dataQuery, dispatch, mocked, 0, max_records, recordCount, statusDispatch);
     }
     // EXISTING_CODE
     if (!partialFetch) {
-      refreshAccountsData(dataQuery, dispatch, mocked);
+      refreshAccountsTxsData(dataQuery, dispatch, mocked);
     }
   }, [dataQuery, dispatch, mocked, recordCount, statusDispatch]);
 
@@ -266,7 +268,7 @@ export const Accounts = (props) => {
   }, [accounts, curTag, statusDispatch]);
 
   let custom = null;
-  let title = 'Accounts';
+  let title = 'AccountsTxs';
   // EXISTING_CODE
   title = name
     ? decodeURIComponent(name.replace(/\+/g, '%20'))
@@ -394,8 +396,8 @@ const BalanceView = ({data, columns, title}) => {
 }
 
 //----------------------------------------------------------------------
-export function refreshAccountsData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords, statusDispatch) {
-  if (mocked) return refreshAccountsData(query, dispatch, mocked);
+export function refreshAccountsTxsData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords, statusDispatch) {
+  if (mocked) return refreshAccountsTxsData(query, dispatch, mocked);
   getServerData(
     getDataUrl(),
     query + (maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
@@ -412,7 +414,7 @@ export function refreshAccountsData2(query, dispatch, mocked, firstRecord, maxRe
       named = accounts.map((item) => {
         item.fromName = meta.namedFrom && meta.namedFrom[item.from];
         item.toName = meta.namedTo && meta.namedTo[item.to];
-        if (meta && meta.accountedFor && meta.accountedFor.name !== meta.accountedFor.address) {
+        if (meta && meta.accountedFor) {
           if (meta.accountedFor.address === item.from) item.fromName = meta.accountedFor;
           if (meta.accountedFor.address === item.to) item.toName = meta.accountedFor;
 
@@ -427,7 +429,7 @@ export function refreshAccountsData2(query, dispatch, mocked, firstRecord, maxRe
     dispatch({ type: 'success', payload: theData });
     if (maxRecords < nRecords) {
       statusDispatch(LOADING);
-      refreshAccountsData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords, statusDispatch);
+      refreshAccountsTxsData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords, statusDispatch);
     }
   });
 }
@@ -451,7 +453,7 @@ const getDataUrl = () => {
 }
 
 //----------------------------------------------------------------------
-export function refreshAccountsData(query, dispatch, mocked) {
+export function refreshAccountsTxsData(query, dispatch, mocked) {
   getServerData(getDataUrl(), query + (mocked ? '&mockData' : '')).then((theData) => {
     let accounts = theData.data;
     // EXISTING_CODE
@@ -491,7 +493,7 @@ export const accountsReducer = (state, action) => {
 };
 
 //----------------------------------------------------------------------
-export const useAccounts = () => {
+export const useAccountsTxs = () => {
   return useContext(GlobalContext).accounts;
 };
 

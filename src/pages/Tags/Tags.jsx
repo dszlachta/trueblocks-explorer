@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -32,6 +32,7 @@ export const Tags = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('tagsPageDetails', 0)));
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -55,6 +56,10 @@ export const Tags = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
+        case 'toggle-detail':
+          setDetailLevel((detailLevel + 1) % 3);
+          localStorage.setItem('tagsPageDetails', (detailLevel + 1) % 3);
+          break;
         case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
@@ -72,6 +77,7 @@ export const Tags = (props) => {
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Tag', record: record });
           break;
@@ -175,7 +181,7 @@ export const Tags = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable(tags, curTag, filtered, title, searchFields, recordIconList, tagsHandler);
+  const table = getInnerTable(tags, curTag, filtered, title, detailLevel, searchFields, recordIconList, tagsHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -193,7 +199,7 @@ export const Tags = (props) => {
       {debug && <pre>{JSON.stringify(tags, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <Dialog showing={editDialog.showing} header={'Edit/Add Tag'} handler={tagsHandler} object={{ address: curRecordId }} columns={tagsSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Tag'} handler={tagsHandler} object={editDialog.record} columns={tagsSchema}/>
       {custom}
     </div>
   );
@@ -212,7 +218,7 @@ const getTagList = (tags) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (tags, curTag, filtered, title, searchFields, recordIconList, tagsHandler) => {
+const getInnerTable = (tags, curTag, filtered, title, detailLevel, searchFields, recordIconList, tagsHandler) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -226,6 +232,7 @@ const getInnerTable = (tags, curTag, filtered, title, searchFields, recordIconLi
       pagination={true}
       recordIcons={recordIconList}
       parentHandler={tagsHandler}
+      detailLevel={detailLevel}
     />
   );
 };
@@ -255,7 +262,7 @@ export function refreshTagsData(query, dispatch, mocked) {
     let tags = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    if (tags) theData.data = sortArray(tags, defaultSort, ['asc', 'asc', 'asc']);
+    theData.data = sortArray(tags, defaultSort, ['asc', 'asc', 'asc']); // will return if array is null
     dispatch({ type: 'success', payload: theData });
   });
 }

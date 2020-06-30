@@ -6,7 +6,7 @@ cmdUrl = "http://localhost:8080/when"
 dataUrl = "http://localhost:8080/when"
 dataQuery = "list"
 defaultTags = "['Yours', 'Known', 'Dated']"
-imports = "||getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord|||"
+imports = "||getServerData, sendServerCommand, sortArray, handleClick, navigate, replaceRecord, stateFromStorage|||"
 
 [[subpages]]
 list = [

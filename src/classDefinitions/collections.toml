@@ -5,7 +5,7 @@ defaultSort = "tags,name,client"
 cmdUrl = "http://localhost:8080/names"
 dataUrl = "http://localhost:8080/names"
 dataQuery = "collections"
-imports = "||getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord|||"
+imports = "||getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord, stateFromStorage|||"
 
 [[subpages]]
 list = [

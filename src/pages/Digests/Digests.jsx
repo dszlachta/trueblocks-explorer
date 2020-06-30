@@ -133,11 +133,11 @@ export const Digests = () => {
 //----------------------------------------------------------------------
 function refreshData(url, query, dispatch) {
   getServerData(url, query).then((theData) => {
-    let result = theData.data;
+    let digests = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    const sorted = sortArray(result, defaultSort, ['asc', 'asc', 'asc']);
-    dispatch({ type: 'success', payload: sorted });
+    theData.data = sortArray(digests, defaultSort, ['asc', 'asc', 'asc']);
+    dispatch({ type: 'success', payload: theData.data });
   });
 }
 

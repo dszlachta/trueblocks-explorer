@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
+import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -32,6 +32,7 @@ export const Collections = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('collectionsPageDetails', 0)));
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -55,6 +56,10 @@ export const Collections = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
+        case 'toggle-detail':
+          setDetailLevel((detailLevel + 1) % 3);
+          localStorage.setItem('collectionsPageDetails', (detailLevel + 1) % 3);
+          break;
         case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
@@ -72,6 +77,7 @@ export const Collections = (props) => {
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Collection', record: record });
           break;
@@ -175,7 +181,7 @@ export const Collections = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable(collections, curTag, filtered, title, searchFields, recordIconList, collectionsHandler);
+  const table = getInnerTable(collections, curTag, filtered, title, detailLevel, searchFields, recordIconList, collectionsHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -193,7 +199,7 @@ export const Collections = (props) => {
       {debug && <pre>{JSON.stringify(collections, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <Dialog showing={editDialog.showing} header={'Edit/Add Collection'} handler={collectionsHandler} object={{ address: curRecordId }} columns={collectionsSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Collection'} handler={collectionsHandler} object={editDialog.record} columns={collectionsSchema}/>
       {custom}
     </div>
   );
@@ -212,7 +218,7 @@ const getTagList = (collections) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (collections, curTag, filtered, title, searchFields, recordIconList, collectionsHandler) => {
+const getInnerTable = (collections, curTag, filtered, title, detailLevel, searchFields, recordIconList, collectionsHandler) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -226,6 +232,7 @@ const getInnerTable = (collections, curTag, filtered, title, searchFields, recor
       pagination={true}
       recordIcons={recordIconList}
       parentHandler={collectionsHandler}
+      detailLevel={detailLevel}
     />
   );
 };
@@ -258,7 +265,7 @@ export function refreshCollectionsData(query, dispatch, mocked) {
     let collections = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    if (collections) theData.data = sortArray(collections, defaultSort, ['asc', 'asc', 'asc']);
+    theData.data = sortArray(collections, defaultSort, ['asc', 'asc', 'asc']); // will return if array is null
     dispatch({ type: 'success', payload: theData });
   });
 }

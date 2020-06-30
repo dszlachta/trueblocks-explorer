@@ -32,6 +32,7 @@ export const [{PROPER}] = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('[{LONG}]PageDetails', 0)));
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -54,6 +55,10 @@ export const [{PROPER}] = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
+        case 'toggle-detail':
+          setDetailLevel((detailLevel + 1) % 3);
+          localStorage.setItem('[{LONG}]PageDetails', (detailLevel + 1) % 3);
+          break;
         case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
@@ -71,6 +76,7 @@ export const [{PROPER}] = (props) => {
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit [{SINGULAR}]', record: record });
           break;
@@ -96,6 +102,7 @@ export const [{PROPER}] = (props) => {
           setEditDialog({ showing: false, record: {} });
           break;
 [{DELETE_CMD}]
+
         // EXISTING_CODE
         // EXISTING_CODE
         default:
@@ -141,7 +148,7 @@ export const [{PROPER}] = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable([{LONG}], curTag, filtered, title, searchFields, recordIconList, [{LONG}]Handler);
+  const table = getInnerTable([{LONG}], curTag, filtered, title, detailLevel, searchFields, recordIconList, [{LONG}]Handler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -159,7 +166,7 @@ export const [{PROPER}] = (props) => {
       {debug && <pre>{JSON.stringify([{LONG}], null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <Dialog showing={editDialog.showing} header={'Edit/Add [{SINGULAR}]'} handler={[{LONG}]Handler} object={{ address: curRecordId }} columns={[{LONG}]Schema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add [{SINGULAR}]'} handler={[{LONG}]Handler} object={editDialog.record} columns={[{LONG}]Schema}/>
       {custom}
     </div>
   );
@@ -178,7 +185,7 @@ const getTagList = ([{LONG}]) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = ([{LONG}], curTag, filtered, title, searchFields, recordIconList, [{LONG}]Handler) => {
+const getInnerTable = ([{LONG}], curTag, filtered, title, detailLevel, searchFields, recordIconList, [{LONG}]Handler) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -192,6 +199,7 @@ const getInnerTable = ([{LONG}], curTag, filtered, title, searchFields, recordIc
       pagination={true}
       recordIcons={recordIconList}
       parentHandler={[{LONG}]Handler}
+      detailLevel={detailLevel}
     />
   );
 };
@@ -213,7 +221,7 @@ export function refresh[{PROPER}]Data(query, dispatch, mocked) {
     let [{LONG}] = theData.data;
     // EXISTING_CODE
     // EXISTING_CODE
-    if ([{LONG}]) theData.data = sortArray([{LONG}], defaultSort, ['asc', 'asc', 'asc']);
+    theData.data = sortArray([{LONG}], defaultSort, ['asc', 'asc', 'asc']); // will return if array is null
     dispatch({ type: 'success', payload: theData });
   });
 }

@@ -8,7 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sortArray, sortStrings, handleClick, replaceRecord } from 'components/utils';
+import { getServerData, sortArray, sortStrings, handleClick, replaceRecord, stateFromStorage } from 'components/utils';
 import { calcValue } from 'store';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
@@ -32,6 +32,7 @@ export const Caches = (props) => {
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
   const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
+  const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('cachesPageDetails', 0)));
 
   // EXISTING_CODE
   // EXISTING_CODE
@@ -53,6 +54,10 @@ export const Caches = (props) => {
       });
       if (record) record = record[0];
       switch (action.type.toLowerCase()) {
+        case 'toggle-detail':
+          setDetailLevel((detailLevel + 1) % 3);
+          localStorage.setItem('cachesPageDetails', (detailLevel + 1) % 3);
+          break;
         case 'select-tag':
           if (action.payload === 'Debug') {
             setDebug(!debug);
@@ -70,6 +75,7 @@ export const Caches = (props) => {
         case 'add':
           setEditDialog({ showing: true, record: {} });
           break;
+        case 'enter':
         case 'edit':
           if (record) setEditDialog({ showing: true, name: 'Edit Cache', record: record });
           break;
@@ -140,7 +146,7 @@ export const Caches = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable(caches, curTag, filtered, title, searchFields, recordIconList, cachesHandler);
+  const table = getInnerTable(caches, curTag, filtered, title, detailLevel, searchFields, recordIconList, cachesHandler);
   return (
     <div>
       {/* prettier-ignore */}
@@ -158,7 +164,7 @@ export const Caches = (props) => {
       {debug && <pre>{JSON.stringify(caches, null, 2)}</pre>}
       {table}
       {/* prettier-ignore */}
-      <Dialog showing={editDialog.showing} header={'Edit/Add Cache'} handler={cachesHandler} object={{ address: curRecordId }} columns={cachesSchema}/>
+      <Dialog showing={editDialog.showing} header={'Edit/Add Cache'} handler={cachesHandler} object={editDialog.record} columns={cachesSchema}/>
       {custom}
     </div>
   );
@@ -177,7 +183,7 @@ const getTagList = (caches) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (caches, curTag, filtered, title, searchFields, recordIconList, cachesHandler) => {
+const getInnerTable = (caches, curTag, filtered, title, detailLevel, searchFields, recordIconList, cachesHandler) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -191,6 +197,7 @@ const getInnerTable = (caches, curTag, filtered, title, searchFields, recordIcon
       pagination={true}
       recordIcons={recordIconList}
       parentHandler={cachesHandler}
+      detailLevel={detailLevel}
     />
   );
 };
@@ -223,7 +230,7 @@ export function refreshCachesData(query, dispatch, mocked) {
     // EXISTING_CODE
     if (caches) caches = caches[0].caches;
     // EXISTING_CODE
-    if (caches) theData.data = sortArray(caches, defaultSort, ['asc', 'asc', 'asc']);
+    theData.data = sortArray(caches, defaultSort, ['asc', 'asc', 'asc']); // will return if array is null
     dispatch({ type: 'success', payload: theData });
   });
 }

@@ -106,7 +106,6 @@ const RightPanel = ({ status, handler, subsystem }) => {
             data={myData}
             columns={systemsSchema}
             showHidden={true}
-            detailLevel={2}
             handler={handler}
           />
         </div>

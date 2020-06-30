@@ -16,7 +16,7 @@ export const ObjectTable = ({
   pagination = false,
   paginationParts = '',
   showHidden = false,
-  detailLevel = false,
+  detailLevel = 2,
   handler = null,
   cn = null,
 }) => {
@@ -62,7 +62,6 @@ export const ObjectTable = ({
 
           const siderClass = 'at-header-base at-sider ' + (cn ? cn : 'ot') + '-sider';
           const rowClass = 'at-row ' + (cn ? cn : 'ot') + '-row' + (column.wide ? '-wide nowrap' : '');
-
 
           if (column.type === 'separator') {
             const record = {...column, 'detailLevel': detailLevel};
