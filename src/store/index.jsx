@@ -19,12 +19,6 @@ export {
   useSystemCheck,
 };
 
-//----------------------------------------------------------------------
-//export function isVerbose() {
-//  return false;
-//}
-//export const debug = true;
-
 //-----------------------------------------------------------------
 export function getPrimaryKey(columns) {
   const ret = columns.filter((c) => c.selector === 'id');

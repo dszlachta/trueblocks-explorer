@@ -333,12 +333,6 @@ export const accountsSchema = [
     detail: 1,
   },
   {
-    name: 'Price',
-    selector: 'price',
-    type: 'double',
-    detail: 1,
-  },
-  {
     name: 'Error',
     selector: 'isError',
     type: 'string',

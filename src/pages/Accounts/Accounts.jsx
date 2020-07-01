@@ -154,19 +154,21 @@ export const Accounts = (props) => {
   );
 
   useEffect(() => {
-    statusDispatch(LOADING);
     let partialFetch = false;
     // EXISTING_CODE
     partialFetch = true;
     if (partialFetch) {
       const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
-      refreshAccountsData2(dataQuery, dispatch, mocked, 0, max_records, recordCount, statusDispatch);
+      if (mocked)
+        refreshAccountsData(dataQuery, dispatch, mocked);
+      else 
+        refreshAccountsData2(dataQuery, dispatch, 0, max_records, recordCount);
     }
     // EXISTING_CODE
     if (!partialFetch) {
       refreshAccountsData(dataQuery, dispatch, mocked);
     }
-  }, [dataQuery, dispatch, mocked, recordCount, statusDispatch]);
+  }, [dataQuery, dispatch, mocked, recordCount]);
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, accountsHandler, { type: 'Add' }));
@@ -394,41 +396,48 @@ const BalanceView = ({data, columns, title}) => {
 }
 
 //----------------------------------------------------------------------
-export function refreshAccountsData2(query, dispatch, mocked, firstRecord, maxRecords, nRecords, statusDispatch) {
-  if (mocked) return refreshAccountsData(query, dispatch, mocked);
+export function refreshAccountsData2(query, dispatch, firstRecord, maxRecords, nRecords) {
+
   getServerData(
     getDataUrl(),
     query + (maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
+
   ).then((theData) => {
+
     if (!theData.data || theData.data.length === 0)
       return;
 
-    let accounts = theData.data;
-    accounts = accounts && accounts.length > 0 ? accounts[0] : accounts;
     let meta = theData.meta;
-    let named = accounts[0];
+    let accounts = theData.data;
 
-    if (accounts && meta) {
-      named = accounts.map((item) => {
-        item.fromName = meta.namedFrom && meta.namedFrom[item.from];
-        item.toName = meta.namedTo && meta.namedTo[item.to];
-        if (meta && meta.accountedFor && meta.accountedFor.name !== meta.accountedFor.address) {
-          if (meta.accountedFor.address === item.from) item.fromName = meta.accountedFor;
-          if (meta.accountedFor.address === item.to) item.toName = meta.accountedFor;
+    console.log('   ')
+    console.log('---------------------------------------------------------')
+    console.log('accounts from theData.data', accounts);
+    if (accounts && accounts.length > 0) {
+      accounts = accounts[0];
+      console.log('accounts from weird test', accounts);
 
-          //if (acctFor.address === item.from) item.fromName = acctFor.name;
-          //if (acctFor.address === item.to) item.toName = acctFor.name;
-        }
-        return item;
-      });
+      if (meta) {
+        const named = accounts.map((item) => {
+          item.fromName = meta.namedFrom && meta.namedFrom[item.from];
+          item.toName = meta.namedTo && meta.namedTo[item.to];
+          if (meta && meta.accountedFor && meta.accountedFor.name !== meta.accountedFor.address) {
+            if (meta.accountedFor.address === item.from) item.fromName = meta.accountedFor;
+            if (meta.accountedFor.address === item.to) item.toName = meta.accountedFor;
+          }
+          return item;
+        });
+        accounts = named;
+      }
     }
-    accounts = named;
+
     theData.data = sortArray(accounts, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
+
     if (maxRecords < nRecords) {
-      statusDispatch(LOADING);
-      refreshAccountsData2(query, dispatch, mocked, 0, maxRecords * 2, nRecords, statusDispatch);
+      refreshAccountsData2(query, dispatch, 0, maxRecords * 2, nRecords);
     }
+
   });
 }
 // EXISTING_CODE
