@@ -3,7 +3,7 @@ import { scaleLinear } from 'd3-scale';
 import { extent } from 'd3-array';
 
 import { Tablebar, DataTable } from 'components';
-import { calcValue } from 'store';
+import { calcValue } from 'components/utils';
 
 import { LineChart } from './Charts/Line';
 import { BarChart } from './Charts/Bar';

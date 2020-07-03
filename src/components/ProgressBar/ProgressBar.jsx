@@ -7,9 +7,10 @@ import {
 
 import './ProgressBar.css';
 
+//-----------------------------------------------------
 export const ProgressBar = (props) => {
   const [progPct, setProgressPct] = useState(0);
-  const [finished, setFinished] = useState(true);
+  const [finished, setFinished] = useState(false);
   const [op, setOp] = useState('');
 
   useEffect(() => {

@@ -8,8 +8,19 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sendServerCommand, sortArray, sortStrings, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
-import { calcValue } from 'store';
+import {
+  calcValue,
+  downloadData,
+  exportValue,
+  getServerData,
+  sendServerCommand,
+  sortArray,
+  sortStrings,
+  handleClick,
+  navigate,
+  replaceRecord,
+  stateFromStorage,
+} from 'components/utils';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 
@@ -147,6 +158,14 @@ export const Monitors = (props) => {
           navigate('/accounts?addrs=' + action.record_id + (record ? '&name=' + record.name : ''), false);
           //          navigate('/accounts?addrs=' + action.record_id, false);
           break;
+        case 'download':
+          const exportFields = action.columns.filter((column) => {
+            return column.selector.includes('accounting.');
+          });
+          const str = new Date().toISOString();
+          const filename = 'Accounts_' + str.replace(/[ -.T]/g, '_').replace(/Z/, '');
+          downloadData('IIF', exportFields, action.data, filename, exportValue, null);
+          break;
         // EXISTING_CODE
         default:
           break;
@@ -191,7 +210,16 @@ export const Monitors = (props) => {
   // EXISTING_CODE
   // EXISTING_CODE
 
-  const table = getInnerTable(monitors, curTag, filtered, title, detailLevel, searchFields, recordIconList, monitorsHandler);
+  const table = getInnerTable(
+    monitors,
+    curTag,
+    filtered,
+    title,
+    detailLevel,
+    searchFields,
+    recordIconList,
+    monitorsHandler
+  );
   return (
     <div>
       {/* prettier-ignore */}
@@ -228,7 +256,16 @@ const getTagList = (monitors) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (monitors, curTag, filtered, title, detailLevel, searchFields, recordIconList, monitorsHandler) => {
+const getInnerTable = (
+  monitors,
+  curTag,
+  filtered,
+  title,
+  detailLevel,
+  searchFields,
+  recordIconList,
+  monitorsHandler
+) => {
   // EXISTING_CODE
   // EXISTING_CODE
   return (
@@ -257,9 +294,9 @@ const recordIconList = [
   'Delete/Undelete',
   'Edit/Remove',
   'View/None',
+  'footer-QuickBooks',
   'footer-CSV',
   'footer-TXT',
-  'footer-Import',
   //
 ];
 const defaultSort = ['tags', 'address'];
@@ -335,4 +372,33 @@ export function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
+export function getExportValue(record, fieldName) {
+  if (!record) return '';
+  const fn = fieldName.replace('accounting.', '').toLowerCase();
+  switch (fn) {
+    case 'accnt':
+      return 'ACCNT';
+    case 'name':
+      return record.name;
+    case 'refnum':
+      return record.address.substr(0, 6);
+    case 'timestamp':
+      return '';
+    case 'accnttype':
+      return 'BANK';
+    case 'obamount':
+      return '0.00';
+    case 'desc':
+      return 'Crypto Wallet';
+    case 'accum':
+      return record.address;
+    case 'scd':
+      return '';
+    case 'extra':
+      return '';
+    default:
+      break;
+  }
+  return record[fieldName];
+}
 // EXISTING_CODE

@@ -4,7 +4,7 @@ import {
     select,
 } from 'd3';
 
-import { calcValue } from 'store';
+import { calcValue } from 'components/utils';
 
 import './Scatter.css';
 

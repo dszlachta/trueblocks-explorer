@@ -8,8 +8,17 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, ObjectTable, ChartTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sortArray, handleClick, navigate, replaceRecord, stateFromStorage } from 'components/utils';
-import { calcValue } from 'store';
+import {
+  calcValue,
+  exportValue,
+  downloadData,
+  getServerData,
+  sortArray,
+  handleClick,
+  navigate,
+  replaceRecord,
+  stateFromStorage,
+} from 'components/utils';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 
@@ -22,7 +31,7 @@ import { SidebarTable } from 'components';
 import { getIcon } from 'pages/utils';
 let g_focusValue = '';
 let g_Handler = null;
-const useMountEffect = (fun) => useEffect(fun, [])
+const useMountEffect = (fun) => useEffect(fun, []);
 // EXISTING_CODE
 
 //---------------------------------------------------------------------------
@@ -36,7 +45,6 @@ export const Accounts = (props) => {
   const [searchFields] = useState(defaultSearch);
   const [curTag, setTag] = useState(localStorage.getItem('accountsTag') || 'All');
   const [editDialog, setEditDialog] = useState({ showing: false, record: {} });
-  const [curRecordId, setCurRecordId] = useState('');
   const [debug, setDebug] = useState(false);
   const [detailLevel, setDetailLevel] = useState(Number(stateFromStorage('accountsPageDetails', 0)));
 
@@ -48,11 +56,11 @@ export const Accounts = (props) => {
   g_focusValue = addresses.value && addresses.value.toLowerCase();
   // EXISTING_CODE
 
-  const dataQuery = 'addrs=' + addresses.value + '&staging&accounting&ether';  
+  const dataQuery = 'addrs=' + addresses.value + '&staging&accounting&ether';
   function addendum(record, record_id) {
     let ret = '';
     // EXISTING_CODE
-    ret = "";
+    ret = '';
     // EXISTING_CODE
     return ret;
   }
@@ -60,7 +68,6 @@ export const Accounts = (props) => {
   const accountsHandler = useCallback(
     (action) => {
       const record_id = action.record_id;
-      setCurRecordId(record_id);
       let record = filtered.filter((record) => {
         return record_id && calcValue(record, { selector: 'id', onDisplay: getFieldValue }) === record_id;
       });
@@ -136,14 +143,20 @@ export const Accounts = (props) => {
         case 'row-changed':
           break;
         case 'internallink':
-          if (record)
-            navigate('/explorer/transactions?transactions=' + record.hash, true);
+          if (record) navigate('/explorer/transactions?transactions=' + record.hash, true);
           break;
         case 'externallink':
           if (record && (record.from === '0xBlockReward' || record.from === '0xUncleReward'))
             navigate('https://etherscan.io/block/' + record.blockNumber, true);
-          else
-            navigate('https://etherscan.io/tx/' + action.record_id, true);
+          else navigate('https://etherscan.io/tx/' + action.record_id, true);
+          break;
+        case 'download':
+          const exportFields = action.columns.filter((column) => {
+            return column.selector.includes('accounting.');
+          });
+          // const str = new Date().toISOString();
+          const filename = accounts.meta.accountedFor.name; // g_focusValue + '_' + str.replace(/[ -.T]/g, '_').replace(/Z/, '');
+          downloadData('CSV', exportFields, action.data, filename, exportValue, zeroFunc);
           break;
         // EXISTING_CODE
         default:
@@ -158,11 +171,14 @@ export const Accounts = (props) => {
     // EXISTING_CODE
     partialFetch = true;
     if (partialFetch) {
-      const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
-      if (mocked)
+      if (mocked) {
         refreshAccountsData(dataQuery, dispatch, mocked);
-      else 
-        refreshAccountsData2(dataQuery, dispatch, 0, max_records, recordCount);
+      } else {
+        if (recordCount > 0) {
+          const max_records = stateFromStorage('perPage', 10); // start with five pages, double each time
+          refreshAccountsData2(dataQuery, dispatch, 0, max_records, recordCount);
+        }
+      }
     }
     // EXISTING_CODE
     if (!partialFetch) {
@@ -172,7 +188,7 @@ export const Accounts = (props) => {
 
   useEffect(() => {
     Mousetrap.bind('plus', (e) => handleClick(e, accountsHandler, { type: 'Add' }));
-    Mousetrap.bind('ctrl+d', (e) => handleClick(e, accountsHandler, { type: 'toggle-detail' }))
+    Mousetrap.bind('ctrl+d', (e) => handleClick(e, accountsHandler, { type: 'toggle-detail' }));
     return () => {
       Mousetrap.unbind('plus');
       Mousetrap.unbind('ctrl+d');
@@ -289,7 +305,7 @@ export const Accounts = (props) => {
       } else {
         // an error or first time through?
         setRecordCount(0);
-      };
+      }
     });
     Mousetrap.bind('plus', (e) => handleClick(e, accountsHandler, { type: 'Add' }));
     return () => {
@@ -298,7 +314,16 @@ export const Accounts = (props) => {
   });
   // EXISTING_CODE
 
-  const table = getInnerTable(accounts, curTag, filtered, title, detailLevel, searchFields, recordIconList, accountsHandler);
+  const table = getInnerTable(
+    accounts,
+    curTag,
+    filtered,
+    title,
+    detailLevel,
+    searchFields,
+    recordIconList,
+    accountsHandler
+  );
   return (
     <div>
       {/* prettier-ignore */}
@@ -336,30 +361,50 @@ const getTagList = (accounts) => {
 };
 
 //----------------------------------------------------------------------
-const getInnerTable = (accounts, curTag, filtered, title, detailLevel, searchFields, recordIconList, accountsHandler) => {
+const getInnerTable = (
+  accounts,
+  curTag,
+  filtered,
+  title,
+  detailLevel,
+  searchFields,
+  recordIconList,
+  accountsHandler
+) => {
   // EXISTING_CODE
   if (!accounts) return <></>;
 
   if (curTag === 'Neighbors') {
-    return <ObjectTable data={accounts.meta} columns={metaSchema} title={'Direct Neighbors of ' + title} />
-
+    return <ObjectTable data={accounts.meta} columns={metaSchema} title={'Direct Neighbors of ' + title} />;
   } else if (curTag === 'Balances') {
     const test = accountsSchema;
-    return <BalanceView data={filtered} columns={test} title={title}/>
-
+    return <BalanceView data={filtered} columns={test} title={title} />;
   } else if (curTag === 'Functions') {
     const functionCallData = filtered.map((item) => {
       const parts = item.compressedTx.replace(/\)/, '').split('(');
-      return { date: item.date, to: item.to, functionName: <b>{parts[0]}</b>, parameters: parts[1] }
+      return { date: item.date, to: item.to, functionName: <b>{parts[0]}</b>, parameters: parts[1] };
     });
-    return <DataTable data={functionCallData} columns={functionCallSchema} title={'Functions Called by ' + title} search={true} searchFields={searchFields} pagination={true} parentHandler={accountsHandler}/>
-
+    return (
+      <DataTable
+        data={functionCallData}
+        columns={functionCallSchema}
+        title={'Functions Called by ' + title}
+        search={true}
+        searchFields={searchFields}
+        pagination={true}
+        parentHandler={accountsHandler}
+      />
+    );
   } else if (curTag === 'Messages') {
     const messageData = filtered.map((item) => {
-      return { date: item.date, to: item.to, from: item.from, message: <b>{item.compressedTx.replace("message:", '')}</b> }
+      return {
+        date: item.date,
+        to: item.to,
+        from: item.from,
+        message: <b>{item.compressedTx.replace('message:', '')}</b>,
+      };
     });
-    return <DataTable data={messageData} columns={messagesSchema} title={'Functions Called by ' + title}/>
-
+    return <DataTable data={messageData} columns={messagesSchema} title={'Functions Called by ' + title} />;
   }
   // EXISTING_CODE
   return (
@@ -380,8 +425,8 @@ const getInnerTable = (accounts, curTag, filtered, title, detailLevel, searchFie
 
 // EXISTING_CODE
 //----------------------------------------------------------------------
-const BalanceView = ({data, columns, title}) => {
-  const cols = JSON.parse(JSON.stringify(columns));;
+const BalanceView = ({ data, columns, title }) => {
+  const cols = JSON.parse(JSON.stringify(columns));
   return (
     <ChartTable
       columns={cols}
@@ -393,51 +438,37 @@ const BalanceView = ({data, columns, title}) => {
       pagination={true}
     />
   );
-}
+};
 
 //----------------------------------------------------------------------
 export function refreshAccountsData2(query, dispatch, firstRecord, maxRecords, nRecords) {
-
   getServerData(
     getDataUrl(),
     query + (maxRecords !== -1 ? '&first_record=' + firstRecord + '&max_records=' + maxRecords : '')
-
   ).then((theData) => {
-
-    if (!theData.data || theData.data.length === 0)
-      return;
+    if (!theData.data || theData.data.length === 0) return;
 
     let meta = theData.meta;
     let accounts = theData.data;
 
-    console.log('   ')
-    console.log('---------------------------------------------------------')
-    console.log('accounts from theData.data', accounts);
-    if (accounts && accounts.length > 0) {
-      accounts = accounts[0];
-      console.log('accounts from weird test', accounts);
-
-      if (meta) {
-        const named = accounts.map((item) => {
-          item.fromName = meta.namedFrom && meta.namedFrom[item.from];
-          item.toName = meta.namedTo && meta.namedTo[item.to];
-          if (meta && meta.accountedFor && meta.accountedFor.name !== meta.accountedFor.address) {
-            if (meta.accountedFor.address === item.from) item.fromName = meta.accountedFor;
-            if (meta.accountedFor.address === item.to) item.toName = meta.accountedFor;
-          }
-          return item;
-        });
-        accounts = named;
-      }
+    if (accounts && accounts.length > 0 && meta) {
+      const named = accounts.map((item) => {
+        item.fromName = meta.namedFrom && meta.namedFrom[item.from];
+        item.toName = meta.namedTo && meta.namedTo[item.to];
+        if (meta && meta.accountedFor && meta.accountedFor.name !== meta.accountedFor.address) {
+          if (meta.accountedFor.address === item.from) item.fromName = meta.accountedFor;
+          if (meta.accountedFor.address === item.to) item.toName = meta.accountedFor;
+        }
+        return item;
+      });
+      accounts = named;
     }
-
     theData.data = sortArray(accounts, defaultSort, ['asc', 'asc', 'asc']);
     dispatch({ type: 'success', payload: theData });
 
-    if (maxRecords < nRecords) {
-      refreshAccountsData2(query, dispatch, 0, maxRecords * 2, nRecords);
+    if (Number(firstRecord) + Number(maxRecords) < nRecords) {
+      refreshAccountsData2(query, dispatch, Number(firstRecord) + Number(maxRecords), maxRecords * 2, nRecords);
     }
-
   });
 }
 // EXISTING_CODE
@@ -445,9 +476,9 @@ export function refreshAccountsData2(query, dispatch, firstRecord, maxRecords, n
 // auto-generate: page-settings
 const recordIconList = [
   'ExternalLink',
+  'footer-QuickBooks',
   'footer-CSV',
   'footer-TXT',
-  'footer-Import',
   //
 ];
 const defaultSort = ['blockNumber', 'transactionIndex'];
@@ -457,7 +488,7 @@ const defaultSearch = ['blockNumber', 'hash', 'from', 'fromName', 'to', 'toName'
 //----------------------------------------------------------------------
 const getDataUrl = () => {
   return 'http://localhost:8080/export';
-}
+};
 
 //----------------------------------------------------------------------
 export function refreshAccountsData(query, dispatch, mocked) {
@@ -491,10 +522,30 @@ export const accountsReducer = (state, action) => {
       }
       break;
     case 'success':
+      // console.log('   ')
+      // console.log('---------------------------------------------------------')
+      // console.log('state: ', state);
+      // console.log('payload: ', action.payload);
+      let array = [];
+      if (state.data) {
+        array = state.data.map((item) => {
+          return item;
+        });
+      }
+      if (action.payload.data) {
+        action.payload.data.map((item) => {
+          array.push(item);
+          return true;
+        });
+      }
+      // console.log('array: ', array);
+      action.payload.data = array;
+      // console.log('payload2: ', action.payload);
       accounts = action.payload;
       break;
     default:
-    // do nothing
+      // do nothing
+      break;
   }
   return accounts;
 };
@@ -521,12 +572,11 @@ export function getFieldValue(record, fieldName) {
   }
 
   if (fieldName && fieldName.includes('statements.')) {
+    if (!record || !record.statements || !record.statements[0]) return '';
     let fn = fieldName.replace('statements.', '');
-    if (fn === 'begBalDiff' && record && record.statements && record.statements[0] && record.statements[0][fn] === 0)
-      return '';
-    if (fn === 'endBalDiff' && record && record.statements && record.statements[0] && record.statements[0][fn] === 0)
-      return '';
-    if (fn === 'reconciled' && record && record.statements && record.statements[0])
+    if (fn === 'begBalDiff' && record.statements[0][fn] === 0) return '';
+    if (fn === 'endBalDiff' && record.statements[0][fn] === 0) return '';
+    if (fn === 'reconciled')
       return getIcon(
         'reconciled',
         record.statements[0][fn]
@@ -535,17 +585,32 @@ export function getFieldValue(record, fieldName) {
             : 'CheckCircleYellow'
           : 'XCircle'
       );
-    if (fn === 'totalin' && record && record.statements && record.statements[0])
-      return record.statements[0]['inflow'] +
-              record.statements[0]['intInflow'] +
-              record.statements[0]['selfDestructInflow'] +
-              record.statements[0]['miningInflow'] +
-              record.statements[0]['prefundInflow'];
-    if (fn === 'totalout' && record && record.statements && record.statements[0])
+    if (fn === 'totalin')
       return (
-        Number(record.statements[0]['outflow']) + Number(record.statements[0]['intOutflow']) + Number(record.statements[0]['selfDestructOutflow']) + Number(record.statements[0]['gasCostOutflow'])
+        Number(record.statements[0]['inflow']) +
+        Number(record.statements[0]['intInflow']) +
+        Number(record.statements[0]['selfDestructInflow']) +
+        Number(record.statements[0]['miningInflow']) +
+        Number(record.statements[0]['prefundInflow'])
       );
-    if (record && record.statements && record.statements[0]) return record.statements[0][fn];
+    if (fn === 'totalout')
+      return (
+        Number(record.statements[0]['outflow']) +
+        Number(record.statements[0]['intOutflow']) +
+        Number(record.statements[0]['selfDestructOutflow']) +
+        Number(record.statements[0]['gasCostOutflow'])
+      );
+    if (fn === 'net') {
+      let income = record.statements.reduce((sum, statement) => {
+        const ret = getFieldValue(record, 'statements.totalin');
+        return sum + Number(ret);
+      }, 0);
+      let outflow = record.statements.reduce((sum, statement) => {
+        return sum + Number(getFieldValue(record, 'statements.totalout'));
+      }, 0);
+      return income - outflow;
+    }
+    return record.statements[0][fn];
   }
 
   const internal = record.from !== g_focusValue && record.to !== g_focusValue;
@@ -554,13 +619,9 @@ export function getFieldValue(record, fieldName) {
     case 'id':
       return record.hash;
     case 'separator4':
-      return record.detailLevel === 2 ? "All Events" : record.name;
+      return record.detailLevel === 2 ? 'All Events' : record.name;
     case 'marker':
-      return (
-        <Fragment>
-          {record.blockNumber + '.' + record.transactionIndex}
-        </Fragment>
-      );
+      return <Fragment>{record.blockNumber + '.' + record.transactionIndex}</Fragment>;
     case 'marker2':
       return (
         <Fragment>
@@ -568,7 +629,7 @@ export function getFieldValue(record, fieldName) {
           {record.isError ? <div className="isError">{'er'}</div> : ''}
         </Fragment>
       );
-      case 'isError':
+    case 'isError':
       return record.isError ? 'error' : '';
     case 'internal':
       return internal ? 'int' : '';
@@ -610,9 +671,9 @@ export function getFieldValue(record, fieldName) {
       if (record.receipt.contractAddress === '0x0') return '';
       return record.receipt.contractAddress;
     case 'compressedLog':
-      return <CompressedLogs record={record} />
+      return <CompressedLogs record={record} />;
     case 'compressedTx':
-      return <CompressedTx record={record} />
+      return <CompressedTx record={record} />;
     default:
       break;
   }
@@ -621,22 +682,58 @@ export function getFieldValue(record, fieldName) {
 }
 
 // EXISTING_CODE
-//----------------------------------------------------------------------
-export const CompressedLogs = ({record}) => {
-  if (!record.receipt || !record.receipt.logs || record.receipt.logs.length === 0) return <div key={'yyy'}>{<i>{'no events'}</i>}</div>;
-  const logs = record.receipt.logs.map((l) => { return l })
-  const theList = logs.map((log) => {
-    return displayCompressed(log.compressedLog.replace(/ /g, ''));
-  })
-  return <Fragment>{theList}</Fragment>;
+//----------------------------------------------------------------------------
+export function getExportValue(record, fieldName) {
+  /*
+Date,Amount,Payee,Description,Reference
+2019/09/03,-15.00,"PNC Bank","Service Charge",""
+2019/09/03,-20.00,"Intuit Pymt Soln","Corporate ACH Act Fee",""
+2019/09/06,-1038.03,"Capital One","Card payment",""
+           */
+  if (!record) return '';
+  const field = fieldName.replace('accounting.', '');
+  switch (field) {
+    case 'date':
+      if (record.date) {
+        let val = record.date.split(' ')[0].split('-');
+        return val.join('/');
+      }
+      break;
+    case 'amount':
+      return getFieldValue(record, 'statements.net');
+    case 'payee':
+      const ret = getFieldValue(record, 'statements.net');
+      return ret > 0 ? record.from : record.to;
+    case 'description':
+      if (!record.compressedTx) return '';
+      return record.compressedTx.replace(/[{()} ,:]/g, '_');
+    case 'reference':
+      return record.hash;
+    default:
+      return getFieldValue(record, field);
+  }
+  return record[fieldName];
 }
 
 //----------------------------------------------------------------------
-export const CompressedTx = ({record, fieldName}) => {
+export const CompressedLogs = ({ record }) => {
+  if (!record.receipt || !record.receipt.logs || record.receipt.logs.length === 0)
+    return <div key={'yyy'}>{<i>{'no events'}</i>}</div>;
+  const logs = record.receipt.logs.map((l) => {
+    return l;
+  });
+  const theList = logs.map((log) => {
+    return displayCompressed(log.compressedLog.replace(/ /g, ''));
+  });
+  return <Fragment>{theList}</Fragment>;
+};
+
+//----------------------------------------------------------------------
+export const CompressedTx = ({ record, fieldName }) => {
   if (!record['compressedTx']) return null;
   const compressed = record['compressedTx'];
   return displayCompressed(compressed.replace(/ /g, ''));
-}
+};
 
 //----------------------------------------------------------------------
 function displayCompressed(compressed) {
@@ -665,12 +762,12 @@ function displayCompressed(compressed) {
           return (
             <>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 15fr 80fr 1fr' }}>
-                <div>{' '}</div>
-                <div key={item + '_a'}>{(s[0] === ' stub' ? '0x' : s[0] + ':')}</div>
+                <div> </div>
+                <div key={item + '_a'}>{s[0] === ' stub' ? '0x' : s[0] + ':'}</div>
                 <div className={ofInterest ? 'focusValue' : ''} key={item + '_b'}>
                   {s[1]}
                 </div>
-                <div>{' '}</div>
+                <div> </div>
               </div>
             </>
           );
@@ -716,19 +813,24 @@ export const metaSchema = [
 
 //----------------------------------------------------------------------
 export const functionCallSchema = [
-  {selector: 'id',hidden: true},
-  {selector: 'date', width: 7},
-  {selector: 'to', width: 12},
-  {selector: 'functionName', width: 10},
-  {selector: 'parameters', width: 40},
+  { selector: 'id', hidden: true },
+  { selector: 'date', width: 7 },
+  { selector: 'to', width: 12 },
+  { selector: 'functionName', width: 10 },
+  { selector: 'parameters', width: 40 },
 ];
 
 //----------------------------------------------------------------------
 export const messagesSchema = [
-  {selector: 'id',hidden: true},
-  {selector: 'date', width: 7},
-  {selector: 'to', width: 14},
-  {selector: 'from', width: 14},
-  {selector: 'message', width: 40},
+  { selector: 'id', hidden: true },
+  { selector: 'date', width: 7 },
+  { selector: 'to', width: 14 },
+  { selector: 'from', width: 14 },
+  { selector: 'message', width: 40 },
 ];
+
+//----------------------------------------------------------------------
+function zeroFunc(record) {
+  return getFieldValue(record, 'statements.net') === 0;
+}
 // EXISTING_CODE

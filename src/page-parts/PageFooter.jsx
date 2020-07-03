@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { useToggles } from 'store';
-import { Settings, Discord, GitHub, Medium, Twitter } from 'assets/icons/SetSocial';
+import { Settings, Discord, GitHub, Medium, Twitter, GitCoin } from 'assets/icons/SetSocial';
 import { ClickableIcon, ProgressBar } from 'components';
 import './PageFooter.css';
 
@@ -50,6 +50,10 @@ const CenterFooter = () => {
 const RightFooter = () => {
   return (
     <div className="right-footer">
+      <ClickableIcon
+        link="http://gitcoin.co/grants/184/trueblocks"
+        icon={<GitCoin className="footer-social icon_color" height="24px" />}
+      />
       <ClickableIcon
         link="http://twitter.com/@quickblocks"
         icon={<Twitter className="footer-social icon_color" height="24px" />}

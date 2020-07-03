@@ -2,9 +2,9 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { search as theSearch } from 'ss-search';
 
 import { Tablebar, IconTray, Displayable } from 'components';
-import { createClass } from 'components/utils';
-import { calcValue, exportValue, getPrimaryKey, getAltIconKey } from 'store';
-import { stateFromStorage, formatFieldByType, handleClick, sortArray } from 'components/utils';
+import { calcValue, exportValue, formatFieldByType, downloadData, createClass } from 'components/utils';
+import { getPrimaryKey, getAltIconKey } from 'store';
+import { stateFromStorage, handleClick, sortArray } from 'components/utils';
 import { hasFields } from './utils';
 
 import ChevronUp from 'assets/icons/ChevronUp';
@@ -139,25 +139,16 @@ export const DataTable = ({
         break;
 
       case 'download':
-        const asCSV = action.fmt === 'CSV';
-        const exportFields = columns.filter((column) => {
-          return column.export;
-        });
-        const download = filteredData.map((record, index) => {
-          const row = exportFields.map((column) => {
-            return exportValue(record, column);
+        if (action.fmt === 'CSV' || action.fmt === 'TXT') {
+          const exportFields = columns.filter((column) => {
+            return column.download;
           });
-          return row.join(asCSV ? ',' : '\t');
-        });
-        const fieldNames = exportFields.map((column) => {
-          return column.name;
-        });
-        const output = fieldNames.join(asCSV ? ',' : '\t') + '\n' + download.join('\n');
-        var expElement = document.createElement('a');
-        expElement.href = 'data:text/' + (asCSV ? 'csv' : 'text') + ';charset=utf-8,' + encodeURI(output);
-        expElement.target = '_blank';
-        expElement.download = 'download.' + (asCSV ? 'csv' : 'txt');
-        expElement.click();
+          downloadData(action.fmt, exportFields, filteredData, 'download', exportValue);
+
+        }  else if (parentHandler) {
+          const exportAction = { ...action, columns: columns, data: filteredData };
+          parentHandler(exportAction);
+        }
         break;
 
       case 'copied':

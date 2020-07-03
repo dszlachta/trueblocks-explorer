@@ -103,8 +103,8 @@ export const schemasSchema = [
     align: 'center',
   },
   {
-    name: 'Export',
-    selector: 'export',
+    name: 'Download',
+    selector: 'download',
     type: 'bool',
     width: 1,
     isPill: true,

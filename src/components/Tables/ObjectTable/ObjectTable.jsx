@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
-import { Tablebar } from 'components';
-import { formatFieldByType } from 'components/utils';
-import { calcValue, getPrimaryKey } from 'store';
-import { Displayable } from 'components';
+import { Tablebar, Displayable } from 'components';
+import { calcValue, formatFieldByType } from 'components/utils'
+import { getPrimaryKey } from 'store';
+
 import './ObjectTable.css';
 
 //-----------------------------------------------------------------

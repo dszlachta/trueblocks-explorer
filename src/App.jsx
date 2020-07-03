@@ -14,6 +14,7 @@ import { dashboardDefault, dashboardReducer } from 'pages/Dashboard/Dashboard';
 import { collectionsDefault, collectionsReducer } from 'pages/Collections/Collections';
 import { monitorsDefault, monitorsReducer } from 'pages/Monitors/Monitors';
 import { accountsDefault, accountsReducer } from 'pages/Accounts/Accounts';
+import { summaryDefault, summaryReducer } from 'pages/Summary/Summary';
 import { tagsDefault, tagsReducer } from 'pages/Tags/Tags';
 import { explorerDefault, explorerReducer } from 'pages/Explorer/Explorer';
 import { namesDefault, namesReducer } from 'pages/Names/Names';
@@ -38,6 +39,7 @@ const defaultData = {
   collections: collectionsDefault,
   monitors: monitorsDefault,
   accounts: accountsDefault,
+  summary: summaryDefault,
   tags: tagsDefault,
   explorer: explorerDefault,
   names: namesDefault,
@@ -60,6 +62,7 @@ function App() {
   const [collectionsState, collectionsDispatch] = useReducer(collectionsReducer, defaultData['collections']);
   const [monitorsState, monitorsDispatch] = useReducer(monitorsReducer, defaultData['monitors']);
   const [accountsState, accountsDispatch] = useReducer(accountsReducer, defaultData['accounts']);
+  const [summaryState, summaryDispatch] = useReducer(summaryReducer, defaultData['summary']);
   const [tagsState, tagsDispatch] = useReducer(tagsReducer, defaultData['tags']);
   const [explorerState, explorerDispatch] = useReducer(explorerReducer, defaultData['explorer']);
   const [namesState, namesDispatch] = useReducer(namesReducer, defaultData['names']);
@@ -80,6 +83,7 @@ function App() {
     collections: { collections: collectionsState, dispatch: collectionsDispatch },
     monitors: { monitors: monitorsState, dispatch: monitorsDispatch },
     accounts: { accounts: accountsState, dispatch: accountsDispatch },
+    summary: { summary: summaryState, dispatch: summaryDispatch },
     tags: { tags: tagsState, dispatch: tagsDispatch },
     explorer: { explorer: explorerState, dispatch: explorerDispatch },
     names: { names: namesState, dispatch: namesDispatch },

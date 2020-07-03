@@ -9,6 +9,7 @@ import { Dashboard } from './Dashboard/Dashboard';
 import { Collections } from './Collections/Collections';
 import { Monitors } from './Monitors/Monitors';
 import { Accounts } from './Accounts/Accounts';
+import { Summary } from './Summary/Summary';
 import { Explorer } from './Explorer/Explorer';
 import { Names } from './Names/Names';
 import { Tags } from './Tags/Tags';
@@ -30,8 +31,8 @@ export const thePages = {
   'monitors/': { component: <Monitors /> },
   //
   'accounts/': { component: <Accounts /> },
-  'accounts/summary': { component: <Accounts /> },
-  'accounts/transactions': { component: <Accounts /> },
+  //
+  'summary/': { component: <Summary /> },
   //
   'tags/': { component: <Tags /> },
   //
@@ -103,10 +104,10 @@ export const theMenu = {
     {
       label: 'Accounts',
       exact: true,
-      items: [
-        { label: 'Summary' },
-        { label: 'Transactions' },
-      ],
+    },
+    {
+      label: 'Summary',
+      exact: true,
     },
     {
       label: 'Tags',

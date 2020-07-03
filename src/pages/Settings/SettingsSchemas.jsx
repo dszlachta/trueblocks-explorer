@@ -25,6 +25,7 @@ import { dashboardSchema } from 'pages/Dashboard/DashboardSchema';
 import { collectionsSchema } from 'pages/Collections/CollectionsSchema';
 import { monitorsSchema } from 'pages/Monitors/MonitorsSchema';
 import { accountsSchema } from 'pages/Accounts/AccountsSchema';
+import { summarySchema } from 'pages/Summary/SummarySchema';
 import { tagsSchema } from 'pages/Tags/TagsSchema';
 import { explorerSchema } from 'pages/Explorer/ExplorerSchema';
 import { namesSchema } from 'pages/Names/NamesSchema';
@@ -43,7 +44,8 @@ export const SettingsSchemas = () => {
   const schemas = useSchemas();
   const matched = schemas.filter((item) => item.name === current)[0];
   const hasIcons =
-    matched && matched.schema.filter((field) => {
+    matched &&
+    matched.schema.filter((field) => {
       return field.type === 'icons';
     }).length > 0;
   const mocks = matched ? mockData(matched.schema) : [];
@@ -184,34 +186,37 @@ export const SettingsSchemas = () => {
             >
               <div></div>
               <div>
-                {matched && <DataTable
-                  tableName={'mocksTable'}
-                  key={matched.name + 'm'}
-                  title={''}
-                  data={mocks}
-                  columns={matched.schema}
-                  search={false}
-                  pagination={false}
-                  showHidden={true}
-                  detailLevel={2}
-                  recordIcons={hasIcons ? ['Add', 'Edit'] : []}
-                />}
+                {matched && (
+                  <DataTable
+                    tableName={'mocksTable'}
+                    key={matched.name + 'm'}
+                    title={''}
+                    data={mocks}
+                    columns={matched.schema}
+                    search={false}
+                    pagination={false}
+                    showHidden={true}
+                    detailLevel={2}
+                    recordIcons={hasIcons ? ['Add', 'Edit'] : []}
+                  />
+                )}
                 <br />
               </div>
               <div></div>
               <div></div>
               <div>
-                  {matched && 
-                <ObjectTable
-                  key={matched.name + 'm'}
-                  title={''}
-                  data={mocks[0]}
-                  columns={matched.schema}
-                  search={false}
-                  pagination={false}
-                  showHidden={true}
-                  detailLevel={2}
-                />}
+                {matched && (
+                  <ObjectTable
+                    key={matched.name + 'm'}
+                    title={''}
+                    data={mocks[0]}
+                    columns={matched.schema}
+                    search={false}
+                    pagination={false}
+                    showHidden={true}
+                    detailLevel={2}
+                  />
+                )}
               </div>
             </div>
           </td>
@@ -234,6 +239,7 @@ const useSchemas = () => {
     { group: 'pages_', name: 'collectionsSchema', schema: collectionsSchema },
     { group: 'pages_', name: 'monitorsSchema', schema: monitorsSchema },
     { group: 'pages_', name: 'accountsSchema', schema: accountsSchema },
+    { group: 'pages_', name: 'summarySchema', schema: summarySchema },
     { group: 'pages_', name: 'tagsSchema', schema: tagsSchema },
     { group: 'pages_', name: 'explorerSchema', schema: explorerSchema },
     { group: 'pages_', name: 'namesSchema', schema: namesSchema },

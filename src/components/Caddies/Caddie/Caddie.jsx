@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 
 import { Card, ObjectTable } from 'components';
-import { calcValue } from 'store';
+import { calcValue } from 'components/utils';
 import { getIcon } from 'pages/utils';
 
 import './Caddie.css';

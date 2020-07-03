@@ -78,7 +78,10 @@ const TableFooterRow = ({ searchFields, footerIcons, handler }) => {
       <div style={style1}>
         {footerIcons.map((a, index) => {
           const value = a.replace('footer-', '').split('/')[0];
-          switch (value.toLowerCase()) {
+          const lowValue = value.toLowerCase();
+          switch (lowValue) {
+            case 'xero':
+            case 'quickbooks':
             case 'csv':
             case 'txt':
             case 'import':

@@ -8,8 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { [{TABLE_IMPORT}], Dialog } from 'components';
-import { [{UTILS_IMPORT}] } from 'components/utils';
-import { calcValue } from 'store';
+import { calcValue, [{UTILS_IMPORT}] } from 'components/utils';
 
 import { [{STATUS_STORE_IMPORT}] } from 'store/status_store';
 

@@ -11,8 +11,8 @@ export const digestsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    detail: 2,
     searchable: true,
+    detail: 2,
     onDisplay: getFieldValue,
   },
   {
@@ -125,8 +125,8 @@ export const digestsSchema = [
     name: 'Filename',
     selector: 'filename',
     type: 'string',
-    detail: 2,
     searchable: true,
+    detail: 2,
   },
   {
     name: 'Chunk Size',

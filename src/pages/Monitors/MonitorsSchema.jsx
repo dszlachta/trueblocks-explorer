@@ -2,7 +2,7 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import { getFieldValue } from 'pages/Monitors/Monitors';
+import { getFieldValue, getExportValue } from 'pages/Monitors/Monitors';
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -121,10 +121,69 @@ export const monitorsSchema = [
     type: 'bool',
   },
   {
+    name: 'ACCNT',
+    selector: 'accounting.accnt',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'NAME',
+    selector: 'accounting.name',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'REFNUM',
+    selector: 'accounting.refnum',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'TIMESTAMP',
+    selector: 'accounting.timestamp',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'ACCNTTYPE',
+    selector: 'accounting.accnttype',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'OBAMOUNT',
+    selector: 'accounting.obamount',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'DESC',
+    selector: 'accounting.desc',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'ACCNUM',
+    selector: 'accounting.accum',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'SCD',
+    selector: 'accounting.scd',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'EXTRA',
+    selector: 'accounting.extra',
+    type: 'string',
+    onDisplay: getExportValue,
+  },
+  {
     name: 'Icons',
     selector: 'icons',
     type: 'icons',
   },
 ];
 // auto-generate: schema
-  

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import { DataTable, ObjectTable } from 'components';
-import { stateFromStorage } from 'components/utils';
-import { getPrimaryKey, calcValue } from 'store';
+import {  calcValue, stateFromStorage } from 'components/utils';
+import { getPrimaryKey } from 'store';
 import { getIcon } from 'pages/utils';
 
 import './SidebarTable.css';

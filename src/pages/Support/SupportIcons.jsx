@@ -33,6 +33,7 @@ import ToggleLeft from 'assets/icons/ToggleLeft';
 import ToggleCenter from 'assets/icons/ToggleCenter';
 import ToggleRight from 'assets/icons/ToggleRight';
 import Twitter from 'assets/icons/Twitter';
+import GitCoin from 'assets/icons/GitCoin';
 import Undelete from 'assets/icons/Undelete';
 import View from 'assets/icons/View';
 //import X from 'assets/icons/X';
@@ -110,6 +111,7 @@ export const SupportIcons = () => {
         { name: 'GitHub', component: <GitHub size={size} color={color} fill={fill} style={style} /> },
         { name: 'Medium', component: <Medium size={size} color={color} fill={fill} style={style} /> },
         { name: 'Twitter', component: <Twitter size={size} color={color} fill={fill} style={style} /> },
+        { name: 'GitCoin', component: <GitCoin size={size} color={color} fill={fill} style={style} /> },
       ],
     },
     {

@@ -114,6 +114,6 @@ export function getIcon(index, labelIn, expanded = false, pad = false, size = 20
     case 'redlight':
       return <GridIcon key={key} fill="red" color="#333" size="15px" />;
     default:
-      return <div key={key}>{'Unknown icon: ' + label}</div>;
+      return <div key={key}>{labelIn}</div>;
   }
 }

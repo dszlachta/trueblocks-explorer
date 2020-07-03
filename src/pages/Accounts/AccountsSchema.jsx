@@ -2,7 +2,7 @@
  * This file was generated with makeClass. Edit only those parts of the code inside
  * of 'EXISTING_CODE' tags.
  */
-import { getFieldValue } from 'pages/Accounts/Accounts';
+import { getFieldValue, getExportValue } from 'pages/Accounts/Accounts';
 
 //----------------------------------------------------------------------------
 // auto-generate: schema
@@ -16,8 +16,8 @@ export const accountsSchema = [
     name: 'ID',
     selector: 'id',
     type: 'string',
-    detail: 1,
     searchable: true,
+    detail: 2,
     onDisplay: getFieldValue,
   },
   {
@@ -26,6 +26,7 @@ export const accountsSchema = [
     type: 'string',
     width: 2,
     editable: true,
+    download: true,
     chart: 'range',
     underField: 'marker',
     onDisplay: getFieldValue,
@@ -49,6 +50,7 @@ export const accountsSchema = [
     type: 'address',
     width: 5,
     editable: true,
+    download: true,
     chart: 'range',
     searchable: true,
     underField: 'fromName',
@@ -58,8 +60,8 @@ export const accountsSchema = [
     name: 'fromName',
     selector: 'fromName',
     type: 'string',
-    detail: 2,
     searchable: true,
+    detail: 1,
     onDisplay: getFieldValue,
   },
   {
@@ -68,6 +70,7 @@ export const accountsSchema = [
     type: 'address',
     width: 5,
     editable: true,
+    download: true,
     chart: 'range',
     searchable: true,
     underField: 'toName',
@@ -77,8 +80,8 @@ export const accountsSchema = [
     name: 'toName',
     selector: 'toName',
     type: 'string',
-    detail: 2,
     searchable: true,
+    detail: 1,
     onDisplay: getFieldValue,
   },
   {
@@ -134,6 +137,7 @@ export const accountsSchema = [
     type: 'string',
     width: 1,
     align: 'center',
+    download: true,
     onDisplay: getFieldValue,
   },
   {
@@ -141,6 +145,7 @@ export const accountsSchema = [
     selector: 'statements.begBal',
     type: 'value',
     width: 2,
+    download: true,
     onDisplay: getFieldValue,
   },
   {
@@ -155,6 +160,7 @@ export const accountsSchema = [
     selector: 'statements.totalin',
     type: 'value',
     width: 2,
+    download: true,
     onDisplay: getFieldValue,
   },
   {
@@ -197,6 +203,7 @@ export const accountsSchema = [
     selector: 'statements.totalout',
     type: 'value',
     width: 2,
+    download: true,
     onDisplay: getFieldValue,
   },
   {
@@ -233,6 +240,7 @@ export const accountsSchema = [
     selector: 'statements.endBal',
     type: 'value',
     width: 2,
+    download: true,
     chart: 'domain',
     onDisplay: getFieldValue,
   },
@@ -240,6 +248,7 @@ export const accountsSchema = [
     name: 'Calc',
     selector: 'statements.endBalCalc',
     type: 'value',
+    download: true,
     detail: 2,
     onDisplay: getFieldValue,
   },
@@ -263,6 +272,7 @@ export const accountsSchema = [
     type: 'string',
     width: 1,
     align: 'center',
+    download: true,
     onDisplay: getFieldValue,
   },
   {
@@ -333,6 +343,12 @@ export const accountsSchema = [
     detail: 1,
   },
   {
+    name: 'Price',
+    selector: 'price',
+    type: 'double',
+    detail: 1,
+  },
+  {
     name: 'Error',
     selector: 'isError',
     type: 'string',
@@ -355,8 +371,8 @@ export const accountsSchema = [
     name: 'Articulated Tx',
     selector: 'articulatedTx',
     type: 'CFunction',
-    detail: 2,
     searchable: true,
+    detail: 2,
   },
   {
     name: 'Traces',
@@ -374,8 +390,8 @@ export const accountsSchema = [
     name: 'Function',
     selector: 'function',
     type: 'string',
-    detail: 2,
     searchable: true,
+    detail: 2,
     onDisplay: getFieldValue,
   },
   {
@@ -412,8 +428,8 @@ export const accountsSchema = [
     selector: 'hash',
     type: 'hash',
     editable: true,
-    detail: 2,
     searchable: true,
+    detail: 2,
   },
   {
     name: 'Nonce',
@@ -440,6 +456,41 @@ export const accountsSchema = [
     selector: 'time',
     type: 'string',
     detail: 2,
+  },
+  {
+    name: 'Date',
+    selector: 'accounting.date',
+    type: 'string',
+    detail: 10,
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'Amount',
+    selector: 'accounting.amount',
+    type: 'string',
+    detail: 10,
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'Payee',
+    selector: 'accounting.payee',
+    type: 'string',
+    detail: 10,
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'Description',
+    selector: 'accounting.description',
+    type: 'string',
+    detail: 10,
+    onDisplay: getExportValue,
+  },
+  {
+    name: 'Reference',
+    selector: 'accounting.reference',
+    type: 'string',
+    detail: 10,
+    onDisplay: getExportValue,
   },
   {
     name: 'Icons',

@@ -8,8 +8,7 @@ import Mousetrap from 'mousetrap';
 import GlobalContext from 'store';
 
 import { DataTable, PageCaddie, Dialog } from 'components';
-import { getServerData, sortArray, sortStrings, handleClick, replaceRecord, stateFromStorage } from 'components/utils';
-import { calcValue } from 'store';
+import { calcValue, getServerData, sortArray, sortStrings, handleClick, replaceRecord, stateFromStorage } from 'components/utils';
 
 import { useStatus, LOADING, NOT_LOADING } from 'store/status_store';
 

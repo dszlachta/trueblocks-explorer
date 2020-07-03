@@ -1,10 +1,10 @@
 import React, { useState, Fragment } from 'react';
 
 import { Tablebar, PanelTable } from 'components';
-import { fmtNum, handleClick } from 'components/utils';
+import { calcValue, fmtNum, handleClick } from 'components/utils';
 
 import './GridTable.css';
-import { calcValue, getPrimaryKey } from 'store';
+import { getPrimaryKey } from 'store';
 
 //-----------------------------------------------------------------
 export const GridTable = ({

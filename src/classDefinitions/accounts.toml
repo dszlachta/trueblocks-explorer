@@ -13,6 +13,4 @@ imports = "Fragment, |DataTable, ObjectTable, ChartTable, PageCaddie|getServerDa
 [[subpages]]
 list = [
     { page = "accounts", subpage = "" },
-    { page = "accounts", subpage = "Summary" },
-    { page = "accounts", subpage = "Transactions" },
 ]

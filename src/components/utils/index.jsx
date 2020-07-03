@@ -115,8 +115,7 @@ export const range = (len) => {
 
 //----------------------------------------------------------------------
 export const currentPage = () => {
-  const electronIndexLoaded = [/^file:\/\//, /index.html/]
-        .every((regexp) => regexp.test(window.location));
+  const electronIndexLoaded = [/^file:\/\//, /index.html/].every((regexp) => regexp.test(window.location));
 
   if (electronIndexLoaded) {
     return { page: 'dashboard', subpage: '', params: {} };
@@ -132,6 +131,46 @@ export const currentPage = () => {
   if (parts.length < 3) parts[2] = '';
   return { page: parts[1], subpage: parts[2], params: params };
 };
+
+//----------------------------------------------------------------------------
+export const sortArray = (array, fArray, dArray) => {
+  if (fArray.size === 0) return array;
+  if (!array || array.size === 0) return array;
+  array.sort(function (a, b) {
+    for (var index = 0; index < fArray.length; index++) {
+      let aVal = a[fArray[index]];
+      let bVal = b[fArray[index]];
+      let result = (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (dArray[index] ? 1 : -1);
+      if (result) return result;
+    }
+    return 0;
+  });
+  return array;
+};
+
+//----------------------------------------------------------------------------
+export const sortStrings = (array, dir) => {
+  if (!array || array.size === 0) return array;
+  array.sort(function (aVal, bVal) {
+    return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (dir ? 1 : -1);
+  });
+  return array;
+};
+
+//-----------------------------------------------------------------
+export function calcValue(record, column) {
+  if (!column) return '';
+  if (column.onDisplay) return column.onDisplay(record, column.selector);
+  if (!record || record === undefined) return '';
+  return record[column.selector];
+}
+
+//-----------------------------------------------------------------
+export function exportValue(record, column) {
+  if (!column) return '';
+  if (!record[column.selector] || record[column.selector] === '') return calcValue(record, column);
+  return record[column.selector];
+}
 
 //---------------------------------------------------------------
 export const formatFieldByType = (type, value, decimals = 0) => {
@@ -183,32 +222,7 @@ export const formatFieldByType = (type, value, decimals = 0) => {
 };
 
 //----------------------------------------------------------------------------
-export const sortArray = (array, fArray, dArray) => {
-  if (fArray.size === 0) return array;
-  if (!array || array.size === 0) return array;
-  array.sort(function (a, b) {
-    for (var index = 0; index < fArray.length; index++) {
-      let aVal = a[fArray[index]];
-      let bVal = b[fArray[index]];
-      let result = (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (dArray[index] ? 1 : -1);
-      if (result) return result;
-    }
-    return 0;
-  });
-  return array;
-};
-
-//----------------------------------------------------------------------------
-export const sortStrings = (array, dir) => {
-  if (!array || array.size === 0) return array;
-  array.sort(function (aVal, bVal) {
-    return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (dir ? 1 : -1);
-  });
-  return array;
-};
-
-//----------------------------------------------------------------------------
-export const humanFileSize = (numInBytes) => {
+const humanFileSize = (numInBytes) => {
   numInBytes = fmtNum(numInBytes).split('.')[0].replace(/[,.]/g, ''); // clean it
   if (numInBytes === 0) return '0 B';
   // return numInBytes;
@@ -315,3 +329,35 @@ export const dataFetcher = (url) =>
   fetch(url).then((r) => {
     return r.json();
   });
+
+//-------------------------------------------------------------------------
+export const downloadData = (format, exportFields, data, filename, exportFunc, zeroFunc = null) => {
+  const isCSV = format === 'CSV';
+  const isIIF = format === 'IIF';
+  const delimiter = isCSV ? ',' : '\t';
+  const outFmt = isCSV ? 'csv' : 'text';
+  const preHeader = isIIF ? '!HDR	PROD	VER	REL	IIFVER	DATE	TIME\nHDR	TrueBlocks	Version 0.7.0.1234		1	7/1/20	1593644002\n' : '';
+  const exportFileName = filename[0] === '/' ? filename : filename + (isCSV ? '.csv' : isIIF ? '.iif' : '.txt');
+
+  const theHeader = exportFields
+    .map((column) => {
+      return !column.name ? column.selector : column.name;
+    })
+    .join(delimiter);
+
+  const filtered = !zeroFunc ? data : data.filter((record) => !zeroFunc(record));
+  const theRows = filtered.map((record, index) => {
+    const row = exportFields.map((column) => {
+      return exportFunc(record, column);
+    });
+    return row.join(delimiter);
+  });
+
+  const theOutput = preHeader + (isIIF ? '!' : '') + theHeader + '\n' + theRows.join('\n');
+
+  var expElement = document.createElement('a');
+  expElement.href = 'data:text/' + outFmt + ';charset=utf-8,' + encodeURI(theOutput);
+  expElement.target = '_blank';
+  expElement.download = exportFileName;
+  expElement.click();
+};

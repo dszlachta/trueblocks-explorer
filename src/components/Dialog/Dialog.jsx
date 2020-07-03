@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { useForm, ErrorMessage } from 'react-hook-form';
-import { DevTool } from "react-hook-form-devtools";
+import { DevTool } from 'react-hook-form-devtools';
 
 import { Modal } from 'components/Modal/Modal';
 
@@ -11,9 +11,10 @@ import { typeToConstraints } from 'modules/string_validation';
 //-------------------------------------------------------------------------
 export const Dialog = ({ showing, header, handler, object, columns }) => {
   const { register, control, handleSubmit, errors } = useForm();
-  const onSubmit = (data) => console.log(data);
 
   if (!showing) return <Fragment></Fragment>;
+
+  const onSubmit = (data) => console.log(data);
 
   // Prepare click listeners
   // Here we "save" actionType for later use and return a new function that will take event as
@@ -23,12 +24,11 @@ export const Dialog = ({ showing, header, handler, object, columns }) => {
   // because it will be used with submit button only - so we can just set `actionType` to `okay`.
   const handleSubmitClick = (e) => {
     e.persist();
-
     handleSubmit((data) => {
       onSubmit({
         ...data,
         id: data.address,
-        is_custom: object.is_custom
+        is_custom: object.is_custom,
       });
       handleButtonClick('okay')(e);
     })();
@@ -37,17 +37,10 @@ export const Dialog = ({ showing, header, handler, object, columns }) => {
   // Buttons that we will use instead of the default ones
   const buttons = (
     <Fragment>
-      <button
-        type="reset"
-        onClick={handleButtonClick('cancel')}
-      >
+      <button type="reset" onClick={handleButtonClick('cancel')}>
         Cancel
       </button>
-      <button
-        type="submit"
-        className="selected"
-        onClick={handleSubmitClick}
-      >
+      <button type="submit" className="selected" onClick={handleSubmitClick}>
         Okay
       </button>
     </Fragment>
@@ -66,35 +59,36 @@ export const Dialog = ({ showing, header, handler, object, columns }) => {
 //-------------------------------------------------------------------------
 export const DialogRow = ({ name, selector, children }) => {
   return (
-      <label
-          key={selector}>
-          <span>
-              {name}
-          </span>
-          <div>
-              {children}
-          </div>
-      </label>
-  )
-}
+    <label key={selector}>
+      <span>{name}</span>
+      <div>{children}</div>
+    </label>
+  );
+};
 
 //-------------------------------------------------------------------------
 function columnsToInputs({ columns, defaultValues, register, errors }) {
+  let cnt = 0;
   return columns
     .filter(({ editable }) => editable)
     .map((column, index) => {
       const { selector, name, type } = column;
       if (selector === 'id') return null;
       const constraints = typeToConstraints.get(selector) || {};
+      cnt++;
       return (
-        <DialogRow
-          key={selector}
-          name={name}
-          selector={selector}>
-            <input name={selector} tabindex={index+1} placeholder={type} defaultValue={defaultValues[selector]} className="editable_input" ref={register({ ...constraints })} />
-            <ErrorMessage errors={errors} name={selector} />
+        <DialogRow key={selector} name={name} selector={selector}>
+          <input
+            name={selector}
+            tabindex={index + 1}
+            placeholder={" <" + type + ">"}
+            focus={cnt === 1}
+            defaultValue={defaultValues[selector]}
+            className="editable_input"
+            ref={register({ ...constraints })}
+          />
+          <ErrorMessage errors={errors} name={selector} />
         </DialogRow>
-      )
+      );
     });
 }
-
