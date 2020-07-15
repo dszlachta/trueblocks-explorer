@@ -1,0 +1,10 @@
+.wizard {
+    background-color: var(--secondary-bg-color);
+    width: 80vw;
+    margin: auto;
+    padding: var(--padding-panel);
+}
+
+.wizard h1 {
+    margin-top: 0;
+}

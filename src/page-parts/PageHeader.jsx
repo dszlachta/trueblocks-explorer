@@ -19,12 +19,15 @@ export const PageHeader = () => {
 };
 
 //-----------------------------------------------------
-const PageHeaderLeft = () => {
+export const PageHeaderLeft = ({ isLink=true }) => {
+  const imgElement = (<img className="logo" alt={logo} src={logo} />);
+  const imgWrapperElement = isLink
+    ? (<Link to="/">{imgElement}</Link>)
+    : (<div>{imgElement}</div>);
+
   return (
     <div className="left-header">
-      <Link to="/">
-        <img className="logo" alt={logo} src={logo} />
-      </Link>
+      {imgWrapperElement}
       <div>{'TrueBlocks Account Explorer'}</div>
     </div>
   );
